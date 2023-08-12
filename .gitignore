@@ -42,4 +42,4 @@ testem.log
 Thumbs.db
 
 # Custom Ignores
-# package-lock.json
+package-lock.json
