@@ -1,0 +1,22 @@
+{
+	"editor.tabSize": 4,
+	"prettier.useTabs": true,
+	"editor.formatOnSave": false,
+	"[html]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": true
+		}
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": true
+		}
+	},
+	"[json][jsonc]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.codeActionsOnSave": {}
+	},
+	"cSpell.words": ["Parens"]
+}
