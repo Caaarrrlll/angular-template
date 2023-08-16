@@ -34,6 +34,6 @@ const materialModules = [
 	imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, ...materialModules, LayoutModule],
 	providers: [],
 	bootstrap: [AppComponent],
-	exports: [...materialModules],
+	exports: [...materialModules, NavigationComponent],
 })
 export class AppModule {}
