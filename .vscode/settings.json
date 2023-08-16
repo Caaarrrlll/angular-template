@@ -1,22 +1,35 @@
 {
+	"cSpell.words": ["Parens"],
+
 	"editor.tabSize": 4,
-	"prettier.useTabs": true,
 	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true,
+		"source.organizeImports": true
+	},
+	"editor.formatOnPaste": true,
+	"editor.formatOnSaveMode": "file",
+
+	"prettier.arrowParens": "always",
+	"prettier.bracketSpacing": true,
+	"prettier.bracketSameLine": true,
+	"prettier.printWidth": 180,
+	"prettier.semi": true,
+	"prettier.singleQuote": false,
+	"prettier.tabWidth": 4,
+	"prettier.useTabs": true,
+
+	"typescript.preferences.importModuleSpecifier": "non-relative",
+	"typescript.preferences.quoteStyle": "double",
+	"typescript.updateImportsOnFileMove.enabled": "always",
+
 	"[html]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.codeActionsOnSave": {
-			"source.fixAll.eslint": true
-		}
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.codeActionsOnSave": {
-			"source.fixAll.eslint": true
-		}
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[json][jsonc]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
-		"editor.codeActionsOnSave": {}
-	},
-	"cSpell.words": ["Parens"]
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	}
 }
