@@ -1,5 +1,8 @@
 {
-	"cSpell.words": ["Parens"],
+	"cSpell.words": [
+		"Parens",
+		"polyfills"
+	],
 
 	"editor.tabSize": 4,
 	"editor.formatOnSave": true,
