@@ -15,6 +15,10 @@ const routes: Routes = [
 		loadChildren: () => import("./modules/contact/contact.module").then((m) => m.ContactModule),
 	},
 	{
+		path: "playground",
+		loadChildren: () => import("./modules/playground/playground.module").then((m) => m.PlaygroundModule),
+	},
+	{
 		path: "**",
 		loadChildren: () => import("./modules/not-found/not-found.module").then((m) => m.NotFoundModule),
 	},
