@@ -7,7 +7,7 @@ import { ControlValueAccessor } from "@angular/forms";
 	styleUrls: ["./text-input.component.scss"],
 })
 export class TextInputComponent implements ControlValueAccessor {
-	textValue: string = "";
+	textValue = "";
 	onChange: unknown = () => {};
 	onTouched: any = () => {};
 
