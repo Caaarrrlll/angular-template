@@ -1,6 +1,6 @@
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { AsyncPipe } from "@angular/common";
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
@@ -14,23 +14,14 @@ import { map, shareReplay } from "rxjs/operators";
 	selector: "app-navigation",
 	templateUrl: "./navigation.component.html",
 	styleUrls: ["./navigation.component.scss"],
-	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: true,
-	imports: [
-		AsyncPipe,
-		MatButtonModule,
-		MatIconModule,
-		MatListModule,
-		MatSidenavModule,
-		MatToolbarModule,
-		RouterLink,
-	],
+	imports: [AsyncPipe, MatButtonModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule, RouterLink],
 })
 export class NavigationComponent {
+	private readonly breakpointObserver = inject(BreakpointObserver);
+
 	isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Handset]).pipe(
 		map((result) => result.matches),
 		shareReplay(),
 	);
-
-	constructor(private breakpointObserver: BreakpointObserver) {}
 }
