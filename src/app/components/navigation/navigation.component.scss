@@ -7,6 +7,10 @@
 	height: 100%;
 }
 
+.fill-space {
+	flex: 1 1 auto;
+}
+
 .mat-sidenav-content {
 	display: flex;
 	flex-direction: column;
