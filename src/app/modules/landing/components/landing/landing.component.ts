@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
@@ -5,6 +6,7 @@ import { Component, ChangeDetectionStrategy } from "@angular/core";
 	templateUrl: "./landing.component.html",
 	styleUrls: ["./landing.component.scss"],
 	changeDetection: ChangeDetectionStrategy.Eager,
-	standalone: false,
+	standalone: true,
+	imports: [CommonModule],
 })
 export class LandingComponent {}

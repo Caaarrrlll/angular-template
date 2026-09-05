@@ -1,0 +1,30 @@
+:host {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	min-height: 0;
+}
+
+.not-found {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.title {
+	font-size: 5rem;
+	color: #c2185b;
+}
+
+.message {
+	font-size: 2rem;
+	margin: 0.25rem;
+}
+
+.description {
+	margin: 1rem 0 2rem;
+	color: rgba(0, 0, 0, 0.6);
+}
