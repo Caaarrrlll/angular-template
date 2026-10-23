@@ -8,14 +8,14 @@ export const routes: Routes = [
 	},
 	{
 		path: "home",
-		loadComponent: () => import("./modules/landing/components/landing/landing.component").then((m) => m.LandingComponent),
+		loadComponent: () => import("./segments/landing/components/landing/landing.component").then((m) => m.LandingComponent),
 	},
 	{
 		path: "contact-us",
-		loadComponent: () => import("./modules/contact/components/contact/contact.component").then((m) => m.ContactComponent),
+		loadComponent: () => import("./segments/contact/components/contact/contact.component").then((m) => m.ContactComponent),
 	},
 	{
 		path: "**",
-		loadComponent: () => import("./modules/not-found/components/not-found/not-found.component").then((m) => m.NotFoundComponent),
+		loadComponent: () => import("./segments/not-found/components/not-found/not-found.component").then((m) => m.NotFoundComponent),
 	},
 ];

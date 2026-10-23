@@ -1,4 +1,3 @@
-import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { RouterLink } from "@angular/router";
@@ -8,6 +7,6 @@ import { RouterLink } from "@angular/router";
 	templateUrl: "./not-found.component.html",
 	styleUrls: ["./not-found.component.scss"],
 	standalone: true,
-	imports: [CommonModule, MatButtonModule, RouterLink],
+	imports: [MatButtonModule, RouterLink],
 })
 export class NotFoundComponent {}

@@ -17,6 +17,13 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
+    "paths": {
+      "@animations/*": ["./src/app/animations/*"],
+      "@segments/*": ["./src/app/segments/*"],
+      "@shared/components/*": ["./src/app/controls/components/*"],
+      "@shared/pipes/*": ["./src/app/library/pipes/*"],
+      "@shared/services/*": ["./src/app/library/services/*"]
+    },
     "useDefineForClassFields": false
   },
 	"angularCompilerOptions": {
