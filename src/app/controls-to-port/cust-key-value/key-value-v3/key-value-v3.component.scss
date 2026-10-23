@@ -1,0 +1,57 @@
+.kv-container-row {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	padding-bottom: var(--bottomPadding);
+
+	.key {
+		white-space: nowrap;
+		align-self: center;
+	}
+
+	.value {
+		align-self: center;
+		margin-left: 10px;
+		.show-pointer {
+			cursor: pointer;
+		}
+	}
+}
+
+.row-start {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.row-end {
+	display: flex;
+	justify-content: flex-end;
+	text-align: right;
+}
+
+.flex-row-wrap {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+
+.right {
+	justify-content: right;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.icon-size {
+	height: initial;
+	width: initial;
+	padding-right: 4px;
+	font-size: initial;
+}
+
+.center-align {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

@@ -1,0 +1,83 @@
+<div *ngIf="!avatar && !noPadding && dekraButtonType === null" style="padding: 15px; text-align: center">
+	<div *ngIf="isDekraLoading">
+		<cust-loader fontSize="24px"></cust-loader>
+	</div>
+	<button *ngIf="!isDekraLoading && hasDekraReport" mat-stroked-button (click)="openDekraReport()">
+		<img src="../../../../assets/images/companies/dekra.svg" alt="Dekra Logo" [ngClass]="{ showImage: hasDekraReport }" />
+		<span *ngIf="!hasDekraReport">Dekra</span>
+	</button>
+	<p class="noDekra" *ngIf="!hasDekraReport">No Report Available</p>
+</div>
+
+<div
+	*ngIf="avatar && dekraButtonType === null"
+	[title]="hasDekraReport ? 'View Dekra Report' : 'No Dekra report available'"
+	(click)="openDekraReport()"
+	class="user-icon"
+	[ngClass]="{ greyscale: !hasDekraReport }"
+	[ngStyle]="{ cursor: hasDekraReport ? 'pointer' : 'default' }"
+>
+	<img *ngIf="!isDekraLoading" style="font-size: 16px" src="../../../../assets/images/companies/dekra_min.png" />
+	<div *ngIf="isDekraLoading">
+		<cust-loader style="color: black" fontSize="24px"></cust-loader>
+	</div>
+</div>
+
+<div *ngIf="!avatar && noPadding && dekraButtonType === null">
+	<button *ngIf="hasDekraReport" mat-stroked-button (click)="openDekraReport()">
+		<div *ngIf="!isDekraLoading">
+			<img src="../../../../assets/images/companies/dekra.svg" alt="Dekra Logo" [ngClass]="{ showImage: hasDekraReport }" />
+			<span *ngIf="!hasDekraReport">Dekra</span>
+		</div>
+		<div *ngIf="isDekraLoading">
+			<cust-loader fontSize="24px"></cust-loader>
+		</div>
+	</button>
+	<p class="noDekra" *ngIf="!hasDekraReport">No Report Available</p>
+</div>
+
+<div *ngIf="greenLogo">
+	<button *ngIf="hasDekraReport" class="dekra-button" mat-stroked-button (click)="openDekraReport()">
+		<div *ngIf="!isDekraLoading" class="dekra-button-content">
+			<div>
+				<img src="../../../../assets/images/companies/dekra-green-logo.svg" alt="Dekra Logo" class="dekra-logo" />
+			</div>
+			<div class="dekra-text">DEKRA GREEN</div>
+		</div>
+
+		<div *ngIf="isDekraLoading">
+			<cust-loader fontSize="24px"></cust-loader>
+		</div>
+	</button>
+	<p class="noDekra" *ngIf="!hasDekraReport">No Report Available</p>
+</div>
+<div *ngIf="goldLogo" class="dekra-button-container">
+	<button *ngIf="hasDekraReport" class="dekra-button" mat-stroked-button (click)="openDekraReport()">
+		<div *ngIf="!isDekraLoading" class="dekra-button-content">
+			<div>
+				<img src="../../../../assets/images/companies/dekra-gold-logo.svg" alt="Dekra Logo" class="dekra-logo" />
+			</div>
+			<div class="dekra-text">DEKRA GOLD</div>
+		</div>
+
+		<div *ngIf="isDekraLoading">
+			<cust-loader fontSize="24px"></cust-loader>
+		</div>
+	</button>
+	<p class="noDekra" *ngIf="!hasDekraReport">No Report Available</p>
+</div>
+<div *ngIf="platinumLogo">
+	<button *ngIf="hasDekraReport" class="dekra-button" mat-stroked-button (click)="openDekraReport()">
+		<div *ngIf="!isDekraLoading" class="dekra-button-content">
+			<div>
+				<img src="../../../../assets/images/companies/dekra-platinum-logo.svg" alt="Dekra Logo" class="dekra-logo" />
+			</div>
+			<div class="dekra-text">DEKRA PLATINUM</div>
+		</div>
+
+		<div *ngIf="isDekraLoading">
+			<cust-loader fontSize="24px"></cust-loader>
+		</div>
+	</button>
+	<p class="noDekra" *ngIf="!hasDekraReport">No Report Available</p>
+</div>

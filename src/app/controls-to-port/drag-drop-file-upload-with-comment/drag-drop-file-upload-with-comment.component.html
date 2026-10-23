@@ -1,0 +1,28 @@
+<div class="container" appDragAndDropFilesWithComment (fileDropped)="handleFilesDropped($event)">
+	<div class="exit" *ngIf="!isInDialog" (click)="onClose()">
+		<span class="k-icon k-i-close"></span>
+	</div>
+
+	<div>
+		<div *ngIf="files.length > 0" class="uploaded-files">
+			<div style="color: #f47920; margin-bottom: 10px">Attached files</div>
+			<div *ngFor="let file of files">{{ file.name }}</div>
+		</div>
+
+		<div>
+			<input type="file" id="fileDropRef" #fileDropRef multiple [accept]="filesToAccept" (change)="handleFilesDropped($event.target.files)" />
+			<span class="k-icon k-i-file"></span>
+			<h3>Drag and drop file here</h3>
+			<h3>or</h3>
+			<label for="fileDropRef">Browse for file</label>
+		</div>
+	</div>
+</div>
+
+<div>
+	<div class="stretch-column-stretch">
+		<kendo-floatinglabel [text]="'New comment'" class="flex-wide">
+			<textarea class="flex-wide" kendoTextArea [autoSize]="true" [(ngModel)]="newComment" (change)="handleAddedComment($event.currentTarget.value)"></textarea>
+		</kendo-floatinglabel>
+	</div>
+</div>

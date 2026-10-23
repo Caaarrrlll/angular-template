@@ -1,0 +1,40 @@
+<!-- <div [ngClass]="row ? 'kv-container-row' : 'kv-container'"> -->
+<div [ngClass]="alignRight ? 'right kv-container-row' : 'kv-container-row'">
+	<div
+		*ngIf="key"
+		[title]="keyTitle ? keyTitle : ''"
+		[ngClass]="{
+			key: true,
+			bold: !boldValue,
+			red: keyColor == 'red',
+			orange: keyColor == 'orange',
+			green: keyColor == 'green'
+		}"
+	>
+		{{ key }}:
+	</div>
+	<div
+		[title]="title ? title : ''"
+		[ngClass]="{
+			value: true,
+			bold: boldValue,
+			red: valueColor == 'red',
+			orange: valueColor == 'orange',
+			green: valueColor == 'green'
+		}"
+		class="center-align"
+	>
+		{{ value }}
+		<span
+			*ngIf="valPercent !== null"
+			[ngStyle]="{
+				padding: '0 5px',
+				color: valPercent > 0 ? 'red' : valPercent < 0 ? 'green' : 'black'
+			}"
+		>
+			({{ valPercent | percent }})
+		</span>
+		<mat-icon *ngIf="showEdit" (click)="editField()" class="show-pointer icon-size material-icons-outlined">edit</mat-icon>
+		<mat-icon *ngIf="showView" (click)="viewField()" class="show-pointer icon-size material-icons-outlined">visibility</mat-icon>
+	</div>
+</div>

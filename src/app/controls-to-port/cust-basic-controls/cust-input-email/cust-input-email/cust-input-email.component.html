@@ -1,0 +1,5 @@
+<mat-form-field appearance="fill">
+	<mat-label>{{ inputObj.label }}</mat-label>
+	<input type="email" [formControl]="inputControl" matInput placeholder="{{ inputObj.placeholder }}" [readonly]="inputObj.isReadOnly" />
+	<mat-error *ngIf="inputControl.invalid">Invalid email address</mat-error>
+</mat-form-field>

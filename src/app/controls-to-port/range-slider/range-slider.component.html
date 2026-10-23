@@ -1,0 +1,76 @@
+<div class="sliderDiv">
+	<div class="sliderInnerDiv">
+		<mat-slider
+			class="mat-range-slider mat-range-min-slider"
+			[disabled]="disabled"
+			[color]="color"
+			[invert]="false"
+			[min]="min"
+			[max]="max"
+			[step]="step"
+			[thumbLabel]="false"
+			[displayWith]="displayWith"
+			[vertical]="vertical"
+			(change)="minUpdated($event)"
+			[value]="values.minValue"
+		>
+		</mat-slider>
+	</div>
+	<div class="sliderInnerDiv">
+		<mat-slider
+			class="mat-range-slider mat-range-max-slider"
+			[disabled]="disabled"
+			[color]="color"
+			[invert]="false"
+			[min]="values.minValue"
+			[max]="max"
+			[step]="step"
+			[thumbLabel]="false"
+			[displayWith]="displayWith"
+			[vertical]="vertical"
+			(change)="maxUpdated($event)"
+			[value]="values.maxValue"
+		>
+		</mat-slider>
+	</div>
+</div>
+<br />
+<div class="inputDiv">
+	<mat-form-field class="rangeInput" appearance="outline">
+		<mat-label>Min</mat-label>
+		<input
+			matInput
+			placeholder="Min"
+			type="number"
+			[disabled]="disabled"
+			[step]="step"
+			[min]="min"
+			[max]="values.maxValue - 1"
+			[value]="values.minValue"
+			(input)="minInputUpdated($event)"
+		/>
+		<mat-hint *ngIf="prefix" matPrefix>{{ unit }}</mat-hint>
+		<mat-hint *ngIf="suffix" matSuffix>{{ unit }}</mat-hint>
+	</mat-form-field>
+	-
+	<mat-form-field class="rangeInput" appearance="outline">
+		<mat-label>Max</mat-label>
+		<input
+			matInput
+			placeholder="Max"
+			type="number"
+			[disabled]="disabled"
+			[step]="step"
+			[min]="values.minValue + 1"
+			[max]="max"
+			[value]="values.maxValue"
+			(input)="maxInputUpdated($event)"
+		/>
+		<mat-hint *ngIf="prefix" matPrefix>{{ unit }}</mat-hint>
+		<mat-hint *ngIf="suffix" matSuffix>{{ unit }}</mat-hint>
+	</mat-form-field>
+</div>
+
+<div style="text-align: center">
+	<mat-error *ngIf="values.minValue >= values.maxValue"> Range is not valid </mat-error>
+</div>

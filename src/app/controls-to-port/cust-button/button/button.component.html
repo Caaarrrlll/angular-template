@@ -1,0 +1,27 @@
+<button
+	(click)="clicked($event)"
+	[disabled]="disabled || loading"
+	matRipple
+	[matRippleDisabled]="disabled || loading"
+	class="cust-button"
+	[class]="color"
+	[ngClass]="{ disabled: disabled, loading: loading }"
+	[ngStyle]="{
+		'font-size': fontSize,
+		'font-weight': fontWeight,
+		padding: padding,
+		width: width,
+		margin: margin,
+		display: display,
+		'align-items': alignItems
+	}"
+	#target
+>
+	{{ value }}
+	<cust-loader *ngIf="loading" class="btnLoader" fontSize="{{ fontSize }} "></cust-loader>
+	<div *ngIf="numberOfClicks === 1" class="progress-bar" [class]="color"></div>
+	<div *ngIf="icon != ''" class="icon" style="display: flex">
+		<mat-icon [color]="iconColor" [style]="iconStyle">{{ icon }}</mat-icon>
+	</div>
+	<kendo-contextmenu [target]="target" [items]="menuItems" (select)="onSelect($event)"> </kendo-contextmenu>
+</button>

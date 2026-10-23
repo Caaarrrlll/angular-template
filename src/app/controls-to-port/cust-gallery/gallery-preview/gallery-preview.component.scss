@@ -1,0 +1,93 @@
+.galleryPreviewContainer {
+	display: flex;
+	justify-content: center;
+}
+
+.galleryPreviewImageRow {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.galleryPreviewImageContainer {
+	display: inline-block;
+	width: 100%;
+	flex-shrink: 0;
+	margin: 3px;
+}
+
+.galleryPreviewControlButtonPrev {
+	height: 60px;
+	width: 60px;
+	display: flex;
+	align-self: center;
+	justify-content: center;
+}
+
+.galleryPreviewControlButtonNext {
+	height: 60px;
+	width: 60px;
+	display: flex;
+	align-self: center;
+	justify-content: center;
+}
+
+.galleryPreviewNavButton {
+	border-radius: 30px;
+	border: none;
+	height: 50px;
+	width: 50px;
+	color: #fff;
+	background-color: rgb(180 180 180 / 15%);
+	margin: 0px 5px;
+	display: flex;
+	align-self: center;
+	justify-content: center;
+}
+
+.galleryPreviewNavButton:hover {
+	cursor: pointer;
+	background-color: rgb(180 180 180 / 35%);
+}
+
+.galleryPreviewNavButton:disabled:hover {
+	cursor: default;
+	background-color: rgb(180 180 180 / 15%);
+}
+
+.galleryPreviewSvgIcon {
+	max-width: 100%;
+	height: 100%;
+	margin: auto;
+	display: flex;
+}
+
+.galleryPreviewSvgIconOrange {
+	filter: invert(55%) sepia(59%) saturate(2200%) hue-rotate(347deg) brightness(98%) contrast(95%);
+}
+
+.galleryPreviewImage {
+	background-position: center;
+	background-size: cover;
+	margin: 2px;
+	border-radius: 3px;
+}
+
+.galleryPreviewImage:hover {
+	cursor: pointer;
+}
+
+.galleryPreviewActiveImage {
+	border: 2px solid #f47920;
+	margin: 0px;
+}
+
+.generalGalleryPreviewBtn {
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

@@ -1,0 +1,81 @@
+<ng-container>
+	<ng-container *ngIf="type.display?.length >= 29">
+		<div>Button name '{{ type.display }}' is to long, stopping. The button name must be less than 29. Please fix your code</div>
+	</ng-container>
+
+	<ng-container *ngIf="type.display?.length < 29">
+		<button
+			*ngIf="type.display?.length == 0"
+			[disabled]="type.disabled"
+			(click)="onClick(type.value, $event)"
+			class="icon-button-container icon-container"
+			[class]="buttonClass"
+			matTooltip="{{ type.tooltip }}"
+		>
+			<ng-container *ngIf="type.loading">
+				<cust-loader></cust-loader>
+			</ng-container>
+			<div *ngIf="!type.loading" class="icon-container" style="width: 20px; height: 20px; padding-right: 3px">
+				<mat-icon>{{ type.icon }}</mat-icon>
+			</div>
+		</button>
+
+		<button
+			*ngIf="type.display?.length != 0"
+			[class]="buttonClass"
+			[disabled]="type.disabled"
+			(click)="onClick(type.value)"
+			class="button-container button-width-ext"
+			style="--button-padding: {{ buttonPadding }};--font-size: {{ buttonFontSize }}; --button-height: {{ buttonHeight }};--button-width: {{
+				type.width
+			}};font-family: Poppins, sans-serif"
+			matTooltip="{{ type.tooltip }}"
+		>
+			<ng-container *ngIf="type.icon?.length > 0 && type.iconSide == 'left' && !type.loading">
+				<div class="icon-container" style="padding-left: 4px">
+					<mat-icon>{{ type.icon }}</mat-icon>
+				</div>
+				<ng-container *ngIf="type.display?.length > 0">
+					<div
+						[style]="{
+							'padding-left': type.isTableButton ? '4px' : '8px',
+							'padding-right': type.isTableButton ? '4px' : '8px'
+						}"
+					>
+						{{ type.display.toUpperCase() }}
+					</div>
+				</ng-container>
+			</ng-container>
+			<ng-container *ngIf="type.icon?.length > 0 && type.iconSide == 'right' && !type.loading">
+				<ng-container *ngIf="type.display?.length > 0">
+					<div
+						[style]="{
+							'padding-left': type.isTableButton ? '4px' : '8px',
+							'padding-right': type.isTableButton ? '4px' : '8px'
+						}"
+					>
+						{{ type.display.toUpperCase() }}
+					</div>
+				</ng-container>
+				<div class="icon-container" style="padding-right: 4px">
+					<mat-icon>{{ type.icon }}</mat-icon>
+				</div>
+			</ng-container>
+
+			<ng-container *ngIf="type.display?.length > 0 && !type.iconSide && !type.loading">
+				<div
+					[style]="{
+						'padding-left': type.isTableButton ? '4px' : '8px',
+						'padding-right': type.isTableButton ? '4px' : '8px'
+					}"
+				>
+					{{ type.display.toUpperCase() }}
+				</div>
+			</ng-container>
+
+			<ng-container *ngIf="type.loading">
+				<cust-loader></cust-loader>
+			</ng-container>
+		</button>
+	</ng-container>
+</ng-container>

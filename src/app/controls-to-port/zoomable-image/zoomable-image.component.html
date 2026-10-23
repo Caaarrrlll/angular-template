@@ -1,0 +1,47 @@
+<div class="img-zoom-container flex" style="height: 100%" (mouseleave)="showZoomLens = false" [ngClass]="{ fullscreen: showLightbox }">
+	<div class="flex" style="justify-content: center; height: 100%; width: 100%">
+		<div #zoomContainer style="align-self: center; text-align: center; height: 100%; display: flex; justify-content: center; align-items: center">
+			<img *ngIf="src" [src]="src" alt="Image unavailable" (mousemove)="moveLens($event)" #image (click)="showLightbox = true" />
+		</div>
+
+		<div class="img-controls">
+			<span>{{ count }}</span>
+		</div>
+		<div class="actions">
+			<div class="nav-icon" *ngIf="!showLightbox">
+				<mat-icon (click)="showLightbox = !showLightbox">fullscreen</mat-icon>
+			</div>
+			<div class="nav-icon" [ngClass]="{ active: showZoomLens }">
+				<mat-icon (click)="initZoom()">zoom_in</mat-icon>
+			</div>
+		</div>
+		<div class="close" *ngIf="showLightbox">
+			<div class="nav-icon">
+				<mat-icon class="icon" (click)="showLightbox = !showLightbox">close</mat-icon>
+			</div>
+		</div>
+
+		<div class="direction left" title="Previous Image" (click)="prev.emit()">
+			<div class="nav-icon">
+				<mat-icon class="icon">chevron_left</mat-icon>
+			</div>
+		</div>
+		<div class="direction right" title="Next Image" (click)="next.emit()">
+			<div class="nav-icon">
+				<mat-icon class="icon">chevron_right</mat-icon>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="src" [hidden]="!showZoomLens" class="img-zoom-lens" [style.left]="lensLeft" [style.top]="lensTop" #lens></div>
+	<div
+		*ngIf="src"
+		[hidden]="!showZoomLens"
+		class="img-zoom-result"
+		[style.background-image]="backgroundImage"
+		[style.backgroundSize]="backgroundSize"
+		[style.backgroundPosition]="backgroundPosition"
+		[style.left]="resultLeft"
+		[style.top]="resultTop"
+		#result
+	></div>
+</div>

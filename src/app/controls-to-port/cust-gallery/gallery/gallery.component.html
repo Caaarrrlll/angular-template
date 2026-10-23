@@ -1,0 +1,155 @@
+<!-- <div style="display: flex; height: 100%; width: 100%; "> -->
+
+<div id="fullScreen" class="outerGalleryContainer">
+	<div
+		class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerPrev"
+		[ngClass]="{ galleryNavButtonContainerPrevFS: fullscreenOpen }"
+		(click)="prev()"
+		#prevDiv
+	>
+		<button *ngIf="arrLength > 1 && !onlyShowPreview" class="generalGalleryBtn galleryNavButton prevButton" matRipple [matRippleTrigger]="prevDiv">
+			<img
+				style="width: 50%"
+				src="../../../../assets/images/gallery-icons/prev.svg"
+				alt="Previous"
+				class="gallerySvgIcon"
+				[ngClass]="{ gallerySvgIconOrange: orangeIcons }"
+			/>
+		</button>
+	</div>
+
+	<div
+		#galleryContainer
+		class="galleryImageContainer"
+		[ngClass]="{
+			galleryContainerBorder: border && !onlyShowPreview,
+			galleryImageContainerFillWidth: galleryWidth === 'fillWidth' || fullscreenOpen,
+			noImageGalleryContainer: onlyShowPreview
+		}"
+		(mousewheel)="horizontalScroll($event)"
+		(swiperight)="prev()"
+		(swipeleft)="next()"
+	>
+		<div
+			class="galleryControlsContainerTop galleryControlsContainerTopLeft"
+			[ngClass]="{ galleryControlsContainerTopLeftFS: fullscreenOpen }"
+			*ngIf="!onlyShowPreview && fullscreenOpen"
+		>
+			<button (click)="toggleZoomBox()" class="generalGalleryBtn galleryNavButton" matRipple>
+				<img
+					*ngIf="!imageZoom"
+					style="width: 50%"
+					src="../../../../assets/images/gallery-icons/zoom-in.svg"
+					alt="Image Zoom"
+					class="gallerySvgIcon"
+					[ngClass]="{ gallerySvgIconOrange: orangeIcons }"
+				/>
+				<img
+					*ngIf="imageZoom"
+					style="width: 50%"
+					src="../../../../assets/images/gallery-icons/zoom-out.svg"
+					alt="Image Zoom"
+					class="gallerySvgIcon"
+					[ngClass]="{ gallerySvgIconOrange: orangeIcons }"
+				/>
+			</button>
+		</div>
+
+		<span
+			id="galleryZoomBox"
+			class="galleryZoomBox"
+			[ngStyle]="{ 'background-image': 'url(' + currentImage?.url ? currentImage?.url : currentImage['imageURLs'][0] + ')' }"
+		></span>
+
+		<img
+			id="mainGalleryImage"
+			(load)="onImageLoad()"
+			[src]="(currentImage?.url ? currentImage?.url : currentImage['imageURLs'][0]) | safe"
+			[alt]="currentImage.title"
+			[ngStyle]="{ 'object-fit': imageSize }"
+			[title]="currentImage?.description"
+			[cursorFollowZoom]="imageZoom && fullscreenOpen"
+			*ngIf="!flatView"
+		/>
+		<div *ngIf="flatView" style="margin: auto; display: flex; padding: 20px; width: 100%" [ngStyle]="{ 'background-color': fullscreenOpen ? 'white' : 'none' }">
+			<app-evaluation-comparison style="display: flex; margin: auto" [buyleadCode]="stockNumber" [flatViewCompare]="flatViewCompare"></app-evaluation-comparison>
+		</div>
+
+		<div class="galleryPagerScollContainer" #pagerScrollContainer (mousewheel)="pagerHorizontalScroll($event)" *ngIf="!onlyShowPreview">
+			<div class="galleryPager">
+				<span
+					*ngFor="let image of images; let i = index"
+					class="generalGalleryBtn galleryPagerButton"
+					[ngClass]="{ selectedGalleryPagerButton: i === currentIndex }"
+					(click)="navigateToIndex(i)"
+				></span>
+			</div>
+		</div>
+
+		<div class="galleryControlsContainer galleryControlsContainerLeft" [ngClass]="{ galleryControlsContainerLeftFS: fullscreenOpen }" *ngIf="!onlyShowPreview">
+			<button *ngIf="showAutoplay && arrLength > 1 && !autoplayGo" (click)="toggleAutoplay()" class="generalGalleryBtn galleryNavButton" matRipple>
+				<img
+					style="width: 50%"
+					src="../../../../assets/images/gallery-icons/play.svg"
+					alt="Play"
+					class="gallerySvgIcon"
+					[ngClass]="{ gallerySvgIconOrange: orangeIcons }"
+				/>
+			</button>
+			<button *ngIf="showAutoplay && arrLength > 1 && autoplayGo" (click)="toggleAutoplay()" class="generalGalleryBtn galleryNavButton" matRipple>
+				<img
+					style="width: 50%"
+					src="../../../../assets/images/gallery-icons/pause.svg"
+					alt="Pause"
+					class="gallerySvgIcon"
+					[ngClass]="{ gallerySvgIconOrange: orangeIcons }"
+				/>
+			</button>
+		</div>
+		<div class="galleryControlsContainer galleryControlsContainerRight" [ngClass]="{ galleryControlsContainerRightFS: fullscreenOpen }" *ngIf="!onlyShowPreview">
+			<button *ngIf="!fullscreenOpen" (click)="toggleFullScreen()" class="generalGalleryBtn galleryNavButton" matRipple>
+				<img
+					style="width: 50%"
+					src="../../../../assets/images/gallery-icons/full-screen.svg"
+					alt="Fullscreen"
+					class="gallerySvgIcon"
+					[ngClass]="{ gallerySvgIconOrange: orangeIcons }"
+				/>
+			</button>
+			<button *ngIf="fullscreenOpen" (click)="toggleFullScreen()" class="generalGalleryBtn galleryNavButton" matRipple>
+				<img
+					style="width: 50%"
+					src="../../../../assets/images/gallery-icons/small-screen.svg"
+					alt="Exit Fullscreen"
+					class="gallerySvgIcon"
+					[ngClass]="{ gallerySvgIconOrange: orangeIcons }"
+				/>
+			</button>
+		</div>
+	</div>
+
+	<div
+		class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerNext"
+		[ngClass]="{ galleryNavButtonContainerNextFS: fullscreenOpen }"
+		(click)="next()"
+		#nextDiv
+	>
+		<button *ngIf="arrLength > 1 && !onlyShowPreview" class="generalGalleryBtn galleryNavButton nextButton" matRipple [matRippleTrigger]="nextDiv">
+			<img style="width: 50%" src="../../../../assets/images/gallery-icons/next.svg" alt="Next" class="gallerySvgIcon" [ngClass]="{ gallerySvgIconOrange: orangeIcons }" />
+		</button>
+	</div>
+</div>
+
+<div class="galleryPreviewContainer" *ngIf="showGalleryPreview && arrLength > 0 && !fullscreenOpen">
+	<cust-gallery-preview
+		(imageSelected)="navigateToIndex($event)"
+		[images]="images"
+		[imageWidth]="galleryPreviewImageMaxWidth"
+		[totalWidth]="galleryContainerWidth"
+		[activeImageIndex]="currentIndex"
+		[onlyShowPreview]="onlyShowPreview"
+		[orangeIcons]="orangeIcons"
+	>
+	</cust-gallery-preview>
+</div>
+<!-- </div> -->

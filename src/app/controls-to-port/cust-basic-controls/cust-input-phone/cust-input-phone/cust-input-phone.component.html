@@ -1,0 +1,5 @@
+<mat-form-field appearance="fill">
+	<mat-label>{{ inputObj.label }}</mat-label>
+	<input type="phone" [formControl]="inputControl" matInput placeholder="{{ inputObj.placeholder }}" [readonly]="inputObj.isReadOnly" />
+	<mat-error *ngIf="inputControl.invalid">Invalid phone number</mat-error>
+</mat-form-field>

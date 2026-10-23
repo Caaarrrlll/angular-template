@@ -176,6 +176,9 @@ Update the summary whenever a control is finalised.
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
 | Drag drop file upload | `drag-drop-file-upload/` | Pending | |
+| Card table | `card-table/` (migrated to `src/app/controls/components/card-table`) | Pending | Convert to standalone component. |
+| Table | `table/` (migrated to `src/app/controls/components/table`) | Pending | Convert to standalone component. |
+| Tabs | `tabs/` (migrated to `src/app/controls/components/tabs`) | Pending | Convert to standalone component. |
 | Drag drop file upload with comment | `drag-drop-file-upload-with-comment/` | Pending | |
 | Dynamic material dialog | `dynamic-material-dialog/` | Pending | |
 | Dynamic window | `dynamic-window/` | Pending | |

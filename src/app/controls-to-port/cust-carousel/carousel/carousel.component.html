@@ -1,0 +1,32 @@
+<div [ngClass]="'carousel-container-' + preview">
+	<div [ngClass]="'vehicle-imgs-preview-' + preview">
+		<img
+			*ngFor="let img of images; index as i"
+			[src]="img.url | safe"
+			alt="Image unavailable"
+			class="thumbnail flex-wide"
+			(click)="selectedImg = i"
+			[ngClass]="{
+				selected: selectedImg == i,
+				selectedNext: selectedImg + 1 == i,
+				'thumbnail-left': preview == 'left',
+				'thumbnail-bottom': preview == 'bottom',
+				'thumbnail-right': preview == 'right'
+			}"
+		/>
+	</div>
+	<div [ngClass]="'vehicle-imgs-' + preview">
+		<div class="selected-image">
+			<app-zoomable-image
+				*ngIf="images"
+				[src]="images[selectedImg]?.url | safe"
+				[title]="images[selectedImg]?.name | spaceBetweenUppercase"
+				style="height: 100%; width: 100%"
+				[count]="selectedImg + 1 + ' of ' + images.length"
+				(prev)="prev()"
+				(next)="next()"
+			>
+			</app-zoomable-image>
+		</div>
+	</div>
+</div>

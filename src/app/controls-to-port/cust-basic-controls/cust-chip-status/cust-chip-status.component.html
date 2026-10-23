@@ -1,0 +1,14 @@
+<mat-chip-list>
+	<mat-chip
+		class="chip-button"
+		[ngClass]="[chipStatus[type], !showSolid ? 'default-background' : 'solid']"
+		[style]="{
+			'--color': showSolid ? '#fff' : '#18242e',
+			'--chip-height': isSmall ? '16px' : '25px',
+			'--fontSize': isSmall ? '8px' : '12px',
+			'--font-weight': showSolid ? '400' : '700'
+		}"
+	>
+		<div>{{ text }}</div>
+	</mat-chip>
+</mat-chip-list>

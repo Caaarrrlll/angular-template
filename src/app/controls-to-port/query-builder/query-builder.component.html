@@ -1,0 +1,156 @@
+<ng-template #recursiveRule let-ruleSet="ruleSet" let-parentRuleSet="parentRuleSet" let-ruleSetIndex="ruleSetIndex">
+	<div class="button-container">
+		<!-- AND OR toggle buttons -->
+		<ng-container>
+			<mat-button-toggle-group name="fontStyle" aria-label="Font Style" [disabled]="disabled">
+				<mat-button-toggle [checked]="ruleSet.ruleSetLogic === 'AND'" checked value="bold" (click)="ruleSetLogicChange(ruleSet, 'AND')"> AND </mat-button-toggle>
+				<mat-button-toggle [checked]="ruleSet.ruleSetLogic === 'OR'" value="italic" (click)="ruleSetLogicChange(ruleSet, 'OR')"> OR </mat-button-toggle>
+			</mat-button-toggle-group>
+		</ng-container>
+
+		<!-- Add Rule & RuleSet buttons -->
+		<ng-container>
+			<span class="rule-actions-container">
+				<ng-container *ngIf="disabled">
+					<cust-button-tertiary
+						[type]="{
+							iconSide: 'left',
+							icon: 'add',
+							tooltip: 'Rule',
+							display: 'Rule',
+							value: 'Rule',
+							disabled: true
+						}"
+					></cust-button-tertiary>
+					<cust-button-tertiary
+						[type]="{
+							iconSide: 'left',
+							icon: 'playlist_add',
+							tooltip: 'RuleSet',
+							display: 'RuleSet',
+							value: 'RuleSet',
+							disabled: true
+						}"
+					></cust-button-tertiary>
+				</ng-container>
+				<ng-container *ngIf="!disabled">
+					<cust-button-tertiary
+						[type]="{
+							iconSide: 'left',
+							icon: 'add',
+							tooltip: 'Rule',
+							display: 'Rule',
+							value: 'Rule',
+							disabled: false
+						}"
+						(buttonClick)="addRule(ruleSet)"
+					></cust-button-tertiary>
+					<cust-button-tertiary
+						[type]="{
+							iconSide: 'left',
+							icon: 'playlist_add',
+							tooltip: 'RuleSet',
+							display: 'RuleSet',
+							value: 'RuleSet',
+							disabled: false
+						}"
+						(buttonClick)="addRuleSet(ruleSet)"
+					></cust-button-tertiary>
+				</ng-container>
+
+				<cust-button-tertiary
+					*ngIf="parentRuleSet !== undefined"
+					[type]="{
+						display: '',
+						icon: 'close',
+						tooltip: 'Close',
+						value: 'Close',
+						disabled: disabled
+					}"
+					(buttonClick)="removeRuleSet(ruleSet, parentRuleSet)"
+				></cust-button-tertiary>
+			</span>
+		</ng-container>
+	</div>
+	<ul class="rules-container">
+		<li *ngFor="let rule of ruleSet.content" class="rule">
+			<!-- Expression inputs and remove button -->
+			<ng-container *ngIf="rule.type === 'rule'">
+				<span class="rule-input-container">
+					<mat-form-field class="input-control">
+						<mat-select
+							#selectedToken
+							[(ngModel)]="rule.rule.token"
+							[value]="rule.rule.token"
+							[disabled]="disabled"
+							(selectionChange)="selectedTokenChange(ruleSet, rule.rule, $event.value, 'token'); emitChanges()"
+						>
+							<mat-option *ngFor="let token of expressionTokens" [value]="token">{{ token.name }}</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<mat-form-field class="expression-control">
+						<mat-select
+							[(ngModel)]="rule.rule.operator"
+							[value]="rule.rule.operator"
+							[disabled]="disabled"
+							(selectionChange)="selectedOperatorChange(ruleSet, rule.rule, $event.value, 'operator'); emitChanges()"
+						>
+							<mat-option *ngFor="let option of selectedToken?.value?.type?.value" [value]="option">
+								{{ option }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<mat-checkbox
+						*ngIf="selectedToken?.value?.type?.type === 'boolean'"
+						[(ngModel)]="rule.rule.value"
+						[value]="rule.rule.value"
+						[disabled]="disabled"
+						(change)="selectedValueChange(ruleSet, rule.rule, $event.target.value, 'value'); emitChanges()"
+					>
+					</mat-checkbox>
+					<mat-form-field *ngIf="selectedToken?.value?.type?.type !== 'boolean'" class="input-control">
+						<input
+							*ngIf="selectedToken?.value?.type?.type === 'string'"
+							matInput
+							type="text"
+							[(ngModel)]="rule.rule.value"
+							[value]="rule.rule.value"
+							[disabled]="disabled"
+							placeholder="value"
+							(input)="selectedValueChange(ruleSet, rule.rule, $event.target.value, 'value'); emitChanges()"
+						/>
+						<input
+							*ngIf="selectedToken?.value?.type?.type !== 'string' && selectedToken?.value?.type?.type !== 'boolean'"
+							matInput
+							[type]="selectedToken?.value?.type?.type"
+							[(ngModel)]="rule.rule.value"
+							[value]="rule.rule.value"
+							[disabled]="disabled"
+							(input)="selectedValueChange(ruleSet, rule.rule, $event.target.value, 'value'); emitChanges()"
+							placeholder="value"
+						/>
+					</mat-form-field>
+				</span>
+				<cust-button-tertiary
+					[type]="{
+						display: '',
+						icon: 'close',
+						tooltip: 'Close',
+						value: 'Close',
+						disabled: disabled
+					}"
+					(buttonClick)="removeRule(rule, ruleSet.content)"
+				></cust-button-tertiary>
+			</ng-container>
+
+			<!-- RuleSet container that calls itself recursively -->
+			<ng-container *ngIf="rule.type === 'ruleSet'">
+				<div class="width-100">
+					<ng-container *ngTemplateOutlet="recursiveRule; context: { ruleSet: rule.ruleSet, parentRuleSet: ruleSet, ruleSetIndex: i }"></ng-container>
+				</div>
+			</ng-container>
+		</li>
+	</ul>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="recursiveRule; context: { ruleSet: query, parentRuleSet: undefined }"></ng-container>

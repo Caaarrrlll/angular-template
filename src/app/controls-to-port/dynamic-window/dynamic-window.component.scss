@@ -1,0 +1,71 @@
+.loader {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	background: rgba(0, 0, 0, 0.4);
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	padding-top: 10px;
+}
+
+.rotateButton {
+	float: right;
+}
+
+.k-textarea {
+	border: none;
+	border-bottom: rgba(0, 0, 0, 0.42) solid 1px;
+	border-radius: 0;
+}
+
+.k-form-hint {
+	color: rgba(0, 0, 0, 0.42);
+}
+
+.space-between {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.space-between-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+.space-between {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.flex {
+	display: flex;
+}
+
+.row {
+	flex-direction: row;
+}
+
+.j-c-end {
+	justify-content: flex-end;
+}
+
+.j-c-space-between {
+	justify-content: space-between;
+}
+
+.a-i-center {
+	align-items: center;
+}

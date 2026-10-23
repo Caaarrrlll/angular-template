@@ -1,0 +1,28 @@
+<mat-card
+	[style]="{
+		'--card-height': height
+	}"
+>
+	<mat-card-header>
+		<div class="row">
+			<span
+				><b
+					[style]="{
+						'font-size': '17px',
+						'padding-left': '4px',
+						color: '#444C53'
+					}"
+					>{{ title }}</b
+				></span
+			>
+		</div>
+	</mat-card-header>
+	<mat-card-content
+		style="overflow-y: 'auto'"
+		[style]="{
+			height: conentHeight
+		}"
+	>
+		<ng-content></ng-content>
+	</mat-card-content>
+</mat-card>

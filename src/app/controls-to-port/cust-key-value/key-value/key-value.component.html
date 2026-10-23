@@ -1,0 +1,39 @@
+<ng-container *ngIf="sameFontSize && removeValuePadding">
+	<div [ngClass]="row ? 'kv-container-row' : 'kv-container'">
+		<div class="key">{{ key }}</div>
+		<div class="value sameFontSize removePadding" [title]="value">
+			{{ value }}
+			<div *ngIf="showEdit" (click)="editField()" class="k-icon k-i-pencil show-pointer"></div>
+		</div>
+	</div>
+</ng-container>
+
+<ng-container *ngIf="!sameFontSize && removeValuePadding">
+	<div [ngClass]="row ? 'kv-container-row' : 'kv-container'">
+		<div class="key">{{ key }}</div>
+		<div class="value removePadding" [title]="value">
+			{{ value }}
+			<div *ngIf="showEdit" (click)="editField()" class="k-icon k-i-pencil show-pointer"></div>
+		</div>
+	</div>
+</ng-container>
+
+<ng-container *ngIf="sameFontSize && !removeValuePadding">
+	<div [ngClass]="row ? 'kv-container-row' : 'kv-container'">
+		<div class="key">{{ key }}</div>
+		<div class="value sameFontSize" [title]="value">
+			{{ value }}
+			<div *ngIf="showEdit" (click)="editField()" class="k-icon k-i-pencil show-pointer"></div>
+		</div>
+	</div>
+</ng-container>
+
+<ng-container *ngIf="!sameFontSize && !removeValuePadding">
+	<div [ngClass]="row ? 'kv-container-row' : 'kv-container'">
+		<div class="key">{{ key }}</div>
+		<div class="value" [title]="value">
+			{{ value }}
+			<div *ngIf="showEdit" (click)="editField()" class="k-icon k-i-pencil show-pointer"></div>
+		</div>
+	</div>
+</ng-container>

@@ -39,9 +39,11 @@ When multiple solutions exist:
 - Prefer the TypeScript `Array.map` over `Array.forEach` unless explicit side effects are intentional.
 - Declare explicit return types.
 - Strongly type variables and parameters.
+- Prefer `inject()` over constructor parameter injection.
 - Tear down long-lived RxJS subscriptions with `takeUntilDestroyed()` (from `@angular/core/rxjs-interop`); if outside of an injectable context, inject `DestroyRef` and pass it `takeUntilDestroyed(this.destroyRef)`.
 - Do not use `Promise.resolve().then(...)`, `setTimeout`, or `detectChanges()`; prefer using `effect()`, `computed()`, or `afterNextRender` to wait for render effects.
 - When adding logs, do not use the default `console.(log|error|etc)`; inject the logger service in the project.
+- Use the new Angular control flow syntax (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch` in templates.
 
 ## Code Reviews
 
@@ -76,6 +78,7 @@ Do not:
 - `src/app/controls-to-port`: Temporary folder; contains a bunch of code moved from past projects to be consolidated into this project.
 - `src/app/segments`: Contains logical components that fulfil whole ideas; each segment can be seen as a whole feature.
 - `src/app/library`: Contains shared code and, in the future, interceptors, directives, validators, guards and utils.
+- `src/app/library/directives`: Contains reusable directives.
 - `src/app/library/pipes`: Contains reusable pipes and `PIPES_CONTRACTS.md`.
 - `src/app/library/services`: Contains shared services (for example the logger service) and `SERVICES_CONTRACTS.md`.
 - `src/app/library/validators`: Contains reusable validators and `VALIDATORS_CONTRACTS.md`.

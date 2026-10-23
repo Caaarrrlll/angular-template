@@ -1,0 +1,62 @@
+<div class="table-filters">
+	<div class="table-filters">
+		<app-linq-grid-filters
+			[gridFilters]="filters"
+			[showSortButton]="showSortButton"
+			[showAddButton]="showAddButton"
+			[showCustomButton]="showCustomButton"
+			[customButtonTooltip]="customButtonTooltip"
+			[customButtonIcon]="customButtonIcon"
+			[showUpperToggle]="showUpperToggle"
+			[upperToggle]="upperToggle"
+			(refreshClicked)="refreshLeads()"
+			(clearButtonClicked)="filtersClear()"
+			(filterChanged)="updateFilter($event)"
+			(sortChanged)="updateSort($event)"
+			(addButtonClicked)="navigateToCreateLead()"
+			(filterRefresh)="filterRefresh($event)"
+			(customButtonClicked)="customButtonClicked()"
+			(upperToggleChanged)="upperToggleChange()"
+		>
+		</app-linq-grid-filters>
+	</div>
+</div>
+<div class="table-container">
+	<div class="table-wrapper" *ngIf="listObservable | apiResponse | async as leads">
+		<ng-template [ngIf]="!leads.loading">
+			<table mat-table [dataSource]="leads.payload" matSort [matSortActive]="defaultSort" [matSortDirection]="'desc'" (matSortChange)="announceSortChange($event)">
+				<ng-container matColumnDef="lead">
+					<th *matHeaderCellDef mat-header-cell class="sticky-header"></th>
+					<td *matCellDef="let element" mat-cell>
+						<cust-list-card
+							[data]="element"
+							[cardHeader]="cardHeader"
+							[tableButtonConfig]="tableButtonConfig"
+							[tableConfig]="tableConfig"
+							[tablePropertiesConfig]="tablePropertiesConfig"
+							[parentDataProcess]="parentDataProcess"
+							[parentButtonProcess]="parentButtonProcess"
+							[spinner]="spinner"
+							(buttonClick)="buttonAction($event)"
+						></cust-list-card>
+					</td>
+				</ng-container>
+				<tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+				<tr id="{{ row.stockNumber }}" *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+			</table>
+		</ng-template>
+		<mat-progress-bar class="progress-bar" *ngIf="leads.loading" mode="indeterminate"></mat-progress-bar>
+		<ng-template [ngIf]="leads.error">
+			<p style="padding-left: 20px">Error retrieving data from the server</p>
+		</ng-template>
+	</div>
+	<div class="paginator">
+		<mat-paginator
+			(page)="pageChange($event)"
+			[length]="custPage.pageTotal"
+			[pageIndex]="custPage.page"
+			[pageSize]="custPage.pageSize"
+			[pageSizeOptions]="custPage.pageSizeOptions"
+		></mat-paginator>
+	</div>
+</div>

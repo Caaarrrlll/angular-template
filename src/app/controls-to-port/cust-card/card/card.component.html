@@ -1,0 +1,6 @@
+<div class="card" [class.margin]="marginRight" [class.selected]="selected" [class.fill]="fillHeight">
+	<div class="card-sidebar" [ngClass]="color" *ngIf="showSidebar"></div>
+	<div [class.content]="showSidebar">
+		<ng-content></ng-content>
+	</div>
+</div>

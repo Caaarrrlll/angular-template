@@ -1,0 +1,14 @@
+<div>{{ inputObj.label }}</div>
+<mat-button-toggle-group style="width: 100%" name="label" [formControl]="inputControl" [multiple]="inputObj.multiSelect" [value]="inputObj.value">
+	<mat-button-toggle
+		*ngFor="let option of inputObj.inputList; index as i"
+		[value]="option.value"
+		[disabled]="inputObj.isReadOnly || (equalToSelected && option.value === 'and')"
+		class="toggle-button"
+		style="width: 100%"
+		[style]="{
+			'--divider-color': i < inputObj.inputList.length - 1 ? '1px solid #444C53' : 'none'
+		}"
+		>{{ option.display.toUpperCase() }}</mat-button-toggle
+	>
+</mat-button-toggle-group>

@@ -1,0 +1,57 @@
+img {
+	width: 100%;
+}
+
+.noDekra {
+	color: red;
+	font-size: 10px;
+	margin: 1px;
+}
+
+.showImage {
+	display: block !important;
+}
+
+.greyscale {
+	-webkit-filter: grayscale(100%);
+}
+
+.user-icon {
+	color: #fff;
+	height: 30px;
+	width: 30px;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.dekra-button {
+	display: flex;
+	width: max-content !important;
+}
+
+.dekra-logo {
+	display: block !important;
+	height: max-content;
+	margin-right: 6px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.dekra-text {
+	margin-left: 5px;
+	font-size: 17px;
+}
+
+.dekra-button-content {
+	display: flex;
+	align-items: center;
+	width: max-content;
+	height: max-content;
+}
+
+.dekra-button-container {
+	display: flex;
+	width: max-content;
+}

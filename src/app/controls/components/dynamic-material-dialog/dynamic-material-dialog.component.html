@@ -1,0 +1,394 @@
+<div class="dynamic-material-dialog">
+	<h2
+		mat-dialog-title
+		*ngIf="options && options.draggable"
+		cdkDrag
+		cdkDragHandle
+		cdkDragBoundary=".cdk-overlay-container"
+		cdkDragRootElement=".cdk-overlay-pane"
+		style="float: right; cursor: grab"
+	>
+		{{ dialogSetup.title }}<span style="float: right; cursor: pointer"><mat-icon (click)="close('close')">close</mat-icon></span>
+	</h2>
+
+	<h2 mat-dialog-title *ngIf="!options">
+		{{ dialogSetup.title }}<span style="float: right; cursor: pointer"><mat-icon (click)="close('close')">close</mat-icon></span>
+	</h2>
+
+	<div *ngIf="dialogSetup.imageUrl" class="image-wrapper">
+		<img [src]="dialogSetup.imageUrl" alt="Image" />
+	</div>
+
+	<mat-dialog-content>
+		<div *ngIf="dialogSetup.instructionText" class="instruction-text">
+			{{ dialogSetup.instructionText }}
+		</div>
+
+		<form [formGroup]="form" class="form-wrapper">
+			<div *ngFor="let control of dialogSetup.controls" [ngSwitch]="control.type" class="control-wrapper">
+				<div *ngIf="control.instructionText">{{ control.instructionText }}</div>
+
+				<!--            Text Area-->
+				<mat-form-field *ngSwitchCase="formType.TextArea" appearance="legacy">
+					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+					<textarea [formControlName]="control.formName" [placeholder]="control.placeholder" matInput rows="4"></textarea>
+					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+					<mat-error *ngFor="let error of control.validators">
+						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							error.errorMessage
+						}}</ng-template>
+					</mat-error>
+				</mat-form-field>
+
+				<!--            Input-->
+				<div *ngSwitchCase="formType.Input">
+					<mat-form-field appearance="legacy">
+						<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+						<input
+							autocomplete="off"
+							[formControlName]="control.formName"
+							[type]="control.inputType"
+							matInput
+							(input)="controlChange(control)"
+							[(ngModel)]="control.value"
+						/>
+						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+						<mat-error *ngFor="let error of control.validators">
+							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+								error.errorMessage
+							}}</ng-template>
+						</mat-error>
+					</mat-form-field>
+
+					<div *ngIf="control.autoComplete && this.autoCompleteList.length > 0 && this.searchInputName == control.formName">
+						<div style="padding: 5px">Select a buylead below to verify</div>
+						<div class="auto-complete-container">
+							<div *ngFor="let item of this.autoCompleteList" (click)="autoCompleteSet(control, item)" class="auto-complete-line">
+								{{ item }}
+							</div>
+							<mat-spinner *ngIf="showSpinner && this.searchInputName == control.formName" style="margin: 0 auto" [diameter]="30"></mat-spinner>
+						</div>
+					</div>
+				</div>
+
+				<!--            Currency Short Hand-->
+				<mat-form-field *ngSwitchCase="formType.CurrencyShortHand" appearance="legacy">
+					<mat-label>{{
+						!form.controls[control.formName].value
+							? control.label
+							: control.label + " of " + (form.controls[control.formName].value * 1000 | currency : "ZAR" : "symbol-narrow" : "1.0-0")
+					}}</mat-label>
+					<input [formControlName]="control.formName" matInput type="number" />
+					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+					<mat-error *ngFor="let error of control.validators">
+						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							error.errorMessage
+						}}</ng-template>
+					</mat-error>
+				</mat-form-field>
+
+				<!--           Drop Down -->
+				<mat-form-field *ngSwitchCase="formType.DropDown" appearance="legacy">
+					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+					<mat-select
+						[formControlName]="control.formName"
+						[multiple]="control.multiple"
+						[disabled]="control.disabled"
+						(selectionChange)="dropdownChange($event, control.formName)"
+					>
+						<mat-option *ngFor="let option of control.data" [value]="option.value">{{ option.display }}</mat-option>
+					</mat-select>
+					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+					<mat-error *ngFor="let error of control.validators">
+						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							error.errorMessage
+						}}</ng-template>
+					</mat-error>
+				</mat-form-field>
+
+				<!--                Drop Down Group-->
+				<mat-form-field *ngSwitchCase="formType.DropDownGroup" appearance="legacy">
+					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+					<mat-select [formControlName]="control.formName">
+						<mat-optgroup *ngFor="let group of control.groups" [label]="group.groupName">
+							<mat-option *ngFor="let option of group.data" [value]="option.value">{{ option.display }}</mat-option>
+						</mat-optgroup>
+					</mat-select>
+					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+					<mat-error *ngFor="let error of control.validators">
+						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							error.errorMessage
+						}}</ng-template>
+					</mat-error>
+				</mat-form-field>
+
+				<!--            Button Group-->
+				<div *ngSwitchCase="formType.ButtonGroup" class="button-group-wrapper">
+					<cust-button-toggle style="width: 100%" [inputObj]="control" (inputChanged)="inputChange($event, control.formName)"></cust-button-toggle>
+				</div>
+
+				<!--            CUST Button Group-->
+				<div *ngSwitchCase="formType.CUSTButtonGroup" class="button-group-wrapper">
+					<cust-button-toggle
+						style="width: 100%"
+						[inputObj]="control"
+						[equalToSelected]="equalSelected"
+						(inputChanged)="inputChange($event, control.formName)"
+					></cust-button-toggle>
+				</div>
+
+				<!--                Single Date-->
+				<div *ngSwitchCase="formType.SingleDate">
+					<mat-form-field appearance="legacy">
+						<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+						<input
+							[formControlName]="control.formName"
+							[matCalendar]="datepicker"
+							(input)="formatDate(control.formName)"
+							matInput
+							tabindex="-1"
+							[dateTransform]="'yyyy/MM/dd'"
+						/>
+						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+						<mat-error *ngFor="let error of control.validators">
+							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+								error.errorMessage
+							}}</ng-template>
+						</mat-error>
+					</mat-form-field>
+					<mat-calendar #datepicker [(selected)]="selectedDate" (selectedChange)="calendarUpdateControl($event, control.formName)"> </mat-calendar>
+				</div>
+
+				<!--                Single Date String-->
+				<div *ngSwitchCase="formType.SingleDateString">
+					<mat-form-field appearance="legacy">
+						<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+						<input #singleDateStringInput [formControlName]="control.formName" [matDatepicker]="datepicker" matInput tabindex="-1" />
+						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+						<mat-error *ngFor="let error of control.validators">
+							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+								error.errorMessage
+							}}</ng-template>
+						</mat-error>
+					</mat-form-field>
+					<mat-calendar #datepicker [(selected)]="form.get(control.formName).value" (selectedChange)="calendarUpdateControl($event, control.formName)"> </mat-calendar>
+				</div>
+
+				<!--                Range Date-->
+				<mat-form-field *ngSwitchCase="formType.RangeDate" appearance="legacy">
+					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+					<mat-date-range-input [formGroupName]="control.formName" [rangePicker]="rangePicker">
+						<input formControlName="start" matStartDate placeholder="Start date" />
+						<input formControlName="end" matEndDate placeholder="End date" />
+					</mat-date-range-input>
+					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+					<mat-datepicker-toggle [for]="rangePicker" matSuffix></mat-datepicker-toggle>
+					<mat-date-range-picker #rangePicker>
+						<mat-date-range-picker-actions>
+							<button mat-button matDateRangePickerCancel>Cancel</button>
+							<button color="primary" mat-raised-button matDateRangePickerApply>Apply</button>
+						</mat-date-range-picker-actions>
+					</mat-date-range-picker>
+					<mat-error *ngFor="let error of control.validators">
+						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							error.errorMessage
+						}}</ng-template>
+					</mat-error>
+				</mat-form-field>
+
+				<!--                Range Date String-->
+				<mat-form-field *ngSwitchCase="formType.RangeDateString" appearance="legacy">
+					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+					<mat-date-range-input [formGroupName]="control.formName" [rangePicker]="rangePicker">
+						<input formControlName="start" matStartDate placeholder="Start date" />
+						<input formControlName="end" matEndDate placeholder="End date" />
+					</mat-date-range-input>
+					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+					<mat-datepicker-toggle [for]="rangePicker" matSuffix></mat-datepicker-toggle>
+					<mat-date-range-picker #rangePicker>
+						<mat-date-range-picker-actions>
+							<button mat-button matDateRangePickerCancel>Cancel</button>
+							<button color="primary" mat-raised-button matDateRangePickerApply>Apply</button>
+						</mat-date-range-picker-actions>
+					</mat-date-range-picker>
+					<mat-error *ngFor="let error of control.validators">
+						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							error.errorMessage
+						}}</ng-template>
+					</mat-error>
+				</mat-form-field>
+
+				<!--                Date Time Picker-->
+				<div *ngSwitchCase="formType.DateTime" [formGroupName]="control.formName" class="date-time-wrapper">
+					<mat-form-field appearance="legacy">
+						<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+						<input [matDatepicker]="datepicker" formControlName="date" matInput />
+						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+						<mat-datepicker-toggle [for]="datepicker" matSuffix></mat-datepicker-toggle>
+						<mat-datepicker #datepicker>
+							<mat-datepicker-actions>
+								<button mat-button matDatepickerCancel>Cancel</button>
+								<button color="primary" mat-raised-button matDatepickerApply>Apply</button>
+							</mat-datepicker-actions>
+						</mat-datepicker>
+						<mat-error *ngFor="let error of control.validators">
+							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+								error.errorMessage
+							}}</ng-template>
+						</mat-error>
+					</mat-form-field>
+					<mat-form-field>
+						<mat-label>Enter time</mat-label>
+						<input formControlName="time" matInput type="time" />
+						<mat-error *ngFor="let error of control.validators">
+							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+								error.errorMessage
+							}}</ng-template>
+						</mat-error>
+					</mat-form-field>
+				</div>
+
+				<!--           Slider -->
+				<mat-slider
+					*ngSwitchCase="formType.Slider"
+					[formControlName]="control.formName"
+					[max]="control.maxValue"
+					[min]="control.minValue"
+					[step]="control.increment"
+					[thumbLabel]="true"
+				></mat-slider>
+
+				<!--                Check box-->
+				<div *ngSwitchCase="formType.CheckBox" class="checkbox-wrapper">
+					<mat-form-field *ngIf="control.filterable && this.showSearch">
+						<mat-label>Search</mat-label>
+						<input [formControl]="searchControl" matInput />
+					</mat-form-field>
+					<app-checkbox-group [formControlName]="control.formName" [multi]="control.multi" class="checkbox-group">
+						<app-checkbox *ngFor="let option of filteredData | async" [value]="option.value" (click)="rangeClicked(option)">{{ option.display }}</app-checkbox>
+					</app-checkbox-group>
+				</div>
+
+				<!--                Check box Range-->
+				<div *ngSwitchCase="formType.CheckBoxRange" class="checkbox-wrapper">
+					<mat-form-field *ngIf="control.filterable && this.showSearch">
+						<mat-label>Search</mat-label>
+						<input [formControl]="searchControl" matInput />
+					</mat-form-field>
+					<app-range-checkbox-group [formControlName]="control.formName" [multi]="control.multi" class="checkbox-group">
+						<app-range-checkbox *ngFor="let option of filteredData | async" [value]="option.range" (click)="rangeClicked(option)">{{
+							option.display
+						}}</app-range-checkbox>
+					</app-range-checkbox-group>
+				</div>
+
+				<!--                Radio Button-->
+				<div *ngSwitchCase="formType.Radio" class="checkbox-wrapper">
+					<mat-form-field *ngIf="this.showSearch">
+						<mat-label>Search</mat-label>
+						<input [formControl]="searchControl" matInput />
+					</mat-form-field>
+					<mat-radio-group class="dynamic-radio-group" [formControlName]="control.formName">
+						<mat-radio-button class="dynamic-radio-button" *ngFor="let option of filteredData | async" [value]="option.value">{{ option.display }}</mat-radio-button>
+					</mat-radio-group>
+				</div>
+
+				<!-- Approval -->
+				<div *ngSwitchCase="formType.Approval">
+					<div class="space-between-row">
+						<button mat-raised-button color="accent" fontSize="15px" padding="10px 15px" margin="30px 0px 0px 0px" (click)="submitApproval('Reject')">
+							{{ control.rejectText }}
+						</button>
+						<button
+							mat-raised-button
+							color="primary"
+							fontSize="15px"
+							padding="10px 15px"
+							margin="30px 0px 0px 0px"
+							(click)="submitApproval('Approve')"
+							[disabled]="form.invalid"
+						>
+							{{ control.approveText }}
+						</button>
+					</div>
+				</div>
+
+				<!--            Address-->
+				<mat-form-field *ngSwitchCase="formType.Address" appearance="legacy">
+					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+					<input
+						#mapSearchField
+						autocomplete="off"
+						[formControlName]="control.formName"
+						type="search"
+						autocorrect="off"
+						spellcheck="off"
+						(keydown.enter)="allowManualInput ? null : $event.preventDefault()"
+						[value]="control.value"
+						matInput
+					/>
+					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+					<mat-error *ngFor="let error of control.validators">
+						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							error.errorMessage
+						}}</ng-template>
+					</mat-error>
+				</mat-form-field>
+				<ng-container *ngSwitchCase="formType.Upload">
+					<div class="container" appDragAndDropFiles (fileDropped)="handleFilesDropped($event)">
+						<div *ngIf="files.length > 0" class="uploaded-files">
+							<div style="color: #f47920; margin-bottom: 10px">Attached files</div>
+							<div *ngFor="let file of files">{{ file.name }}</div>
+						</div>
+
+						<div>
+							<mat-form-field>
+								<input
+									type="file"
+									matInput
+									id="fileDropRef"
+									[formControlName]="control.formName"
+									#fileDropRef
+									[accept]="filesToAccept"
+									(change)="handleFilesDropped($event.target.files)"
+								/>
+							</mat-form-field>
+							<span class="k-icon k-i-file"></span>
+							<label for="fileDropRef">Browse for file</label>
+						</div>
+					</div>
+				</ng-container>
+
+				<mat-form-field *ngSwitchCase="formType.Numeric" appearance="legacy">
+					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
+					<input
+						autocomplete="off"
+						[formControlName]="control.formName"
+						[type]="control.inputType"
+						matInput
+						(input)="controlChange(control)"
+						[(ngModel)]="control.value"
+						MinMax
+					/>
+					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
+					<mat-error *ngFor="let error of control.validators">
+						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							error.errorMessage
+						}}</ng-template>
+					</mat-error>
+				</mat-form-field>
+			</div>
+		</form>
+	</mat-dialog-content>
+
+	<mat-dialog-actions
+		*ngIf="!dialogSetup.hideBackButton || !dialogSetup.hideSubmitButton"
+		[ngStyle]="{ 'justify-content': dialogSetup.hideBackButton ? 'right' : 'space-between' }"
+		style="display: flex"
+	>
+		<button (click)="actions(dialogSetup.backButtonText)" *ngIf="!dialogSetup.hideBackButton" mat-stroked-button>
+			{{ dialogSetup.backButtonText }}
+		</button>
+		<button (click)="save()" *ngIf="!dialogSetup.hideSubmitButton" color="primary" mat-flat-button>{{ dialogSetup.submitButtonText }}</button>
+	</mat-dialog-actions>
+</div>

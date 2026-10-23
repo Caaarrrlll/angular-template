@@ -1,0 +1,372 @@
+<mat-card>
+	<mat-card-header>
+		<div class="row">
+			<div *ngFor="let headCol of carHeaders" class="column-header" style="--alignment: {{ headCol.alignment }};">
+				<div class="no-wrap-text header-text" *ngIf="headCol.type == 'Display'">
+					<b
+						[style]="{
+							'font-size': headCol.fontSize ? headCol.fontSize : '16px',
+							'padding-left': '4px'
+						}"
+					>
+						<span *ngIf="headCol.textPre" class="header-pre-text">{{ headCol.textPre }}</span>
+
+						<span *ngIf="headCol.textPre && headCol.text.length > 0" class="header-pre-text-devider">|</span>
+
+						<mat-icon *ngIf="headCol.icon" class="header-icons">{{ headCol.icon }}</mat-icon>
+
+						<span *ngIf="headCol.textPre" class="header-with-pre-text no-wrap-text" title="{{ headCol.text }}"
+							>{{ headCol.text.substr(0, headCol.length ? headCol.length : 40) }}<i *ngIf="headCol.text.length > (headCol.length ? headCol.length : 40)">...</i></span
+						>
+
+						<span
+							*ngIf="!headCol.textPre"
+							[style]="{
+								color: headCol.textColor ? headCol.textColor : '#000'
+							}"
+							>{{ headCol.text }}</span
+						>
+
+						<span *ngIf="headCol.textExtended" class="header-pre-text-devider">|</span>
+						<span
+							*ngIf="headCol.textExtended"
+							[style]="{
+								color: headCol.textColor ? headCol.textColor : '#000'
+							}"
+							>{{ headCol.textExtended }}</span
+						>
+					</b>
+				</div>
+				<div *ngIf="headCol.type == 'status'">
+					<span *ngIf="headCol.text.length" class="column-header-status" style="--alignment: {{ headCol.alignment }}">
+						<span class="header-date-display" *ngIf="headCol.postText?.length">
+							<b>{{ headCol.postLable }}: </b> {{ headCol.postText | date : userSettingsModel.dateFormat }}
+							<b class="header-pre-text-devider">|</b>
+						</span>
+						<cust-chip-status [text]="headCol.text" [type]="headCol.statusType"> </cust-chip-status>
+					</span>
+				</div>
+				<div *ngIf="headCol.type == 'chipsStatus'">
+					<span *ngIf="headCol.text.length" class="column-header-status">
+						<cust-chip-status [text]="headCol.text" [type]="headCol.statusType" [showSolid]="'false'" [isSmall]="false"> </cust-chip-status>
+					</span>
+				</div>
+			</div>
+		</div>
+	</mat-card-header>
+	<mat-card-content>
+		<div
+			class="card-height"
+			[style]="{
+				'--height': tablePropertiesConfig[0].height ? tablePropertiesConfig[0].height : maxLines * 30 + 'px'
+			}"
+		>
+			<div
+				*ngFor="let row of cardRows"
+				class="{{ row.colSCSS }} {{ cardHeight }} col-left column"
+				style="--alignment: 'left'"
+				[style]="{
+					'--col-width': !row.width ? (row.width > 0 ? 100 / row.width.length - 0.2 + '%' : '100%') : row.width,
+					'--height': tablePropertiesConfig[0].height ? tablePropertiesConfig[0].height : maxLines * 30 + 'px'
+				}"
+			>
+				<ng-container *ngIf="row.item[row.item.length - 1].type == 'button'">
+					<div class="main-button-container main-button-container-width">
+						<div
+							class="main-button-style"
+							[style]="{
+								'--height': maxLines * 30 + 18 + 'px'
+							}"
+							[ngClass]="row.pulse ? pulseColour : ''"
+						>
+							<ng-container *ngFor="let detail of row.item">
+								<div
+									*ngIf="detail.type != 'taskHeading'"
+									class="element element-ext"
+									[style]="{
+										'--top':
+											row.item.length > 5 && row.item[0].type == 'taskHeading'
+												? '20px'
+												: row.item.length > 3 && row.item[0].type == 'taskHeading'
+												? '0px'
+												: row.item.length > 4
+												? row.item[0].type == 'taskHeading'
+													? row.item.length == 2
+														? '-15px'
+														: '15px'
+													: '15px'
+												: row.item.length < 3
+												? '35%'
+												: '25%',
+										display:
+											row.item.length > 5 && row.item[0].type == 'taskHeading'
+												? 'inline-block'
+												: row.item.length > 3 && row.item[0].type == 'taskHeading'
+												? 'flex'
+												: row.item.length > 3
+												? 'inline-block'
+												: row.item[0].type != 'taskHeading'
+												? 'inline-block'
+												: 'flex'
+									}"
+								>
+									<ng-container *ngIf="detail.type == 'countDown'">
+										<div class="element-count-down">
+											<cust-countdown [timeLeft]="detail.value" textFormat="true" (timeRemaining)="setPulseColour($event)"></cust-countdown>
+										</div>
+									</ng-container>
+									<ng-container *ngIf="detail.type == 'button'">
+										<div class="button-item">
+											<cust-button-primary
+												*ngIf="detail.buttonType == 'Primary'"
+												[type]="{
+													display: detail.value,
+													value: detail.buttonClick,
+													isTableButton: true,
+													width: '110px',
+													loading: detail.loading ? detail.loading : false
+												}"
+												(buttonClick)="buttonAction(detail)"
+											></cust-button-primary>
+											<cust-button-secondary
+												*ngIf="detail.buttonType == 'Secondary'"
+												[type]="{
+													display: detail.value,
+													value: detail.buttonClick,
+													isTableButton: true,
+													width: '110px',
+													loading: detail.loading ? detail.loading : false
+												}"
+												(buttonClick)="buttonAction(detail)"
+											></cust-button-secondary>
+											<cust-button-tertiary
+												*ngIf="!detail.buttonType || detail.buttonType == 'Tertiary'"
+												[type]="{
+													display: detail.value,
+													value: detail.buttonClick,
+													isTableButton: true,
+													width: '110px',
+													loading: detail.loading ? detail.loading : false
+												}"
+												(buttonClick)="buttonAction(detail)"
+											></cust-button-tertiary>
+										</div>
+									</ng-container>
+								</div>
+							</ng-container>
+						</div>
+					</div>
+				</ng-container>
+
+				<div *ngIf="row.item[row.item.length - 1].type != 'button'">
+					<ng-container *ngFor="let detail of row.item">
+						<ng-container [ngSwitch]="detail.type">
+							<ng-container *ngSwitchCase="'heading'">
+								<p class="text-link-underlined paragraph-heading">{{ detail.value }}</p>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'boldText'">
+								<div class="left-text-border content-font content-height">
+									<div class="no-wrap-text" title="{{ detail.value }}">
+										<b>{{ detail.value }}</b>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'boolean'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 8 + 'px' }">
+										<b>{{ detail.label }}:</b>
+									</div>
+									<div *ngIf="!detail.label">
+										<div style="float: left" class="content-font content-height" *ngIf="detail.extendedText">
+											{{ detail.value }}
+										</div>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '500'
+										}"
+									>
+										<div class="no-wrap-text" title="{{ detail.value }}">{{ detail.value }}</div>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'text'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }}:</b>
+									</div>
+									<div *ngIf="!detail.label">
+										<div style="float: left" class="content-font content-height" *ngIf="detail.extendedText">
+											{{ detail.value }}
+										</div>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<div class="no-wrap-text" title="{{ detail.value }}">{{ detail.value }}</div>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'imageIconsWithLabel'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }}:</b>
+									</div>
+									<div class="image-icons right-text-border">
+										<ng-container *ngFor="let image of detail.imageIcons">
+											<img style="height: 1.3rem" [ngStyle]="{ opacity: image.opacity }" [src]="image.path" />
+										</ng-container>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'chipsStatus'">
+								<div
+									*ngIf="detail.value?.length > 0"
+									class="float-container-chip content-font content-height"
+									style="padding-left: 5px;--col-width: {{ row.width > 0 ? 100 / row.width.length - 0.2 + '%' : '100%' }};height: 20px;"
+								>
+									<div class="float-child content-font content-height">
+										<b>{{ detail.label }}:</b>
+									</div>
+									<div class="float-child-2 content-height">
+										<cust-chip-status [text]="detail.value" [type]="detail.valueColor" [isSmall]="false"> </cust-chip-status>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'coloredText'">
+								<p class="left-text-border content-font content-height">
+									<ng-container
+										><b [ngStyle]="{ color: detail.extendedColour ? detail.extendedColour : '#000000' }"> {{ detail.value }}</b>
+									</ng-container>
+								</p>
+							</ng-container>
+							<ng-container *ngSwitchCase="'money'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label">
+										<b>{{ detail.label }}:</b>
+									</div>
+									<div class="float-child-rigth currency-text content-font content-height" *ngIf="detail.label">
+										<cust-currency [amount]="detail.value"></cust-currency>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'distance'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left content-font content-height" *ngIf="detail.label" [style]="{ width: detail.label.length * 8 + 'px' }">
+										<b>{{ detail.label }}:</b>
+									</div>
+
+									<div class="float-child-rigth content-font content-height right-text-border-ext">
+										<cust-distance [distance]="detail.value"></cust-distance>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'date'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" [style]="{ width: labelLen * 8 + 'px' }" *ngIf="detail.label">
+										<b>{{ detail.label }}:</b>
+									</div>
+									<div *ngIf="detail.label" class="content-font content-height right-text-border-ext">
+										{{ detail.value | date : userSettingsModel.dateFormat }}
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'dateTime'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" [style]="{ width: labelLen * 8 + 'px' }" *ngIf="detail.label">
+										<b>{{ detail.label }}:</b>
+									</div>
+									<div *ngIf="detail.label" class="content-font content-height right-text-border-ext">
+										{{ detail.value | date : userSettingsModel.dateFormat + " " + userSettingsModel.timeFormat }}
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'IdNumber'">
+								<div class="float-container left-text-border content-font">
+									<cust-sensitive-info
+										*ngIf="detail.value"
+										[value]="detail.value"
+										[type]="detail.type"
+										[maskValue]="detail.maskHide"
+										[fontSize]="'16px'"
+										[iconColor]="'#000'"
+									></cust-sensitive-info>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'phone'">
+								<div class="float-container left-text-border content-font content-height">
+									<cust-sensitive-info
+										*ngIf="detail.value != null && detail.value.length > 0"
+										class="content-font content-height"
+										[value]="detail.value"
+										[type]="detail.type"
+										[maskValue]="detail.maskHide"
+										[message]="detail.whatsappMessage"
+										[fontSize]="'16px'"
+										[iconColor]="'#000'"
+									></cust-sensitive-info>
+								</div>
+								<div class="float-container left-text-border content-font content-height" *ngIf="detail.value == null">
+									<mat-icon *ngIf="detail.value == null" class="inline-icons">phone</mat-icon> N/A
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'mail'">
+								<div class="float-container left-text-border content-font content-height">
+									<cust-sensitive-info
+										[value]="detail.value"
+										[type]="detail.type"
+										[maskValue]="detail.maskHide"
+										[message]="detail.whatsappMessage"
+										[fontSize]="'16px'"
+										[iconColor]="'#000'"
+									></cust-sensitive-info>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'store'">
+								<div class="float-container left-text-border content-font content-height">
+									<mat-icon class="inline-icons">storefront</mat-icon> {{ detail.value }}
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'textWithColorBlock'">
+								{{ detail.value }}
+								<div class="colored-block" [ngStyle]="{ 'background-color': detail.coloredBlock }"></div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'iconWithDisplay'">
+								<div title="{{ detail.iconTooltip }}">
+									<div class="float-container left-text-border content-font content-height no-wrap-text" [title]="detail.value">
+										<mat-icon class="inline-icons" [ngStyle]="{ color: detail.iconColour }">{{ detail.iconName }}</mat-icon> {{ detail.value }}
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'buttonAction'">
+								<p title="{{ detail.iconTooltip }}">
+									<mat-icon class="inline-icons">{{ detail.iconName }}</mat-icon>
+								</p>
+							</ng-container>
+
+							<p *ngSwitchDefault>Type {{ detail.type }} not found for {{ detail.label }}</p>
+						</ng-container>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+	</mat-card-content>
+</mat-card>

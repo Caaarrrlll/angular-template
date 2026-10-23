@@ -1,0 +1,224 @@
+.cust-button {
+	cursor: pointer;
+	border-radius: 10px;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.default {
+	border: 1px solid #404040;
+	color: #404040;
+
+	&:hover {
+		box-shadow: 0px 0px 6px #404040;
+	}
+}
+
+.primary {
+	background: #f47920;
+	border: 1px solid #f47920;
+	color: #ffffff;
+
+	&:hover {
+		box-shadow: 0px 0px 6px #f47920;
+	}
+}
+
+.primary-underline {
+	background: none;
+	border: none;
+	color: #f47920;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.primary-inverted {
+	background: none;
+	border: 1px solid #f47920;
+	font-weight: bold;
+	color: #f47920;
+
+	&:hover {
+		box-shadow: 0px 0px 6px #f47920;
+	}
+}
+
+.accent {
+	background: #1b2935;
+	border: 1px solid #1b2935;
+	color: #ffffff;
+
+	&:hover {
+		box-shadow: 0px 0px 6px #1b2935;
+	}
+}
+
+.accept {
+	background: #17aa57;
+	border: 1px solid #17aa57;
+	color: #ffffff;
+
+	&:hover {
+		box-shadow: 0px 0px 6px #17aa57;
+	}
+}
+
+.tertiary {
+	background: #ffffff;
+	border: 1px solid #1b2935;
+	color: #1b2935;
+
+	&:hover {
+		box-shadow: 0px 0px 6px #1b2935;
+	}
+}
+
+.error {
+	background: #dc0000;
+	border: 1px solid #dc0000;
+	color: #ffffff;
+
+	&:hover {
+		box-shadow: 0px 0px 6px #dc0000;
+	}
+}
+
+.disabled {
+	background: #ffffff !important;
+	border: 1px solid #8f8f8f !important;
+	color: #8f8f8f !important;
+
+	&:hover {
+		cursor: default !important;
+		box-shadow: none !important;
+	}
+}
+
+.loading {
+	opacity: 75%;
+
+	&:hover {
+		cursor: default !important;
+		box-shadow: none;
+	}
+}
+
+.btnLoader {
+	margin-left: 4px;
+}
+
+// progress bar for confirmation button
+$progress-bar-timer: 3000ms;
+.progress-bar {
+	height: 2px;
+	background-color: #ffffff;
+
+	animation: cssload-width $progress-bar-timer cubic-bezier(0.45, 0, 1, 1) infinite;
+	-o-animation: cssload-width $progress-bar-timer cubic-bezier(0.45, 0, 1, 1) infinite;
+	-ms-animation: cssload-width $progress-bar-timer cubic-bezier(0.45, 0, 1, 1) infinite;
+	-webkit-animation: cssload-width $progress-bar-timer cubic-bezier(0.45, 0, 1, 1) infinite;
+	-moz-animation: cssload-width $progress-bar-timer cubic-bezier(0.45, 0, 1, 1) infinite;
+}
+@keyframes cssload-width {
+	0%,
+	100% {
+		transition-timing-function: cubic-bezier(1, 0, 0.65, 0.85);
+	}
+	0% {
+		width: 0;
+	}
+	100% {
+		width: 100%;
+	}
+}
+@-o-keyframes cssload-width {
+	0%,
+	100% {
+		-o-transition-timing-function: cubic-bezier(1, 0, 0.65, 0.85);
+	}
+	0% {
+		width: 0;
+	}
+	100% {
+		width: 100%;
+	}
+}
+@-ms-keyframes cssload-width {
+	0%,
+	100% {
+		-ms-transition-timing-function: cubic-bezier(1, 0, 0.65, 0.85);
+	}
+	0% {
+		width: 0;
+	}
+	100% {
+		width: 100%;
+	}
+}
+@-webkit-keyframes cssload-width {
+	0%,
+	100% {
+		-webkit-transition-timing-function: cubic-bezier(1, 0, 0.65, 0.85);
+	}
+	0% {
+		width: 0;
+	}
+	100% {
+		width: 100%;
+	}
+}
+@-moz-keyframes cssload-width {
+	0%,
+	100% {
+		-moz-transition-timing-function: cubic-bezier(1, 0, 0.65, 0.85);
+	}
+	0% {
+		width: 0;
+	}
+	100% {
+		width: 100%;
+	}
+}
+.default.progress-bar {
+	background-color: #404040 !important;
+}
+
+.primary.progress-bar {
+	background-color: #ffffff !important;
+}
+
+.accent.progress-bar {
+	background-color: #ffffff !important;
+}
+
+.tertiary.progress-bar {
+	background-color: #1b2935 !important;
+}
+
+.error.progress-bar {
+	background-color: #ffffff !important;
+}
+
+.disabled.progress-bar {
+	background-color: #8f8f8f !important;
+}
+
+.tertiary-inverted {
+	background: none;
+	border: 1px solid #1b2935;
+	color: #1b2935;
+
+	&:hover {
+		box-shadow: 0px 0px 6px #1b2935;
+	}
+}
+
+.primary-inverted-black {
+	background: none;
+	border: 1px solid #f47920;
+	font-weight: bold;
+	color: #1b2935;
+	box-shadow: 0px 0px 6px #f47920;
+}

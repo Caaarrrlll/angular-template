@@ -1,0 +1,69 @@
+.mat-card-header {
+	padding: 1px !important;
+	height: 36px;
+	border-bottom: 1px solid #000;
+}
+
+.mat-card {
+	padding: 0 !important;
+	box-shadow: unset !important;
+	border: 1px solid #dedede;
+	border-radius: 8px;
+	height: var(--card-height);
+}
+
+.mat-card-content {
+	padding: 8px !important;
+}
+
+.row {
+	display: flex;
+	width: 100% !important;
+	justify-content: start;
+	align-items: center;
+	height: 36px;
+	margin-left: -30px;
+	margin-top: -2px;
+}
+
+@media screen and (min-width: 0px) and (max-width: 1115px) {
+	.main-button-container-width {
+		width: 135%;
+	}
+}
+
+@media screen and (min-width: 1116px) and (max-width: 1400px) {
+	.main-button-container-width {
+		width: 135%;
+	}
+}
+
+@media screen and (min-width: 1401px) and (max-width: 1527px) {
+	.main-button-container-width {
+		width: 135%;
+	}
+}
+
+@media screen and (min-width: 1528px) and (max-width: 1700px) {
+	.main-button-container-width {
+		width: 130%;
+	}
+}
+
+@media screen and (min-width: 1701px) and (max-width: 1800px) {
+	.main-button-container-width {
+		width: 133%;
+	}
+}
+
+@media screen and (min-width: 1801px) and (max-width: 2100px) {
+	.main-button-container-width {
+		width: 136%;
+	}
+}
+
+@media screen and (min-width: 2101px) {
+	.main-button-container-width {
+		width: 138%;
+	}
+}

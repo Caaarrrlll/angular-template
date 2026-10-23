@@ -1,0 +1,53 @@
+<div class="galleryPreviewContainer" *ngIf="images">
+	<button
+		*ngIf="visibleImages - 1 < lastIndexOfArray"
+		[disabled]="firstVisibleIndex === 0"
+		(click)="prev()"
+		class="generalGalleryPreviewBtn galleryPreviewNavButton galleryPreviewControlButtonPrev"
+		matRipple
+		[matRippleDisabled]="firstVisibleIndex === 0"
+	>
+		<img
+			style="width: 50%"
+			src="../../../../assets/images/gallery-icons/prev.svg"
+			alt="Previous"
+			class="galleryPreviewSvgIcon"
+			[ngClass]="{ galleryPreviewSvgIconOrange: orangeIcons }"
+		/>
+	</button>
+
+	<div class="galleryPreviewImageRow" [ngStyle]="{ width: maxWidth + 'px' }" (mousewheel)="horizontalScroll($event)">
+		<div
+			*ngFor="let image of images; let i = index"
+			class="galleryPreviewImageContainer"
+			[ngStyle]="{ width: imageWidth + 'px', 'max-width': maxWidth + 'px', display: image.visible }"
+		>
+			<div
+				class="galleryPreviewImage"
+				[ngStyle]="{
+					'background-image': 'url(' + image.url + ')',
+					height: imageHeight + 'px'
+				}"
+				[ngClass]="{ galleryPreviewActiveImage: i === galleryPreviewActiveImageIndex && !onlyShowPreview }"
+				(click)="selectImage(i)"
+			></div>
+		</div>
+	</div>
+
+	<button
+		*ngIf="visibleImages - 1 < lastIndexOfArray"
+		[disabled]="lastVisibleIndex === lastIndexOfArray"
+		(click)="next()"
+		class="generalGalleryPreviewBtn galleryPreviewNavButton galleryPreviewControlButtonNext"
+		matRipple
+		[matRippleDisabled]="lastVisibleIndex === lastIndexOfArray"
+	>
+		<img
+			style="width: 50%"
+			src="../../../../assets/images/gallery-icons/next.svg"
+			alt="Next"
+			class="galleryPreviewSvgIcon"
+			[ngClass]="{ galleryPreviewSvgIconOrange: orangeIcons }"
+		/>
+	</button>
+</div>

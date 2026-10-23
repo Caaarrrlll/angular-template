@@ -1,0 +1,93 @@
+<div class="card-content" *ngIf="displayedColumns">
+	<div class="button-container">
+		<button [disabled]="isDisabled" mat-stroked-button color="accent" *ngIf="showAdd" (click)="createElement()">
+			Add New
+		</button>
+	</div>
+
+	<div class="table-container">
+		<table mat-table [dataSource]="dataSource" class="card-content border" multiTemplateDataRows>
+			<!-- Columns to display in Table-->
+			<ng-container [matColumnDef]="column.columnDef" *ngFor="let column of displayedColumns">
+				<th mat-header-cell *matHeaderCellDef>{{ column.header }}</th>
+				<td (click)="openElement(element, cellIndex)" mat-cell *matCellDef="let element; let cellIndex = dataIndex">
+					{{ column.cell(element) == "null" ? "" : (column.cell(element) | truncate : 85) }}
+				</td>
+			</ng-container>
+
+			<!-- Actions Column-->
+			<ng-container matColumnDef="expand">
+				<th mat-header-cell *matHeaderCellDef>Actions</th>
+				<td (click)="openElement(element, cellIndex)" mat-cell *matCellDef="let element; let cellIndex = dataIndex">
+					<div *ngIf="!element.isNew">
+						<button *ngIf="gridRules.view ?? true" mat-icon-button color="accent" class="bg-white" (click)="openReadonlyElement(element)">
+							<mat-icon>visibility</mat-icon>
+						</button>
+						<button
+							[disabled]="isDisabled"
+							*ngIf="gridRules.edit ?? true"
+							mat-icon-button
+							color="accent"
+							class="bg-white"
+							(click)="openElement(element, cellIndex, $event)"
+						>
+							<mat-icon>edit</mat-icon>
+						</button>
+						<button [disabled]="isDisabled" *ngIf="gridRules.delete ?? true" mat-icon-button color="accent" class="bg-white" (click)="deleteElement(element, $event)">
+							<mat-icon>delete</mat-icon>
+						</button>
+						<button *ngIf="gridRules.arrow ?? true" mat-icon-button color="accent" class="bg-white">
+							<mat-icon *ngIf="element !== expandedElement">expand_more</mat-icon>
+							<mat-icon *ngIf="element === expandedElement">expand_less</mat-icon>
+						</button>
+					</div>
+				</td>
+			</ng-container>
+
+			<!-- Expandable Content Column-->
+			<ng-container matColumnDef="expandedDetail">
+				<td mat-cell *matCellDef="let element" [attr.colspan]="expandColumns.length">
+					<div class="expanded-detail" [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'">
+						<app-expandable-grid-form
+							[form]="form"
+							[editableColumns]="editableColumns"
+							[currentElement]="expandedElement"
+							[additionalButton]="additionalButton"
+							(onClose)="close()"
+							(onSave)="saveData($event)"
+							[isDisabled]="isDisabled"
+						></app-expandable-grid-form>
+					</div>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="expandColumns; sticky: true"></tr>
+			<tr mat-row *matRowDef="let element; columns: expandColumns" class="element-row" [class.expanded-row]="expandedElement === element"></tr>
+			<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+		</table>
+
+		<!-- Paginator with Server-side pagination -->
+		<div *ngIf="gridData?.data" class="mat-paginator-sticky">
+			<mat-paginator
+				#paginator
+				[pageSizeOptions]="paginationConstants.pageSizes"
+				[pageIndex]="gridData?.pageNumber - 1"
+				[pageSize]="gridData?.pageSize"
+				[length]="gridData?.totalCount"
+				(page)="paginate($any($event))"
+				showFirstLastButtons
+				aria-label="Select page"
+			>
+			</mat-paginator>
+		</div>
+
+		<!-- Paginator with Frontend pagination -->
+		<div *ngIf="!gridData?.data" class="mat-paginator-sticky">
+			<mat-paginator #paginator [pageSizeOptions]="paginationConstants.pageSizes" showFirstLastButtons aria-label="Select page"></mat-paginator>
+		</div>
+	</div>
+</div>
+<!-- Loader -->
+<div *ngIf="isLoading" class="loader">
+	<mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>

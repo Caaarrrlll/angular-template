@@ -1,0 +1,54 @@
+.card {
+	position: relative;
+	background: #ffffff;
+	border-radius: 15px;
+	overflow: hidden;
+	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+	margin: 2px;
+	// border: #ffffff 3px solid;
+
+	&-sidebar {
+		width: 30px;
+		float: left;
+		background: lightgray;
+		position: absolute;
+		height: 100%;
+		min-height: inherit;
+		z-index: 1;
+	}
+}
+
+.fill {
+	height: 100%;
+}
+
+.margin {
+	margin-right: 20px;
+}
+
+.selected {
+	border: #f47920 2px solid;
+	box-shadow: 0 0 5px #f47920;
+	margin: 0;
+}
+
+.content {
+	margin-left: 30px;
+}
+
+.red {
+	background: #d50000;
+}
+
+.green {
+	background: #bcd139;
+}
+
+.orange {
+	background: #f47920;
+}
+
+.white {
+	background-color: white;
+	color: black;
+}

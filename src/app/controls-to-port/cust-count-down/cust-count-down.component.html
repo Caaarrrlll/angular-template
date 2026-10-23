@@ -1,0 +1,4 @@
+<ng-container *ngIf="textFormat; else digitFormat">
+	<div [ngClass]="seconds > 59 ? 'green' : 'red'" class="h3 text-container"><mat-icon class="icon">timelapse</mat-icon>{{ getTimeRemaining(seconds) }}</div></ng-container
+>
+<ng-template #digitFormat>{{ getTimeRemaining(seconds) }}</ng-template>

@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>{{ data?.title ?? "Confirmation" }}</h1>
+<mat-dialog-content>
+	<p>{{ data?.description ?? "Are you sure?" }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<div class="container">
+		<button mat-stroked-button (click)="dialogRef.close(false)">No</button>
+
+		<button mat-stroked-button color="primary" (click)="dialogRef.close(true)">Yes</button>
+	</div>
+</mat-dialog-actions>

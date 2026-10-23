@@ -1,0 +1,20 @@
+<div class="flex row">
+	<div class="flex col field-width" style="--width: 100px">
+		<mat-form-field>
+			<mat-label>Start Date</mat-label>
+			<input [formControl]="inputFrom" matInput placeholder="Start Date" />
+			<mat-hint>{{ placeholder }}</mat-hint>
+			<mat-error *ngIf="inputFrom.invalid">Invalid start date</mat-error>
+		</mat-form-field>
+	</div>
+	<div class="flex col field-width flex-item-right" style="--width: 100px">
+		<mat-form-field>
+			<mat-label>End Date</mat-label>
+			<input [formControl]="inputTo" matInput placeholder="End Date" />
+			<mat-hint>{{ placeholder }}</mat-hint>
+			<mat-error *ngIf="inputTo.invalid">Invalid end date</mat-error>
+		</mat-form-field>
+	</div>
+</div>
+
+<mat-calendar [selected]="selectedRangeValue" (selectedChange)="selectedChange($event)"> </mat-calendar>

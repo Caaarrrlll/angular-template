@@ -1,0 +1,548 @@
+<mat-card>
+	<mat-card-header>
+		<div class="row">
+			<div *ngFor="let headCol of cardHeaders" class="column-header" style="--alignment: {{ headCol.alignment }};">
+				<div class="no-wrap-text header-text" *ngIf="headCol.type == 'boldText'">
+					<span
+						><b
+							[style]="{
+								'font-size': headCol.fontSize ? headCol.fontSize : '17px',
+								'padding-left': '4px',
+								color: headCol.textColor ? headCol.textColor : '#000'
+							}"
+							>{{ headCol.text }}</b
+						></span
+					>
+				</div>
+				<div class="no-wrap-text header-text" *ngIf="headCol.type == 'Display'">
+					<b
+						[style]="{
+							'font-size': headCol.fontSize ? headCol.fontSize : '17px',
+							'padding-left': '4px',
+							color: headCol.textColor ? headCol.textColor : '#000'
+						}"
+					>
+						<span *ngIf="headCol.textPre" class="header-pre-text"
+							><b>{{ headCol.textPre }} - {{ headCol.text }}</b></span
+						>
+
+						<span *ngIf="headCol.textPre" class="header-pre-text-devider">|</span>
+
+						<span
+							*ngIf="!headCol.textPre && !headCol.clickAction"
+							[style]="{
+								color: headCol.textColor ? headCol.textColor : '#000'
+							}"
+						>
+							{{ headCol.text }}
+						</span>
+
+						<span
+							*ngIf="!headCol.textPre && headCol.clickAction"
+							[style]="{
+								color: headCol.textColor ? headCol.textColor : '#000'
+							}"
+							(click)="buttonAction(headCol.clickAction)"
+							class="text-link"
+						>
+							{{ headCol.text }}
+						</span>
+
+						<mat-icon *ngIf="headCol.icon" class="header-icons">{{ headCol.icon }}</mat-icon>
+
+						<span *ngIf="headCol.textExtended" class="header-pre-text-devider">|</span>
+						<span
+							*ngIf="headCol.textExtended"
+							[style]="{
+								color: headCol.textColor ? headCol.textColor : '#000'
+							}"
+							>{{ headCol.textExtended }}</span
+						>
+					</b>
+				</div>
+				<div *ngIf="headCol.type == 'status'">
+					<span *ngIf="headCol.text.length" class="column-header-status" style="--alignment: {{ headCol.alignment }}">
+						<cust-chip-status [text]="headCol.text" [type]="headCol.statusType"> </cust-chip-status>
+					</span>
+				</div>
+				<div *ngIf="headCol.type == 'chipsStatus'">
+					<span *ngIf="headCol.text.length" class="column-header-status">
+						<cust-chip-status [text]="headCol.text" [type]="headCol.statusType" [showSolid]="false" [isSmall]="false"> </cust-chip-status>
+					</span>
+				</div>
+			</div>
+			<div style="padding-top: 5px" *ngIf="tableHeaderMenu">
+				<div *ngIf="tableHeaderMenu.action">
+					<div class="header-button">
+						<cust-button-v2
+							[type]="{
+								value: tableHeaderMenu.action,
+								icon: 'edit',
+								display: '',
+								type: 'icon'
+							}"
+							(buttonClick)="buttonAction(tableHeaderMenu.action)"
+						></cust-button-v2>
+					</div>
+				</div>
+
+				<div class="dropdown" *ngIf="!tableHeaderMenu.action">
+					<button class="dropbtn" (click)="getMenu(tableHeaderMenu.id)">
+						<i class="fa fa-caret-down"
+							><mat-icon>{{ tableHeaderMenu.icon }}</mat-icon></i
+						>
+					</button>
+					<div class="dropdown-content" id="{{ tableHeaderMenu.id }}" style="padding-top: 16px; padding-bottom: 26px">
+						<div *ngFor="let menu of tableHeaderMenu.items" style="padding-left: 12px; padding-right: 12px">
+							<a style="border-bottom: 1px #e8ece9 solid; padding: 8px; cursor: pointer; height: 20px" (click)="menuClick(menu.action)">{{ menu.display }}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</mat-card-header>
+	<mat-card-content style="overflow-y: 'auto'">
+		<div
+			class="card-height"
+			[style]="{
+				'--height': tableProperties.height
+			}"
+		>
+			<div *ngIf="data == null || data === undefined" style="padding-left: 8px">
+				<cust-button-primary
+					[type]="{
+						display: errorActionButton,
+						value: errorActionButton,
+						isTableButton: false,
+						width: '160px'
+					}"
+					(buttonClick)="buttonAction(errorActionButton)"
+				></cust-button-primary>
+			</div>
+			<div
+				*ngFor="let row of cardRows"
+				class="{{ row.colSCSS }} {{ cardHeight }} col-left column"
+				style="--alignment: 'left'"
+				[style]="{
+					'--col-width': !row.width ? (row.width > 0 ? 100 / row.width.length - 0.2 + '%' : '100%') : row.width,
+					'--height': maxLines * 30 + 'px'
+				}"
+			>
+				<div>
+					<ng-container *ngFor="let detail of row.item">
+						<ng-container [ngSwitch]="detail.type">
+							<ng-container *ngSwitchCase="'heading'">
+								<p class="text-link-underlined paragraph-heading">{{ detail.value }}</p>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'boldText'">
+								<div class="left-text-border content-font content-height">
+									<div class="no-wrap-text" title="{{ detail.value }}">
+										<b>{{ detail.value }}</b>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'boolean'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }} </b>
+									</div>
+									<div *ngIf="!detail.label">
+										<div style="float: left" class="content-font content-height" *ngIf="detail.extendedText">
+											{{ detail.value }}
+										</div>
+									</div>
+									<div
+										class="float-container right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<mat-icon *ngIf="detail.value" class="icons-infront" style="color: green" (click)="buttonAction(detail.buttonClick)">check</mat-icon>
+										<mat-icon *ngIf="!detail.value" class="icons-infront" style="color: red" (click)="buttonAction(detail.buttonClick)">close</mat-icon>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'textWithEdit'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="!detail.label">
+										<div style="float: left" class="content-font content-height" *ngIf="detail.extendedText">{{ detail.value }}</div>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<div class="no-wrap-text" title="{{ detail.value }}">
+											<mat-icon *ngIf="detail.buttonClick != null" class="icons-infront" (click)="buttonAction(detail.buttonClick)">edit</mat-icon>
+											{{ detail.value }}
+										</div>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'displayList'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }} </b>
+									</div>
+									<div style="float: left" (mouseover)="mouseOver($event, detail.list)" (mouseleave)="mouseOff()">
+										<mat-icon class="icons-infront">remove_red_eye</mat-icon>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'textClick'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="!detail.label">
+										<div style="float: left" class="content-font content-height" *ngIf="detail.extendedText">{{ detail.value }}</div>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<div class="no-wrap-text text-link" title="{{ detail.value }}" (click)="buttonAction(detail.buttonClick)">
+											{{ detail.value }}
+										</div>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'textCombined'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }}</b> {{ detail.value }}
+									</div>
+									<div *ngIf="detail.buttonClick">
+										<cust-button-primary
+											[type]="{
+												display: detail.buttonClick,
+												value: detail.buttonClick,
+												isTableButton: true,
+												width: '150px',
+												loading: detail.loading ? detail.loading : false
+											}"
+											(buttonClick)="buttonAction(detail.buttonClick)"
+										></cust-button-primary>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'text'">
+								<div class="float-container left-text-border content-font content-height" *ngIf="detail.value != 'N/A'">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="!detail.label">
+										<div style="float: left" class="content-font content-height" *ngIf="detail.extendedText">
+											{{ detail.value }}
+										</div>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<div class="no-wrap-text" title="{{ detail.value }}">{{ detail.value }}</div>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'chipsStatus'">
+								<div
+									*ngIf="detail.value?.length > 0"
+									class="float-container-chip content-font content-height"
+									style="padding-left: 5px;--col-width: {{ row.width > 0 ? 100 / row.width.length - 0.2 + '%' : '100%' }};height: 20px;"
+								>
+									<div class="float-child content-font content-height">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div class="float-child-2 content-height">
+										<cust-chip-status [text]="detail.value" [type]="detail.valueColor" [isSmall]="true"> </cust-chip-status>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'coloredText'">
+								<p class="left-text-border content-font content-height">
+									<ng-container
+										><b [ngStyle]="{ color: detail.extendedColour ? detail.extendedColour : '#000000' }"> {{ detail.value }}</b>
+									</ng-container>
+								</p>
+							</ng-container>
+							<ng-container *ngSwitchCase="'money'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div class="float-child-rigth currency-text content-font content-height" *ngIf="detail.label">
+										<cust-currency [amount]="detail.value"></cust-currency>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'distance'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left content-font content-height" *ngIf="detail.label" [style]="{ width: detail.label.length * 8 + 'px' }">
+										<b>{{ detail.label }}</b>
+									</div>
+
+									<div class="float-child-rigth content-font content-height right-text-border-ext">
+										<cust-distance [distance]="detail.value"></cust-distance>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'date'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" [style]="{ width: labelLen * 8 + 'px' }" *ngIf="detail.label">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="detail.label" class="content-font content-height right-text-border-ext">
+										{{ detail.value | date : userSettingsModel.dateFormat }}
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'IdNumber'">
+								<div class="float-container left-text-border content-font content-height" *ngIf="detail.value">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 15 + 'px' }">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<div class="no-wrap-text" title="{{ detail.value }}">{{ detail.value }}</div>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'phone'">
+								<div *ngIf="detail.value" class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 15 + 'px' }">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<div class="no-wrap-text" title="{{ detail.value }}">
+											<mat-icon
+												class="inline-icons-before-value"
+												[style]="{ color: iconColor ? iconColor : '#f57c00' }"
+												[style]="{ '--icon-color': iconColor }"
+												>phone</mat-icon
+											>
+											{{ detail.value }}
+										</div>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'phoneText'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" [style]="{ width: labelLen * 8 + 'px' }" *ngIf="detail.label">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="detail.label" class="content-font content-height right-text-border-ext">
+										<a style="color: #000" href="tel:{{ detail.value }}" target="_top">
+											{{ detail.value }}
+										</a>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'mail'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 15 + 'px' }">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<div class="no-wrap-text" title="{{ detail.value }}">
+											<mat-icon
+												class="inline-icons-before-value"
+												[style]="{ color: iconColor ? iconColor : '#f57c00' }"
+												[style]="{ '--icon-color': iconColor }"
+												>mail</mat-icon
+											>
+											{{ detail.value }}
+										</div>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'mailText'">
+								<div class="float-container left-text-border content-font content-height no-wrap-text">
+									<div class="float-child-left" [style]="{ width: labelLen * 8 + 'px' }" *ngIf="detail.label">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="detail.label" class="content-font content-height right-text-border-ext">
+										<a style="color: #000" href="mailto:{{ detail.value }}?Subject=Information for {{ detail.whatsappMessage }}" target="_top">
+											{{ detail.value }}
+										</a>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'textLink'">
+								<div class="float-container left-text-border content-font content-height no-wrap-text">
+									<div class="float-child-left" [style]="{ width: labelLen * 8 + 'px' }" *ngIf="detail.label">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="detail.label" class="content-font content-height right-text-border-ext">
+										<a style="color: #000" href="{{ detail.url }}" target="_top">
+											{{ detail.value }}
+										</a>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'store'">
+								<div class="float-container left-text-border content-font content-height">
+									<mat-icon class="inline-icons">storefront</mat-icon> {{ detail.value }}
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'textWithColorBlock'">
+								{{ detail.value }}
+								<div class="colored-block" [ngStyle]="{ 'background-color': detail.coloredBlock }"></div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'iconWithDisplay'">
+								<div title="{{ detail.iconTooltip }}">
+									<mat-icon class="inline-icons">{{ detail.iconName }}</mat-icon> {{ detail.value }}
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'buttonAction'">
+								<p title="{{ detail.iconTooltip }}">
+									<mat-icon class="inline-icons">{{ detail.iconName }}</mat-icon>
+								</p>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'image'">
+								<div class="float-container left-text-border content-font content-height no-wrap-text">
+									<div class="float-child-left" [style]="{ width: labelLen * 8 + 'px' }" *ngIf="detail.label">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="detail.label" class="content-font content-height right-text-border-ext">
+										<img src="{{ detail.value }}" title="Pre-Fitted Netstar Unit" />
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngSwitchCase="'dekra'">
+								<div class="dekra-button">
+									<cust-dekra-button [ngStyle]="{ width: '30%' }" [avatar]="false" [vinNumber]="detail.vin" [hasDekraReport]="detail.value" [noPadding]="true">
+									</cust-dekra-button>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'button'">
+								<div class="float-container left-text-border content-font content-height">
+									<div class="float-child-left" *ngIf="detail.label" [style]="{ width: detail.label.length * 10 + 'px' }">
+										<b>{{ detail.label }}</b>
+									</div>
+									<div *ngIf="!detail.label">
+										<div style="float: left" class="content-font content-height" *ngIf="detail.extendedText">
+											{{ detail.value }}
+										</div>
+									</div>
+									<div
+										class="float-child-rigth right-text-border content-font content-height"
+										*ngIf="detail.label"
+										[style]="{
+											'text-align': 'right',
+											color: detail.valueColor ? detail.valueColor : '#000',
+											'font-weight': detail.valueColor ? '700' : '400'
+										}"
+									>
+										<div class="no-wrap-text" title="{{ detail.value }}">{{ detail.value }}</div>
+									</div>
+									<div [style]="{ width: detail.label.length * 10 + 'px' }">
+										<cust-button-primary
+											[type]="{
+												display: detail.buttonClick,
+												value: detail.buttonClick,
+												isTableButton: true,
+												width: '110px',
+												loading: detail.loading ? detail.loading : false
+											}"
+											(buttonClick)="buttonAction(detail.buttonClick)"
+										></cust-button-primary>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngSwitchCase="'paragraph'">
+								<div
+									class="display-paragraph"
+									[style]="{
+										'--height': tableProperties.height
+									}"
+								>
+									{{ detail.value }}
+								</div>
+							</ng-container>
+
+							<p *ngSwitchDefault>Type {{ detail.type }} not found for {{ detail.label }}</p>
+						</ng-container>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+		<div class="chip-footer" *ngIf="footerChips">
+			<div class="chip-footer-item">
+				<b>{{ footerChips.label }}</b>
+			</div>
+			<div *ngFor="let footerChip of footerChips.chipList" class="chip-footer-item">
+				<cust-chip-status [text]="footerChip.display" [type]="'Default'" [isSmall]="true" [showSolid]="'true'"> </cust-chip-status>
+			</div>
+		</div>
+	</mat-card-content>
+</mat-card>
+
+<div *ngIf="showDetailCard" class="baseball-card-popup" [ngStyle]="{ top: top + 'px', left: left + 'px' }">
+	<span><b>Uploaded Documents:</b></span>
+	<mat-divider style="margin-top: 5px; margin-bottom: 5px"></mat-divider>
+
+	<span *ngIf="displayDetails.length <= 1"><li>No Documents</li></span>
+
+	<div *ngIf="displayDetails.length > 1">
+		<ul *ngFor="let doc of displayDetails">
+			<li>{{ doc.ficaUploadedDocName }}</li>
+		</ul>
+	</div>
+</div>

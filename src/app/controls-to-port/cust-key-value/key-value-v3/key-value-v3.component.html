@@ -1,0 +1,26 @@
+<div [ngClass]="alignRight ? 'right kv-container-row' : 'kv-container-row'" [style]="{ '--bottomPadding': bottomPadding }">
+	<div
+		*ngIf="key"
+		[title]="keyTitle ? keyTitle : ''"
+		[ngClass]="{
+			key: true,
+			bold: !boldValue
+		}"
+		class="flex-row-wrap row-start"
+	>
+		{{ key }}{{ colon ? ":" : "" }}
+	</div>
+
+	<div
+		[title]="title ? title : ''"
+		[ngClass]="{
+			value: true,
+			bold: boldValue
+		}"
+		class="flex-row-wrap row-end"
+	>
+		<mat-icon *ngIf="showEdit" (click)="editField()" class="show-pointer icon-size material-icons-outlined">edit</mat-icon>
+		<mat-icon *ngIf="showView" (click)="viewField()" class="show-pointer icon-size material-icons-outlined">visibility</mat-icon>
+		{{ value }}
+	</div>
+</div>

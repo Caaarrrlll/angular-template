@@ -1,0 +1,55 @@
+.kv-container {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 8px;
+
+	.key {
+		color: #f47920;
+		font-size: small;
+	}
+
+	.value {
+		margin-left: 10px;
+
+		.show-pointer {
+			cursor: pointer;
+		}
+	}
+}
+
+.removePadding {
+	margin-left: 0 !important;
+}
+
+.sameFontSize {
+	font-size: small !important;
+}
+
+.kv-container-row {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 8px;
+
+	.key {
+		color: #f47920;
+		min-width: 50%;
+		font-size: smaller;
+		text-align: right;
+		padding-right: 5px;
+	}
+
+	.value::before {
+		// content: " : ";
+		color: #f47920;
+	}
+
+	.value {
+		// max-width: 50%;
+		font-size: medium;
+		width: 100%;
+
+		.show-pointer {
+			cursor: pointer;
+		}
+	}
+}

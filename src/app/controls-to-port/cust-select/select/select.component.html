@@ -1,0 +1,8 @@
+<div class="select-box" appCustClickElsewhere (clickElsewhere)="closeDropdown()">
+	<div class="options-container" [ngClass]="{ active: active }">
+		<ng-content></ng-content>
+	</div>
+	<div class="selected" (click)="selected()">
+		{{ placeholder }}
+	</div>
+</div>

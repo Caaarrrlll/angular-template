@@ -1,0 +1,172 @@
+<div *ngIf="loading" class="loader">
+	<span class="k-i-loading k-icon" style="font-size: 64px"></span>
+</div>
+
+<form [formGroup]="form" class="content">
+	<div *ngIf="dialogSetup.instructionText" style="padding-bottom: 20px">{{ dialogSetup.instructionText }}</div>
+	<div *ngIf="dialogSetup.optionSelected" style="padding-bottom: 20px">
+		<b>{{ dialogSetup.optionSelected }}</b>
+	</div>
+	<div *ngIf="dialogSetup.additionalText" style="padding-bottom: 20px">{{ dialogSetup.additionalText }}</div>
+
+	<div *ngFor="let control of dialogSetup.controls; let i = index" style="display: flex; justify-content: center; width: 500px; padding-bottom: 30px">
+		<div *ngIf="control.instructionText">{{ control.instructionText }}</div>
+
+		<div *ngIf="control.type == 'Image'" style="width: 100%; padding-bottom: 20px; text-align: center">
+			<img [ngStyle]="{ transform: 'rotate(' + imageDegs + 'deg)' }" [src]="control.imgUrl | safe" alt="Image unavailable" />
+		</div>
+
+		<span *ngIf="control.type == 'Slider'" style="margin-bottom: 15px"
+			><strong>{{ form.controls[control.formName].value | currency : "ZAR" : "symbol-narrow" : "1.0-0" }}</strong></span
+		>
+		<kendo-formfield *ngIf="control.type == 'Slider'" style="width: 500px; padding-bottom: 30px">
+			<kendo-slider
+				[min]="control.minValue"
+				[max]="control.maxValue"
+				[smallStep]="control.increment"
+				[largeStep]="control.increment"
+				[formControlName]="control.formName"
+				style="width: 100%"
+			></kendo-slider>
+		</kendo-formfield>
+
+		<!-- Single -->
+		<kendo-buttongroup selection="single" *ngIf="control.type == 'BtnGroup'">
+			<button *ngFor="let btn of control.data" (click)="setFromValue(control, btn)" kendoButton [toggleable]="true" [selected]="btn.selected">
+				{{ btn.display }}
+			</button>
+		</kendo-buttongroup>
+
+		<!-- DropDown -->
+		<kendo-formfield *ngIf="control.type == 'DropDown'" style="width: 100%; padding-bottom: 10px; min-width: 450px">
+			<kendo-floatinglabel [text]="control.placeholder" style="width: 100%">
+				<kendo-dropdownlist [formControlName]="control.formName" [data]="control.data" [textField]="'display'" valueField="value" [valuePrimitive]="control.valuePrimitive">
+				</kendo-dropdownlist>
+			</kendo-floatinglabel>
+			<kendo-formerror *ngIf="form.controls[control.formName].hasError('required')" style="color: red">This field is required</kendo-formerror>
+		</kendo-formfield>
+
+		<!-- TextArea -->
+		<kendo-formfield *ngIf="control.type == 'TextArea'" style="width: 100%; padding-bottom: 20px">
+			<kendo-floatinglabel [text]="control.placeholder" style="width: 100%">
+				<textarea kendoTextArea [autoSize]="true" [formControlName]="control.formName"></textarea>
+			</kendo-floatinglabel>
+			<kendo-formhint *ngIf="form.controls[control.formName].validator != null" style="color: red">This field is required</kendo-formhint>
+			<kendo-formhint *ngIf="form.controls[control.formName].validator == null">This field is optional </kendo-formhint>
+
+			<kendo-formerror *ngIf="form.controls[control.formName].hasError('required')" style="color: red">This field is required</kendo-formerror>
+		</kendo-formfield>
+
+		<!-- Input -->
+		<kendo-formfield *ngIf="control.type == 'Input'" style="width: 100%; padding-bottom: 20px">
+			<kendo-floatinglabel [text]="control.placeholder" style="width: 100%; font-size: 18px !important">
+				<input kendoTextBox [formControlName]="control.formName" [type]="control.valueType ? control.valueType : 'text'" />
+			</kendo-floatinglabel>
+			<kendo-formerror *ngIf="form.controls[control.formName].hasError('required')">This field is required </kendo-formerror>
+			<kendo-formerror *ngIf="form.controls[control.formName].hasError('pattern')">The Value entered is not a valid phone number</kendo-formerror>
+		</kendo-formfield>
+
+		<!-- Currency Short Hand -->
+		<kendo-formfield *ngIf="control.type == 'CurrencyShortHand'" style="width: 100%; padding-bottom: 20px">
+			<kendo-floatinglabel
+				[text]="
+					!form.controls[control.formName].value
+						? control.placeholder
+						: control.placeholder + ' of ' + (form.controls[control.formName].value * 1000 | currency : 'ZAR' : 'symbol-narrow' : '1.0-0')
+				"
+				style="width: 100%"
+			>
+				<input kendoTextBox [formControlName]="control.formName" type="number" />
+			</kendo-floatinglabel>
+			<kendo-formerror *ngIf="form.controls[control.formName].hasError('required')">This field is required </kendo-formerror>
+		</kendo-formfield>
+
+		<!-- MultiSelect -->
+		<kendo-formfield *ngIf="control.type == 'MultiSelect'" style="width: 100%; padding-bottom: 20px">
+			<kendo-floatinglabel [text]="control.placeholder" style="width: 100%">
+				<kendo-multiselect
+					#kendoMultiSelect
+					[data]="control.data"
+					[textField]="'displayText'"
+					[valueField]="'value'"
+					[formControlName]="control.formName"
+					[valuePrimitive]="control.valuePrimitive"
+				>
+				</kendo-multiselect>
+			</kendo-floatinglabel>
+		</kendo-formfield>
+
+		<!-- SingleDate -->
+		<kendo-formfield *ngIf="control.type == 'SingleDate'" style="width: 500px; padding-bottom: 30px; text-align: center">
+			<span style="font-weight: bold">{{ control.placeholder }}</span>
+			<kendo-multiviewcalendar [views]="1" [formControlName]="control.formName" [min]="control?.disabledBefore" style="width: 100%"></kendo-multiviewcalendar>
+			<kendo-formerror *ngIf="form.controls[control.formName].hasError('required')">This field is required </kendo-formerror>
+		</kendo-formfield>
+
+		<!-- DateTimePicker -->
+		<kendo-formfield *ngIf="control.type == 'DateTime'">
+			<span style="font-weight: bold">{{ control.placeholder }}</span>
+			<kendo-datetimepicker [formControlName]="control.formName"></kendo-datetimepicker>
+		</kendo-formfield>
+
+		<!-- Checkbox -->
+		<kendo-formfield *ngIf="control.type == 'Checkbox'">
+			<label [for]="isAllDay"> {{ control.label }} </label>
+			<input #isAllDay type="checkbox" [formControlName]="control.formName" />
+		</kendo-formfield>
+
+		<!-- Radio -->
+		<kendo-formfield *ngIf="control.type == 'radio'">
+			<div class="space-between">
+				<div *ngFor="let item of control.data">
+					<kendo-label class="k-radio-label" [for]="terms" [text]="item.label"></kendo-label>
+					<input #terms type="radio" [value]="item.text" [formControlName]="control.formName" kendoRadioButton />
+					<br />
+					<br />
+				</div>
+			</div>
+		</kendo-formfield>
+		<!-- Approval -->
+		<kendo-formfield *ngIf="control.type == 'approval'">
+			<div class="space-between-row">
+				<cust-button
+					value="Reject"
+					color="accent"
+					fontSize="15px"
+					padding="10px 15px"
+					margin="30px 0px 0px 0px"
+					(click)="submitApproval('Reject')"
+					[disabled]="!form.valid"
+				></cust-button>
+				<cust-button value="Approve" color="primary" fontSize="15px" padding="10px 15px" margin="30px 0px 0px 0px" (click)="submitApproval('Approve')"></cust-button>
+			</div>
+		</kendo-formfield>
+	</div>
+</form>
+
+<div
+	class="row flex"
+	[ngStyle]="{
+		'justify-content': dialogSetup.hideBackButton || dialogSetup.hideSubmitButton ? 'flex-end' : 'space-between'
+	}"
+>
+	<cust-button
+		*ngIf="!dialogSetup.hideBackButton"
+		[value]="dialogSetup.backButtonText"
+		color="accent"
+		fontSize="15px"
+		padding="10px 15px"
+		margin="30px 0px 0px 0px"
+		(click)="close()"
+	></cust-button>
+	<cust-button
+		*ngIf="!dialogSetup.hideSubmitButton"
+		[value]="dialogSetup.submitButtonText"
+		color="primary"
+		[disabled]="!form.valid"
+		fontSize="15px"
+		padding="10px 15px"
+		margin="30px 0px 0px 0px"
+		(click)="submit()"
+	></cust-button>
+</div>

@@ -1,0 +1,10 @@
+<button (click)="checkBoxGroup.toggleValue(value)" class="checkbox-wrapper" mat-button>
+	<div class="inner-wrapper">
+		<div class="label">
+			<ng-content></ng-content>
+		</div>
+		<div class="checkbox">
+			<mat-checkbox [checked]="checkBoxGroup.isSelected(value)"></mat-checkbox>
+		</div>
+	</div>
+</button>

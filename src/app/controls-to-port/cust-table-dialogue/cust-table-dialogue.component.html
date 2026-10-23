@@ -1,0 +1,48 @@
+<div class="title-bar">
+	<p class="title">{{ title }}</p>
+	<button class="closeBtn" mat-icon-button (click)="closeDialog()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<div class="table-wrapper">
+	<table mat-table [dataSource]="dataSource" *ngIf="dataSource.data.length > 0">
+		<ng-container *ngFor="let column of tableConfig">
+			<ng-container [matColumnDef]="column.colName">
+				<th mat-header-cell *matHeaderCellDef class="col-width" style="--width: {{ column.width }}">{{ column.display }}</th>
+				<ng-container [ngSwitch]="column.type">
+					<ng-container *ngSwitchCase="'currency'">
+						<td mat-cell *matCellDef="let element; let j = dataIndex">
+							<cust-currency [amount]="element[column.colName]"></cust-currency>
+						</td>
+					</ng-container>
+					<ng-container *ngSwitchCase="'odometer'">
+						<td mat-cell *matCellDef="let element">
+							{{ element[column.colName] | thousandSeparator | postfix : "km" : true }}
+						</td>
+					</ng-container>
+					<ng-container *ngSwitchDefault>
+						<td mat-cell *matCellDef="let element">
+							<cust-button-tertiary
+								*ngIf="column.colName.includes('view')"
+								[type]="{
+									icon: column.icon ? column.icon : '',
+									iconSide: column.icon ? 'left' : '',
+									tooltip: column.tooltip ? column.tooltip : '',
+									display: column.disableDisplay ? '' : column.display,
+									value: column.colName,
+									disabled: false,
+									isTableButton: true
+								}"
+								(buttonClick)="navigateToStock(element)"
+							></cust-button-tertiary>
+							{{ element[column.colName] }}
+						</td>
+					</ng-container>
+				</ng-container>
+			</ng-container>
+		</ng-container>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+	</table>
+	<div *ngIf="dataSource.data.length === 0" class="empty-table-message"><h2>No records to display</h2></div>
+</div>

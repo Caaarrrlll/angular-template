@@ -1,0 +1,14 @@
+<span style="float: right; cursor: pointer"><mat-icon (click)="close()">close</mat-icon></span>
+<ng-container *ngIf="imageData$ | apiResponse | async as imageData">
+	<ng-container *ngIf="imageData.noData">
+		<span class="no-data">No images available</span>
+	</ng-container>
+	<ng-container *ngIf="imageData.payload">
+		<div class="image-container">
+			<img [src]="'data:image/jpeg;base64,' + imageData.payload.file.data" class="image" />
+		</div>
+	</ng-container>
+	<ng-container *ngIf="imageData.loading">
+		<cust-loader fontSize="60px"></cust-loader>
+	</ng-container>
+</ng-container>

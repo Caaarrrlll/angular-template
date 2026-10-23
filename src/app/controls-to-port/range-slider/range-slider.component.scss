@@ -1,0 +1,39 @@
+::ng-deep .mat-range-min-slider div.mat-slider-track-fill {
+	background-color: rgba(0, 0, 0, 0.26) !important;
+}
+
+::ng-deep .mat-range-min-slider div.mat-slider-track-background {
+	background-color: #ef6c00 !important;
+}
+
+mat-slider {
+	width: 100%;
+	margin: auto;
+	padding: 0px;
+}
+
+.rangeInput {
+	width: calc(50% - 7px);
+	display: inline-block;
+	margin: 0px;
+}
+
+.sliderDiv {
+	width: 360px;
+	overflow: hidden;
+}
+
+.sliderInnerDiv {
+	width: 50%;
+	min-height: 20px;
+	display: inline-block;
+}
+
+.inputDiv {
+	max-width: 360px;
+}
+
+mat-hint {
+	position: relative;
+	bottom: 4px;
+}

@@ -1,0 +1,20 @@
+.button-icon {
+	color: #75828e;
+	height: unset;
+	width: unset;
+	cursor: pointer;
+}
+
+.button-wrapper {
+	background-color: unset;
+	border: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	display: none;
+}
+
+.currency-spacing {
+	padding-right: 5px;
+}

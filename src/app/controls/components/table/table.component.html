@@ -1,0 +1,368 @@
+<div class="table-container">
+	<ng-container *ngIf="filters != null">
+		<div class="table-filters">
+			<app-linq-grid-filters
+				(filterChanged)="buttonEmit($event, 'updateFilters')"
+				(refreshClicked)="buttonEmit(filters, 'Refresh')"
+				[gridFilters]="filters"
+				[showCustomButton]="showCustomButton"
+				[showAddButton]="showAddButton"
+				[selectableColumns]="selectableColumns"
+				[displayedColumns]="columnsToDisplayWithExpand"
+				(customButtonClicked)="buttonEmit(null, 'exportToExcel')"
+				(addButtonClicked)="buttonEmit(null, 'add')"
+				(displayedColumnsChanged)="buttonEmit($event, 'displayedColumnsChanged')"
+				[exporting]="exporting"
+			></app-linq-grid-filters></div
+	></ng-container>
+
+	<div
+		class="table-wrapper"
+		[ngClass]="{ 'table-wrapper-height-no-filter': filters == null, 'table-wrapper-height': filters != null }"
+		*ngIf="listObservable | apiResponse | async as listObs"
+	>
+		<table
+			mat-table
+			[dataSource]="listObs.payload"
+			matSort
+			multiTemplateDataRows
+			[matSortActive]="defaultSort"
+			[matSortDirection]="'desc'"
+			(matSortChange)="announceSortChange($event)"
+		>
+			<ng-container *ngFor="let col of displayedColumns; let i = index">
+				<ng-container matColumnDef="{{ col }}" [sticky]="tableConfig[i].sticky">
+					<th
+						mat-header-cell
+						*matHeaderCellDef
+						mat-header-cell
+						mat-sort-header="{{ col }}"
+						class="col-width"
+						style="--width: {{ tableConfig[i].width }}"
+						[disabled]="tableConfig[i].disableSort"
+					>
+						<div *ngIf="!tableConfig[i].type?.includes('button')">
+							{{ tableConfig[i].display }}
+						</div>
+					</th>
+					<ng-container [ngSwitch]="tableConfig[i].type">
+						<ng-container *ngSwitchCase="'text'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								{{ element[col] }}
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'titleText'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								{{ element[col] ?? "None" | titlecase }}
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'spaceUpperCase'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								{{ element[col] ?? "None" | spaceBetweenUppercase }}
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'date'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								{{ element[col] | date : "yyyy/MM/dd" }}
+							</td>
+						</ng-container>
+
+						<ng-container
+							*ngSwitchCase="'dateTime'"
+							[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+							[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+						>
+							<td mat-cell *matCellDef="let element">{{ element[col] | date : "yyyy/MM/dd HH:mm" : tableConfig[i].timeZone }}</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'dateInPast'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="isDateInPast(element[col]) ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="isDateInPast(element[col]) ? '800' : '400'"
+							>
+								{{ element[col] | date : "yyyy/MM/dd" }}
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'timeAgo'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								<div *ngIf="element[col]">{{ element[col] | date : "yyyy/MM/dd" }} ({{ element[col] | date : "yyyy/MM/dd HH:mm" | dayAndHours }})</div>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'currency'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								<cust-currency [amount]="element[col]"></cust-currency>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'booleanInverse'">
+							<td mat-cell *matCellDef="let element">
+								<mat-icon *ngIf="!element[col]" style="color: #75bf44">check</mat-icon>
+								<mat-icon *ngIf="element[col]" style="color: #ff3826">close</mat-icon>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'boolean'">
+							<td mat-cell *matCellDef="let element">
+								<mat-icon *ngIf="element[col]" style="color: #75bf44">check</mat-icon>
+								<mat-icon *ngIf="!element[col]" style="color: #ff3826">close</mat-icon>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'yesNo'">
+							<td mat-cell *matCellDef="let element">
+								<ng-container *ngIf="element[col]"><span>Yes</span></ng-container>
+								<ng-container *ngIf="!element[col]"><span>No</span></ng-container>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'yesNoInverted'">
+							<td mat-cell *matCellDef="let element">
+								<ng-container *ngIf="element[col]"><span style="color: red">Yes</span></ng-container>
+								<ng-container *ngIf="!element[col]"><span>No</span></ng-container>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'odometer'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								{{ element[col] | thousandSeparator | postfix : "km" : true }}
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'buttonConditional'">
+							<td mat-cell *matCellDef="let row">
+								<cust-button-tertiary
+									*ngIf="row[tableConfig[i].colName]"
+									[type]="{
+										icon: tableConfig[i].icon ? tableConfig[i].icon : '',
+										iconSide: tableConfig[i].icon ? 'left' : '',
+										tooltip: tableConfig[i].tooltip ? tableConfig[i].tooltip : '',
+										display: tableConfig[i].disableDisplay ? '' : tableConfig[i].display,
+										value: tableConfig[i].colName,
+										disabled: false,
+										isTableButton: true
+									}"
+									(buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"
+								></cust-button-tertiary>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'buttonTertiary'">
+							<td mat-cell *matCellDef="let row">
+								<cust-button-tertiary
+									[type]="{
+										icon: tableConfig[i].icon ? tableConfig[i].icon : '',
+										iconSide: tableConfig[i].icon ? 'left' : '',
+										tooltip: tableConfig[i].tooltip ? tableConfig[i].tooltip : '',
+										display: tableConfig[i].disableDisplay ? '' : tableConfig[i].display,
+										value: tableConfig[i].colName,
+										disabled: false,
+										isTableButton: true
+									}"
+									(buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"
+								></cust-button-tertiary>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'buttonPrimary'">
+							<td mat-cell *matCellDef="let row">
+								<cust-button-primary
+									[type]="{
+										icon: tableConfig[i].icon ? tableConfig[i].icon : '',
+										tooltip: tableConfig[i].tooltip ? tableConfig[i].tooltip : '',
+										display: tableConfig[i].disableDisplay ? '' : tableConfig[i].display,
+										value: tableConfig[i].colName,
+										disabled: false,
+										isTableButton: true
+									}"
+									(buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"
+								></cust-button-primary>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'button'">
+							<td mat-cell *matCellDef="let row">
+								<cust-button-secondary
+									[type]="{
+										icon: '',
+										tooltip: tableConfig[i].tooltip ? tableConfig[i].tooltip : '',
+										display: tableConfig[i].display,
+										value: tableConfig[i].colName,
+										disabled: false,
+										isTableButton: true
+									}"
+									(buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"
+								></cust-button-secondary>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'percentage'">
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								{{ element[col] | postfix : (element[col] != "" ? "%" : "") }}
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'probabilityReverse'">
+							<td mat-cell *matCellDef="let element">{{ 1 - element[col] | percent }}</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'textLink'">
+							<td mat-cell *matCellDef="let element" style="cursor: pointer" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)">
+								<u>{{ element[col] }}</u>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'textLinkCurrency'">
+							<td mat-cell *matCellDef="let element" style="cursor: pointer" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)">
+								<u> <cust-currency [amount]="element[col]"></cust-currency></u>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'dictionary'">
+							<td mat-cell *matCellDef="let element; let j = dataIndex">
+								{{ tableConfig[i]?.dictionary[element[col]] }}
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'favouriteButton'">
+							<td mat-cell *matCellDef="let row">
+								<cust-button-tertiary
+									[type]="{
+										icon: row[col] ? 'star' : 'star_border',
+										iconSide: tableConfig[i].icon ? 'left' : '',
+										tooltip: tableConfig[i].tooltip ? tableConfig[i].tooltip : '',
+										display: '',
+										value: tableConfig[i].colName,
+										disabled: false,
+										isTableButton: true
+									}"
+									(buttonClick)="buttonEmit(row, tableConfig[i].display)"
+								></cust-button-tertiary>
+							</td>
+						</ng-container>
+						<ng-container *ngSwitchCase="'listPopupHover'">
+							<td mat-cell *matCellDef="let element; let j = dataIndex" (mouseover)="mouseOver(j, col)" (mouseleave)="mouseLeave()">
+								<div *ngIf="element[col].length > 1">{{ element[col][0] }}, ...</div>
+								<div *ngIf="element[col].length === 1">{{ element[col][0] }}</div>
+								<ng-container *ngIf="currentHover.index === j && currentHover.column == col && element[col].length > 0">
+									<div class="card-popup">
+										<div *ngFor="let item of element[col]" class="list-item">{{ item }}</div>
+									</div>
+								</ng-container>
+							</td>
+						</ng-container>
+
+						<ng-container *ngSwitchDefault>
+							<td
+								mat-cell
+								*matCellDef="let element; let j = dataIndex"
+								[style.color]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? tableConfig[i]?.highlightColor[j] : '#000'"
+								[style.font-weight]="tableConfig[i]?.highlightColor?.length > 0 && tableConfig[i]?.highlightColor[j] ? '800' : '400'"
+							>
+								{{ element[col] }}
+							</td>
+						</ng-container>
+					</ng-container>
+				</ng-container>
+			</ng-container>
+
+			<ng-container matColumnDef="expand" sticky>
+				<th style="width: 2em" mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+				<td mat-cell *matCellDef="let element">
+					<button
+						*ngIf="element.expandable"
+						mat-flat-button
+						aria-label="expand row"
+						(click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation(); setInjector(element)"
+					>
+						<mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+						<mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+					</button>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="expandedDetail" sticky>
+				<td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+					<div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+						<ng-container *ngIf="element.expandable">
+							<ng-container *ngComponentOutlet="template.componentType; injector: myInjector">element</ng-container>
+						</ng-container>
+					</div>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand; sticky: true"></tr>
+			<tr
+				id="{{ row.stockNumber }}"
+				mat-row
+				*matRowDef="let row; columns: columnsToDisplayWithExpand"
+				class="element-row"
+				[class.selected]="row === selectedVehicle || row.stockNumber === scrollToId"
+				[class.expanded-row]="expandedElement === element"
+			></tr>
+			<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+			<tr class="mat-row" *matNoDataRow>
+				<td class="mat-cell">No records available</td>
+			</tr>
+		</table>
+
+		<div *ngIf="listObs.error" style="padding: 5px">No data</div>
+		<mat-progress-bar class="progress-bar" *ngIf="listObs.loading" mode="indeterminate"></mat-progress-bar>
+	</div>
+
+	<div class="paginator" *ngIf="hasPagination">
+		<mat-paginator
+			(page)="buttonEmit($event, 'pageChange')"
+			[length]="custPage.pageTotal"
+			[pageIndex]="custPage.page"
+			[pageSize]="custPage.pageSize"
+			[pageSizeOptions]="custPage.pageSizeOptions"
+		></mat-paginator>
+	</div>
+</div>

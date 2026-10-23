@@ -1,0 +1,80 @@
+.button-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.rule-actions-container {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 5px;
+	}
+}
+
+.rules-container {
+	list-style-type: none;
+	position: relative;
+	margin: 4px 0;
+
+	.rule {
+		position: relative;
+		border: 1px solid #ccc;
+		padding: 10px;
+		margin-bottom: 10px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 5px;
+
+		.rule-input-container {
+			gap: 15px;
+			display: flex;
+			align-items: center;
+
+			.input-control {
+				width: fit-content;
+				min-width: 150px;
+				margin-bottom: -22px;
+			}
+
+			.expression-control {
+				@extend .input-control;
+				width: 120px;
+				min-width: 0;
+			}
+		}
+	}
+}
+
+.rule::before {
+	content: "";
+	left: -12px;
+	border-color: #ccc;
+	border-style: solid;
+	width: 9px;
+	height: calc(50% + 6px);
+	position: absolute;
+	top: -6px;
+	border-width: 0 0 2px 2px;
+}
+
+.rule:not(:last-child)::after {
+	content: "";
+	left: -12px;
+	border-color: #ccc;
+	border-style: solid;
+	width: 9px;
+	height: calc(50% + 6px);
+	position: absolute;
+	border-width: 0 0 0 2px;
+	top: 50%;
+	box-sizing: border-box;
+}
+
+.rule-set {
+	display: relative;
+}
+
+.width-100 {
+	width: 100%;
+}

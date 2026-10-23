@@ -1,0 +1,28 @@
+<mat-form-field appearance="fill">
+	<mat-label>{{ label }}</mat-label>
+	<input
+		[type]="isTextNumber ? 'text' : 'number'"
+		(keyup)="checkInput($event)"
+		[formControl]="inputControl.inputControl"
+		matInput
+		[placeholder]="placeholder"
+		[readonly]="isReadOnly"
+	/>
+	<button *ngIf="action != undefined" mat-button matSuffix class="button-wrapper" [title]="action.tooltip" (click)="buttonClick(action.value, action.parameters)">
+		<mat-icon class="button-icon">{{ action.icon }}</mat-icon>
+	</button>
+	<button
+		mat-button
+		*ngIf="inputControl.inputControl.value && inputControl.clear && !isReadOnly"
+		class="button-wrapper"
+		matSuffix
+		mat-icon-button
+		aria-label="Clear"
+		(click)="inputControl.inputControl.reset()"
+	>
+		<mat-icon>close</mat-icon>
+	</button>
+	<mat-error *ngFor="let error of inputControl.errors">
+		<ng-container *ngIf="inputControl.inputControl.hasError(error.name)">{{ error.message }}</ng-container>
+	</mat-error>
+</mat-form-field>

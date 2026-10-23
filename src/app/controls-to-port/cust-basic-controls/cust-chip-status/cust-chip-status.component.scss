@@ -1,0 +1,183 @@
+.chip-button {
+	white-space: nowrap;
+	user-select: none;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	color: var(--color);
+	border-width: 2px;
+	border-style: solid;
+	min-height: var(--chip-height);
+	font-size: var(--fontSize);
+	font-weight: var(--font-weight);
+	padding: 8px;
+
+	&.negative {
+		border: 2px solid #ff3826;
+	}
+
+	&.solid {
+		background-color: #2d4559;
+	}
+
+	&.default-background {
+		background-color: #fff;
+	}
+
+	&.action {
+		border: 2px solid #f79147;
+	}
+
+	&.informative {
+		border: 2px solid #75bf44;
+	}
+
+	.inactive {
+		border-color: 2px solid #8a8a92;
+	}
+
+	&.progress {
+		border: 2px solid #8a8a92;
+	}
+
+	&.progress {
+		border: 2px solid #f79147;
+	}
+
+	&.new {
+		border: 2px solid #65a1c3;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.newSale {
+		border: 2px solid #4f94bb;
+	}
+	&.Approved {
+		border: 2px solid #75bf44;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.Assigned {
+		border: 2px solid #f79147;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.awaitingCustomerAction {
+		border: 2px solid #f79147;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.customerContactAttemptFailed {
+		border: 2px solid #f79147;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.Escalated {
+		border: 2px solid #f79147;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.feedbackRequired {
+		border: 2px solid #8a8a92;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.legalActionRequired {
+		border: 2px solid #8a8a92;
+		background-color: #f3f3f3;
+		color: #000;
+	}
+
+	&.miosaReferred {
+		border: 2px solid #8a8a92;
+		background-color: #f3f3f3;
+		color: #000;
+	}
+
+	&.noAgreementReached {
+		border: 2px solid #f79147;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.rejected {
+		border: 2px solid #ff3826;
+		background-color: #f3f3f3;
+		color: #000;
+	}
+
+	&.rejectionLetterReviewed {
+		border: 2px solid #f79147;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.thirdPartyFeedbackRequired {
+		border: 2px solid #8a8a92;
+		background-color: #f3f3f3;
+		color: #000;
+	}
+
+	&.resolved {
+		border: 2px solid #75bf44;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.vehicleReleased {
+		border: 2px solid #75bf44;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.completedNatisDelivered {
+		border: 2px solid #75bf44;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.sold {
+		border: 2px solid #75bf44;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.saleInitiated {
+		border: 2px solid #75bf44;
+		background-color: #fff;
+		color: #000;
+	}
+	&.stock {
+		border: 2px solid #4f94bb;
+	}
+	&.reserved {
+		border: 2px solid #4f94bb;
+	}
+	&.default {
+		border: 2px solid #2d4559; //Do not change the default colour
+	}
+	&.bought {
+		border: 2px solid #4f94bb;
+	}
+	&.toBePriced {
+		border: 2px solid #4f94bb;
+	}
+	&.forSale {
+		border: 2px solid #f79147;
+	}
+	&.online {
+		border: 2px solid #f79147;
+	}
+	&.inTransit {
+		border: 2px solid #8a8a92;
+	}
+	&.NFS {
+		border: 2px solid #ff3826;
+	}
+}

@@ -1,0 +1,59 @@
+<mat-chip-list>
+	<mat-chip
+		*ngFor="let item of this.input"
+		[disabled]="item.disabled"
+		[hidden]="item.hidden"
+		(mouseover)="mouseOver(item)"
+		(mouseleave)="mouseLeave(item)"
+		(click)="!item.disabled ? chipAction(item, $event) : ''"
+		class="chip-button"
+		[style]="{
+			'--background': item.count > 0 && !item.showZero ? '#2d4559' : item.count == 0 && item.showZero ? '#DCDCDC' : !item.isToggle ? '#fff' : '#2d4559',
+			'--color': item.count > 0 && !item.showZero ? '#fff' : !item.isToggle ? '#18242E' : '#fff',
+			'--border': item.count > 0 && !item.showZero ? '#000' : '#E1E1E1',
+			'--hover-color': item.disabled == false ? '#3F607C' : '#DCDCDC',
+			'--hover-text-color': item.disabled == false ? '#FFF' : '#000'
+		}"
+	>
+		<div *ngIf="item.icon.length > 0" class="mat-icon-custom">
+			<mat-icon aria-hidden="false" aria-label="" fontIcon="{{ item.icon }}" class="mat-icon-content" style="padding-right: 5px"></mat-icon>
+		</div>
+		<div>
+			{{ item.display }}
+		</div>
+		<span style="padding-left: 10px" *ngIf="item.count > 0">
+			<div
+				*ngIf="!item.mouseOver"
+				class="circle"
+				[style]="{
+					'--width': item.count < 99 ? '18px' : '35px',
+					'--radius': item.count < 99 ? '50%' : '9999px',
+					'--background': !item.showZero ? '#ef6c00' : !item.isToggle ? '#fff' : '#ef6c00',
+					border: !item.showZero ? '1px solid #ef6c00' : !item.isToggle ? '1px solid #888888' : '1px solid #ef6c00',
+					color: !item.showZero ? '#fff' : !item.isToggle ? '#888888' : '#fff'
+				}"
+			>
+				<span class="circle-count" [style]="{ '--padding-left': item.count < 10 ? '1px' : '0px' }">{{ item.count }}</span>
+			</div>
+			<div
+				*ngIf="item.mouseOver"
+				class="circle"
+				[style]="{ '--width': item.count < 99 ? '18px' : '35px' }"
+				style="--background: #517ca0; --color: #fff; --width: 18px; --radius: 9999px; border: 1px solid #517ca0"
+				(click)="chipClearAction(item)"
+			>
+				<span *ngIf="!item.showZero && !item.refresh" class="circle-count">X</span>
+				<span *ngIf="!item.showZero && item.refresh" class="circle-count">
+					<mat-icon aria-hidden="false" aria-label="" fontIcon="refresh" class="circle-count mat-icon-count"></mat-icon>
+				</span>
+
+				<span *ngIf="item.showZero" class="circle-count">{{ item.count }}</span>
+			</div>
+		</span>
+		<span style="padding-left: 10px" *ngIf="item.count == 0 && item.showZero">
+			<div class="circle" style="--background: #e7e7e7; --color: #000; --width: 18px; --radius: 50%; border: 1px solid #000">
+				<span class="circle-count" style="padding-left: 1px">{{ item.count }}</span>
+			</div>
+		</span>
+	</mat-chip>
+</mat-chip-list>
