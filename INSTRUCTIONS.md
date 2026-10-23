@@ -13,3 +13,7 @@ Review `src/app/library/pipes/PIPES_CONTRACTS.md` before creating a pipe. When a
 ## Service Contracts
 
 Review `src/app/library/services/SERVICES_CONTRACTS.md` before creating a service. When a service is added, changed, or removed, update that file with its name, location, purpose, and public API.
+
+## Validator Contracts
+
+Review `src/app/library/validators/VALIDATORS_CONTRACTS.md` before creating a validator. When a validator is added, changed, or removed, update that file with its name, location, purpose, and usage.

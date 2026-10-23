@@ -22,7 +22,8 @@
       "@segments/*": ["./src/app/segments/*"],
       "@shared/components/*": ["./src/app/controls/components/*"],
       "@shared/pipes/*": ["./src/app/library/pipes/*"],
-      "@shared/services/*": ["./src/app/library/services/*"]
+      "@shared/services/*": ["./src/app/library/services/*"],
+      "@shared/validators/*": ["./src/app/library/validators/*"]
     },
     "useDefineForClassFields": false
   },

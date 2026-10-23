@@ -10,6 +10,7 @@ Read in this order when relevant to the task:
 2. `INSTRUCTIONS.md` - a set of instructions to follow.
 3. `src/app/library/pipes/PIPES_CONTRACTS.md` - existing pipe contracts; review before creating a pipe.
 4. `src/app/library/services/SERVICES_CONTRACTS.md` - existing service contracts; review before creating a service.
+5. `src/app/library/validators/VALIDATORS_CONTRACTS.md` - existing validator contracts; review before creating a validator.
 
 ## Core Priorities
 
@@ -28,7 +29,7 @@ When multiple solutions exist:
 - Avoid introducing dependencies.
 - Before introducing design patterns (except Observer and Iterator), declare them with an explanation and let the developer decide.
 - Before writing formatting, mapping, or label logic, search for an existing pipe or utility.
-- Before creating a pipe or service, review `src/app/library/pipes/PIPES_CONTRACTS.md` or `src/app/library/services/SERVICES_CONTRACTS.md` to avoid duplicating existing functionality.
+- Before creating a pipe or service, review `src/app/library/pipes/PIPES_CONTRACTS.md` or `src/app/library/services/SERVICES_CONTRACTS.md` to avoid duplicating existing functionality. Before creating a validator, review `src/app/library/validators/VALIDATORS_CONTRACTS.md`.
 
 ## Coding Standards
 
@@ -77,6 +78,7 @@ Do not:
 - `src/app/library`: Contains shared code and, in the future, interceptors, directives, validators, guards and utils.
 - `src/app/library/pipes`: Contains reusable pipes and `PIPES_CONTRACTS.md`.
 - `src/app/library/services`: Contains shared services (for example the logger service) and `SERVICES_CONTRACTS.md`.
+- `src/app/library/validators`: Contains reusable validators and `VALIDATORS_CONTRACTS.md`.
 
 ## Testing
 
