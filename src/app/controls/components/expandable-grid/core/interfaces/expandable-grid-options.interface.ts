@@ -1,4 +1,4 @@
-import { _Dictionary } from "@controls/index";
+import { _Dictionary } from "@shared/components/expandable-grid/core/interfaces/dictionary.interface";
 import { InputType } from "../types/input-type.type";
 
 export interface _ExpandableGridOptionsInterface {
@@ -6,6 +6,6 @@ export interface _ExpandableGridOptionsInterface {
 	type: InputType;
 	title?: string;
 	hint?: string;
-	typeValues?: _Dictionary<any>;
-    maxLength?: number;
+	typeValues?: _Dictionary<unknown>;
+	maxLength?: number;
 }

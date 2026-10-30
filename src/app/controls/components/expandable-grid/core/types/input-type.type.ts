@@ -1,1 +1,1 @@
-export type InputType = "input" | "dropdown" | "checkbox" | "textarea" | "timeSpanPicker" | "chipList" | "password" | "multi-select-dropdown";
+export type InputType = "input" | "dropdown" | "checkbox" | "textarea" | "password" | "multi-select-dropdown";

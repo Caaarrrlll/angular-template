@@ -1,51 +1,72 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { _ExpandableGridAdditionalButtonInterface } from "@controls/expandable-grid/core/interfaces/expandable-grid-additional-button.interface";
-import { _ExpandableGridOptionsInterface } from "../../core/interfaces/expandable-grid-options.interface";
+import { KeyValuePipe, TitleCasePipe } from "@angular/common";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { TextFieldModule } from "@angular/cdk/text-field";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { _ExpandableGridAdditionalButtonInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-additional-button.interface";
+import { _ExpandableGridOptionsInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-options.interface";
+import { _ExpandableGridRow } from "@shared/components/expandable-grid/core/types/expandable-grid-row.type";
 
 @Component({
 	selector: "app-expandable-grid-form",
 	templateUrl: "./expandable-grid-form.component.html",
 	styleUrls: ["./expandable-grid-form.component.scss"],
+	standalone: true,
+	imports: [ReactiveFormsModule, TitleCasePipe, KeyValuePipe, TextFieldModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatSelectModule],
 })
 export class ExpandableGridFormComponent {
-	private _currentElement!: Element;
+	private _currentElement?: _ExpandableGridRow;
 
 	@Input() public additionalButton?: _ExpandableGridAdditionalButtonInterface;
 	@Input()
-	public get currentElement(): Element {
+	public get currentElement(): _ExpandableGridRow | undefined {
 		return this._currentElement;
 	}
-	public set currentElement(v: Element | any) {
-		if (!!v) {
-			this._currentElement = v;
-			this.form.reset();
-			this.form.contains("cellIndex") && v.isNew ? this.form.controls["cellIndex"].setValue(999) : v;
-			this.form.patchValue(v);
+	public set currentElement(value: _ExpandableGridRow | undefined) {
+		if (!value) {
+			return;
 		}
+
+		this._currentElement = value;
+
+		if (!this.form) {
+			return;
+		}
+
+		this.form.reset();
+
+		if (this.form.contains("cellIndex") && value["isNew"]) {
+			this.form.controls["cellIndex"].setValue(999);
+		}
+
+		this.form.patchValue(value);
 	}
 	@Input() public form!: FormGroup;
 	@Input() public editableColumns: _ExpandableGridOptionsInterface[] = [];
-	@Input() public isDisabled: boolean = false;
-	@Output() public onClose = new EventEmitter<void>();
-	@Output() public onSave = new EventEmitter<any>();
+	@Input() public isDisabled = false;
+	@Output() public closed = new EventEmitter<void>();
+	@Output() public saved = new EventEmitter<unknown>();
 
-	constructor(private cdr: ChangeDetectorRef) {}
-
-	public close(): void {
-		this.onClose.emit();
-		this.form.reset();
-		this.cdr.detectChanges();
+	public hasError(key: string, error: string): boolean {
+		return this.form.controls[key]?.hasError(error) ?? false;
 	}
 
-	public save(): void {
-		this.onSave.emit(this.form.value);
+	public cancel(): void {
 		this.form.reset();
-		this.cdr.detectChanges();
-		this.close();
+		this.closed.emit();
 	}
 
-	public compareFn(option1: any, option2: any) {
-		return option1?.toString() === option2?.toString();
+	public submit(): void {
+		this.saved.emit(this.form.getRawValue());
+		this.form.reset();
+		this.closed.emit();
+	}
+
+	public compareFn(option1: unknown, option2: unknown): boolean {
+		return String(option1 ?? "") === String(option2 ?? "");
 	}
 }

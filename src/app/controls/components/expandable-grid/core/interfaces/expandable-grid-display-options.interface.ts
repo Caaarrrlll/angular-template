@@ -1,5 +1,5 @@
-export interface _ExpandableGridDisplayOptionsInterface {
+export interface _ExpandableGridDisplayOptionsInterface<T = Record<string, unknown>> {
 	columnDef: string;
 	header?: string;
-	cell?: any;
+	cell?: (element: T) => unknown;
 }

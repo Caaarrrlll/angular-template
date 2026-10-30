@@ -40,7 +40,6 @@ import { TimeInStringPipe } from "@pipes/time-in-string-pipe/time-in-string.pipe
 import { TimeMaskPipe } from "@pipes/time-mask.pipe";
 import { ToNumberPipe } from "@pipes/to-number.pipe";
 import { TrimCharactersPipe } from "@pipes/trim-characters.pipe";
-import { TruncatePipe } from "@pipes/truncate.pipe";
 import { RemoveUnderscorePipe } from "@pipes/underscore-to-title.pipe";
 import { DayAndHoursPipe } from "./day-and-hour-pipe/day-and-hours.pipe";
 
@@ -81,7 +80,6 @@ import { DayAndHoursPipe } from "./day-and-hour-pipe/day-and-hours.pipe";
 		TimeFormatPipe,
 		OrdinalPipe,
 		ToNumberPipe,
-		TruncatePipe,
 		NearestPipe,
 	],
 	exports: [
@@ -114,7 +112,6 @@ import { DayAndHoursPipe } from "./day-and-hour-pipe/day-and-hours.pipe";
 		OrdinalPipe,
 		DayAndHoursPipe,
 		ToNumberPipe,
-		TruncatePipe,
 		NearestPipe,
 		HideTradeRetailPipe,
 		FormatAnalyticsPipe,

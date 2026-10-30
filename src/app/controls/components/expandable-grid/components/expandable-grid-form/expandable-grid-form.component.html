@@ -1,94 +1,123 @@
 <form [formGroup]="form" class="grid-form">
-	<div *ngFor="let item of editableColumns">
-		<mat-form-field *ngIf="item.type === 'input' && !!item" class="form-field">
-			<mat-label>{{ (item.title | titlecase) ?? (item.key | titlecase) }}</mat-label>
-			<input
-				[disabled]="isDisabled"
-				matInput
-				[placeholder]="item.key | titlecase"
-				[formControlName]="item.key"
-				#formValue
-				title="{{ formValue.value }}"
-				maxlength="{{ item.maxLength ?? 100 }}"
-			/>
-			<mat-hint>{{ item?.hint }}</mat-hint>
-			<mat-error *ngIf="form.controls[item.key].hasError('required')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is required</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('maxlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too long</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('minlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too short</mat-error>
-		</mat-form-field>
+	@for (item of editableColumns; track item.key) {
+		@switch (item.type) {
+			@case ("input") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<input
+						[disabled]="isDisabled"
+						matInput
+						[placeholder]="item.key | titlecase"
+						[formControlName]="item.key"
+						#formValue
+						[attr.title]="formValue.value"
+						[attr.maxlength]="item.maxLength ?? 100" />
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+					@if (hasError(item.key, "maxlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too long</mat-error>
+					}
+					@if (hasError(item.key, "minlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too short</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("password") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<input [disabled]="isDisabled" type="password" matInput [placeholder]="item.key | titlecase" [formControlName]="item.key" [attr.maxlength]="item.maxLength ?? 100" />
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+					@if (hasError(item.key, "maxlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too long</mat-error>
+					}
+					@if (hasError(item.key, "minlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too short</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("textarea") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<textarea
+						[disabled]="isDisabled"
+						matInput
+						[placeholder]="item.key | titlecase"
+						[formControlName]="item.key"
+						cdkTextareaAutosize
+						cdkAutosizeMinRows="1"
+						[attr.maxlength]="item.maxLength ?? 100"></textarea>
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+					@if (hasError(item.key, "maxlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too long</mat-error>
+					}
+					@if (hasError(item.key, "minlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too short</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("dropdown") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<mat-select [disabled]="isDisabled" [formControlName]="item.key" [compareWith]="compareFn">
+						@for (option of item.typeValues ?? {} | keyvalue; track option.key) {
+							<mat-option [value]="option.key">{{ option.value }}</mat-option>
+						}
+					</mat-select>
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("multi-select-dropdown") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<mat-select [disabled]="isDisabled" [formControlName]="item.key" [compareWith]="compareFn" multiple>
+						@for (option of item.typeValues ?? {} | keyvalue; track option.key) {
+							<mat-option [value]="option.key">{{ option.value }}</mat-option>
+						}
+					</mat-select>
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("checkbox") {
+				<div class="form-field checkbox-container">
+					<mat-checkbox [disabled]="isDisabled" [formControlName]="item.key">{{ item.title || item.key | titlecase }}</mat-checkbox>
+				</div>
+			}
+		}
+	}
 
-		<mat-form-field *ngIf="item.type === 'password' && !!item" class="form-field">
-			<mat-label>{{ (item.title | titlecase) ?? (item.key | titlecase) }}</mat-label>
-			<input [disabled]="isDisabled" type="password" matInput [placeholder]="item.key | titlecase" [formControlName]="item.key" maxlength="{{ item.maxLength ?? 100 }}" />
-			<mat-hint>{{ item?.hint }}</mat-hint>
-			<mat-error *ngIf="form.controls[item.key].hasError('required')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is required</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('maxlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too long</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('minlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too short</mat-error>
-		</mat-form-field>
-
-		<mat-form-field *ngIf="item.type === 'textarea' && !!item" class="form-field">
-			<mat-label>{{ (item.title | titlecase) ?? (item.key | titlecase) }}</mat-label>
-			<textarea
-				[disabled]="isDisabled"
-				matInput
-				[placeholder]="item.key | titlecase"
-				[formControlName]="item.key"
-				cdkTextareaAutosize
-				cdkAutosizeMinRows="1"
-				maxlength="{{ item.maxLength ?? 100 }}"
-			>
-			</textarea>
-			<mat-hint>{{ item?.hint }}</mat-hint>
-			<mat-error *ngIf="form.controls[item.key].hasError('required')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is required</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('maxlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too long</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('minlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too short</mat-error>
-		</mat-form-field>
-
-		<mat-form-field *ngIf="item.type === 'dropdown' && !!item" class="form-field">
-			<mat-label>{{ (item.title | titlecase) ?? (item.key | titlecase) }}</mat-label>
-			<mat-select [disabled]="isDisabled" [formControlName]="item.key" [compareWith]="compareFn">
-				<mat-option *ngFor="let option of item?.typeValues | keyvalue" [value]="option.key">
-					{{ option?.value }}
-				</mat-option>
-			</mat-select>
-			<mat-hint>{{ item?.hint }}</mat-hint>
-			<mat-error *ngIf="form.controls[item.key].hasError('required')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is required</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('maxlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too long</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('minlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too short</mat-error>
-		</mat-form-field>
-
-        	<mat-form-field *ngIf="item.type === 'multi-select-dropdown' && !!item" class="form-field">
-			<mat-label>{{ (item.title | titlecase) ?? (item.key | titlecase) }}</mat-label>
-			<mat-select [disabled]="isDisabled" [formControlName]="item.key" [compareWith]="compareFn" multiple>
-				<mat-option *ngFor="let option of item?.typeValues | keyvalue" [value]="option.key">
-					{{ option?.value }}
-				</mat-option>
-			</mat-select>
-			<mat-hint>{{ item?.hint }}</mat-hint>
-			<mat-error *ngIf="form.controls[item.key].hasError('required')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is required</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('maxlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too long</mat-error>
-			<mat-error *ngIf="form.controls[item.key].hasError('minlength')">{{ (item.title | titlecase) ?? (item.key | titlecase) }} is too short</mat-error>
-		</mat-form-field>
-
-		<div *ngIf="item.type === 'checkbox' && !!item" class="form-field checkbox-container">
-			<mat-checkbox [disabled]="isDisabled" [formControlName]="item.key">{{ (item.title | titlecase) ?? (item.key | titlecase) }}</mat-checkbox>
-		</div>
-
-		<div *ngIf="item.type === 'timeSpanPicker' && !!item">
-			<app-time-span-picker [disabled]="isDisabled" [formControlName]="item.key" [title]="item.title!"></app-time-span-picker>
-		</div>
-
-		<div *ngIf="item.type === 'chipList' && !!item">
-			<app-chip-list [isDisabled]="isDisabled" [formControlName]="item.key" [title]="item.title!"></app-chip-list>
-		</div>
-	</div>
 	<div class="button-container">
-		<button mat-stroked-button color="accent" class="form-button" (click)="close()">Cancel</button>
-		<button [disabled]="isDisabled" mat-raised-button color="primary" class="form-button text-white" [disabled]="!form.valid" (click)="save()">
+		<button type="button" mat-stroked-button color="accent" class="form-button" (click)="cancel()">Cancel</button>
+		<button type="button" [disabled]="isDisabled || !form.valid" mat-raised-button color="primary" class="form-button text-white" (click)="submit()">
 			<span>Save</span>
 		</button>
-		<button [disabled]="isDisabled" *ngIf="additionalButton" mat-raised-button color="primary" class="form-button text-white" (click)="additionalButton.function()">
-			<span> {{ additionalButton.name }}</span>
-		</button>
+		@if (additionalButton) {
+			<button type="button" [disabled]="isDisabled" mat-raised-button color="primary" class="form-button text-white" (click)="additionalButton.action()">
+				<span>{{ additionalButton.name }}</span>
+			</button>
+		}
 	</div>
 </form>

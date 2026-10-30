@@ -9,6 +9,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 | Pipe | Name | File | Standalone | Summary |
 | --- | --- | --- | --- | --- |
 | `ApiResponsePipe` | `apiResponse` | `api-response/api-response.pipe.ts` | Yes | Converts an observable API call into loading, payload, error, and no-data view states. |
+| `TruncatePipe` | `truncate` | `truncate/truncate.pipe.ts` | Yes | Truncates text to a maximum length and appends a trailing string. |
 
 ## ApiResponsePipe
 
@@ -34,3 +35,19 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```
 
 - **Notes:** Migrated from `src/app/controls-to-port/pipes/api-response-pipe`. The legacy `ApiResponseModule` was removed; the pipe is standalone.
+
+## TruncatePipe
+
+- **Purpose:** Shortens long text so table cells and labels do not overflow.
+- **Inputs:**
+  - `text`: The string to truncate.
+  - `size`: Maximum number of characters to keep.
+  - `trail`: Optional suffix appended when text is truncated. Defaults to `...`.
+- **Output:** The original string when it fits, otherwise the first `size` characters followed by `trail`.
+- **Example:**
+
+  ```html
+  {{ longDescription | truncate: 85 }}
+  ```
+
+- **Notes:** Migrated from `src/app/controls-to-port/pipes/truncate.pipe.ts`; now standalone.

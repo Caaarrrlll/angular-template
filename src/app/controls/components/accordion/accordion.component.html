@@ -1,0 +1,24 @@
+<section class="accordion">
+	@for (item of items; track item; let i = $index) {
+		<div class="accordion__item" [class.disabled]="item.disabled" [class.active]="expanded.has(i)">
+			<ng-container
+				[ngTemplateOutlet]="item.customHeader?.templateRef ?? defaultHeader"
+				[ngTemplateOutletContext]="{ $implicit: item, index: i, toggle: toggleState }"></ng-container>
+			@if (expanded.has(i)) {
+				<div class="accordion__content" [animate.enter]="animation.enter" [animate.leave]="animation.leave">
+					<div class="accordion__content-inner">
+						@if (item.content?.templateRef) {
+							<ng-container [ngTemplateOutlet]="item.content.templateRef"></ng-container>
+						}
+					</div>
+				</div>
+			}
+		</div>
+	}
+</section>
+
+<ng-template #defaultHeader let-item let-index="index">
+	<button type="button" class="accordion__header" [disabled]="item.disabled" (click)="toggleState(index)">
+		<span class="accordion__toggle-btn"></span>
+	</button>
+</ng-template>

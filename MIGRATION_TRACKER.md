@@ -16,9 +16,9 @@ Tracks the migration of custom controls in `src/app/controls-to-port` to the new
 ## Summary
 
 - Total controls: 63
-- Migrated: 0
+- Migrated: 4
 - In progress: 0
-- Pending: 63
+- Pending: 59
 
 Update the summary whenever a control is finalised.
 
@@ -26,7 +26,7 @@ Update the summary whenever a control is finalised.
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Accordion | `accordion/` | Pending | |
+| Accordion | `accordion/` | Migrated | Standalone in `src/app/controls/components/accordion`; expansion uses CSS `animate.enter`/`animate.leave`. |
 
 ## Checkbox Group
 
@@ -39,7 +39,7 @@ Update the summary whenever a control is finalised.
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Confirmation dialog | `confirmation-dialog/` | Pending | |
+| Confirmation dialog | `confirmation-dialog/` | Migrated | Standalone in `src/app/controls/components/confirmation-dialog`; ported as a dependency of the Expandable Grid. |
 
 ## Basic Controls
 
@@ -182,8 +182,8 @@ Update the summary whenever a control is finalised.
 | Drag drop file upload with comment | `drag-drop-file-upload-with-comment/` | Pending | |
 | Dynamic material dialog | `dynamic-material-dialog/` | Pending | |
 | Dynamic window | `dynamic-window/` | Pending | |
-| Expandable grid | `expandable-grid/` | Pending | |
-| Expandable grid form | `expandable-grid/components/expandable-grid-form/` | Pending | |
+| Expandable grid | `expandable-grid/` | Migrated | Standalone in `src/app/controls/components/expandable-grid`; detail expansion uses CSS `animate.enter`/`animate.leave`. |
+| Expandable grid form | `expandable-grid/components/expandable-grid-form/` | Migrated | Standalone; `timeSpanPicker` and `chipList` field types omitted until those controls are migrated. |
 | Numeric up/down | `numeric-up-down/` | Pending | |
 | Query builder | `query-builder/` | Pending | |
 | Range checkbox group | `range-checkbox-group/` | Pending | |
@@ -208,5 +208,5 @@ These are dependencies of the controls above and should be migrated alongside th
 | Click elsewhere directive | `cust-select/select/cust-click-elsewhere.directive.ts` | Pending | |
 | Tab next button directive | `cust-tab/tab-next-button.directive.ts` | Pending | |
 | Tab back button directive | `cust-tab/tab-back-button.directive.ts` | Pending | |
-| Accordion directives | `accordion/directives/` | Pending | |
+| Accordion directives | `accordion/directives/` | Migrated | Standalone attribute directives: `appAccordionItem`, `appAccordionHeader`, `appAccordionContent`. |
 | Shared grid filters | `shared-controls/grid-filters/` | Pending | Folder is currently empty. |

@@ -1,60 +1,63 @@
-import { animate, state, style, transition, trigger } from "@angular/animations";
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
-import { PaginationConstants } from "@apis/process-engine/constants/pagination-constants";
-import { _Dictionary } from "@apis/process-engine/models/dictionary.interface";
-import { _MatPaginatorInterface } from "@apis/process-engine/models/mat-paginator.interface";
-import { _PaginatedResponseInterface } from "@apis/process-engine/models/paginated-response.interface";
-import { _ExpandableGridAdditionalButtonInterface } from "@controls/expandable-grid/core/interfaces/expandable-grid-additional-button.interface";
-import { DialogService } from "@modules/process-engine-v2/shared/services/dialog.service";
-import { filter, first } from "rxjs";
-import { _ExpandableGridDisplayOptionsInterface } from "./core/interfaces/expandable-grid-display-options.interface";
-import { _ExpandableGridOptionsInterface } from "./core/interfaces/expandable-grid-options.interface";
-import { _ExpandableGridRulesInterface } from "./core/interfaces/expandable-grid-rules.interface";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatIconModule } from "@angular/material/icon";
+import { MatPaginator, MatPaginatorModule, PageEvent } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { ConfirmationDialogComponent } from "@shared/components/confirmation-dialog/confirmation-dialog.component";
+import { _ConfirmationDialogData } from "@shared/components/confirmation-dialog/confirmation-dialog.interface";
+import { ExpandableGridFormComponent } from "@shared/components/expandable-grid/components/expandable-grid-form/expandable-grid-form.component";
+import { _ExpandableGridAdditionalButtonInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-additional-button.interface";
+import { _ExpandableGridDisplayOptionsInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-display-options.interface";
+import { _ExpandableGridOptionsInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-options.interface";
+import { _ExpandableGridRulesInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-rules.interface";
+import { _ExpandableGridPaginatedDataInterface } from "@shared/components/expandable-grid/core/interfaces/paginated-response.interface";
+import { _ExpandableGridRow } from "@shared/components/expandable-grid/core/types/expandable-grid-row.type";
+import { TruncatePipe } from "@shared/pipes/truncate/truncate.pipe";
+import { first } from "rxjs";
+
+export type _ExpandableGridData<T> = _ExpandableGridPaginatedDataInterface<T> | T[];
 
 @Component({
 	selector: "app-expandable-grid",
 	templateUrl: "./expandable-grid.component.html",
 	styleUrls: ["./expandable-grid.component.scss"],
-	animations: [
-		trigger("detailExpand", [
-			state("collapsed", style({ height: "0px", minHeight: "0" })),
-			state("expanded", style({ height: "*" })),
-			transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
-		]),
-	],
+	standalone: true,
+	imports: [MatButtonModule, MatDialogModule, MatIconModule, MatPaginatorModule, MatProgressSpinnerModule, MatTableModule, ExpandableGridFormComponent, TruncatePipe],
 })
 export class ExpandableGridComponent implements OnInit {
-	private _gridData: any = undefined;
-	private _paginator!: MatPaginator;
+	private readonly dialog = inject(MatDialog);
+	private _gridData?: _ExpandableGridData<_ExpandableGridRow>;
+	private _paginator?: MatPaginator;
 
 	public expandColumns: string[] = [];
-	public expandedElement: any = undefined;
-	public paginationConstants = PaginationConstants;
-	public dataSource: MatTableDataSource<_PaginatedResponseInterface<any>> = new MatTableDataSource<_PaginatedResponseInterface<any>>();
-	public showAdd: boolean = true;
+	public expandedElement?: _ExpandableGridRow;
+	public dataSource: MatTableDataSource<_ExpandableGridRow> = new MatTableDataSource<_ExpandableGridRow>();
+	public showAdd = true;
 
 	@Input()
-	public get gridData(): any {
+	public get gridData(): _ExpandableGridData<_ExpandableGridRow> | undefined {
 		return this._gridData;
 	}
 
-	public set gridData(v: any) {
-		if (!!v) {
-			this._gridData = v;
-			this.initialize();
+	public set gridData(value: _ExpandableGridData<_ExpandableGridRow> | undefined) {
+		if (!value) {
+			return;
 		}
+
+		this._gridData = value;
+		this.initialize();
 	}
 
-	@Input() public isDisabled: boolean = false;
+	@Input() public isDisabled = false;
 	@Input() public additionalButton?: _ExpandableGridAdditionalButtonInterface;
-	@Input() public displayedColumns: _ExpandableGridDisplayOptionsInterface[] = [];
+	@Input() public displayedColumns: _ExpandableGridDisplayOptionsInterface<_ExpandableGridRow>[] = [];
 	@Input() public form!: FormGroup;
-	@Input() public componentData!: _PaginatedResponseInterface<any> | any;
-	@Input() public isLoading: boolean = false;
+	@Input() public isLoading = false;
 	@Input() public editableColumns: _ExpandableGridOptionsInterface[] = [];
+	@Input() public pageSizeOptions: number[] = [10, 25, 50, 100];
 	@Input() public gridRules: _ExpandableGridRulesInterface = {
 		delete: true,
 		edit: true,
@@ -62,87 +65,103 @@ export class ExpandableGridComponent implements OnInit {
 		arrow: false,
 	};
 
-	@Output() public onDelete = new EventEmitter<Event>();
-	@Output() public onSave = new EventEmitter<Event>();
-	@Output() public onPaginate = new EventEmitter<_MatPaginatorInterface>();
-	@Output() public onExpandElement? = new EventEmitter<Event>();
+	@Output() public delete = new EventEmitter<_ExpandableGridRow>();
+	@Output() public save = new EventEmitter<unknown>();
+	@Output() public pageChange = new EventEmitter<PageEvent>();
+	@Output() public expand = new EventEmitter<_ExpandableGridRow>();
 
-	@ViewChild("paginator") set paginator(value: MatPaginator) {
+	@ViewChild("paginator")
+	public set paginator(value: MatPaginator | undefined) {
 		this._paginator = value;
 	}
 
-	constructor(private _dialogService: DialogService) {}
-
-	private initialize(): void {
-		this.showAdd = true;
-		this.dataSource.data = this.gridData?.data ?? this.gridData;
-		if (!this.gridData.data) {
-			this.dataSource.paginator = this._paginator!;
-		}
+	public get paginatedData(): _ExpandableGridPaginatedDataInterface<_ExpandableGridRow> | undefined {
+		return this._gridData && !Array.isArray(this._gridData) ? this._gridData : undefined;
 	}
 
-	public openReadonlyElement(element: any): void {
+	public ngOnInit(): void {
+		this.expandColumns = [...this.displayedColumns.map((column) => column.columnDef), "expand"];
+	}
+
+	public formatCell(column: _ExpandableGridDisplayOptionsInterface<_ExpandableGridRow>, element: _ExpandableGridRow): string {
+		const value = column.cell?.(element) ?? element[column.columnDef];
+		return value === null || value === undefined || value === "null" ? "" : String(value);
+	}
+
+	public openReadonlyElement(element: _ExpandableGridRow, event?: Event): void {
+		event?.stopPropagation();
 		this.expandedElement = this.expandedElement === element ? undefined : element;
 		this.form.disable();
 		this.showAdd = !this.showAdd;
 	}
 
-	public openElement(element: any, cellIndex: any, $event?: Event): void {
-		$event?.stopPropagation();
-		this.onExpandElement?.emit(element);
+	public openElement(element: _ExpandableGridRow, cellIndex?: number, event?: Event): void {
+		event?.stopPropagation();
+		this.expand.emit(element);
 		this.expandedElement = this.expandedElement === element ? undefined : element;
-		if (this.expandedElement && !!this.form.controls["cellIndex"]) {
-			this.expandedElement["cellIndex"] = cellIndex;
+
+		if (this.expandedElement && this.form.contains("cellIndex") && cellIndex !== undefined) {
+			this.form.controls["cellIndex"].setValue(cellIndex);
 		}
+
 		if (this.isDisabled) {
 			this.form.disable();
 		} else {
 			this.form.enable();
 		}
+
 		this.showAdd = !this.showAdd;
 	}
 
 	public close(): void {
-		this.dataSource.data = this.dataSource.data.filter((x: any) => !x.isNew);
+		this.dataSource.data = this.dataSource.data.filter((row) => !row["isNew"]);
 		this.expandedElement = undefined;
 		this.showAdd = true;
 	}
 
 	public createElement(): void {
-		let obj: _Dictionary<string> = {};
-		const data: _Dictionary<string>[] = [];
-		for (const key of this.displayedColumns) {
-			obj = { ...obj, ...{ [key.columnDef]: null } };
-		}
-		obj = { ...obj, ...{ isNew: "true" } };
-		data.push(obj);
-		this.dataSource.data = [...(data as any[]), ...this.dataSource.data];
-		this.expandedElement = obj;
+		const row: _ExpandableGridRow = Object.fromEntries(this.displayedColumns.map((column) => [column.columnDef, null]));
+		row["isNew"] = true;
+		this.dataSource.data = [row, ...this.dataSource.data];
+		this.expandedElement = row;
 		this.showAdd = false;
 	}
 
-	public deleteElement(element: any, $event: Event): void {
-		$event.stopPropagation();
-		this._dialogService
-			.openConfirmationDialog()
-			.pipe(
-				first(),
-				filter((v) => !!v)
-			)
-			.subscribe(() => this.onDelete.emit(element));
+	public confirmDelete(element: _ExpandableGridRow, event: Event): void {
+		event.stopPropagation();
+		this.dialog
+			.open<ConfirmationDialogComponent, _ConfirmationDialogData, boolean>(ConfirmationDialogComponent, {
+				data: {
+					title: "Delete",
+					description: "Are you sure you want to delete this item?",
+				},
+			})
+			.afterClosed()
+			.pipe(first())
+			.subscribe((confirmed) => {
+				if (confirmed) {
+					this.delete.emit(element);
+				}
+			});
 		this.showAdd = true;
 	}
 
-	saveData(event): void {
+	public saveData(value: unknown): void {
 		this.showAdd = true;
-		this.onSave.emit(event);
+		this.save.emit(value);
 	}
 
-	public paginate(page: _MatPaginatorInterface): void {
-		this.onPaginate.emit(page);
+	public paginate(event: PageEvent): void {
+		this.pageChange.emit(event);
 	}
 
-	public ngOnInit(): void {
-		this.expandColumns = [...this.displayedColumns.map((x) => x.columnDef), "expand"];
+	private initialize(): void {
+		this.showAdd = true;
+		const gridData = this._gridData;
+		this.dataSource.data = Array.isArray(gridData) ? gridData : (gridData?.data ?? []);
+
+		if (!Array.isArray(gridData) && gridData && this._paginator) {
+			this.dataSource.paginator = this._paginator;
+		}
 	}
 }

@@ -16,8 +16,42 @@ tr.element-row:hover {
 }
 
 .expanded-detail {
+	display: grid;
+	grid-template-rows: 1fr;
 	overflow: hidden;
 	width: 100%;
+}
+
+.expanded-detail-inner {
+	min-height: 0;
+}
+
+.expanded-detail-enter {
+	animation: detail-expand 225ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.expanded-detail-leave {
+	animation: detail-collapse 225ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes detail-expand {
+	from {
+		grid-template-rows: 0fr;
+	}
+
+	to {
+		grid-template-rows: 1fr;
+	}
+}
+
+@keyframes detail-collapse {
+	from {
+		grid-template-rows: 1fr;
+	}
+
+	to {
+		grid-template-rows: 0fr;
+	}
 }
 
 .loader {
