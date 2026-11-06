@@ -44,6 +44,7 @@ When multiple solutions exist:
 - Do not use `Promise.resolve().then(...)`, `setTimeout`, or `detectChanges()`; prefer using `effect()`, `computed()`, or `afterNextRender` to wait for render effects.
 - When adding logs, do not use the default `console.(log|error|etc)`; inject the logger service in the project.
 - Use the new Angular control flow syntax (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch` in templates.
+- Keep animations with the control they belong to, in an `animations/` folder inside that control (for example `src/app/controls/components/accordion/animations/accordion-expansion-animation.ts`); do not place control-specific animations in a shared/global animations folder.
 
 ## Code Reviews
 
@@ -73,8 +74,7 @@ Do not:
 
 - `src/app`: Contains the source code.
 - `src/assets`: Contains all the assets.
-- `src/app/animations`: Contains reusable Angular animation definitions.
-- `src/app/controls`: Contains reusable shared controls (for example the Navigation component).
+- `src/app/controls`: Contains reusable shared controls (for example the Navigation component). Control-specific animations live in an `animations` folder inside the owning control (for example `src/app/controls/components/accordion/animations/`).
 - `src/app/controls-to-port`: Temporary folder; contains a bunch of code moved from past projects to be consolidated into this project.
 - `src/app/segments`: Contains logical components that fulfil whole ideas; each segment can be seen as a whole feature.
 - `src/app/library`: Contains shared code and, in the future, interceptors, directives, validators, guards and utils.

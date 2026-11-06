@@ -21,8 +21,11 @@ import { _CustTableColumnHoverInterface } from "@shared/components/table/cust-ta
 import { _CustTableInterface } from "@shared/components/table/cust-table.interface";
 import { PASSED_INFO } from "@shared/components/table/table-constants.const";
 import { LinQRequestState } from "@models/LinQRequestState/LinQRequestState";
-import { PostfixModule } from "@pipes/postfix/postfix.module";
 import { PipesModule } from "@pipes/pipes.module";
+import { DayAndHoursPipe } from "@shared/pipes/day-and-hours/day-and-hours.pipe";
+import { PostfixPipe } from "@shared/pipes/postfix/postfix.pipe";
+import { SpaceBetweenUppercasePipe } from "@shared/pipes/space-between-uppercase/space-between-uppercase.pipe";
+import { ThousandSeparatorPipe } from "@shared/pipes/thousand-separator/thousand-separator.pipe";
 import { Observable, Subject } from "rxjs";
 
 @Component({
@@ -33,7 +36,10 @@ import { Observable, Subject } from "rxjs";
 	imports: [
 		CommonModule,
 		PipesModule,
-		PostfixModule,
+		DayAndHoursPipe,
+		PostfixPipe,
+		SpaceBetweenUppercasePipe,
+		ThousandSeparatorPipe,
 		LinqGridFiltersModule,
 		MatCheckboxModule,
 		MatPaginatorModule,

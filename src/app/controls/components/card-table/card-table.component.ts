@@ -19,7 +19,6 @@ import { _CUSTPage } from "@controls/cust-page/cust-page.class";
 import { _LinQGridFilterItem } from "@controls/linq-grid-filters/linq-grid-filter-item.model";
 import { LinqGridFiltersModule } from "@controls/linq-grid-filters/linq-grid-filters.module";
 import { PipesModule } from "@pipes/pipes.module";
-import { PostfixModule } from "@pipes/postfix/postfix.module";
 import {
 	_CustCardButtonTableInterface,
 	_CustCardHeaderTableInterface,
@@ -37,7 +36,6 @@ import { Observable, Subject } from "rxjs";
 	imports: [
 		CommonModule,
 		PipesModule,
-		PostfixModule,
 		LinqGridFiltersModule,
 		MatCheckboxModule,
 		MatPaginatorModule,
@@ -62,7 +60,6 @@ import { Observable, Subject } from "rxjs";
 	],
 })
 export class CardTableComponent implements OnDestroy, AfterContentInit {
-
 	@Input() listObservable: Observable<unknown>;
 	@Input() filters: _LinQGridFilterItem[];
 	@Input() custPage: _CUSTPage;
@@ -102,8 +99,6 @@ export class CardTableComponent implements OnDestroy, AfterContentInit {
 	};
 
 	taskName = undefined;
-
-
 
 	ngAfterContentInit(): void {
 		this.cardHeader = this.tableWrapper.cardHeaders;

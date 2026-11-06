@@ -4,6 +4,8 @@ Tracks the migration of custom controls in `src/app/controls-to-port` to the new
 
 > **Note:** `src/app/controls-to-port` does not have to be kept in a working state. Once a control or supporting item is migrated, it can be removed from the old code.
 
+> **Animation migration:** Extract each animation into its own file in an `animations/` folder inside the owning control (for example `src/app/controls/components/accordion/animations/accordion-expansion-animation.ts`) and convert deprecated `@angular/animations` triggers to the newer `animate.enter`/`animate.leave` standard.
+
 ## Status key
 
 | Status | Meaning |
@@ -19,8 +21,11 @@ Tracks the migration of custom controls in `src/app/controls-to-port` to the new
 - Migrated: 4
 - In progress: 0
 - Pending: 59
+- Pending helper services: 13
+- Migrated pipes: 14
+- Pending legacy pipes: 21
 
-Update the summary whenever a control is finalised.
+Update the summary whenever a control, helper service, or pipe is finalised.
 
 ## Accordion
 
@@ -192,6 +197,47 @@ Update the summary whenever a control is finalised.
 | Search address | `search-address/` | Pending | |
 | Time span picker | `time-span-picker/` | Pending | |
 | Zoomable image | `zoomable-image/` | Pending | |
+
+## Services
+
+Helper services in `src/app/controls-to-port/services`; review each for potential porting.
+
+| Service | Source | Status | Notes |
+| --- | --- | --- | --- |
+| App shell service | `services/app-shell.service.ts` | Pending | Tracks menu behaviour (`over`/`side`) via `BehaviorSubject`. |
+| Base64 to blob service | `services/b64-to-blob.service.ts` | Pending | Converts base64 data to `Blob`; uses Node `Buffer`. |
+| Custom preloading strategy service | `services/custom-preloading-strategy.service.ts` | Pending | Preloads routes when `route.data.preload` is set. |
+| Date/time ops service | `services/date-time-ops.service.ts` | Pending | Relative-time formatting and date helpers; uses `DatePipe`. |
+| Error handling service | `services/error-handling.service.ts` | Pending | Global `ErrorHandler`; depends on `SnackbarService`. |
+| Grid storage service | `services/grid-storage.service.ts` | Pending | Session-stored grid filter state; uses Kendo `DataSourceRequestState`. |
+| Locale service | `services/locale.service.ts` | Pending | Loads Kendo CLDR locale data and switches the active locale. |
+| Login service | `services/login.service.ts` | Pending | Authentication/JWT handling; depends on `NotificationService`, `User`, and `jwt-decode`. |
+| Navigation service | `services/navigation.service.ts` | Pending | Builds role/country-filtered menus; depends on `LoginService` and models. |
+| Notification service | `services/notification.service.ts` | Pending | SignalR notifications/chat; depends on Kendo, API models, and SignalR. |
+| Open page service | `services/open-page.service.ts` | Pending | Routing helper for in-app/new-tab navigation; class name is `openPageService`. |
+| Search retain service | `services/search-retain.service.ts` | Pending | Holds and clears the grid search value via `BehaviorSubject`. |
+| Snackbar service | `services/snackbar.service.ts` | Pending | Kendo notification wrapper; depends on `LoginService`. |
+
+## Pipes
+
+Contracts for migrated pipes live in `src/app/library/pipes/PIPES_CONTRACTS.md`.
+
+| Pipe | Source | Status | Notes |
+| --- | --- | --- | --- |
+| Absolute | `pipes/absolute.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/absolute`. |
+| Camel to title | `pipes/camel-to-title.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/camel-to-title`. |
+| Currency in string | `pipes/currency-in-string-pipe/` | Migrated | Standalone in `src/app/library/pipes/currency-in-string`; uses `formatCurrency`. |
+| Day and hours | `pipes/day-and-hour-pipe/` | Migrated | Standalone in `src/app/library/pipes/day-and-hours`. |
+| Format null | `pipes/format-null-pipe/` | Migrated | Standalone in `src/app/library/pipes/format-null`; template name `formatNull`. |
+| Obscure text | `pipes/obscure-text-pipe/` | Migrated | Standalone in `src/app/library/pipes/obscure-text`. |
+| Pascal to title | `pipes/pascal-to-title-pipe/` | Migrated | Standalone in `src/app/library/pipes/pascal-to-title`. |
+| Postfix | `pipes/postfix/` | Migrated | Standalone in `src/app/library/pipes/postfix`. |
+| Remove spaces | `pipes/remove-spaces-pipe/` | Migrated | Standalone in `src/app/library/pipes/remove-spaces`. |
+| Remove underscore | `pipes/underscore-to-title.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/remove-underscore`; template name `removeUnderscore`. |
+| Round to Nth | `pipes/round-to-nth-pipe/` | Migrated | Standalone in `src/app/library/pipes/round-to-nth`. |
+| Safe | `pipes/safe.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/safe`; injects `DomSanitizer`. |
+| Space between uppercase | `pipes/space-between-uppercase-pipe/` | Migrated | Standalone in `src/app/library/pipes/space-between-uppercase`; class renamed to `SpaceBetweenUppercasePipe`. |
+| Thousand separator | `pipes/thousand-separator-pipe/` | Migrated | Standalone in `src/app/library/pipes/thousand-separator`. |
 
 ## Supporting Code
 

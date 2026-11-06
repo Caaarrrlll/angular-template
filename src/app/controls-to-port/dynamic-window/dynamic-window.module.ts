@@ -2,12 +2,13 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PipesModule } from "@pipes/pipes.module";
+import { SafePipe } from "@shared/pipes/safe/safe.pipe";
 import { KendoModule } from "src/app/kendo.module";
 import { CustButtonModule } from "../cust-button/cust-button.module";
 import { DynamicWindowComponent } from "./dynamic-window.component";
 
 @NgModule({
-	imports: [CommonModule, KendoModule, FormsModule, ReactiveFormsModule, CustButtonModule, PipesModule],
+	imports: [CommonModule, KendoModule, FormsModule, ReactiveFormsModule, CustButtonModule, PipesModule, SafePipe],
 	declarations: [DynamicWindowComponent],
 	exports: [DynamicWindowComponent],
 })

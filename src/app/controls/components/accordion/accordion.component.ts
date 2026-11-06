@@ -1,6 +1,6 @@
-import { accordionExpansionAnimation } from "@animations/accordion-expansion-animation";
 import { NgTemplateOutlet } from "@angular/common";
 import { Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList } from "@angular/core";
+import { accordionExpansionAnimation } from "@shared/components/accordion/animations/accordion-expansion-animation";
 import { AccordionItemDirective } from "@shared/components/accordion/directives/accordion-item.directive";
 
 @Component({
