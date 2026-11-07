@@ -2,18 +2,9 @@ import { AfterViewInit, Component, ElementRef, Inject, NgZone, OnInit, ViewChild
 import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { MatSelectChange } from "@angular/material/select";
-import {
-	CheckBox,
-	CheckBoxRange,
-	DynamicDialogSetup,
-	FormType,
-	RadioButton,
-	ValidatorType,
-	_ControlInterface,
-	_FormData,
-} from "@controls/dynamic-material-dialog/dynamic-material-dialog-setup.model";
-import { _CustInputReturn, _custInputGeneral } from "@controls/cust-basic-controls/cust-basic-controls.interface";
-import { SnackbarService } from "@services/snackbar.service";
+import { ButtonToggleResponse } from "@shared/components/button-toggle/button-toggle.interface";
+import { CheckBox, CheckBoxRange, DynamicDialogSetup, FormType, RadioButton, ValidatorType, _ControlInterface, _FormData } from "./dynamic-material-dialog-setup.model";
+import { SnackbarService } from "@shared/services/snackbar.service";
 import { Observable, Subject } from "rxjs";
 import { debounceTime, filter, map, startWith, takeUntil } from "rxjs/operators";
 import { DynamicDialogService } from "./dynamic-dialog.service";
@@ -48,7 +39,6 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 	showSearch: boolean = false;
 	curRange: unknown;
 	selectedDate: Date;
-	inputObject: _custInputGeneral;
 	equalSelected: boolean = false;
 
 	constructor(
@@ -498,7 +488,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		this.files = files;
 	}
 
-	inputChange(event: _CustInputReturn, formName: string): void {
+	inputChange(event: ButtonToggleResponse, formName: string): void {
 		if (!this.dialogSetup.simple && formName === "secondOperator") {
 			if (!this.dialogSetup.controls[2].value) {
 				this.form.controls[this.dialogSetup.controls[3].formName].enable();

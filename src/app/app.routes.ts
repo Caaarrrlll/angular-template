@@ -1,4 +1,15 @@
 import { Routes } from "@angular/router";
+import { environment } from "../environments/environment";
+
+const sandboxRoutes: Routes =
+	environment.environmentName === "production"
+		? []
+		: [
+				{
+					path: "sandbox",
+					loadComponent: () => import("./segments/sandbox/components/sandbox/sandbox.component").then((m) => m.SandboxComponent),
+				},
+			];
 
 export const routes: Routes = [
 	{
@@ -14,6 +25,7 @@ export const routes: Routes = [
 		path: "contact-us",
 		loadComponent: () => import("./segments/contact/components/contact/contact.component").then((m) => m.ContactComponent),
 	},
+	...sandboxRoutes,
 	{
 		path: "**",
 		loadComponent: () => import("./segments/not-found/components/not-found/not-found.component").then((m) => m.NotFoundComponent),

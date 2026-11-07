@@ -3,8 +3,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -14,14 +12,15 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
-import { CheckboxGroupModule } from "@controls/checkbox-group/checkbox-group.module";
-import { DragDropFileUploadModule } from "@controls/drag-drop-file-upload/drag-drop-file-upload.module";
-import { DynamicMaterialDialogComponent } from "@controls/dynamic-material-dialog/dynamic-material-dialog.component";
-import { RangeCheckboxGroupModule } from "@controls/range-checkbox-group/range-checkbox-group.module";
-import { CustButtonToggleModule } from "@controls/cust-basic-controls/cust-button-toggle/cust-button-toggle.module";
-import { DateTransformDirectiveModule } from "@directives/date-transform.directive";
-import { MinMaxDirectiveModule } from "@directives/min-max.directive";
-import { PipesModule } from "@pipes/pipes.module";
+import { ButtonToggleComponent } from "@shared/components/button-toggle/button-toggle.component";
+import { CheckboxGroupComponent } from "@shared/components/checkbox-group/checkbox-group.component";
+import { CheckboxComponent } from "@shared/components/checkbox-group/checkbox/checkbox.component";
+import { RangeCheckboxGroupComponent } from "@shared/components/range-checkbox-group/range-checkbox-group.component";
+import { RangeCheckboxComponent } from "@shared/components/range-checkbox-group/range-checkbox/range-checkbox.component";
+import { DateTransformDirectiveModule } from "@shared/directives/date-transform.directive";
+import { DragAndDropFilesDirectiveModule } from "@shared/directives/drag-and-drop-files.directive";
+import { MinMaxDirectiveModule } from "@shared/directives/min-max.directive";
+import { DynamicMaterialDialogComponent } from "./dynamic-material-dialog.component";
 
 @NgModule({
 	declarations: [DynamicMaterialDialogComponent],
@@ -37,17 +36,16 @@ import { PipesModule } from "@pipes/pipes.module";
 		MatRadioModule,
 		MatSliderModule,
 		DragDropModule,
-		MatButtonToggleModule,
-		PipesModule,
-		MatCheckboxModule,
 		MatProgressSpinnerModule,
 		MatIconModule,
-		CheckboxGroupModule,
-		RangeCheckboxGroupModule,
-		DragDropFileUploadModule,
+		CheckboxGroupComponent,
+		CheckboxComponent,
+		RangeCheckboxGroupComponent,
+		RangeCheckboxComponent,
+		ButtonToggleComponent,
+		DragAndDropFilesDirectiveModule,
 		MinMaxDirectiveModule,
 		DateTransformDirectiveModule,
-		CustButtonToggleModule,
 	],
 	exports: [DynamicMaterialDialogComponent],
 })

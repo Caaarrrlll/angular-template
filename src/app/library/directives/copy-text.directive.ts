@@ -1,6 +1,6 @@
 import { Clipboard, ClipboardModule } from "@angular/cdk/clipboard";
 import { AfterViewInit, Directive, ElementRef, HostListener, Input, NgModule, OnChanges, Renderer2 } from "@angular/core";
-import { SnackbarService } from "@services/snackbar.service";
+import { SnackbarService } from "@shared/services/snackbar.service";
 
 @Directive({
 	selector: "[copyText]",

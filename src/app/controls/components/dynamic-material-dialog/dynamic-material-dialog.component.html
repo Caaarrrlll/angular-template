@@ -124,17 +124,17 @@
 
 				<!--            Button Group-->
 				<div *ngSwitchCase="formType.ButtonGroup" class="button-group-wrapper">
-					<cust-button-toggle style="width: 100%" [inputObj]="control" (inputChanged)="inputChange($event, control.formName)"></cust-button-toggle>
+					<app-button-toggle style="width: 100%" [inputObj]="control" (inputChanged)="inputChange($event, control.formName)"></app-button-toggle>
 				</div>
 
 				<!--            CUST Button Group-->
 				<div *ngSwitchCase="formType.CUSTButtonGroup" class="button-group-wrapper">
-					<cust-button-toggle
+					<app-button-toggle
 						style="width: 100%"
 						[inputObj]="control"
 						[equalToSelected]="equalSelected"
 						(inputChanged)="inputChange($event, control.formName)"
-					></cust-button-toggle>
+					></app-button-toggle>
 				</div>
 
 				<!--                Single Date-->

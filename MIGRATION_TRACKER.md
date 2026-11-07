@@ -17,11 +17,12 @@ Tracks the migration of custom controls in `src/app/controls-to-port` to the new
 
 ## Summary
 
-- Total controls: 63
-- Migrated: 4
+- Total controls: 62
+- Migrated: 9
 - In progress: 0
-- Pending: 59
-- Pending helper services: 13
+- Pending: 53
+- Migrated helper services: 1
+- Pending helper services: 12
 - Migrated pipes: 14
 - Pending legacy pipes: 21
 
@@ -37,8 +38,8 @@ Update the summary whenever a control, helper service, or pipe is finalised.
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Checkbox group | `checkbox-group/` | Pending | |
-| Checkbox | `checkbox-group/checkbox/` | Pending | |
+| Checkbox group | `checkbox-group/` | Migrated | Standalone in `src/app/controls/components/checkbox-group`; implements `ControlValueAccessor`. |
+| Checkbox | `checkbox-group/checkbox/` | Migrated | Standalone in `src/app/controls/components/checkbox-group/checkbox`; resolves the parent group with host injection. |
 
 ## Confirmation Dialog
 
@@ -54,7 +55,7 @@ Update the summary whenever a control, helper service, or pipe is finalised.
 | Button secondary | `cust-basic-controls/cust-button-secondary/` | Pending | |
 | Button tertiary | `cust-basic-controls/cust-button-tertiary/` | Pending | |
 | Button text | `cust-basic-controls/cust-button-text/` | Pending | |
-| Button toggle | `cust-basic-controls/cust-button-toggle/` | Pending | |
+| Button toggle | `cust-basic-controls/cust-button-toggle/` | Migrated | Standalone in `src/app/controls/components/button-toggle`; typed `ButtonToggleInput`/`ButtonToggleResponse`. |
 | Button v2 | `cust-basic-controls/cust-button-v2/` | Pending | |
 | Chip status | `cust-basic-controls/cust-chip-status/` | Pending | |
 | Chips | `cust-basic-controls/cust-chips/` | Pending | |
@@ -190,9 +191,8 @@ Update the summary whenever a control, helper service, or pipe is finalised.
 | Expandable grid | `expandable-grid/` | Migrated | Standalone in `src/app/controls/components/expandable-grid`; detail expansion uses CSS `animate.enter`/`animate.leave`. |
 | Expandable grid form | `expandable-grid/components/expandable-grid-form/` | Migrated | Standalone; `timeSpanPicker` and `chipList` field types omitted until those controls are migrated. |
 | Numeric up/down | `numeric-up-down/` | Pending | |
-| Query builder | `query-builder/` | Pending | |
-| Range checkbox group | `range-checkbox-group/` | Pending | |
-| Range checkbox | `range-checkbox-group/range-checkbox/` | Pending | |
+| Range checkbox group | `range-checkbox-group/` | Migrated | Standalone in `src/app/controls/components/range-checkbox-group`; typed `RangeCheckboxValue`. |
+| Range checkbox | `range-checkbox-group/range-checkbox/` | Migrated | Standalone in `src/app/controls/components/range-checkbox-group/range-checkbox`. |
 | Range slider | `range-slider/` | Pending | |
 | Search address | `search-address/` | Pending | |
 | Time span picker | `time-span-picker/` | Pending | |
@@ -216,7 +216,7 @@ Helper services in `src/app/controls-to-port/services`; review each for potentia
 | Notification service | `services/notification.service.ts` | Pending | SignalR notifications/chat; depends on Kendo, API models, and SignalR. |
 | Open page service | `services/open-page.service.ts` | Pending | Routing helper for in-app/new-tab navigation; class name is `openPageService`. |
 | Search retain service | `services/search-retain.service.ts` | Pending | Holds and clears the grid search value via `BehaviorSubject`. |
-| Snackbar service | `services/snackbar.service.ts` | Pending | Kendo notification wrapper; depends on `LoginService`. |
+| Snackbar service | `services/snackbar.service.ts` | Migrated | Replaced by the Material-based `SnackbarService` in `src/app/library/services/snackbar.service.ts`; duplicate suppression preserved. Stacked notifications/"Close All", the `errorList` buffer with `dev_show_error` gating, and the Kendo slide animation are intentionally dropped. Legacy consumers still in `controls-to-port` are listed in `SERVICES_CONTRACTS.md`. |
 
 ## Pipes
 
@@ -248,9 +248,8 @@ These are dependencies of the controls above and should be migrated alongside th
 | Page base class | `cust-page/cust-page.class.ts` | Pending | |
 | Basic controls service | `cust-basic-controls/cust-basic-controls.service.ts` | Pending | |
 | Dynamic dialog service | `dynamic-material-dialog/dynamic-dialog.service.ts` | Pending | |
-| Submit directive | `directives/submit.directive.ts` | Pending | |
-| Focus directive | `directives/focus.directive.ts` | Pending | |
-| After value change directive | `directives/after-value-change.directive.ts` | Pending | |
+| Shared directives | `directives/` | Migrated | Migrated to `src/app/library/directives`; legacy copies removed. |
+| Shared validators | `validators/` | Migrated | Migrated to `src/app/library/validators`; legacy copies removed. |
 | Click elsewhere directive | `cust-select/select/cust-click-elsewhere.directive.ts` | Pending | |
 | Tab next button directive | `cust-tab/tab-next-button.directive.ts` | Pending | |
 | Tab back button directive | `cust-tab/tab-back-button.directive.ts` | Pending | |

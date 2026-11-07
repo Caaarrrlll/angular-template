@@ -1,0 +1,38 @@
+<section class="sandbox">
+	<header class="sandbox__header">
+		<h1>Sandbox</h1>
+		<p>Deterministic mock data for exercising the migrated controls. Changes are kept in memory only.</p>
+	</header>
+
+	<section class="sandbox__section">
+		<h2>Accordion</h2>
+		<app-accordion [expandFirst]="true" (expandedItem)="onAccordionExpanded($event)">
+			@for (item of accordionItems; track item.title) {
+				<div appAccordionItem [title]="item.title" [disabled]="item.disabled">
+					<ng-template appAccordionHeader let-accordionItem let-toggle="toggle" let-index="index">
+						<button type="button" class="sandbox-accordion__header" [disabled]="accordionItem.disabled" (click)="toggle(index)">
+							<span>{{ accordionItem.title }}</span>
+							<mat-icon>expand_more</mat-icon>
+						</button>
+					</ng-template>
+					<ng-template appAccordionContent>
+						<p>{{ item.body }}</p>
+					</ng-template>
+				</div>
+			}
+		</app-accordion>
+	</section>
+
+	<section class="sandbox__section">
+		<h2>Expandable grid</h2>
+		<app-expandable-grid
+			[form]="gridForm"
+			[editableColumns]="editableColumns"
+			[displayedColumns]="gridColumns"
+			[gridData]="gridRows"
+			[gridRules]="gridRules"
+			(delete)="onGridDelete($event)"
+			(save)="onGridSave($event)">
+		</app-expandable-grid>
+	</section>
+</section>
