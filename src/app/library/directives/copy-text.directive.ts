@@ -1,32 +1,40 @@
-import { Clipboard, ClipboardModule } from "@angular/cdk/clipboard";
-import { AfterViewInit, Directive, ElementRef, HostListener, Input, NgModule, OnChanges, Renderer2 } from "@angular/core";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { AfterViewInit, Directive, ElementRef, HostListener, Input, OnChanges, Renderer2, inject } from "@angular/core";
 import { SnackbarService } from "@shared/services/snackbar.service";
 
 @Directive({
 	selector: "[copyText]",
+	standalone: true,
 })
 export class CopyTextDirective implements AfterViewInit, OnChanges {
 	// IF USING IN A GRID OR COMPONENT WHERE CHANGE DETECTION MIGHT BE
 	// AN ISSUE BIND TO THE INPUT INSTEAD OF USING --> this.element.textContent
 	// THIS WILL MAKE SURE THE MOST UP TO DATE VALUE IS USED
-	@Input() copyText: string;
-	private element: any;
-	private copyIcon: any;
-	private text: string;
+	@Input() copyText = "";
+	private readonly clipboard = inject(Clipboard);
+	private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+	private readonly snackbar = inject(SnackbarService);
+	private readonly renderer = inject(Renderer2);
 
-	constructor(private clipboard: Clipboard, private elementRef: ElementRef, private snackbar: SnackbarService, private renderer: Renderer2) {
-		this.element = this.elementRef.nativeElement;
+	private readonly element = this.elementRef.nativeElement;
+	private copyIcon: HTMLElement | undefined;
+	private text = "";
+
+	constructor() {
 		this.renderer.addClass(this.element, "copyAndPasteElement");
 	}
 
 	ngAfterViewInit(): void {
-		this.text = this.copyText ? this.copyText : this.element.textContent;
-		this.renderer.setAttribute(this.element, "title", 'Click to copy "' + this.text + '"');
+		this.updateText();
 		this.createIconAndApplyCSSClasses();
 	}
 
-	ngOnChanges() {
-		this.text = this.copyText ? this.copyText : this.element.textContent;
+	ngOnChanges(): void {
+		this.updateText();
+	}
+
+	private updateText(): void {
+		this.text = this.copyText ? this.copyText : this.element.textContent ?? "";
 		this.renderer.setAttribute(this.element, "title", 'Click to copy "' + this.text + '"');
 	}
 
@@ -49,17 +57,10 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 	}
 
 	@HostListener("mouseenter") onMouseEnter() {
-		this.renderer.addClass(this.copyIcon, "copyAndPasteIconActive");
+		if (this.copyIcon) this.renderer.addClass(this.copyIcon, "copyAndPasteIconActive");
 	}
 
 	@HostListener("mouseleave") onMouseLeave() {
-		this.renderer.removeClass(this.copyIcon, "copyAndPasteIconActive");
+		if (this.copyIcon) this.renderer.removeClass(this.copyIcon, "copyAndPasteIconActive");
 	}
 }
-
-@NgModule({
-	imports: [ClipboardModule],
-	declarations: [CopyTextDirective],
-	exports: [CopyTextDirective],
-})
-export class CopyTextDirectiveModule {}

@@ -1,7 +1,8 @@
-import { AfterViewInit, Directive, Input, NgModule, OnChanges, Renderer2 } from "@angular/core";
+import { AfterViewInit, Directive, Input, OnChanges, Renderer2, inject } from "@angular/core";
 
 @Directive({
 	selector: "[cursorFollowZoom]",
+	standalone: true,
 })
 export class ZoomDirective implements AfterViewInit, OnChanges {
 	@Input() cursorFollowZoom = false;
@@ -9,33 +10,32 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 	@Input() height = 300;
 	@Input() width = 400;
 	@Input() zoom = 2;
-	private zoomBox: any;
-	private image: HTMLImageElement;
-	private cursorListner: any;
-	private mouseWheelListner: any;
+	private zoomBox: HTMLElement | null = null;
+	private image: HTMLImageElement | undefined;
+	private cursorListner: (() => void) | undefined;
+	private mouseWheelListner: (() => void) | undefined;
 
-	constructor(private renderer: Renderer2) {}
+	private readonly renderer = inject(Renderer2);
 
 	ngOnChanges(): void {
-		if (!this.cursorFollowZoom) {
-			this.removeZoomBox();
-		} else {
+		this.removeZoomBox();
+		if (this.cursorFollowZoom && this.image) {
 			this.cursorListner = this.renderer.listen(this.image, "mousemove", this.positionZoomBox);
 			this.mouseWheelListner = this.renderer.listen(this.image, "mousewheel", this.changeZoomLevel);
 		}
 	}
 
-	ngAfterViewInit() {
-		this.zoomBox = this.renderer.selectRootElement("#galleryZoomBox");
-		this.image = this.renderer.selectRootElement("#" + this.imageID) as HTMLImageElement;
-		if (this.cursorFollowZoom) {
+	ngAfterViewInit(): void {
+		this.zoomBox = this.renderer.selectRootElement("#galleryZoomBox") as HTMLElement | null;
+		this.image = this.renderer.selectRootElement("#" + this.imageID) as HTMLImageElement | undefined;
+		if (this.cursorFollowZoom && this.image) {
 			this.cursorListner = this.renderer.listen(this.image, "mousemove", this.positionZoomBox);
 			this.mouseWheelListner = this.renderer.listen(this.image, "mousewheel", this.changeZoomLevel);
 		}
 	}
 
 	private positionZoomBox = (e: MouseEvent) => {
-		if (this.cursorFollowZoom && this.zoomBox) {
+		if (this.cursorFollowZoom && this.zoomBox && this.image) {
 			this.renderer.addClass(this.zoomBox, "galleryZoomBoxVisible");
 			this.zoomBox.style.width = this.width + "px";
 			this.zoomBox.style.height = this.height + "px";
@@ -75,13 +75,13 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 		}
 	};
 
-	private getCursorPosition = (e) => {
-		const x = e.x - this.image.getBoundingClientRect().left;
-		const y = e.y - this.image.getBoundingClientRect().top;
+	private getCursorPosition = (e: MouseEvent) => {
+		const x = e.x - this.image!.getBoundingClientRect().left;
+		const y = e.y - this.image!.getBoundingClientRect().top;
 		return { x, y };
 	};
 
-	private changeZoomLevel = (e: any) => {
+	private changeZoomLevel = (e: WheelEvent) => {
 		if (e.deltaY > 0) {
 			if (this.zoom > 1.25) {
 				this.zoom = this.zoom - 0.25;
@@ -98,9 +98,3 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 		this.positionZoomBox(e);
 	};
 }
-
-@NgModule({
-	declarations: [ZoomDirective],
-	exports: [ZoomDirective],
-})
-export class ZoomDirectiveModule {}

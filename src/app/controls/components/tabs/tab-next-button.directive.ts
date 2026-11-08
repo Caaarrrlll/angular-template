@@ -1,19 +1,19 @@
 import { Directive, HostListener, inject, Input } from "@angular/core";
-import { TabsComponent } from "@shared/components/tabs/tabs.component";
+import { TabsComponent } from "./tabs.component";
 
 @Directive({
 	selector: "button[custNextTabButton]",
-	standalone: false,
+	standalone: true,
 })
 export class TabNextButtonDirective {
 	private readonly tabsComponent = inject(TabsComponent);
 
-	@Input() required: boolean = false;
+	@Input() public required: boolean = false;
 
-	@HostListener("click", ["$event"])
-	onNextClick() {
+	@HostListener("click")
+	onNextClick(): void {
 		const tabs = this.tabsComponent.tabs.toArray();
-		const selectedIndex = tabs.map((t) => t.active).indexOf(true);
+		const selectedIndex = tabs.map((tab) => tab.active).indexOf(true);
 
 		if (this.required == false) {
 			tabs[selectedIndex].completed = true;
@@ -21,8 +21,8 @@ export class TabNextButtonDirective {
 
 		if (tabs[selectedIndex].stepControl) {
 			const form = tabs[selectedIndex].stepControl;
-			Object.keys(form.controls).forEach((field) => {
-				const control = form.get(field);
+			Object.keys(form!.controls).forEach((field) => {
+				const control = form!.get(field);
 				control?.markAsTouched({ onlySelf: true });
 			});
 		}

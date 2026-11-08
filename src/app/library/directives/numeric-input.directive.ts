@@ -1,4 +1,4 @@
-import { Directive, HostListener, NgModule } from "@angular/core";
+import { Directive, HostListener } from "@angular/core";
 
 /**
  * Set min max values on mat inputs.
@@ -10,19 +10,11 @@ import { Directive, HostListener, NgModule } from "@angular/core";
 
 @Directive({
 	selector: "[NumericInput]",
+	standalone: true,
 })
 export class NumericInputDirective {
-	constructor() {}
-
 	@HostListener("keypress", ["$event"])
-	public restrictToNumeric(event): boolean {
+	public restrictToNumeric(event: KeyboardEvent): boolean {
 		return /^([0-9])$/.test(event.key);
 	}
 }
-
-@NgModule({
-	imports: [],
-	declarations: [NumericInputDirective],
-	exports: [NumericInputDirective],
-})
-export class NumericInputDirectiveModule {}

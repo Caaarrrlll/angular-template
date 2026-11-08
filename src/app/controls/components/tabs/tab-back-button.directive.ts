@@ -1,17 +1,17 @@
 import { Directive, HostListener, inject } from "@angular/core";
-import { TabsComponent } from "@shared/components/tabs/tabs.component";
+import { TabsComponent } from "./tabs.component";
 
 @Directive({
 	selector: "button[custBackTabButton]",
-	standalone: false,
+	standalone: true,
 })
 export class TabBackButtonDirective {
 	private readonly tabsComponent = inject(TabsComponent);
 
-	@HostListener("click", ["$event"])
-	onBackClick() {
+	@HostListener("click")
+	onBackClick(): void {
 		const tabs = this.tabsComponent.tabs.toArray();
-		const selectedIndex = tabs.map((t) => t.active).indexOf(true);
+		const selectedIndex = tabs.map((tab) => tab.active).indexOf(true);
 		tabs[selectedIndex].active = false;
 		if (!tabs[selectedIndex - 1]) {
 			return;

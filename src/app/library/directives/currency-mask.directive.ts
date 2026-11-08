@@ -1,24 +1,26 @@
-import { Directive, HostListener, NgModule } from "@angular/core";
+import { Directive, HostListener, inject } from "@angular/core";
 import { NgControl } from "@angular/forms";
 
 @Directive({
 	selector: "[formControlName][appCurrencyMask]",
+	standalone: true,
 })
 export class CurrencyMaskDirective {
-	constructor(public ngControl: NgControl) {}
+	public readonly ngControl = inject(NgControl);
 
 	@HostListener("ngModelChange", ["$event"])
-	onModelChange(event) {
-		this.onInputChange(event, false);
+	onModelChange(event: Event): void {
+		this.onInputChange(typeof event === "string" ? event : "", false);
 	}
 
 	@HostListener("keydown.backspace", ["$event"])
-	keydownBackspace(event) {
+	keydownBackspace(event: Event): void {
+		if (!(event.target instanceof HTMLInputElement)) return;
 		this.onInputChange(event.target.value, true);
 	}
 
-	onInputChange(event, backspace) {
-		let newVal = event.replace(/\D/g, "");
+	private onInputChange(value: string, backspace: boolean): void {
+		let newVal = value.replace(/\D/g, "");
 
 		if (backspace && newVal.length <= 6) {
 			newVal = newVal.substring(0, newVal.length - 1);
@@ -44,20 +46,13 @@ export class CurrencyMaskDirective {
 			newVal = newVal.replace(/^(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/, "$1,$2,$3,$4");
 		}
 
-		this.ngControl.valueAccessor.writeValue("R" + newVal);
+		this.ngControl.valueAccessor?.writeValue("R" + newVal);
 	}
 
-	toNumber(val) {
-		let valArr = val.split("");
-		let valFiltered = valArr.filter((x) => !isNaN(x));
-		let valProcessed = valFiltered.join("");
-		return valProcessed;
+	toNumber(val: string): string {
+		return val
+			.split("")
+			.filter((x) => !isNaN(Number(x)))
+			.join("");
 	}
 }
-
-@NgModule({
-	imports: [],
-	declarations: [CurrencyMaskDirective],
-	exports: [CurrencyMaskDirective],
-})
-export class CurrencyMaskDirectiveModule {}

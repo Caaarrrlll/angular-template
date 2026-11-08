@@ -1,3 +1,5 @@
+import { RangeCheckboxValue } from "@shared/components/range-checkbox-group/range-checkbox-group.interface";
+
 export interface _ControlInterface {
 	type: FormType;
 	instructionText?: string;
@@ -8,25 +10,36 @@ export interface _ControlInterface {
 	validationDep?: string;
 }
 
+export interface _DialogControl {
+	type: FormType;
+	formName: string;
+	value?: any;
+	label?: string;
+	placeholder?: string;
+	inputType?: string;
+	autoComplete?: boolean;
+	multiple?: boolean;
+	multi?: boolean;
+	filterable?: boolean;
+	data?: _FormData[];
+	groups?: {
+		groupName: string;
+		data: _FormData[];
+	}[];
+	minValue?: number;
+	maxValue?: number;
+	increment?: number;
+	approveText?: string;
+	rejectText?: string;
+	disabled?: boolean;
+	hintText?: string;
+	instructionText?: string;
+	validators?: _ErrorValidation[];
+	validationDep?: string;
+}
+
 export class DynamicDialogSetup {
-	public controls?: (
-		| TextArea
-		| DialogInput
-		| CurrencyShortHand
-		| DropDown
-		| CUSTButtonGroup
-		| ButtonGroup
-		| SingleDate
-		| RangeDate
-		| DateTime
-		| Slider
-		| CheckBox
-		| RadioButton
-		| Approval
-		| Address
-		| Upload
-		| Numeric
-	)[];
+	public controls?: _DialogControl[];
 	public instructionText?: string;
 	public backButtonText?: string;
 	public hideBackButton?: boolean;
@@ -47,24 +60,7 @@ export class DynamicDialogSetup {
 		title,
 		simple = true,
 	}: {
-		controls?: (
-			| TextArea
-			| DialogInput
-			| CurrencyShortHand
-			| DropDown
-			| CUSTButtonGroup
-			| ButtonGroup
-			| SingleDate
-			| RangeDate
-			| DateTime
-			| Slider
-			| CheckBox
-			| RadioButton
-			| Approval
-			| Address
-			| Upload
-			| Numeric
-		)[];
+		controls?: _DialogControl[];
 		instructionText?: string;
 		backButtonText?: string;
 		hideBackButton?: boolean;
@@ -973,6 +969,8 @@ export class Numeric extends GenericControl {
 export interface _FormData {
 	value: any;
 	display: string;
+	range?: RangeCheckboxValue;
+	activated?: boolean;
 }
 
 export interface _ButtonGroupInput {
@@ -1020,5 +1018,5 @@ export enum FormType {
 	Approval,
 	Address,
 	Upload,
-	Number,
+	Numeric,
 }

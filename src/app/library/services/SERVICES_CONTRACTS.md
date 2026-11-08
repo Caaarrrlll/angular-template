@@ -74,10 +74,8 @@ The old Kendo-based `SnackbarService` in `src/app/controls-to-port/services/snac
 | Consumer | Location |
 | --- | --- |
 | Carousel | `src/app/controls-to-port/cust-carousel/carousel/carousel.component.ts` |
-| Dynamic material dialog | `src/app/controls-to-port/dynamic-material-dialog/dynamic-material-dialog.component.ts` |
 | Dynamic window | `src/app/controls-to-port/dynamic-window/dynamic-window.component.ts` |
 | Error handling service | `src/app/controls-to-port/services/error-handling.service.ts` |
-| Copy text directive | `src/app/controls-to-port/directives/copy-text.directive.ts` |
 
 The ported `copy-text` directive (`src/app/library/directives/copy-text.directive.ts`) and `dynamic-material-dialog` component (`src/app/controls/components/dynamic-material-dialog/dynamic-material-dialog.component.ts`) already use the new Material `SnackbarService`.
 

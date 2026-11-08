@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { AfterContentInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+import { TabComponent } from "./tab/tab.component";
 
 @Component({
 	selector: "app-tabs",
@@ -10,9 +11,9 @@ import { MatIconModule } from "@angular/material/icon";
 	imports: [CommonModule, MatIconModule],
 })
 export class TabsComponent implements AfterContentInit {
-	@ContentChildren(TabComponent, { descendants: true }) tabs: QueryList<TabComponent>;
-	@Input() linear = false;
-	@Output() tabSelectedEvent = new EventEmitter<number>();
+	@ContentChildren(TabComponent, { descendants: true }) public tabs!: QueryList<TabComponent>;
+	@Input() public linear = false;
+	@Output() public tabSelectedEvent = new EventEmitter<number>();
 
 	ngAfterContentInit() {
 		const activeTabs = this.tabs.filter((tab) => tab.active);
@@ -56,9 +57,9 @@ export class TabsComponent implements AfterContentInit {
 
 		if (tabs[selectedIndex].stepControl) {
 			const form = tabs[selectedIndex].stepControl;
-			Object.keys(form.controls).forEach((field) => {
-				const control = form.get(field);
-				control.markAsTouched({ onlySelf: true });
+			Object.keys(form!.controls).forEach((field) => {
+				const control = form!.get(field);
+				control?.markAsTouched({ onlySelf: true });
 			});
 		}
 

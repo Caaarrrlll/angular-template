@@ -2,7 +2,7 @@
 
 This file documents the shared validators in `src/app/library/validators`. Review it before creating a validator, and update it whenever a validator is added, changed, or removed.
 
-> Validators in `src/app/controls-to-port/validators` are legacy code and are not yet part of this contract. Add them here as they are migrated.
+> All validators previously in `src/app/controls-to-port/validators` have been migrated here; the legacy copies were removed.
 
 ## Validator Index
 

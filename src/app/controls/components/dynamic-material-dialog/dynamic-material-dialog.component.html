@@ -29,12 +29,12 @@
 				<div *ngIf="control.instructionText">{{ control.instructionText }}</div>
 
 				<!--            Text Area-->
-				<mat-form-field *ngSwitchCase="formType.TextArea" appearance="legacy">
+				<mat-form-field *ngSwitchCase="formType.TextArea">
 					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
-					<textarea [formControlName]="control.formName" [placeholder]="control.placeholder" matInput rows="4"></textarea>
+					<textarea [formControlName]="control.formName || ''" [placeholder]="control.placeholder || ''" matInput rows="4"></textarea>
 					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 					<mat-error *ngFor="let error of control.validators">
-						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+						<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 							error.errorMessage
 						}}</ng-template>
 					</mat-error>
@@ -42,19 +42,19 @@
 
 				<!--            Input-->
 				<div *ngSwitchCase="formType.Input">
-					<mat-form-field appearance="legacy">
+					<mat-form-field>
 						<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
 						<input
 							autocomplete="off"
-							[formControlName]="control.formName"
-							[type]="control.inputType"
+							[formControlName]="control.formName || ''"
+							[type]="control.inputType ?? 'text'"
 							matInput
 							(input)="controlChange(control)"
 							[(ngModel)]="control.value"
 						/>
 						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 						<mat-error *ngFor="let error of control.validators">
-							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 								error.errorMessage
 							}}</ng-template>
 						</mat-error>
@@ -72,51 +72,51 @@
 				</div>
 
 				<!--            Currency Short Hand-->
-				<mat-form-field *ngSwitchCase="formType.CurrencyShortHand" appearance="legacy">
+				<mat-form-field *ngSwitchCase="formType.CurrencyShortHand">
 					<mat-label>{{
-						!form.controls[control.formName].value
-							? control.label
-							: control.label + " of " + (form.controls[control.formName].value * 1000 | currency : "ZAR" : "symbol-narrow" : "1.0-0")
+						!form.controls[control.formName || ''].value
+							? (control.label || '')
+							: (control.label || '') + " of " + (form.controls[control.formName || ''].value * 1000 | currency : "ZAR" : "symbol-narrow" : "1.0-0")
 					}}</mat-label>
-					<input [formControlName]="control.formName" matInput type="number" />
+					<input [formControlName]="control.formName || ''" matInput type="number" />
 					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 					<mat-error *ngFor="let error of control.validators">
-						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+						<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 							error.errorMessage
 						}}</ng-template>
 					</mat-error>
 				</mat-form-field>
 
 				<!--           Drop Down -->
-				<mat-form-field *ngSwitchCase="formType.DropDown" appearance="legacy">
+				<mat-form-field *ngSwitchCase="formType.DropDown">
 					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
 					<mat-select
-						[formControlName]="control.formName"
-						[multiple]="control.multiple"
-						[disabled]="control.disabled"
-						(selectionChange)="dropdownChange($event, control.formName)"
+						[formControlName]="control.formName || ''"
+						[multiple]="control.multiple ?? false"
+						[disabled]="control.disabled ?? false"
+						(selectionChange)="dropdownChange($event, control.formName || '')"
 					>
 						<mat-option *ngFor="let option of control.data" [value]="option.value">{{ option.display }}</mat-option>
 					</mat-select>
 					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 					<mat-error *ngFor="let error of control.validators">
-						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+						<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 							error.errorMessage
 						}}</ng-template>
 					</mat-error>
 				</mat-form-field>
 
 				<!--                Drop Down Group-->
-				<mat-form-field *ngSwitchCase="formType.DropDownGroup" appearance="legacy">
+				<mat-form-field *ngSwitchCase="formType.DropDownGroup">
 					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
-					<mat-select [formControlName]="control.formName">
+					<mat-select [formControlName]="control.formName || ''">
 						<mat-optgroup *ngFor="let group of control.groups" [label]="group.groupName">
 							<mat-option *ngFor="let option of group.data" [value]="option.value">{{ option.display }}</mat-option>
 						</mat-optgroup>
 					</mat-select>
 					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 					<mat-error *ngFor="let error of control.validators">
-						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+						<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 							error.errorMessage
 						}}</ng-template>
 					</mat-error>
@@ -124,7 +124,7 @@
 
 				<!--            Button Group-->
 				<div *ngSwitchCase="formType.ButtonGroup" class="button-group-wrapper">
-					<app-button-toggle style="width: 100%" [inputObj]="control" (inputChanged)="inputChange($event, control.formName)"></app-button-toggle>
+					<app-button-toggle style="width: 100%" [inputObj]="control" (inputChanged)="inputChange($event, control.formName || '')"></app-button-toggle>
 				</div>
 
 				<!--            CUST Button Group-->
@@ -133,51 +133,50 @@
 						style="width: 100%"
 						[inputObj]="control"
 						[equalToSelected]="equalSelected"
-						(inputChanged)="inputChange($event, control.formName)"
+						(inputChanged)="inputChange($event, control.formName || '')"
 					></app-button-toggle>
 				</div>
 
 				<!--                Single Date-->
 				<div *ngSwitchCase="formType.SingleDate">
-					<mat-form-field appearance="legacy">
+					<mat-form-field>
 						<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
 						<input
-							[formControlName]="control.formName"
-							[matCalendar]="datepicker"
-							(input)="formatDate(control.formName)"
+							[formControlName]="control.formName || ''"
+							(input)="formatDate(control.formName || '')"
 							matInput
 							tabindex="-1"
 							[dateTransform]="'yyyy/MM/dd'"
 						/>
 						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 						<mat-error *ngFor="let error of control.validators">
-							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 								error.errorMessage
 							}}</ng-template>
 						</mat-error>
 					</mat-form-field>
-					<mat-calendar #datepicker [(selected)]="selectedDate" (selectedChange)="calendarUpdateControl($event, control.formName)"> </mat-calendar>
+					<mat-calendar #datepicker [(selected)]="selectedDate" (selectedChange)="calendarUpdateControl($event, control.formName || '')"> </mat-calendar>
 				</div>
 
 				<!--                Single Date String-->
 				<div *ngSwitchCase="formType.SingleDateString">
-					<mat-form-field appearance="legacy">
+					<mat-form-field>
 						<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
-						<input #singleDateStringInput [formControlName]="control.formName" [matDatepicker]="datepicker" matInput tabindex="-1" />
+						<input #singleDateStringInput [formControlName]="control.formName || ''" matInput tabindex="-1" />
 						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 						<mat-error *ngFor="let error of control.validators">
-							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 								error.errorMessage
 							}}</ng-template>
 						</mat-error>
 					</mat-form-field>
-					<mat-calendar #datepicker [(selected)]="form.get(control.formName).value" (selectedChange)="calendarUpdateControl($event, control.formName)"> </mat-calendar>
+					<mat-calendar #datepicker [selected]="form.controls[control.formName || ''].value" (selectedChange)="calendarUpdateControl($event, control.formName || '')"> </mat-calendar>
 				</div>
 
 				<!--                Range Date-->
-				<mat-form-field *ngSwitchCase="formType.RangeDate" appearance="legacy">
+				<mat-form-field *ngSwitchCase="formType.RangeDate">
 					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
-					<mat-date-range-input [formGroupName]="control.formName" [rangePicker]="rangePicker">
+					<mat-date-range-input [formGroupName]="control.formName || ''" [rangePicker]="rangePicker">
 						<input formControlName="start" matStartDate placeholder="Start date" />
 						<input formControlName="end" matEndDate placeholder="End date" />
 					</mat-date-range-input>
@@ -190,16 +189,16 @@
 						</mat-date-range-picker-actions>
 					</mat-date-range-picker>
 					<mat-error *ngFor="let error of control.validators">
-						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+						<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 							error.errorMessage
 						}}</ng-template>
 					</mat-error>
 				</mat-form-field>
 
 				<!--                Range Date String-->
-				<mat-form-field *ngSwitchCase="formType.RangeDateString" appearance="legacy">
+				<mat-form-field *ngSwitchCase="formType.RangeDateString">
 					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
-					<mat-date-range-input [formGroupName]="control.formName" [rangePicker]="rangePicker">
+					<mat-date-range-input [formGroupName]="control.formName || ''" [rangePicker]="rangePicker">
 						<input formControlName="start" matStartDate placeholder="Start date" />
 						<input formControlName="end" matEndDate placeholder="End date" />
 					</mat-date-range-input>
@@ -212,15 +211,15 @@
 						</mat-date-range-picker-actions>
 					</mat-date-range-picker>
 					<mat-error *ngFor="let error of control.validators">
-						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+						<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 							error.errorMessage
 						}}</ng-template>
 					</mat-error>
 				</mat-form-field>
 
 				<!--                Date Time Picker-->
-				<div *ngSwitchCase="formType.DateTime" [formGroupName]="control.formName" class="date-time-wrapper">
-					<mat-form-field appearance="legacy">
+				<div *ngSwitchCase="formType.DateTime" [formGroupName]="control.formName || ''" class="date-time-wrapper">
+					<mat-form-field>
 						<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
 						<input [matDatepicker]="datepicker" formControlName="date" matInput />
 						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
@@ -232,7 +231,7 @@
 							</mat-datepicker-actions>
 						</mat-datepicker>
 						<mat-error *ngFor="let error of control.validators">
-							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 								error.errorMessage
 							}}</ng-template>
 						</mat-error>
@@ -241,7 +240,7 @@
 						<mat-label>Enter time</mat-label>
 						<input formControlName="time" matInput type="time" />
 						<mat-error *ngFor="let error of control.validators">
-							<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+							<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 								error.errorMessage
 							}}</ng-template>
 						</mat-error>
@@ -251,11 +250,11 @@
 				<!--           Slider -->
 				<mat-slider
 					*ngSwitchCase="formType.Slider"
-					[formControlName]="control.formName"
-					[max]="control.maxValue"
-					[min]="control.minValue"
-					[step]="control.increment"
-					[thumbLabel]="true"
+					[formControlName]="control.formName || ''"
+					[max]="control.maxValue ?? 100"
+					[min]="control.minValue ?? 0"
+					[step]="control.increment ?? 1"
+					[discrete]="true"
 				></mat-slider>
 
 				<!--                Check box-->
@@ -264,7 +263,7 @@
 						<mat-label>Search</mat-label>
 						<input [formControl]="searchControl" matInput />
 					</mat-form-field>
-					<app-checkbox-group [formControlName]="control.formName" [multi]="control.multi" class="checkbox-group">
+					<app-checkbox-group [formControlName]="control.formName || ''" [multi]="control.multi ?? false" class="checkbox-group">
 						<app-checkbox *ngFor="let option of filteredData | async" [value]="option.value" (click)="rangeClicked(option)">{{ option.display }}</app-checkbox>
 					</app-checkbox-group>
 				</div>
@@ -275,8 +274,8 @@
 						<mat-label>Search</mat-label>
 						<input [formControl]="searchControl" matInput />
 					</mat-form-field>
-					<app-range-checkbox-group [formControlName]="control.formName" [multi]="control.multi" class="checkbox-group">
-						<app-range-checkbox *ngFor="let option of filteredData | async" [value]="option.range" (click)="rangeClicked(option)">{{
+					<app-range-checkbox-group [formControlName]="control.formName || ''" [multi]="control.multi ?? false" class="checkbox-group">
+						<app-range-checkbox *ngFor="let option of filteredData | async" [value]="$any(option.range)" (click)="rangeClicked(option)">{{
 							option.display
 						}}</app-range-checkbox>
 					</app-range-checkbox-group>
@@ -288,7 +287,7 @@
 						<mat-label>Search</mat-label>
 						<input [formControl]="searchControl" matInput />
 					</mat-form-field>
-					<mat-radio-group class="dynamic-radio-group" [formControlName]="control.formName">
+					<mat-radio-group class="dynamic-radio-group" [formControlName]="control.formName || ''">
 						<mat-radio-button class="dynamic-radio-button" *ngFor="let option of filteredData | async" [value]="option.value">{{ option.display }}</mat-radio-button>
 					</mat-radio-group>
 				</div>
@@ -314,12 +313,12 @@
 				</div>
 
 				<!--            Address-->
-				<mat-form-field *ngSwitchCase="formType.Address" appearance="legacy">
+				<mat-form-field *ngSwitchCase="formType.Address">
 					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
 					<input
 						#mapSearchField
 						autocomplete="off"
-						[formControlName]="control.formName"
+						[formControlName]="control.formName || ''"
 						type="search"
 						autocorrect="off"
 						spellcheck="off"
@@ -329,7 +328,7 @@
 					/>
 					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 					<mat-error *ngFor="let error of control.validators">
-						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+						<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 							error.errorMessage
 						}}</ng-template>
 					</mat-error>
@@ -347,10 +346,10 @@
 									type="file"
 									matInput
 									id="fileDropRef"
-									[formControlName]="control.formName"
+									[formControlName]="control.formName || ''"
 									#fileDropRef
 									[accept]="filesToAccept"
-									(change)="handleFilesDropped($event.target.files)"
+									(change)="handleFilesDropped($any($event.target).files)"
 								/>
 							</mat-form-field>
 							<span class="k-icon k-i-file"></span>
@@ -359,12 +358,12 @@
 					</div>
 				</ng-container>
 
-				<mat-form-field *ngSwitchCase="formType.Numeric" appearance="legacy">
+				<mat-form-field *ngSwitchCase="formType.Numeric">
 					<mat-label *ngIf="control.label">{{ control.label }}</mat-label>
 					<input
 						autocomplete="off"
-						[formControlName]="control.formName"
-						[type]="control.inputType"
+						[formControlName]="control.formName || ''"
+						[type]="control.inputType ?? 'text'"
 						matInput
 						(input)="controlChange(control)"
 						[(ngModel)]="control.value"
@@ -372,7 +371,7 @@
 					/>
 					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 					<mat-error *ngFor="let error of control.validators">
-						<ng-template [ngIf]="form.controls[control.formName].hasError(getEnumName(error.validator)) && form.controls[control.formName].touched">{{
+						<ng-template [ngIf]="form.controls[control.formName || ''].hasError(getEnumName(error.validator)) && form.controls[control.formName || ''].touched">{{
 							error.errorMessage
 						}}</ng-template>
 					</mat-error>
@@ -386,7 +385,7 @@
 		[ngStyle]="{ 'justify-content': dialogSetup.hideBackButton ? 'right' : 'space-between' }"
 		style="display: flex"
 	>
-		<button (click)="actions(dialogSetup.backButtonText)" *ngIf="!dialogSetup.hideBackButton" mat-stroked-button>
+		<button (click)="actions(dialogSetup.backButtonText || '')" *ngIf="!dialogSetup.hideBackButton" mat-stroked-button>
 			{{ dialogSetup.backButtonText }}
 		</button>
 		<button (click)="save()" *ngIf="!dialogSetup.hideSubmitButton" color="primary" mat-flat-button>{{ dialogSetup.submitButtonText }}</button>

@@ -1,27 +1,22 @@
 import { DatePipe } from "@angular/common";
-import { AfterViewInit, Directive, ElementRef, HostListener, Input, NgModule } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef, HostListener, Input, inject } from "@angular/core";
 
 @Directive({
 	selector: "[dateTransform]",
 	providers: [DatePipe],
+	standalone: true,
 })
 export class DateTransformDirective implements AfterViewInit {
 	@Input() dateTransform: string = "";
-	constructor(private _elementRef: ElementRef, private _datePipe: DatePipe) {}
+	private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+	private readonly datePipe = inject(DatePipe);
 
 	ngAfterViewInit(): void {
-		this._elementRef.nativeElement.value = this._datePipe.transform(this._elementRef.nativeElement.value, this.dateTransform);
+		this.elementRef.nativeElement.value = this.datePipe.transform(this.elementRef.nativeElement.value, this.dateTransform) ?? "";
 	}
 
 	@HostListener("ngModelChange") change(): void {
-		if (Number.isNaN(Date.parse(this._elementRef.nativeElement.value))) return;
-		this._elementRef.nativeElement.value = this._datePipe.transform(this._elementRef.nativeElement.value, this.dateTransform);
+		if (Number.isNaN(Date.parse(this.elementRef.nativeElement.value))) return;
+		this.elementRef.nativeElement.value = this.datePipe.transform(this.elementRef.nativeElement.value, this.dateTransform) ?? "";
 	}
 }
-
-@NgModule({
-	imports: [],
-	declarations: [DateTransformDirective],
-	exports: [DateTransformDirective],
-})
-export class DateTransformDirectiveModule {}

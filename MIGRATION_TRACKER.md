@@ -18,13 +18,14 @@ Tracks the migration of custom controls in `src/app/controls-to-port` to the new
 ## Summary
 
 - Total controls: 62
-- Migrated: 9
+- Migrated: 11
 - In progress: 0
-- Pending: 53
+- Pending: 51
 - Migrated helper services: 1
 - Pending helper services: 12
-- Migrated pipes: 14
-- Pending legacy pipes: 21
+- Migrated pipes: 33
+- Pending legacy pipes: 1 (blocked: `timeElapsedFormat` waits on the un-ported `DateTimeOpsService`)
+- Dropped pipes: 1 (`hideTradeRetail`, deleted on request)
 
 Update the summary whenever a control, helper service, or pipe is finalised.
 
@@ -184,9 +185,9 @@ Update the summary whenever a control, helper service, or pipe is finalised.
 | Drag drop file upload | `drag-drop-file-upload/` | Pending | |
 | Card table | `card-table/` (migrated to `src/app/controls/components/card-table`) | Pending | Convert to standalone component. |
 | Table | `table/` (migrated to `src/app/controls/components/table`) | Pending | Convert to standalone component. |
-| Tabs | `tabs/` (migrated to `src/app/controls/components/tabs`) | Pending | Convert to standalone component. |
+| Tabs | `tabs/` (migrated to `src/app/controls/components/tabs`) | Migrated | Standalone `TabsComponent` with `TabComponent` in `tabs/tab/`; back/next button directives live alongside. |
 | Drag drop file upload with comment | `drag-drop-file-upload-with-comment/` | Pending | |
-| Dynamic material dialog | `dynamic-material-dialog/` | Pending | |
+| Dynamic material dialog | `dynamic-material-dialog/` | Migrated | Standalone in `src/app/controls/components/dynamic-material-dialog`; NgModule removed, typed model surface (`_DialogControl`/`_FormData`), strict-template fixes (removed `appearance="legacy"`, broken `[matCalendar]` binding), and a `google-places.d.ts` shim. |
 | Dynamic window | `dynamic-window/` | Pending | |
 | Expandable grid | `expandable-grid/` | Migrated | Standalone in `src/app/controls/components/expandable-grid`; detail expansion uses CSS `animate.enter`/`animate.leave`. |
 | Expandable grid form | `expandable-grid/components/expandable-grid-form/` | Migrated | Standalone; `timeSpanPicker` and `chipList` field types omitted until those controls are migrated. |
@@ -238,6 +239,27 @@ Contracts for migrated pipes live in `src/app/library/pipes/PIPES_CONTRACTS.md`.
 | Safe | `pipes/safe.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/safe`; injects `DomSanitizer`. |
 | Space between uppercase | `pipes/space-between-uppercase-pipe/` | Migrated | Standalone in `src/app/library/pipes/space-between-uppercase`; class renamed to `SpaceBetweenUppercasePipe`. |
 | Thousand separator | `pipes/thousand-separator-pipe/` | Migrated | Standalone in `src/app/library/pipes/thousand-separator`. |
+| Character spacing | `pipes/character-spacing.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/character-spacing`; name `characterSpacing`. |
+| Contains | `pipes/contains.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/contains`; name `contains`. |
+| Email to initials | `pipes/email-to-initials.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/email-to-initials`; name `emailToInitials`. |
+| Filter | `pipes/filter.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/array-filter`; name `arrayFilter`, class kept as `FilterPipe`. |
+| Group by date | `pipes/group-by-date.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/group-by-date`; injects `DatePipe`. |
+| Hide trade retail | `pipes/hide-trade-retail-pipe/` | Dropped | Deleted without migration, per developer request. |
+| Highlight search match | `pipes/highlight-search-match.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/highlight-search-match`; name `searchMatch`. |
+| Kebab to title | `pipes/kebab-to-title.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/kebab-to-title`. |
+| Name to initials | `pipes/name-to-initials.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/name-to-initials`. |
+| Nearest | `pipes/nearest.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/nearest`. |
+| Order by | `pipes/order-by.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/order-by`; comparator-function input only. |
+| Ordinal | `pipes/ordinal.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/ordinal`. |
+| Percentage | `pipes/percentage.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/percentage`. |
+| Remove email domain | `pipes/remove-email-domain.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/remove-email-domain`; name `removeDomain`. |
+| Sort | `pipes/sort.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/sort`; name `sort`, class kept as `ArraySortPipe`. |
+| Time elapsed | `pipes/time-elapsed.pipe.ts` | Blocked | Depends on the un-ported `DateTimeOpsService`; the source stays in `controls-to-port/pipes` until that service is migrated. |
+| Time format | `pipes/time-format.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/time-format`; impure pipe kept impure. |
+| Time in string | `pipes/time-in-string-pipe/` | Migrated | Standalone in `src/app/library/pipes/time-in-string`; injects `DatePipe`. |
+| Time mask | `pipes/time-mask.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/time-mask`. |
+| To number | `pipes/to-number.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/to-number`. |
+| Trim characters | `pipes/trim-characters.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/trim-characters`; overlaps with `truncate`, flagged in `PIPES_CONTRACTS.md`. |
 
 ## Supporting Code
 
@@ -247,11 +269,11 @@ These are dependencies of the controls above and should be migrated alongside th
 | --- | --- | --- | --- |
 | Page base class | `cust-page/cust-page.class.ts` | Pending | |
 | Basic controls service | `cust-basic-controls/cust-basic-controls.service.ts` | Pending | |
-| Dynamic dialog service | `dynamic-material-dialog/dynamic-dialog.service.ts` | Pending | |
+| Dynamic dialog service | `dynamic-material-dialog/dynamic-dialog.service.ts` | Migrated | Standalone root service at `src/app/controls/components/dynamic-material-dialog/dynamic-dialog.service.ts`. |
 | Shared directives | `directives/` | Migrated | Migrated to `src/app/library/directives`; legacy copies removed. |
 | Shared validators | `validators/` | Migrated | Migrated to `src/app/library/validators`; legacy copies removed. |
 | Click elsewhere directive | `cust-select/select/cust-click-elsewhere.directive.ts` | Pending | |
-| Tab next button directive | `cust-tab/tab-next-button.directive.ts` | Pending | |
-| Tab back button directive | `cust-tab/tab-back-button.directive.ts` | Pending | |
+| Tab next button directive | `cust-tab/tab-next-button.directive.ts` | Migrated | Standalone at `src/app/controls/components/tabs/tab-next-button.directive.ts`. |
+| Tab back button directive | `cust-tab/tab-back-button.directive.ts` | Migrated | Standalone at `src/app/controls/components/tabs/tab-back-button.directive.ts`. |
 | Accordion directives | `accordion/directives/` | Migrated | Standalone attribute directives: `appAccordionItem`, `appAccordionHeader`, `appAccordionContent`. |
 | Shared grid filters | `shared-controls/grid-filters/` | Pending | Folder is currently empty. |

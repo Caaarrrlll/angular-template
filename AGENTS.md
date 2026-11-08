@@ -88,6 +88,10 @@ Do not:
 - Unit tests will **not** be performed for UI components.
 - Integration tests will be included if and when services are built to integrate with external services.
 
+## Rate Limit Recovery
+
+- When performing bigger tasks, describe the task's steps as a checklist in `RATE_LIMIT_TRACKER.md` before starting, and keep that file updated as steps are completed. If a rate limit is hit mid-task, the next session can carry on seamlessly from that checklist.
+
 ## Controls to Port
 
 The `src/app/controls-to-port` folder contains custom code written from old code references. These controls are planned for migration to a newer Angular version within this template.
