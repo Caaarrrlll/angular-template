@@ -20,6 +20,7 @@
     "paths": {
       "@animations/*": ["./src/app/controls/components/accordion/animations/*"],
       "@segments/*": ["./src/app/segments/*"],
+      "@shared/models/*": ["./src/app/library/models/*"],
       "@shared/components/*": ["./src/app/controls/components/*"],
       "@shared/directives/*": ["./src/app/library/directives/*"],
       "@shared/pipes/*": ["./src/app/library/pipes/*"],

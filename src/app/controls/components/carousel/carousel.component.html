@@ -1,0 +1,30 @@
+<div [class]="'carousel-container-' + preview">
+	<div [class]="'vehicle-imgs-preview-' + preview">
+		@for (img of images; track img.url; let i = $index) {
+			<img
+				[src]="img.url"
+				alt="Image unavailable"
+				class="thumbnail flex-wide"
+				(click)="selectedImg = i"
+				[class.selected]="selectedImg === i"
+				[class.selectedNext]="selectedImg + 1 === i"
+				[class.thumbnail-left]="preview === 'left'"
+				[class.thumbnail-bottom]="preview === 'bottom'"
+			/>
+		}
+	</div>
+	<div [class]="'vehicle-imgs-' + preview">
+		<div class="selected-image">
+			@if (images) {
+				<app-zoomable-image
+					[src]="images[selectedImg]?.url ?? ''"
+					style="height: 100%; width: 100%"
+					[count]="selectedImg + 1 + ' of ' + images.length"
+					(prev)="prev()"
+					(next)="next()"
+				>
+				</app-zoomable-image>
+			}
+		</div>
+	</div>
+</div>

@@ -2,14 +2,14 @@ import { Routes } from "@angular/router";
 import { environment } from "../environments/environment";
 
 const sandboxRoutes: Routes =
-	environment.environmentName === "production"
-		? []
-		: [
+	environment.isLocal
+		? [
 				{
 					path: "sandbox",
 					loadComponent: () => import("./segments/sandbox/components/sandbox/sandbox.component").then((m) => m.SandboxComponent),
 				},
-			];
+			]
+		: [];
 
 export const routes: Routes = [
 	{

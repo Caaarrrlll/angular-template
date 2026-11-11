@@ -1,0 +1,7 @@
+<mat-form-field appearance="fill">
+	<mat-label>{{ inputObj.label }}</mat-label>
+	<input type="tel" [formControl]="inputControl" matInput [placeholder]="inputObj.placeholder ?? ''" [readonly]="inputObj.isReadOnly ?? false" />
+	@if (inputControl.invalid) {
+		<mat-error>Invalid phone number</mat-error>
+	}
+</mat-form-field>

@@ -19,9 +19,9 @@ Tracks the migration of custom controls in `src/app/controls-to-port` to the new
 ## Summary
 
 - Total control rows: 65 (includes 2 duplicate legacy rows for `card-table/` and `table/`)
-- Migrated: 25
+- Migrated: 40
 - In progress: 0
-- Pending: 40 (Ready: 15, Blocked: 24, Not started: 2 duplicated rows)
+- Pending: 25 (Ready: 4, Blocked: 19, Not started: 2 duplicated rows)
 - Supporting items: 8 migrated, 1 pending, 2 blocked
 - Migrated helper services: 1
 - Pending helper services: 12
@@ -54,34 +54,34 @@ Update the summary whenever a control, helper service, or pipe is finalised.
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Button primary | `cust-basic-controls/cust-button-primary/` | Blocked | Needs `cust-button-v2` (template renders it). |
-| Button secondary | `cust-basic-controls/cust-button-secondary/` | Blocked | Needs `cust-button-v2` (template renders it). |
-| Button tertiary | `cust-basic-controls/cust-button-tertiary/` | Blocked | Needs `cust-button-v2` (template renders it). |
-| Button text | `cust-basic-controls/cust-button-text/` | Blocked | Needs `cust-button-v2` (template renders it). |
+| Button primary | `cust-basic-controls/cust-button-primary/` | Migrated | Wrapper in `src/app/controls/components/button/button-primary`; renders `app-button-v2`. |
+| Button secondary | `cust-basic-controls/cust-button-secondary/` | Migrated | Wrapper in `src/app/controls/components/button/button-secondary`; renders `app-button-v2`. |
+| Button tertiary | `cust-basic-controls/cust-button-tertiary/` | Migrated | Wrapper in `src/app/controls/components/button/button-tertiary`; renders `app-button-v2`. |
+| Button text | `cust-basic-controls/cust-button-text/` | Migrated | Wrapper in `src/app/controls/components/button/button-text`; renders `app-button-v2`. |
 | Button toggle | `cust-basic-controls/cust-button-toggle/` | Migrated | Standalone in `src/app/controls/components/button-toggle`; typed `ButtonToggleInput`/`ButtonToggleResponse`. |
-| Button v2 | `cust-basic-controls/cust-button-v2/` | Ready | `cust-loader` has been migrated. Non-default change detection to fix; dangling `@controls/*` aliases to re-point. |
-| Chip status | `cust-basic-controls/cust-chip-status/` | Ready | Self-contained; ctor-as-module anti-pattern to remove. |
-| Chips | `cust-basic-controls/cust-chips/` | Ready | Needs only the shared basic-controls interface (migrating alongside). |
+| Button v2 | `cust-basic-controls/cust-button-v2/` | Migrated | Standalone in `src/app/controls/components/button/button-v2`; OnPush with class/size getters; dangling `@controls/*` aliases re-pointed to the new `@shared/models/cust-basic-controls` file. |
+| Chip status | `cust-basic-controls/cust-chip-status/` | Migrated | Standalone in `src/app/controls/components/chip-status`; ctor-as-module anti-pattern removed; `_ChipStatus` enum converted to a typed const map (`ChipStatus`). |
+| Chips | `cust-basic-controls/cust-chips/` | Migrated | Standalone in `src/app/controls/components/chips`; unused `onClick`/`optionSelected` dropped; `count` typed as number; shared basic-controls interfaces moved to `@shared/models/cust-basic-controls`. |
 | DEKRA button | `cust-basic-controls/cust-dekra-button/` | Blocked | Needs `RoadworthyApiService` (does not exist in the repo) and `cust-loader`. |
 | Housing card | `cust-basic-controls/cust-housing-card/` | Blocked | Needs `UserSettingsModel` (does not exist in the repo). |
 | Info card | `cust-basic-controls/cust-info-card/` | Blocked | Needs `cust-currency`, `cust-count-down`, `LoginService`, `card-table` enum/interface; `cust-distance`/`cust-sensitive-info` and `UserSettingsModel` do not exist in the repo. Migrate last. |
 | Input currency | `cust-basic-controls/cust-input-currency/` | Blocked | Needs `LocalizeService` (does not exist in the repo); currency-source decision required. |
-| Input email | `cust-basic-controls/cust-input-email/` | Ready | Self-contained; unmanaged `debounceTime` subscription needs `takeUntilDestroyed`. |
-| Input number | `cust-basic-controls/cust-input-number/` | Ready | Self-contained. |
-| Input phone | `cust-basic-controls/cust-input-phone/` | Ready | Self-contained; unmanaged `debounceTime` subscription needs `takeUntilDestroyed`. |
-| Input select | `cust-basic-controls/cust-input-select/` | Ready | Self-contained. |
-| Input text | `cust-basic-controls/cust-input-text/` | Ready | Self-contained; doubles as date input, decide whether to split date behaviour. |
+| Input email | `cust-basic-controls/cust-input-email/` | Migrated | Standalone in `src/app/controls/components/input/input-email`; `debounceTime` subscription torn down with `takeUntilDestroyed`. |
+| Input number | `cust-basic-controls/cust-input-number/` | Migrated | Standalone in `src/app/controls/components/input/input-number`. |
+| Input phone | `cust-basic-controls/cust-input-phone/` | Migrated | Standalone in `src/app/controls/components/input/input-phone`; `takeUntilDestroyed`; input `type="tel"`; missing `minlength` now falls back to a digits-only pattern. |
+| Input select | `cust-basic-controls/cust-input-select/` | Migrated | Standalone in `src/app/controls/components/input/input-select`; control created in `ngOnInit`; `(ngModelChange)` replaced with `(selectionChange)`. |
+| Input text | `cust-basic-controls/cust-input-text/` | Migrated | Standalone in `src/app/controls/components/input/input-text`; date-picker mode kept. |
 | List card | `cust-basic-controls/cust-list-card/` | Blocked | Same chain as info card (`cust-currency`, `cust-count-down`, `LoginService`, missing `cust-distance`/`cust-sensitive-info`). Migrate last. |
 | Range date picker | `cust-basic-controls/cust-range-date-picker/` | Blocked | Needs the un-ported `DateTimeOpsService`. |
 | Slide toggle | `cust-basic-controls/cust-slide-toggle/` | Ready | Self-contained. |
-| Tabs | `cust-basic-controls/cust-tabs/` | Ready | Self-contained; `of(...).pipe(delay(100))` render hack to refactor; name clash check with migrated `components/tabs`. |
+| Tabs | `cust-basic-controls/cust-tabs/` | Migrated | Renamed to `app-tab-group` (`src/app/controls/components/tab-group`) to avoid the clash with the migrated `components/tabs`; `of(...).pipe(delay(100))` render hack replaced with a `hideContent` signal + `effect()` re-render cycle; unused `title` input and `_TabTypes` enum dropped. |
 
 ## Button
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
 | Button | `cust-button/button/` | Blocked | Needs `cust-loader`; Kendo `kendo-contextmenu` decision (Kendo not installed); legacy `SharedControlsModule` barrel missing. |
-| FAB button | `cust-button/fab-button/` | Ready | Self-contained presentational control. |
+| FAB button | `cust-button/fab-button/` | Migrated | Standalone in `src/app/controls/components/button/fab-button`; dead Kendo icon classname replaced with `mat-icon`. |
 
 ## Card
 
@@ -100,7 +100,7 @@ Update the summary whenever a control, helper service, or pipe is finalised.
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Carousel | `cust-carousel/carousel/` | Ready | `zoomable-image` has been migrated; library safe/space-between-uppercase pipes already available. |
+| Carousel | `cust-carousel/carousel/` | Migrated | Standalone in `src/app/controls/components/carousel`; binds `src` directly (ZoomableImage sanitises internally, so the `safe` pipe is no longer needed); legacy `title` binding was silently ignored and dropped; SCSS de-duplicated. |
 
 ## Count Down
 
@@ -271,6 +271,7 @@ These are dependencies of the controls above and should be migrated alongside th
 | --- | --- | --- | --- |
 | Page base class | `cust-page/cust-page.class.ts` | Blocked | Needs the missing `_LinQGridFilterItem` model (the `linq-grid-filters` control body is empty); strict-mode violations throughout. |
 | Basic controls service | `cust-basic-controls/cust-basic-controls.service.ts` | Blocked | Decision needed: delete (email part duplicates the library email validator) or fold into library validators; currently unused. |
+| Basic controls models | new `src/app/library/models/cust-basic-controls.ts` | Migrated | Shared interfaces/enums for the chips/buttons/inputs family; created during the batch 2 port (new `@shared/models/*` tsconfig alias). Legacy `cust-basic-controls.interface.ts`/`.enum.ts` stay in `controls-to-port` until every blocked consumer is ported. |
 | Dynamic dialog service | `dynamic-material-dialog/dynamic-dialog.service.ts` | Migrated | Standalone root service at `src/app/controls/components/dynamic-material-dialog/dynamic-dialog.service.ts`. |
 | Shared directives | `directives/` | Migrated | Migrated to `src/app/library/directives`; legacy copies removed. |
 | Shared validators | `validators/` | Migrated | Migrated to `src/app/library/validators`; legacy copies removed. |
