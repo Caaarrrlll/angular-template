@@ -1,0 +1,21 @@
+<div class="kv-container-row" [class.right]="alignRight">
+	@if (key) {
+		<div class="key" [class.bold]="!boldValue" [class.red]="keyColor === `red`" [class.orange]="keyColor === `orange`" [class.green]="keyColor === `green`" [title]="keyTitle ?? ``">
+			{{ key }}:
+		</div>
+	}
+	<div class="value center-align" [class.bold]="boldValue" [class.red]="valueColor === `red`" [class.orange]="valueColor === `orange`" [class.green]="valueColor === `green`" [title]="title ?? ``">
+		{{ value }}
+		@if (valPercent !== undefined) {
+			<span [style.color]="valPercent > 0 ? `red` : valPercent < 0 ? `green` : `black`">
+				({{ valPercent | percent }})
+			</span>
+		}
+		@if (showEdit) {
+			<mat-icon (click)="editField()" class="show-pointer icon-size">edit</mat-icon>
+		}
+		@if (showView) {
+			<mat-icon (click)="viewField()" class="show-pointer icon-size">visibility</mat-icon>
+		}
+	</div>
+</div>

@@ -1,18 +1,10 @@
-Task: add AGENTS.md note + migrate legacy pipes from `src/app/controls-to-port/pipes` to `src/app/library/pipes`
+Task: analyse the remaining controls-to-port migration list, mark migration-ready controls, and migrate the first prerequisite-free batch
 
-[✓] Update AGENTS.md with rate-limit-tracker instruction
-[✓] Record task checklist in RATE_LIMIT_TRACKER.md
-[✓] Read all legacy pipes and the time-in-string subfolder pipe
-[✓] Delete `hide-trade-retail-pipe` (dropped, not migrated)
-[✓] Migrate the 19 applicable pipes as standalone folders under `src/app/library/pipes/<kebab-name>/`
-[•] `time-elapsed.pipe.ts` NOT migrated (Blocked): depends on the un-ported `DateTimeOpsService`; its source remains at `src/app/controls-to-port/pipes/time-elapsed.pipe.ts`
-[✓] Update `PIPES_CONTRACTS.md` (index + per-pipe entries)
-[✓] Update `MIGRATION_TRACKER.md` (pipe counts: 33 migrated, 1 blocked, 1 dropped)
-[✓] Delete the rest of `src/app/controls-to-port/pipes` (including `pipes.module.ts`)
-[✓] Verify: `ng build` passes (pre-existing budget warning only: initial 638.75 kB vs 500 kB warning budget)
-
-Notes:
-
-- Migrated pipe names kept as legacy: `characterSpacing`, `contains`, `arrayFilter` (`FilterPipe`), `groupByDate`, `searchMatch`, `kebabToTitle`, `emailToInitials`, `nameToInitials`, `nearest`, `orderBy`, `ordinal`, `percentage`, `removeDomain`, `sort` (`ArraySortPipe`), `timeFormat`, `timeMask`, `toNumber`, `trimCharacters`, `timeInString`.
-- `trimCharacters` overlaps with the existing `truncate` pipe (slightly different truncation rule); both documented in `PIPES_CONTRACTS.md` — drop one in a later cleanup pass.
-- `toNumber` keeps the legacy `Number(value) ?? value` quirk (fallback never runs, so non-numeric values become `NaN`); documented in the contract.
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Analyse dependencies of all pending to-port folders (3 parallel analysis passes)
+[•] Reconcile + mark `MIGRATION_TRACKER.md`: 19 controls `Ready (no prerequisites)`; the rest `Blocked (needs X)` incl. missing legacy files (RoadworthyApiService, LocalizeService, UserSettingsModel, linq-grid-filters, cust-distance/cust-sensitive-info, Kendo decision for dynamic-window/search-address/ddfu-with-comment, Google Maps script decision, missing `cust-tab/*` sources)
+[✓] First batch migrated: cust-loader, cust-count-down, cust-card + card-header, cust-input, cust-key-value v1-v3, cust-zoom-image, numeric-up-down, zoomable-image, cust-select + option + click-elsewhere directive, time-span-picker (legacy sources removed; `ng build` passes)
+[ ] Batch 2 (next session, all Ready): cust-chip-status, cust-chips, cust-buttons (v2 then primary/secondary/tertiary/text after v2+loader), cust-input-email/phone/number/select/text inputs, cust-tabs (basic controls), fab-button, carousel (now Ready after zoomable-image)
+[ ] Batch 3+: zoomed-out dependency chains (gallery-preview then gallery, currency decision, media dialog, range date picker after DateTimeOpsService, drag-drop-file-upload, table dialogue, card-table, table, dynamic-window, search-address)
+[ ] Update trackers/contracts as items are finalised
+[✓] Verify: `ng build` passes; leave the checklist at a clean boundary for the next session

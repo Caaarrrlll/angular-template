@@ -1,0 +1,43 @@
+.loader-circle {
+	border: solid currentColor 0.05em;
+	border-radius: 50%;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	box-sizing: initial;
+	display: inline-block;
+}
+
+.inner-circle {
+	left: 50%;
+	top: 50%;
+	width: 0.5em;
+	height: 0.5em;
+	position: absolute;
+	animation-name: loader-spin;
+	animation-duration: 0.5s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-direction: reverse;
+	margin-top: -0.3em;
+	margin-left: -0.3em;
+}
+
+.outer-circle {
+	width: 1em;
+	height: 1em;
+	vertical-align: middle;
+	animation-name: loader-spin;
+	animation-timing-function: linear;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	position: relative;
+}
+
+@keyframes loader-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}

@@ -1,1 +1,0 @@
-export const DEFAULT_TIMESPAN: string = '00:00:00';

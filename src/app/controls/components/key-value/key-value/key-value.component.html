@@ -1,0 +1,9 @@
+<div [class]="row ? `kv-container-row` : `kv-container`">
+	<div class="key">{{ key }}</div>
+	<div class="value" [class.sameFontSize]="sameFontSize" [class.removePadding]="removeValuePadding" [title]="value">
+		{{ value }}
+		@if (showEdit) {
+			<div (click)="editField()" class="show-pointer" aria-hidden="true">&#9998;</div>
+		}
+	</div>
+</div>

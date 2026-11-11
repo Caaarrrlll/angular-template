@@ -11,16 +11,18 @@ Tracks the migration of custom controls in `src/app/controls-to-port` to the new
 | Status | Meaning |
 | --- | --- |
 | Pending | Not yet started. |
+| Ready | Analysed: no prerequisites; can be migrated at any time. |
 | In progress | Migration work has started. |
 | Migrated | Finalised and migrated into the template. |
 | Blocked | Waiting on a dependency or decision. |
 
 ## Summary
 
-- Total controls: 62
-- Migrated: 11
+- Total control rows: 65 (includes 2 duplicate legacy rows for `card-table/` and `table/`)
+- Migrated: 25
 - In progress: 0
-- Pending: 51
+- Pending: 40 (Ready: 15, Blocked: 24, Not started: 2 duplicated rows)
+- Supporting items: 8 migrated, 1 pending, 2 blocked
 - Migrated helper services: 1
 - Pending helper services: 12
 - Migrated pipes: 33
@@ -52,152 +54,152 @@ Update the summary whenever a control, helper service, or pipe is finalised.
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Button primary | `cust-basic-controls/cust-button-primary/` | Pending | |
-| Button secondary | `cust-basic-controls/cust-button-secondary/` | Pending | |
-| Button tertiary | `cust-basic-controls/cust-button-tertiary/` | Pending | |
-| Button text | `cust-basic-controls/cust-button-text/` | Pending | |
+| Button primary | `cust-basic-controls/cust-button-primary/` | Blocked | Needs `cust-button-v2` (template renders it). |
+| Button secondary | `cust-basic-controls/cust-button-secondary/` | Blocked | Needs `cust-button-v2` (template renders it). |
+| Button tertiary | `cust-basic-controls/cust-button-tertiary/` | Blocked | Needs `cust-button-v2` (template renders it). |
+| Button text | `cust-basic-controls/cust-button-text/` | Blocked | Needs `cust-button-v2` (template renders it). |
 | Button toggle | `cust-basic-controls/cust-button-toggle/` | Migrated | Standalone in `src/app/controls/components/button-toggle`; typed `ButtonToggleInput`/`ButtonToggleResponse`. |
-| Button v2 | `cust-basic-controls/cust-button-v2/` | Pending | |
-| Chip status | `cust-basic-controls/cust-chip-status/` | Pending | |
-| Chips | `cust-basic-controls/cust-chips/` | Pending | |
-| DEKRA button | `cust-basic-controls/cust-dekra-button/` | Pending | |
-| Housing card | `cust-basic-controls/cust-housing-card/` | Pending | |
-| Info card | `cust-basic-controls/cust-info-card/` | Pending | |
-| Input currency | `cust-basic-controls/cust-input-currency/` | Pending | |
-| Input email | `cust-basic-controls/cust-input-email/` | Pending | |
-| Input number | `cust-basic-controls/cust-input-number/` | Pending | |
-| Input phone | `cust-basic-controls/cust-input-phone/` | Pending | |
-| Input select | `cust-basic-controls/cust-input-select/` | Pending | |
-| Input text | `cust-basic-controls/cust-input-text/` | Pending | |
-| List card | `cust-basic-controls/cust-list-card/` | Pending | |
-| Range date picker | `cust-basic-controls/cust-range-date-picker/` | Pending | |
-| Slide toggle | `cust-basic-controls/cust-slide-toggle/` | Pending | |
-| Tabs | `cust-basic-controls/cust-tabs/` | Pending | |
+| Button v2 | `cust-basic-controls/cust-button-v2/` | Ready | `cust-loader` has been migrated. Non-default change detection to fix; dangling `@controls/*` aliases to re-point. |
+| Chip status | `cust-basic-controls/cust-chip-status/` | Ready | Self-contained; ctor-as-module anti-pattern to remove. |
+| Chips | `cust-basic-controls/cust-chips/` | Ready | Needs only the shared basic-controls interface (migrating alongside). |
+| DEKRA button | `cust-basic-controls/cust-dekra-button/` | Blocked | Needs `RoadworthyApiService` (does not exist in the repo) and `cust-loader`. |
+| Housing card | `cust-basic-controls/cust-housing-card/` | Blocked | Needs `UserSettingsModel` (does not exist in the repo). |
+| Info card | `cust-basic-controls/cust-info-card/` | Blocked | Needs `cust-currency`, `cust-count-down`, `LoginService`, `card-table` enum/interface; `cust-distance`/`cust-sensitive-info` and `UserSettingsModel` do not exist in the repo. Migrate last. |
+| Input currency | `cust-basic-controls/cust-input-currency/` | Blocked | Needs `LocalizeService` (does not exist in the repo); currency-source decision required. |
+| Input email | `cust-basic-controls/cust-input-email/` | Ready | Self-contained; unmanaged `debounceTime` subscription needs `takeUntilDestroyed`. |
+| Input number | `cust-basic-controls/cust-input-number/` | Ready | Self-contained. |
+| Input phone | `cust-basic-controls/cust-input-phone/` | Ready | Self-contained; unmanaged `debounceTime` subscription needs `takeUntilDestroyed`. |
+| Input select | `cust-basic-controls/cust-input-select/` | Ready | Self-contained. |
+| Input text | `cust-basic-controls/cust-input-text/` | Ready | Self-contained; doubles as date input, decide whether to split date behaviour. |
+| List card | `cust-basic-controls/cust-list-card/` | Blocked | Same chain as info card (`cust-currency`, `cust-count-down`, `LoginService`, missing `cust-distance`/`cust-sensitive-info`). Migrate last. |
+| Range date picker | `cust-basic-controls/cust-range-date-picker/` | Blocked | Needs the un-ported `DateTimeOpsService`. |
+| Slide toggle | `cust-basic-controls/cust-slide-toggle/` | Ready | Self-contained. |
+| Tabs | `cust-basic-controls/cust-tabs/` | Ready | Self-contained; `of(...).pipe(delay(100))` render hack to refactor; name clash check with migrated `components/tabs`. |
 
 ## Button
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Button | `cust-button/button/` | Pending | |
-| FAB button | `cust-button/fab-button/` | Pending | |
+| Button | `cust-button/button/` | Blocked | Needs `cust-loader`; Kendo `kendo-contextmenu` decision (Kendo not installed); legacy `SharedControlsModule` barrel missing. |
+| FAB button | `cust-button/fab-button/` | Ready | Self-contained presentational control. |
 
 ## Card
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Card | `cust-card/card/` | Pending | |
-| Card header | `cust-card/card-header/` | Pending | |
+| Card | `cust-card/card/` | Migrated | Standalone in `src/app/controls/components/card`. |
+| Card header | `cust-card/card-header/` | Migrated | Standalone in `src/app/controls/components/card/card-header`. |
 
 ## Card Table
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Card table | `cust-card-table/table/` | Pending | |
+| Card table | `card-table/` | Blocked | Needs the missing `linq-grid-filters` control, `cust-page`, `cust-button` + `cust-button-v2`, `cust-list-card`, `cust-slide-toggle`, `cust-currency`; `_TableTypes` enum diverges from `table/`. |
 
 ## Carousel
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Carousel | `cust-carousel/carousel/` | Pending | |
+| Carousel | `cust-carousel/carousel/` | Ready | `zoomable-image` has been migrated; library safe/space-between-uppercase pipes already available. |
 
 ## Count Down
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Count down | `cust-count-down/` | Pending | |
+| Count down | `cust-count-down/` | Migrated | Standalone in `src/app/controls/components/count-down`; `setInterval` torn down via `DestroyRef`. |
 
 ## Currency
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Currency | `cust-currency/currency/` | Pending | |
+| Currency | `cust-currency/currency/` | Blocked | Needs a currency-source decision; depends on `LocalizeService` (does not exist in the repo). |
 
 ## Gallery
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Gallery | `cust-gallery/gallery/` | Pending | |
-| Gallery preview | `cust-gallery/gallery-preview/` | Pending | |
+| Gallery | `cust-gallery/gallery/` | Blocked | Heaviest chain: missing `cust-flat-vehicle`, `evaluation-comparison`, `ZoomDirective`, `_DeconstructedFlatView` model. |
+| Gallery preview | `cust-gallery/gallery-preview/` | Ready | Self-contained; migrate separately from the gallery. |
 
 ## Input
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Input | `cust-input/input/` | Pending | |
+| Input | `cust-input/input/` | Migrated | Standalone in `src/app/controls/components/input`. |
 
 ## Key Value
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Key value | `cust-key-value/key-value/` | Pending | |
-| Key value v2 | `cust-key-value/key-value-v2/` | Pending | |
-| Key value v3 | `cust-key-value/key-value-v3/` | Pending | |
+| Key value | `cust-key-value/key-value/` | Migrated | Standalone in `src/app/controls/components/key-value/key-value`. |
+| Key value v2 | `cust-key-value/key-value-v2/` | Migrated | Standalone in `src/app/controls/components/key-value/key-value-v2`. |
+| Key value v3 | `cust-key-value/key-value-v3/` | Migrated | Standalone in `src/app/controls/components/key-value/key-value-v3`; consolidation of v1/v2/v3 deliberately deferred. |
 
 ## Loader
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Loader | `cust-loader/loader/` | Pending | |
+| Loader | `cust-loader/loader/` | Migrated | Standalone in `src/app/controls/components/loader`. |
 
 ## Media Dialog
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Media dialog | `cust-media-dialog/` | Pending | |
+| Media dialog | `cust-media-dialog/` | Blocked | Needs `MediaApiService` + `_FileUploadResponse` (missing legacy API layer). |
 
 ## Select
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Select | `cust-select/select/` | Pending | |
-| Option | `cust-select/option/` | Pending | |
+| Select | `cust-select/select/` | Migrated | Standalone in `src/app/controls/components/select/select`; `ControlContainer`/`SkipSelf` pattern kept. Unused `options`/`type`/`controlName` inputs dropped. |
+| Option | `cust-select/option/` | Migrated | Standalone in `src/app/controls/components/select/option`; `selected` now emits the option `value`. |
 
 ## Tab
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Tab | `cust-tab/tab/` | Pending | |
-| Tabs | `cust-tab/tabs/` | Pending | |
-| Tab actions | `cust-tab/tab-actions/` | Pending | |
+| Tab | `cust-tab/tab/` | Blocked | Source folder no longer present in `controls-to-port`; re-import from the original project before migrating. |
+| Tabs | `cust-tab/tabs/` | Blocked | Source folder no longer present in `controls-to-port`; re-import from the original project before migrating. |
+| Tab actions | `cust-tab/tab-actions/` | Blocked | Source folder no longer present in `controls-to-port`; re-import from the original project before migrating. |
 
 ## Table
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Table | `cust-table/table/` | Pending | |
+| Table | `table/` | Blocked | Heaviest: needs the missing `LinqGridFilters` control + `LinQRequestState` model, `cust-page`, `cust-button`/`cust-button-v2`, `cust-currency`, `cust-key-value`; `setTimeout` scroll-restore recursion to refactor; `_Dictionary` to re-point. |
 
 ## Table Dialogue
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Table dialogue | `cust-table-dialogue/` | Pending | |
+| Table dialogue | `cust-table-dialogue/` | Blocked | Needs the `table/` `_CustTableInterface` port; template references `cust-currency`/`cust-button-tertiary` without imports. |
 
 ## Zoom Image
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Zoom image | `cust-zoom-image/` | Pending | |
+| Zoom image | `cust-zoom-image/` | Migrated | Standalone in `src/app/controls/components/zoom-image`. |
 
 ## Other Controls
 
 | Control | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Drag drop file upload | `drag-drop-file-upload/` | Pending | |
+| Drag drop file upload | `drag-drop-file-upload/` | Ready | Re-point to the migrated library `DragAndDropFilesDirective`; Kendo icon classnames to remove. |
 | Card table | `card-table/` (migrated to `src/app/controls/components/card-table`) | Pending | Convert to standalone component. |
 | Table | `table/` (migrated to `src/app/controls/components/table`) | Pending | Convert to standalone component. |
 | Tabs | `tabs/` (migrated to `src/app/controls/components/tabs`) | Migrated | Standalone `TabsComponent` with `TabComponent` in `tabs/tab/`; back/next button directives live alongside. |
-| Drag drop file upload with comment | `drag-drop-file-upload-with-comment/` | Pending | |
+| Drag drop file upload with comment | `drag-drop-file-upload-with-comment/` | Blocked | Needs a comment-handling directive (does not exist); Kendo floatinglabel/textarea markup to replace. |
 | Dynamic material dialog | `dynamic-material-dialog/` | Migrated | Standalone in `src/app/controls/components/dynamic-material-dialog`; NgModule removed, typed model surface (`_DialogControl`/`_FormData`), strict-template fixes (removed `appearance="legacy"`, broken `[matCalendar]` binding), and a `google-places.d.ts` shim. |
-| Dynamic window | `dynamic-window/` | Pending | |
+| Dynamic window | `dynamic-window/` | Blocked | Needs a Kendo strategy decision (Kendo not installed), `DialogSetup`/`BtnGroup` model source, and `cust-button` first. |
 | Expandable grid | `expandable-grid/` | Migrated | Standalone in `src/app/controls/components/expandable-grid`; detail expansion uses CSS `animate.enter`/`animate.leave`. |
-| Expandable grid form | `expandable-grid/components/expandable-grid-form/` | Migrated | Standalone; `timeSpanPicker` and `chipList` field types omitted until those controls are migrated. |
-| Numeric up/down | `numeric-up-down/` | Pending | |
+| Expandable grid form | `expandable-grid/components/expandable-grid-form/` | Migrated | Standalone; `timeSpanPicker` and `chipList` field types omitted until those controls are migrated. The `timeSpanPicker` control is now available for wiring. |
+| Numeric up/down | `numeric-up-down/` | Migrated | Standalone in `src/app/controls/components/numeric-up-down`; `upDownCallback` function input kept as-is for now. |
 | Range checkbox group | `range-checkbox-group/` | Migrated | Standalone in `src/app/controls/components/range-checkbox-group`; typed `RangeCheckboxValue`. |
 | Range checkbox | `range-checkbox-group/range-checkbox/` | Migrated | Standalone in `src/app/controls/components/range-checkbox-group/range-checkbox`. |
-| Range slider | `range-slider/` | Pending | |
-| Search address | `search-address/` | Pending | |
-| Time span picker | `time-span-picker/` | Pending | |
-| Zoomable image | `zoomable-image/` | Pending | |
+| Range slider | `range-slider/` | Ready | Self-contained; `detectChanges()`/`setTimeout`/fake-event patterns to refactor. |
+| Search address | `search-address/` | Blocked | Needs a Google Maps script/typings decision; Kendo form-field markup to remove. |
+| Time span picker | `time-span-picker/` | Migrated | Standalone CVA control in `src/app/controls/components/time-span-picker`; legacy `toLocaleString` zero-padding replaced with `padStart`; on `touch` now marked. |
+| Zoomable image | `zoomable-image/` | Migrated | Standalone in `src/app/controls/components/zoomable-image`; `setTimeout` replaced with an `effect()` on a `showZoomLens` signal; legacy `mousewheel`/`DOMMouseScroll` listeners replaced with a standard `(wheel)` binding. |
 
 ## Services
 
@@ -267,12 +269,12 @@ These are dependencies of the controls above and should be migrated alongside th
 
 | Item | Source | Status | Notes |
 | --- | --- | --- | --- |
-| Page base class | `cust-page/cust-page.class.ts` | Pending | |
-| Basic controls service | `cust-basic-controls/cust-basic-controls.service.ts` | Pending | |
+| Page base class | `cust-page/cust-page.class.ts` | Blocked | Needs the missing `_LinQGridFilterItem` model (the `linq-grid-filters` control body is empty); strict-mode violations throughout. |
+| Basic controls service | `cust-basic-controls/cust-basic-controls.service.ts` | Blocked | Decision needed: delete (email part duplicates the library email validator) or fold into library validators; currently unused. |
 | Dynamic dialog service | `dynamic-material-dialog/dynamic-dialog.service.ts` | Migrated | Standalone root service at `src/app/controls/components/dynamic-material-dialog/dynamic-dialog.service.ts`. |
 | Shared directives | `directives/` | Migrated | Migrated to `src/app/library/directives`; legacy copies removed. |
 | Shared validators | `validators/` | Migrated | Migrated to `src/app/library/validators`; legacy copies removed. |
-| Click elsewhere directive | `cust-select/select/cust-click-elsewhere.directive.ts` | Pending | |
+| Click elsewhere directive | `cust-select/select/cust-click-elsewhere.directive.ts` | Migrated | Standalone `ClickElsewhereDirective` at `src/app/library/directives/click-elsewhere.directive.ts`; selector renamed to `[appClickElsewhere]`. |
 | Tab next button directive | `cust-tab/tab-next-button.directive.ts` | Migrated | Standalone at `src/app/controls/components/tabs/tab-next-button.directive.ts`. |
 | Tab back button directive | `cust-tab/tab-back-button.directive.ts` | Migrated | Standalone at `src/app/controls/components/tabs/tab-back-button.directive.ts`. |
 | Accordion directives | `accordion/directives/` | Migrated | Standalone attribute directives: `appAccordionItem`, `appAccordionHeader`, `appAccordionContent`. |

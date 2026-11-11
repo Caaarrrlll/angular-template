@@ -1,0 +1,54 @@
+<div class="img-zoom-container flex" style="height: 100%" (mouseleave)="showZoomLens.set(false)" [class.fullscreen]="showLightbox()">
+	<div class="flex" style="justify-content: center; height: 100%; width: 100%">
+		<div #zoomContainer style="align-self: center; text-align: center; height: 100%; display: flex; justify-content: center; align-items: center" (wheel)="onMouseWheel($event)">
+			@if (src) {
+				<img #image [src]="src" alt="Image unavailable" (mousemove)="moveLens($event)" (click)="showLightbox.set(true)" />
+			}
+		</div>
+
+		<div class="img-controls">
+			<span>{{ count }}</span>
+		</div>
+		<div class="actions">
+			@if (!showLightbox()) {
+				<div class="nav-icon">
+					<mat-icon (click)="showLightbox.set(!showLightbox())">fullscreen</mat-icon>
+				</div>
+			}
+			<div class="nav-icon" [class.active]="showZoomLens()">
+				<mat-icon (click)="initZoom()">zoom_in</mat-icon>
+			</div>
+		</div>
+		@if (showLightbox()) {
+			<div class="close">
+				<div class="nav-icon">
+					<mat-icon class="icon" (click)="showLightbox.set(!showLightbox())">close</mat-icon>
+				</div>
+			</div>
+		}
+
+		<div class="direction left" title="Previous Image" (click)="prev.emit()">
+			<div class="nav-icon">
+				<mat-icon class="icon">chevron_left</mat-icon>
+			</div>
+		</div>
+		<div class="direction right" title="Next Image" (click)="next.emit()">
+			<div class="nav-icon">
+				<mat-icon class="icon">chevron_right</mat-icon>
+			</div>
+		</div>
+	</div>
+	@if (src) {
+		<div [hidden]="!showZoomLens()" class="img-zoom-lens" [style.left]="lensLeft" [style.top]="lensTop" #lens></div>
+		<div
+			[hidden]="!showZoomLens()"
+			class="img-zoom-result"
+			[style.background-image]="backgroundImage"
+			[style.backgroundSize]="backgroundSize"
+			[style.backgroundPosition]="backgroundPosition"
+			[style.left]="resultLeft"
+			[style.top]="resultTop"
+			#result
+		></div>
+	}
+</div>
