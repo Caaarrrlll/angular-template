@@ -20,8 +20,7 @@
 			[min]="min"
 			[max]="values.maxValue - 1"
 			[value]="values.minValue"
-			(input)="minInputUpdated(minNumberInput)"
-		/>
+			(input)="minInputUpdated(minNumberInput)" />
 		@if (prefix) {
 			<mat-hint matPrefix>{{ unit }}</mat-hint>
 		}
@@ -42,8 +41,7 @@
 			[min]="values.minValue + 1"
 			[max]="max"
 			[value]="values.maxValue"
-			(input)="maxInputUpdated(maxNumberInput)"
-		/>
+			(input)="maxInputUpdated(maxNumberInput)" />
 		@if (prefix) {
 			<mat-hint matPrefix>{{ unit }}</mat-hint>
 		}

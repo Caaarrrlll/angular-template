@@ -9,7 +9,9 @@
 		<div style="padding-bottom: 20px">{{ dialogSetup.instructionText }}</div>
 	}
 	@if (dialogSetup.optionSelected) {
-		<div style="padding-bottom: 20px"><b>{{ dialogSetup.optionSelected }}</b></div>
+		<div style="padding-bottom: 20px">
+			<b>{{ dialogSetup.optionSelected }}</b>
+		</div>
 	}
 	@if (dialogSetup.additionalText) {
 		<div style="padding-bottom: 20px">{{ dialogSetup.additionalText }}</div>
@@ -23,13 +25,21 @@
 
 			@if (control.type === "Image") {
 				<div style="width: 100%; padding-bottom: 20px; text-align: center">
-					<img [src]="(control.imgUrl ?? '') | safe" alt="Image unavailable" />
+					<img [src]="control.imgUrl ?? '' | safe" alt="Image unavailable" />
 				</div>
 			}
 
 			@if (control.type === "Slider") {
-				<span style="margin-bottom: 15px"><strong>{{ form.controls[control.formName].value | currency: "ZAR" : "symbol-narrow" : "1.0-0" }}</strong></span>
-				<mat-slider [min]="control.minValue" [max]="control.maxValue" [step]="control.increment" [discrete]="true" [formControlName]="control.formName" style="width: 500px; padding-bottom: 30px">
+				<span style="margin-bottom: 15px"
+					><strong>{{ form.controls[control.formName].value | currency: "ZAR" : "symbol-narrow" : "1.0-0" }}</strong></span
+				>
+				<mat-slider
+					[min]="control.minValue"
+					[max]="control.maxValue"
+					[step]="control.increment"
+					[discrete]="true"
+					[formControlName]="control.formName"
+					style="width: 500px; padding-bottom: 30px">
 					<input matSliderThumb />
 				</mat-slider>
 			}
@@ -88,7 +98,11 @@
 			@if (control.type === "CurrencyShortHand") {
 				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
 					<mat-label>
-						{{ !form.controls[control.formName].value ? control.placeholder : control.placeholder + " of " + (form.controls[control.formName].value * 1000 | currency: "ZAR" : "symbol-narrow" : "1.0-0") }}
+						{{
+							!form.controls[control.formName].value
+								? control.placeholder
+								: control.placeholder + " of " + (form.controls[control.formName].value * 1000 | currency: "ZAR" : "symbol-narrow" : "1.0-0")
+						}}
 					</mat-label>
 					<input matInput [formControlName]="control.formName" type="number" />
 					@if (form.controls[control.formName].hasError("required")) {

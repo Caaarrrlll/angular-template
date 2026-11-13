@@ -26,20 +26,18 @@ export class InputPhoneComponent implements OnInit {
 
 		this.inputControl.setValue(this.inputObj.value ?? null);
 
-		this.inputControl.valueChanges
-			.pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef))
-			.subscribe((value: string | null): void => {
-				this.inputControl.markAsTouched();
+		this.inputControl.valueChanges.pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef)).subscribe((value: string | null): void => {
+			this.inputControl.markAsTouched();
 
-				if (this.inputControl.invalid) {
-					return;
-				}
+			if (this.inputControl.invalid) {
+				return;
+			}
 
-				this.inputChanged.emit({
-					value: value ?? "",
-					error: false,
-					errorDescription: "",
-				});
+			this.inputChanged.emit({
+				value: value ?? "",
+				error: false,
+				errorDescription: "",
 			});
+		});
 	}
 }

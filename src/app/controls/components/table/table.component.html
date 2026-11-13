@@ -12,8 +12,7 @@
 				(customButtonClicked)="buttonEmit(null, 'exportToExcel')"
 				(addButtonClicked)="buttonEmit(null, 'add')"
 				(displayedColumnsChanged)="buttonEmit($event, 'displayedColumnsChanged')"
-				[exporting]="exporting"
-			></app-linq-grid-filters>
+				[exporting]="exporting"></app-linq-grid-filters>
 		</div>
 	}
 
@@ -26,18 +25,10 @@
 				multiTemplateDataRows
 				[matSortActive]="defaultSort"
 				[matSortDirection]="'desc'"
-				(matSortChange)="announceSortChange($event)"
-			>
+				(matSortChange)="announceSortChange($event)">
 				@for (col of displayedColumns; track col; let i = $index) {
 					<ng-container matColumnDef="{{ col }}" [sticky]="tableConfig[i].sticky">
-						<th
-							mat-header-cell
-							*matHeaderCellDef
-							mat-sort-header="{{ col }}"
-							class="col-width"
-							style="--width: {{ tableConfig[i].width }}"
-							[disabled]="tableConfig[i].disableSort"
-						>
+						<th mat-header-cell *matHeaderCellDef mat-sort-header="{{ col }}" class="col-width" style="--width: {{ tableConfig[i].width }}" [disabled]="tableConfig[i].disableSort">
 							@if (!tableConfig[i].type?.includes("button")) {
 								{{ tableConfig[i].display }}
 							}
@@ -48,8 +39,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
 									{{ element[col] }}
 								</td>
 							}
@@ -58,9 +48,8 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
-									{{ (element[col] ?? "None") | titlecase }}
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
+									{{ element[col] ?? "None" | titlecase }}
 								</td>
 							}
 							@case ("spaceUpperCase") {
@@ -68,9 +57,8 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
-									{{ (element[col] ?? "None") | spaceBetweenUppercase }}
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
+									{{ element[col] ?? "None" | spaceBetweenUppercase }}
 								</td>
 							}
 							@case ("date") {
@@ -78,8 +66,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
 									{{ element[col] | date: "yyyy/MM/dd" }}
 								</td>
 							}
@@ -88,8 +75,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
 									{{ element[col] | date: "yyyy/MM/dd HH:mm" : tableConfig[i].timeZone }}
 								</td>
 							}
@@ -98,8 +84,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="isDateInPast(element[col]) ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="isDateInPast(element[col]) ? '800' : '400'"
-								>
+									[style.font-weight]="isDateInPast(element[col]) ? '800' : '400'">
 									{{ element[col] | date: "yyyy/MM/dd" }}
 								</td>
 							}
@@ -108,8 +93,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
 									@if (element[col]) {
 										{{ element[col] | date: "yyyy/MM/dd" }} ({{ element[col] | date: "yyyy/MM/dd HH:mm" | dayAndHours }})
 									}
@@ -120,8 +104,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
 									<app-currency [amount]="element[col]"></app-currency>
 								</td>
 							}
@@ -170,8 +153,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
 									{{ element[col] | thousandSeparator | postfix: "km" : true }}
 								</td>
 							}
@@ -202,8 +184,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
 									{{ element[col] | postfix: (element[col] !== "" ? "%" : "") }}
 								</td>
 							}
@@ -231,8 +212,7 @@
 								<td mat-cell *matCellDef="let row">
 									<app-button-tertiary
 										[type]="tableButton(tableConfig[i], row[col] ? 'star' : 'star_border', '')"
-										(buttonClick)="buttonEmit(row, tableConfig[i].display)"
-									></app-button-tertiary>
+										(buttonClick)="buttonEmit(row, tableConfig[i].display)"></app-button-tertiary>
 								</td>
 							}
 							@case ("listPopupHover") {
@@ -257,8 +237,7 @@
 									mat-cell
 									*matCellDef="let element; let j = dataIndex"
 									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
-									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
-								>
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'">
 									{{ element[col] }}
 								</td>
 							}
@@ -273,8 +252,7 @@
 							<button
 								mat-flat-button
 								aria-label="expand row"
-								(click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation(); setInjector(element)"
-							>
+								(click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation(); setInjector(element)">
 								@if (expandedElement !== element) {
 									<mat-icon>keyboard_arrow_down</mat-icon>
 								}
@@ -289,9 +267,9 @@
 				<ng-container matColumnDef="expandedDetail" sticky>
 					<td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
 						<div class="element-detail" [class.expanded]="element === expandedElement">
-					@if (element.expandable && template) {
-						<ng-container *ngComponentOutlet="template.componentType; injector: myInjector">element</ng-container>
-					}
+							@if (element.expandable && template) {
+								<ng-container *ngComponentOutlet="template.componentType; injector: myInjector">element</ng-container>
+							}
 						</div>
 					</td>
 				</ng-container>
@@ -302,8 +280,7 @@
 					mat-row
 					*matRowDef="let row; columns: columnsToDisplayWithExpand"
 					class="element-row"
-					[class.selected]="row === selectedVehicle || row.stockNumber === scrollToId"
-				></tr>
+					[class.selected]="row === selectedVehicle || row.stockNumber === scrollToId"></tr>
 				<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
 				<tr class="mat-row" *matNoDataRow>
 					<td class="mat-cell">No records available</td>
@@ -326,8 +303,7 @@
 				[length]="custPage.pageTotal"
 				[pageIndex]="custPage.page"
 				[pageSize]="custPage.pageSize"
-				[pageSizeOptions]="custPage.pageSizeOptions"
-			></mat-paginator>
+				[pageSizeOptions]="custPage.pageSizeOptions"></mat-paginator>
 		</div>
 	}
 </div>

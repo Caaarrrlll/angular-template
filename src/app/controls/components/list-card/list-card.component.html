@@ -68,9 +68,8 @@
 					class="{{ row.colSCSS }} col-left column"
 					[style]="{
 						'--col-width': row.width ?? '100%',
-						'--height': tablePropertiesConfig[0].height ? tablePropertiesConfig[0].height : maxLines * 30 + 'px'
-					}"
-				>
+						'--height': tablePropertiesConfig[0].height ? tablePropertiesConfig[0].height : maxLines * 30 + 'px',
+					}">
 					@if (row.item[row.item.length - 1].type === "button") {
 						<div class="main-button-container main-button-container-width">
 							<div class="main-button-style" [style.--height]="maxLines * 30 + 18 + 'px'" [class]="row.pulse ? pulseColour : ''">
@@ -102,9 +101,8 @@
 																? 'inline-block'
 																: row.item[0].type !== 'taskHeading'
 																	? 'inline-block'
-																	: 'flex'
-											}"
-										>
+																	: 'flex',
+											}">
 											@if (detail.type === "countDown") {
 												<div class="element-count-down">
 													<app-count-down [timeLeft]="countDownTime(detail)" [textFormat]="true" (timeRemaining)="setPulseColour($event)"></app-count-down>
@@ -165,9 +163,8 @@
 												[style]="{
 													'text-align': 'right',
 													color: detail.valueColor ? detail.valueColor : '#000',
-													'font-weight': detail.valueColor ? '700' : '500'
-												}"
-											>
+													'font-weight': detail.valueColor ? '700' : '500',
+												}">
 												<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
 											</div>
 										}
@@ -176,7 +173,7 @@
 								@case ("text") {
 									<div class="float-container left-text-border content-font content-height">
 										@if (detail.label) {
-										<div class="float-child-left" [style.width]="(detail.label ?? '').length * 10 + 'px'">
+											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 10 + 'px'">
 												<b>{{ detail.label }}:</b>
 											</div>
 										}
@@ -195,9 +192,8 @@
 												[style]="{
 													'text-align': 'right',
 													color: detail.valueColor ? detail.valueColor : '#000',
-													'font-weight': detail.valueColor ? '700' : '400'
-												}"
-											>
+													'font-weight': detail.valueColor ? '700' : '400',
+												}">
 												<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
 											</div>
 										}
@@ -275,9 +271,7 @@
 									</div>
 								}
 								@case ("store") {
-									<div class="float-container left-text-border content-font content-height">
-										<mat-icon class="inline-icons">storefront</mat-icon> {{ detail.value }}
-									</div>
+									<div class="float-container left-text-border content-font content-height"><mat-icon class="inline-icons">storefront</mat-icon> {{ detail.value }}</div>
 								}
 								@case ("textWithColorBlock") {
 									{{ detail.value }}

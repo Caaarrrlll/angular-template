@@ -35,7 +35,7 @@ export class _CUSTPage {
 		pageTotal?: number | null,
 		filters?: _LinQGridFilterItem[],
 		pageSizeOptions?: number[],
-		lastScrollPosition?: string
+		lastScrollPosition?: string,
 	): void {
 		this.page = page != undefined && page != null ? page : this.page;
 		this.pageSize = pageSize != undefined && pageSize != null ? pageSize : this.pageSize;

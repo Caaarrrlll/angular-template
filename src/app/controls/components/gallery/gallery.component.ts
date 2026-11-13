@@ -8,7 +8,6 @@ import { ZoomDirective } from "@shared/directives/zoom.directive";
 import { EvaluationComparisonComponent } from "./evaluation-comparison/evaluation-comparison.component";
 import { Image, _DeconstructedFlatView } from "./gallery.models";
 
-
 const imageNotFoundUrl = "assets/images/image_not_found.png";
 
 @Component({
@@ -77,16 +76,11 @@ export class GalleryComponent implements OnChanges, OnInit {
 	}
 
 	public ngOnInit(): void {
-		this.autoplayEvent
-			.pipe(
-				debounceTime(this.autoplayDelay),
-				takeUntilDestroyed(this.destroyRef)
-			)
-			.subscribe(() => {
-				if (this.autoplayGo) {
-					this.next();
-				}
-			});
+		this.autoplayEvent.pipe(debounceTime(this.autoplayDelay), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+			if (this.autoplayGo) {
+				this.next();
+			}
+		});
 	}
 
 	private reset(): void {

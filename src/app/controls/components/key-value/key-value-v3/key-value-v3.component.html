@@ -1,8 +1,6 @@
 <div class="kv-container-row" [class.right]="alignRight" [style.paddingBottom]="bottomPadding">
 	@if (key) {
-		<div class="key flex-row-wrap row-start" [class.bold]="!boldValue" [title]="keyTitle ?? ``">
-			{{ key }}{{ colon ? `:` : `` }}
-		</div>
+		<div class="key flex-row-wrap row-start" [class.bold]="!boldValue" [title]="keyTitle ?? ``">{{ key }}{{ colon ? `:` : `` }}</div>
 	}
 	<div class="value flex-row-wrap row-end" [class.bold]="boldValue" [title]="title ?? ``">
 		@if (showEdit) {

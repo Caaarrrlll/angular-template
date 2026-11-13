@@ -6,8 +6,7 @@
 		[formControl]="inputControl.inputControl"
 		matInput
 		[placeholder]="placeholder"
-		[readonly]="isReadOnly"
-	/>
+		[readonly]="isReadOnly" />
 	@if (action) {
 		<button mat-button class="button-wrapper" [title]="action.tooltip" (click)="buttonClick(action.value, action.parameters)">
 			<mat-icon class="button-icon">{{ action.icon }}</mat-icon>

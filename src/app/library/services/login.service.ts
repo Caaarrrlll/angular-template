@@ -38,7 +38,7 @@ export class LoginService {
 				atob(base64)
 					.split("")
 					.map((character) => `%${`00${character.charCodeAt(0).toString(16)}`.slice(-2)}`)
-					.join("")
+					.join(""),
 			);
 			return JSON.parse(payloadJson) as _JwtPayload;
 		} catch {

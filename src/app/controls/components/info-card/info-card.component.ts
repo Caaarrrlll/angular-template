@@ -33,16 +33,7 @@ export interface _InfoCardParentDataContext {
 	selector: "app-info-card",
 	templateUrl: "./info-card.component.html",
 	styleUrls: ["./info-card.component.scss"],
-	imports: [
-		CommonModule,
-		MatCardModule,
-		MatDividerModule,
-		MatIconModule,
-		ButtonPrimaryComponent,
-		ButtonV2Component,
-		ChipStatusComponent,
-		CurrencyComponent,
-	],
+	imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, ButtonPrimaryComponent, ButtonV2Component, ChipStatusComponent, CurrencyComponent],
 })
 export class InfoCardComponent implements AfterContentInit {
 	@Input() public data!: Record<string, any>;
@@ -322,10 +313,10 @@ export class InfoCardComponent implements AfterContentInit {
 
 				if (config.type && config.type === "boldText") {
 					this.cardHeaders.push({
-					text: config.display,
-					type: config.type,
-					alignment: config.alignment ?? _HeaderAlignment.start,
-					textColor: config.textColor,
+						text: config.display,
+						type: config.type,
+						alignment: config.alignment ?? _HeaderAlignment.start,
+						textColor: config.textColor,
 					});
 				} else if (config.type && config.type === "status") {
 					this.cardHeaders.push({

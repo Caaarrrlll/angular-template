@@ -34,7 +34,7 @@ export class MediaDialogComponent implements OnInit, OnDestroy {
 			map((media: MediaFile | null) => {
 				// strip `type` so the `apiResponse` pipe passes the raw file through as payload
 				return { ...media, type: undefined } as MediaFile;
-			})
+			}),
 		);
 	}
 

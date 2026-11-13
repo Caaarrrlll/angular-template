@@ -65,7 +65,8 @@ export class TabGroupComponent implements OnChanges, AfterContentInit {
 
 	private setMatTabHeader(): void {
 		this.matTabGroupConfig["--mat-tab-header-background-color"] = this.tabList.matTabHeaderBackgroundColor ?? "#fff";
-		this.matTabGroupConfig["--mat-tab-header-right-background-color"] = this.tabList.matTabHeaderRightBackgroundColor ?? (this.tabList.tabType === "horizontal" ? "#fff" : "#293640");
+		this.matTabGroupConfig["--mat-tab-header-right-background-color"] =
+			this.tabList.matTabHeaderRightBackgroundColor ?? (this.tabList.tabType === "horizontal" ? "#fff" : "#293640");
 		this.matTabGroupConfig["--mat-tab-header-right-width"] = "2px";
 	}
 

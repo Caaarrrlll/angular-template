@@ -16,8 +16,7 @@
 			(addButtonClicked)="navigateToCreateLead()"
 			(filterRefresh)="filterRefresh($event)"
 			(customButtonClicked)="customButtonClicked()"
-			(upperToggleChanged)="upperToggleChange()"
-		>
+			(upperToggleChanged)="upperToggleChange()">
 		</app-linq-grid-filters>
 	</div>
 </div>
@@ -39,8 +38,7 @@
 								[parentButtonProcess]="parentButtonProcess"
 								[claims]="claims"
 								[spinner]="spinner"
-								(buttonClick)="buttonAction($event)"
-							></app-list-card>
+								(buttonClick)="buttonAction($event)"></app-list-card>
 						</td>
 					</ng-container>
 					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
@@ -60,8 +58,7 @@
 				[length]="custPage.pageTotal"
 				[pageIndex]="custPage.page"
 				[pageSize]="custPage.pageSize"
-				[pageSizeOptions]="custPage.pageSizeOptions"
-			></mat-paginator>
+				[pageSizeOptions]="custPage.pageSizeOptions"></mat-paginator>
 		</div>
 	}
 </div>

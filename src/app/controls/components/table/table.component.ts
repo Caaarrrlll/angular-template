@@ -111,7 +111,8 @@ export class TableComponent implements OnDestroy, AfterContentInit {
 			this.scrollToPosition();
 		}
 
-		this.requestState.sorts = JSON.parse(localStorage.getItem(this.storageNameIn) ?? "null");		if (!this.requestState.sorts) {
+		this.requestState.sorts = JSON.parse(localStorage.getItem(this.storageNameIn) ?? "null");
+		if (!this.requestState.sorts) {
 			this.requestState.sorts = [
 				{
 					field: this.defaultSort,

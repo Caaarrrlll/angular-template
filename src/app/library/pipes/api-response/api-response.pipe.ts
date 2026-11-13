@@ -26,7 +26,7 @@ export class ApiResponsePipe implements PipeTransform {
 							: {
 									loading: payload?.type === "start",
 									payload: payload?.type ? payload?.value : payload,
-							  };
+								};
 					}),
 					startWith({ loading: true }),
 					catchError((error: unknown) => {
@@ -36,8 +36,8 @@ export class ApiResponsePipe implements PipeTransform {
 
 						this.logger.error(error);
 						return of({ loading: false, error: true });
-					})
-			  )
+					}),
+				)
 			: apiCall;
 	}
 }

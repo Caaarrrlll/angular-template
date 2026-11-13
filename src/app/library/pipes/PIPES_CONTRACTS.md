@@ -6,38 +6,37 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 
 ## Pipe Index
 
-| Pipe | Name | File | Standalone | Summary |
-| --- | --- | --- | --- | --- |
-| `AbsolutePipe` | `absolute` | `absolute/absolute.pipe.ts` | Yes | Returns the absolute value of a number. |
-| `ApiResponsePipe` | `apiResponse` | `api-response/api-response.pipe.ts` | Yes | Converts an observable API call into loading, payload, error, and no-data view states. |
-| `CamelToTitlePipe` | `camelToTitle` | `camel-to-title/camel-to-title.pipe.ts` | Yes | Splits camelCase text and capitalizes the first character. |
-| `CharacterSpacingPipe` | `characterSpacing` | `character-spacing/character-spacing.pipe.ts` | Yes | Groups string characters by the length's lowest common denominator (3-5, default 3) with spaces. |
-| `ContainsPipe` | `contains` | `contains/contains.pipe.ts` | Yes | Returns whether an array contains a value or matches a predicate function. |
-| `CurrencyInStringPipe` | `currencyInString` | `currency-in-string/currency-in-string.pipe.ts` | Yes | Formats numbers embedded in a string as ZAR currency. |
-| `DayAndHoursPipe` | `dayAndHours` | `day-and-hours/day-and-hours.pipe.ts` | Yes | Formats a date as elapsed days and hours from now. |
-| `EmailToInitialsPipe` | `emailToInitials` | `email-to-initials/email-to-initials.pipe.ts` | Yes | Takes the first and last character of an email's local part and uppercases them. |
-| `FilterPipe` | `arrayFilter` | `array-filter/array-filter.pipe.ts` | Yes | Filters an array with an object of property values or a predicate function. |
-| `FormatNullTextPipe` | `formatNull` | `format-null/format-null.pipe.ts` | Yes | Replaces null or undefined with a fallback string. |
-| `GroupByDatePipe` | `groupByDate` | `group-by-date/group-by-date.pipe.ts` | Yes | Groups a collection by its `entryDate` property into date/leadHistory pairs. |
-| `HighlightSearchMatchPipe` | `searchMatch` | `highlight-search-match/highlight-search-match.pipe.ts` | Yes | Wraps the first case-insensitive match of a search term in a `<mark>` tag. |
-| `KebabToTitlePipe` | `kebabToTitle` | `kebab-to-title/kebab-to-title.pipe.ts` | Yes | Replaces the first hyphen in kebab-case text with a space. |
-| `NameToInitialsPipe` | `nameToInitials` | `name-to-initials/name-to-initials.pipe.ts` | Yes | Takes the first two initials of a name and uppercases them. |
-| `NearestPipe` | `nearest` | `nearest/nearest.pipe.ts` | Yes | Rounds a value to the nearest multiple of a unit. |
-| `ObscureTextPipe` | `obscureText` | `obscure-text/obscure-text.pipe.ts` | Yes | Masks all but the last N characters. |
-| `OrderByPipe` | `orderBy` | `order-by/order-by.pipe.ts` | Yes | Sorts an array with a comparator function. |
-| `OrdinalPipe` | `ordinal` | `ordinal/ordinal.pipe.ts` | Yes | Appends an ordinal suffix (st, nd, rd, th) to a number. |
-| `PascalToTitlePipe` | `pascalToTitle` | `pascal-to-title/pascal-to-title.pipe.ts` | Yes | Splits PascalCase text and capitalizes the first character. |
-| `PercentagePipe` | `percentage` | `percentage/percentage.pipe.ts` | Yes | Calculates a percentage as a two-decimal string with a `%` suffix. |
-| `PostfixPipe` | `postfix` | `postfix/postfix.pipe.ts` | Yes | Appends a suffix, optionally separated by a space. |
-| `RemoveEmailDomainPipe` | `removeDomain` | `remove-email-domain/remove-email-domain.pipe.ts` | Yes | Strips the `@` and domain from an email address. |
-| `RemoveSpacesPipe` | `removeSpaces` | `remove-spaces/remove-spaces.pipe.ts` | Yes | Removes whitespace and selected punctuation, then uppercases. |
-| `RemoveUnderscorePipe` | `removeUnderscore` | `remove-underscore/remove-underscore.pipe.ts` | Yes | Replaces underscores with spaces. |
-| `RoundToNthPipe` | `roundToNth` | `round-to-nth/round-to-nth.pipe.ts` | Yes | Rounds a number to N decimal places. |
-| `ArraySortPipe` | `sort` | `sort/array-sort.pipe.ts` | Yes | Sorts an array of records ascending by a field. |
-| `SafePipe` | `safe` | `safe/safe.pipe.ts` | Yes | Bypasses resource URL sanitization. |
-| `SpaceBetweenUppercasePipe` | `spaceBetweenUppercase` | `space-between-uppercase/space-between-uppercase.pipe.ts` | Yes | Inserts a space between an uppercase letter and a following lowercase letter. |
-| `ThousandSeparatorPipe` | `thousandSeparator` | `thousand-separator/thousand-separator.pipe.ts` | Yes | Groups digit runs with spaces. |
-| `TimeElapsedFormatPipe` | `timeElapsedFormat` | `time-elapsed/time-elapsed.pipe.ts` | Yes (impure) | Renders a date as a relative time string. |
+| Pipe                        | Name                    | File                                                      | Standalone   | Summary                                                                                          |
+| --------------------------- | ----------------------- | --------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
+| `AbsolutePipe`              | `absolute`              | `absolute/absolute.pipe.ts`                               | Yes          | Returns the absolute value of a number.                                                          |
+| `ApiResponsePipe`           | `apiResponse`           | `api-response/api-response.pipe.ts`                       | Yes          | Converts an observable API call into loading, payload, error, and no-data view states.           |
+| `CamelToTitlePipe`          | `camelToTitle`          | `camel-to-title/camel-to-title.pipe.ts`                   | Yes          | Splits camelCase text and capitalizes the first character.                                       |
+| `CharacterSpacingPipe`      | `characterSpacing`      | `character-spacing/character-spacing.pipe.ts`             | Yes          | Groups string characters by the length's lowest common denominator (3-5, default 3) with spaces. |
+| `ContainsPipe`              | `contains`              | `contains/contains.pipe.ts`                               | Yes          | Returns whether an array contains a value or matches a predicate function.                       |
+| `CurrencyInStringPipe`      | `currencyInString`      | `currency-in-string/currency-in-string.pipe.ts`           | Yes          | Formats numbers embedded in a string as ZAR currency.                                            |
+| `DayAndHoursPipe`           | `dayAndHours`           | `day-and-hours/day-and-hours.pipe.ts`                     | Yes          | Formats a date as elapsed days and hours from now.                                               |
+| `EmailToInitialsPipe`       | `emailToInitials`       | `email-to-initials/email-to-initials.pipe.ts`             | Yes          | Takes the first and last character of an email's local part and uppercases them.                 |
+| `FilterPipe`                | `arrayFilter`           | `array-filter/array-filter.pipe.ts`                       | Yes          | Filters an array with an object of property values or a predicate function.                      |
+| `FormatNullTextPipe`        | `formatNull`            | `format-null/format-null.pipe.ts`                         | Yes          | Replaces null or undefined with a fallback string.                                               |
+| `GroupByDatePipe`           | `groupByDate`           | `group-by-date/group-by-date.pipe.ts`                     | Yes          | Groups a collection by its `entryDate` property into date/leadHistory pairs.                     |
+| `HighlightSearchMatchPipe`  | `searchMatch`           | `highlight-search-match/highlight-search-match.pipe.ts`   | Yes          | Wraps the first case-insensitive match of a search term in a `<mark>` tag.                       |
+| `KebabToTitlePipe`          | `kebabToTitle`          | `kebab-to-title/kebab-to-title.pipe.ts`                   | Yes          | Replaces the first hyphen in kebab-case text with a space.                                       |
+| `NameToInitialsPipe`        | `nameToInitials`        | `name-to-initials/name-to-initials.pipe.ts`               | Yes          | Takes the first two initials of a name and uppercases them.                                      |
+| `NearestPipe`               | `nearest`               | `nearest/nearest.pipe.ts`                                 | Yes          | Rounds a value to the nearest multiple of a unit.                                                |
+| `ObscureTextPipe`           | `obscureText`           | `obscure-text/obscure-text.pipe.ts`                       | Yes          | Masks all but the last N characters.                                                             |
+| `OrderByPipe`               | `orderBy`               | `order-by/order-by.pipe.ts`                               | Yes          | Sorts an array with a comparator function.                                                       |
+| `OrdinalPipe`               | `ordinal`               | `ordinal/ordinal.pipe.ts`                                 | Yes          | Appends an ordinal suffix (st, nd, rd, th) to a number.                                          |
+| `PascalToTitlePipe`         | `pascalToTitle`         | `pascal-to-title/pascal-to-title.pipe.ts`                 | Yes          | Splits PascalCase text and capitalizes the first character.                                      |
+| `PercentagePipe`            | `percentage`            | `percentage/percentage.pipe.ts`                           | Yes          | Calculates a percentage as a two-decimal string with a `%` suffix.                               |
+| `PostfixPipe`               | `postfix`               | `postfix/postfix.pipe.ts`                                 | Yes          | Appends a suffix, optionally separated by a space.                                               |
+| `RemoveEmailDomainPipe`     | `removeDomain`          | `remove-email-domain/remove-email-domain.pipe.ts`         | Yes          | Strips the `@` and domain from an email address.                                                 |
+| `RemoveCharsPipe`           | `removeChars`           | `remove-chars/remove-chars.pipe.ts`                       | Yes          | Removes every occurrence of a character (or substring); defaults to underscores.                 |
+| `RoundToNthPipe`            | `roundToNth`            | `round-to-nth/round-to-nth.pipe.ts`                       | Yes          | Rounds a number to N decimal places.                                                             |
+| `ArraySortPipe`             | `sort`                  | `sort/array-sort.pipe.ts`                                 | Yes          | Sorts an array of records ascending by a field.                                                  |
+| `SafePipe`                  | `safe`                  | `safe/safe.pipe.ts`                                       | Yes          | Bypasses resource URL sanitization.                                                              |
+| `SpaceBetweenUppercasePipe` | `spaceBetweenUppercase` | `space-between-uppercase/space-between-uppercase.pipe.ts` | Yes          | Inserts a space between an uppercase letter and a following lowercase letter.                    |
+| `ThousandSeparatorPipe`     | `thousandSeparator`     | `thousand-separator/thousand-separator.pipe.ts`           | Yes          | Groups digit runs with spaces.                                                                   |
+| `TimeElapsedFormatPipe`     | `timeElapsedFormat`     | `time-elapsed/time-elapsed.pipe.ts`                       | Yes (impure) | Renders a date as a relative time string.                                                        |
 
 ## CharacterSpacingPipe
 
@@ -308,10 +307,10 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 
   ```html
   <ng-container *ngIf="users$ | apiResponse | async as result">
-    <app-loader *ngIf="result.loading"></app-loader>
-    <app-error *ngIf="result.error"></app-error>
-    <app-empty *ngIf="result.noData"></app-empty>
-    <app-list *ngIf="result.payload" [items]="result.payload"></app-list>
+  	<app-loader *ngIf="result.loading"></app-loader>
+  	<app-error *ngIf="result.error"></app-error>
+  	<app-empty *ngIf="result.noData"></app-empty>
+  	<app-list *ngIf="result.payload" [items]="result.payload"></app-list>
   </ng-container>
   ```
 
@@ -399,8 +398,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 - **Example:**
 
   ```html
-  {{ value | formatNull }}
-  {{ value | formatNull: "N/A" }}
+  {{ value | formatNull }} {{ value | formatNull: "N/A" }}
   ```
 
 - **Notes:** Migrated from `src/app/controls-to-port/pipes/format-null-pipe/format-null-text.pipe.ts`; template name remains `formatNull`; now standalone.
@@ -457,37 +455,20 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 
 - **Notes:** Migrated from `src/app/controls-to-port/pipes/postfix/postfix.pipe.ts`; now standalone.
 
-## RemoveSpacesPipe
+## RemoveCharsPipe
 
-- **Purpose:** Removes whitespace and selected punctuation, then uppercases the result.
+- **Purpose:** Removes every occurrence of a character (or substring) from text; defaults to removing underscores.
 - **Inputs:**
   - `text`: string to clean.
-- **Output:** Uppercased string without whitespace or `,@#$%^&*()/` characters.
+  - `chars`: character or substring to remove. Defaults to `_`.
+- **Output:** The string without the given characters, or an empty string for a falsy value.
 - **Example:**
 
   ```html
-  {{ "AB 12/34" | removeSpaces }}
+  {{ "some_value" | removeChars }} {{ "some value" | removeChars: " " }}
   ```
 
-  Outputs `AB1234`.
-
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/remove-spaces-pipe/remove-spaces.pipe.ts`; now standalone.
-
-## RemoveUnderscorePipe
-
-- **Purpose:** Replaces underscores with spaces.
-- **Inputs:**
-  - `value`: string to format.
-- **Output:** String with underscores replaced by spaces, or an empty string for a falsy value.
-- **Example:**
-
-  ```html
-  {{ "first_name" | removeUnderscore }}
-  ```
-
-  Outputs `first name`.
-
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/underscore-to-title.pipe.ts`; the template name remains `removeUnderscore` and the pipe does not title-case the result; now standalone.
+- **Notes:** Consolidates the former `RemoveUnderscorePipe` (`removeUnderscore`) and `RemoveSpacesPipe` (`removeSpaces`), both removed during a cleanup pass. The legacy app-specific behaviors were not carried over: `removeUnderscore` replaced `_` with a space rather than removing it, and `removeSpaces` also stripped `,@#$%^&*()/` and uppercased the result.
 
 ## RoundToNthPipe
 

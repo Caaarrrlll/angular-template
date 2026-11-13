@@ -1,4 +1,18 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, SecurityContext, ViewChild, WritableSignal, effect, inject, signal } from "@angular/core";
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	EventEmitter,
+	HostListener,
+	Input,
+	Output,
+	SecurityContext,
+	ViewChild,
+	WritableSignal,
+	effect,
+	inject,
+	signal,
+} from "@angular/core";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { MatIconModule } from "@angular/material/icon";
 

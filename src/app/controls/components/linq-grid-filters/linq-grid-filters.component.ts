@@ -130,12 +130,13 @@ export class LinqGridFiltersComponent implements OnInit {
 	public rangeChanged(item: _LinQGridFilterItem, bound: "start" | "end", value: Date | null): void {
 		const range = item.config.options.range ?? { start: null as Date | null, end: null as Date | null };
 		range[bound] = value;
-		item.config.options["range"] = range;		item.active = range.start !== null && range.end !== null;
+		item.config.options["range"] = range;
+		item.active = range.start !== null && range.end !== null;
 		item.filter.filters = item.active
 			? [
 					{ field: item.name, operator: "gte", value: range.start },
 					{ field: item.name, operator: "lte", value: range.end },
-			  ]
+				]
 			: [];
 		this.filterChanged.emit(item);
 	}

@@ -12,9 +12,8 @@
 				'--color': item.count > 0 && !item.showZero ? '#fff' : !item.isToggle ? '#18242E' : '#fff',
 				'--border': item.count > 0 && !item.showZero ? '#000' : '#E1E1E1',
 				'--hover-color': item.disabled == false ? '#3F607C' : '#DCDCDC',
-				'--hover-text-color': item.disabled == false ? '#FFF' : '#000'
-			}"
-		>
+				'--hover-text-color': item.disabled == false ? '#FFF' : '#000',
+			}">
 			@if (item.icon) {
 				<div class="mat-icon-custom">
 					<mat-icon aria-hidden="false" aria-label="" [fontIcon]="item.icon" class="mat-icon-content" style="padding-right: 5px"></mat-icon>
@@ -33,9 +32,8 @@
 								'--radius': item.count < 99 ? '50%' : '9999px',
 								'--background': !item.showZero ? '#ef6c00' : !item.isToggle ? '#fff' : '#ef6c00',
 								border: !item.showZero ? '1px solid #ef6c00' : !item.isToggle ? '1px solid #888888' : '1px solid #ef6c00',
-								color: !item.showZero ? '#fff' : !item.isToggle ? '#888888' : '#fff'
-							}"
-						>
+								color: !item.showZero ? '#fff' : !item.isToggle ? '#888888' : '#fff',
+							}">
 							<span class="circle-count" [style]="{ '--padding-left': item.count < 10 ? '1px' : '0px' }">{{ item.count }}</span>
 						</div>
 					} @else {
@@ -43,8 +41,7 @@
 							class="circle"
 							[style]="{ '--width': item.count < 99 ? '18px' : '35px' }"
 							style="--background: #517ca0; --color: #fff; --width: 18px; --radius: 9999px; border: 1px solid #517ca0"
-							(click)="chipClearAction(item)"
-						>
+							(click)="chipClearAction(item)">
 							@if (!item.showZero && !item.refresh) {
 								<span class="circle-count">X</span>
 							}

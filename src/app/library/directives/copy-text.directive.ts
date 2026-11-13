@@ -34,7 +34,7 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 	}
 
 	private updateText(): void {
-		this.text = this.copyText ? this.copyText : this.element.textContent ?? "";
+		this.text = this.copyText ? this.copyText : (this.element.textContent ?? "");
 		this.renderer.setAttribute(this.element, "title", 'Click to copy "' + this.text + '"');
 	}
 

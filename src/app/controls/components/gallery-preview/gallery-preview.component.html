@@ -5,8 +5,7 @@
 			(click)="prev()"
 			class="generalGalleryPreviewBtn galleryPreviewNavButton galleryPreviewControlButtonPrev"
 			matRipple
-			[matRippleDisabled]="firstVisibleIndex === 0"
-		>
+			[matRippleDisabled]="firstVisibleIndex === 0">
 			<mat-icon class="galleryPreviewSvgIcon" [class.galleryPreviewSvgIconOrange]="orangeIcons">chevron_left</mat-icon>
 		</button>
 	}
@@ -18,8 +17,7 @@
 					class="galleryPreviewImage"
 					[style]="{ 'background-image': 'url(' + image.url + ')', height: imageHeight + 'px' }"
 					[class.galleryPreviewActiveImage]="i === activeImageIndex && !onlyShowPreview"
-					(click)="selectImage(i)"
-				></div>
+					(click)="selectImage(i)"></div>
 			</div>
 		}
 	</div>
@@ -30,8 +28,7 @@
 			(click)="next()"
 			class="generalGalleryPreviewBtn galleryPreviewNavButton galleryPreviewControlButtonNext"
 			matRipple
-			[matRippleDisabled]="lastVisibleIndex === lastIndexOfArray"
-		>
+			[matRippleDisabled]="lastVisibleIndex === lastIndexOfArray">
 			<mat-icon class="galleryPreviewSvgIcon" [class.galleryPreviewSvgIconOrange]="orangeIcons">chevron_right</mat-icon>
 		</button>
 	}

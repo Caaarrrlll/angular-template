@@ -10,7 +10,7 @@
 									[style]="{
 										'font-size': headCol.fontSize ? headCol.fontSize : '17px',
 										'padding-left': '4px',
-										color: headCol.textColor ? headCol.textColor : '#000'
+										color: headCol.textColor ? headCol.textColor : '#000',
 									}"
 									>{{ headCol.text }}</b
 								>
@@ -23,11 +23,12 @@
 								[style]="{
 									'font-size': headCol.fontSize ? headCol.fontSize : '17px',
 									'padding-left': '4px',
-									color: headCol.textColor ? headCol.textColor : '#000'
-								}"
-							>
+									color: headCol.textColor ? headCol.textColor : '#000',
+								}">
 								@if (headCol.textPre) {
-									<span class="header-pre-text"><b>{{ headCol.textPre }} - {{ headCol.text }}</b></span>
+									<span class="header-pre-text"
+										><b>{{ headCol.textPre }} - {{ headCol.text }}</b></span
+									>
 								}
 								@if (headCol.textPre) {
 									<span class="header-pre-text-devider">|</span>
@@ -111,10 +112,9 @@
 							value: errorActionButton,
 							disabled: false,
 							isTableButton: false,
-							width: '160px'
+							width: '160px',
 						}"
-						(buttonClick)="buttonAction(errorActionButton)"
-					></app-button-primary>
+						(buttonClick)="buttonAction(errorActionButton)"></app-button-primary>
 				</div>
 			}
 			@for (row of cardRows; track $index) {
@@ -122,9 +122,8 @@
 					class="{{ row.colSCSS }} col-left column"
 					[style]="{
 						'--col-width': row.width ?? '100%',
-						'--height': maxLines * 30 + 'px'
-					}"
-				>
+						'--height': maxLines * 30 + 'px',
+					}">
 					<div>
 						@for (detail of row.item; track $index) {
 							@switch (detail.type) {
@@ -160,9 +159,8 @@
 												[style]="{
 													'text-align': 'right',
 													color: detail.valueColor ? detail.valueColor : '#000',
-													'font-weight': detail.valueColor ? '700' : '400'
-												}"
-											>
+													'font-weight': detail.valueColor ? '700' : '400',
+												}">
 												@if (detail.value) {
 													<mat-icon class="icons-infront" style="color: green" (click)="buttonAction(detail.buttonClick ?? '')">check</mat-icon>
 												}
@@ -193,9 +191,8 @@
 												[style]="{
 													'text-align': 'right',
 													color: detail.valueColor ? detail.valueColor : '#000',
-													'font-weight': detail.valueColor ? '700' : '400'
-												}"
-											>
+													'font-weight': detail.valueColor ? '700' : '400',
+												}">
 												<div class="no-wrap-text" [title]="detail.value">
 													@if (detail.buttonClick != null) {
 														<mat-icon class="icons-infront" (click)="buttonAction(detail.buttonClick ?? '')">edit</mat-icon>
@@ -238,9 +235,8 @@
 												[style]="{
 													'text-align': 'right',
 													color: detail.valueColor ? detail.valueColor : '#000',
-													'font-weight': detail.valueColor ? '700' : '400'
-												}"
-											>
+													'font-weight': detail.valueColor ? '700' : '400',
+												}">
 												<div class="no-wrap-text text-link" [title]="detail.value" (click)="buttonAction(detail.buttonClick ?? '')">
 													{{ detail.value }}
 												</div>
@@ -285,9 +281,8 @@
 													[style]="{
 														'text-align': 'right',
 														color: detail.valueColor ? detail.valueColor : '#000',
-														'font-weight': detail.valueColor ? '700' : '400'
-													}"
-												>
+														'font-weight': detail.valueColor ? '700' : '400',
+													}">
 													<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
 												</div>
 											}
@@ -353,9 +348,8 @@
 													[style]="{
 														'text-align': 'right',
 														color: detail.valueColor ? detail.valueColor : '#000',
-														'font-weight': detail.valueColor ? '700' : '400'
-													}"
-												>
+														'font-weight': detail.valueColor ? '700' : '400',
+													}">
 													<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
 												</div>
 											}
@@ -376,9 +370,8 @@
 													[style]="{
 														'text-align': 'right',
 														color: detail.valueColor ? detail.valueColor : '#000',
-														'font-weight': detail.valueColor ? '700' : '400'
-													}"
-												>
+														'font-weight': detail.valueColor ? '700' : '400',
+													}">
 													<div class="no-wrap-text" [title]="detail.value">
 														<mat-icon class="inline-icons-before-value" style="color: #f57c00">phone</mat-icon>
 														{{ detail.value }}
@@ -417,9 +410,8 @@
 												[style]="{
 													'text-align': 'right',
 													color: detail.valueColor ? detail.valueColor : '#000',
-													'font-weight': detail.valueColor ? '700' : '400'
-												}"
-											>
+													'font-weight': detail.valueColor ? '700' : '400',
+												}">
 												<div class="no-wrap-text" [title]="detail.value">
 													<mat-icon class="inline-icons-before-value" style="color: #f57c00">mail</mat-icon>
 													{{ detail.value }}
@@ -461,9 +453,7 @@
 									</div>
 								}
 								@case ("store") {
-									<div class="float-container left-text-border content-font content-height">
-										<mat-icon class="inline-icons">storefront</mat-icon> {{ detail.value }}
-									</div>
+									<div class="float-container left-text-border content-font content-height"><mat-icon class="inline-icons">storefront</mat-icon> {{ detail.value }}</div>
 								}
 								@case ("textWithColorBlock") {
 									{{ detail.value }}
@@ -504,9 +494,8 @@
 												[style]="{
 													'text-align': 'right',
 													color: detail.valueColor ? detail.valueColor : '#000',
-													'font-weight': detail.valueColor ? '700' : '400'
-												}"
-											>
+													'font-weight': detail.valueColor ? '700' : '400',
+												}">
 												<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
 											</div>
 											<div [style.width]="detail.label.length * 10 + 'px'">

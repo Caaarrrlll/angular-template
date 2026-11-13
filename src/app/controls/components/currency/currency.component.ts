@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 	selector: "app-currency",
 	standalone: true,
 	imports: [CurrencyPipe],
-	template: `<span class="currency">{{ (amount ?? 0) | currency: currencyCode : "symbol-narrow" : digitsInfo }}</span>`,
+	template: `<span class="currency">{{ amount ?? 0 | currency: currencyCode : "symbol-narrow" : digitsInfo }}</span>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrencyComponent {

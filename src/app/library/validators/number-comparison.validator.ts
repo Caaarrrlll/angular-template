@@ -1,9 +1,6 @@
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 
-export function numberComparisonValidator(
-	shouldBeSmallerControlName: string,
-	shouldBeLargerControlName: string,
-): ValidatorFn {
+export function numberComparisonValidator(shouldBeSmallerControlName: string, shouldBeLargerControlName: string): ValidatorFn {
 	return (control: AbstractControl): ValidationErrors | null => {
 		if (!(control instanceof FormGroup)) {
 			return null;

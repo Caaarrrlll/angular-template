@@ -99,7 +99,10 @@ export class DynamicWindowComponent implements OnInit {
 				}
 			} else {
 				const validationDep = element.validationDep;
-				const dependentPhoneValidator = conditionalValidator(() => !this.form.controls[validationDep].value, Validators.compose([Validators.required, Validators.pattern("0[0-9]{9}")]));
+				const dependentPhoneValidator = conditionalValidator(
+					() => !this.form.controls[validationDep].value,
+					Validators.compose([Validators.required, Validators.pattern("0[0-9]{9}")]),
+				);
 				const dependentEmailValidator = conditionalValidator(() => !this.form.controls[validationDep].value, Validators.compose([Validators.email, Validators.required]));
 
 				this.form.controls[formName].clearValidators();

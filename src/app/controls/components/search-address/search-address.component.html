@@ -11,6 +11,5 @@
 		spellcheck="off"
 		[disabled]="disabled"
 		[value]="value"
-		(input)="allowManualInput ? manualUpdateAddress.emit($event.target.value) : null"
-	/>
+		(input)="allowManualInput ? manualUpdateAddress.emit($event.target.value) : null" />
 </mat-form-field>
