@@ -59,7 +59,6 @@ export class InfoCardComponent implements AfterContentInit {
 	@Output() public buttonClick: EventEmitter<_InfoCardButtonClick> = new EventEmitter<_InfoCardButtonClick>();
 	@Output() public menuClickEvent: EventEmitter<string> = new EventEmitter<string>();
 
-	public pulseColour: string = "";
 	public cardRows: _CardRow[] = [];
 	public cardCols: _CardCol[] = [];
 	public cardHeaders: _CustCardHeaderDataInterface[] = [];

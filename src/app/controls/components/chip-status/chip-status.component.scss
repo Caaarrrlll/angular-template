@@ -31,14 +31,6 @@
 		border: 2px solid #75bf44;
 	}
 
-	.inactive {
-		border-color: 2px solid #8a8a92;
-	}
-
-	&.progress {
-		border: 2px solid #8a8a92;
-	}
-
 	&.progress {
 		border: 2px solid #f79147;
 	}
@@ -49,35 +41,33 @@
 		color: #000;
 	}
 
-	&.newSale {
+	&.newSale,
+	&.stock,
+	&.reserved,
+	&.bought,
+	&.toBePriced {
 		border: 2px solid #4f94bb;
 	}
-	&.Approved {
+
+	// white background, coloured border
+	&.Assigned,
+	&.awaitingCustomerAction,
+	&.customerContactAttemptFailed,
+	&.Escalated,
+	&.noAgreementReached,
+	&.rejectionLetterReviewed {
+		border: 2px solid #f79147;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.Approved,
+	&.resolved,
+	&.vehicleReleased,
+	&.completedNatisDelivered,
+	&.sold,
+	&.saleInitiated {
 		border: 2px solid #75bf44;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.Assigned {
-		border: 2px solid #f79147;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.awaitingCustomerAction {
-		border: 2px solid #f79147;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.customerContactAttemptFailed {
-		border: 2px solid #f79147;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.Escalated {
-		border: 2px solid #f79147;
 		background-color: #fff;
 		color: #000;
 	}
@@ -88,21 +78,11 @@
 		color: #000;
 	}
 
-	&.legalActionRequired {
+	&.legalActionRequired,
+	&.miosaReferred,
+	&.thirdPartyFeedbackRequired {
 		border: 2px solid #8a8a92;
 		background-color: #f3f3f3;
-		color: #000;
-	}
-
-	&.miosaReferred {
-		border: 2px solid #8a8a92;
-		background-color: #f3f3f3;
-		color: #000;
-	}
-
-	&.noAgreementReached {
-		border: 2px solid #f79147;
-		background-color: #fff;
 		color: #000;
 	}
 
@@ -112,72 +92,21 @@
 		color: #000;
 	}
 
-	&.rejectionLetterReviewed {
-		border: 2px solid #f79147;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.thirdPartyFeedbackRequired {
-		border: 2px solid #8a8a92;
-		background-color: #f3f3f3;
-		color: #000;
-	}
-
-	&.resolved {
-		border: 2px solid #75bf44;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.vehicleReleased {
-		border: 2px solid #75bf44;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.completedNatisDelivered {
-		border: 2px solid #75bf44;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.sold {
-		border: 2px solid #75bf44;
-		background-color: #fff;
-		color: #000;
-	}
-
-	&.saleInitiated {
-		border: 2px solid #75bf44;
-		background-color: #fff;
-		color: #000;
-	}
-	&.stock {
-		border: 2px solid #4f94bb;
-	}
-	&.reserved {
-		border: 2px solid #4f94bb;
-	}
-	&.default {
-		border: 2px solid #2d4559; //Do not change the default colour
-	}
-	&.bought {
-		border: 2px solid #4f94bb;
-	}
-	&.toBePriced {
-		border: 2px solid #4f94bb;
-	}
-	&.forSale {
-		border: 2px solid #f79147;
-	}
+	&.forSale,
 	&.online {
 		border: 2px solid #f79147;
 	}
+
 	&.inTransit {
 		border: 2px solid #8a8a92;
 	}
+
 	&.NFS {
 		border: 2px solid #ff3826;
+	}
+
+	&.default {
+		// Do not change the default colour
+		border: 2px solid #2d4559;
 	}
 }

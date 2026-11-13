@@ -286,24 +286,11 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```
 - **Notes:** Migrated from `src/app/controls-to-port/pipes/to-number.pipe.ts`; now standalone.
 
-## TrimCharactersPipe
-
-- **Purpose:** Truncates text to a maximum length and appends `...`.
-- **Inputs:**
-  - `text`: text to trim.
-  - `length`: maximum length; without it the text is returned untrimmed.
-- **Output:** Truncated string, or an empty string for a falsy value.
-- **Example:**
-  ```html
-  {{ longDescription | trimCharacters: 85 }}
-  ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/trim-characters.pipe.ts`; now standalone. Overlaps with `TruncatePipe` (`truncate` keeps exactly `size` characters and accepts a custom trail; `trimCharacters` keeps `length - 1` characters and a fixed `...`). Drop one of the two during a cleanup pass.
 | `TimeFormatPipe` | `timeFormat` | `time-format/time-format.pipe.ts` | Yes | Formats a date string as `hh:mm` using a zone abbreviation such as `CAT`. |
 | `TimeInStringPipe` | `timeInString` | `time-in-string/time-in-string.pipe.ts` | Yes | Converts UTC date-time strings embedded in a string into CAT time. |
 | `TimeMaskPipe` | `timeMask` | `time-mask/time-mask.pipe.ts` | Yes | Splits a dotted value into a `d`-prefixed days/hours string. |
 | `ToNumberPipe` | `toNumber` | `to-number/to-number.pipe.ts` | Yes | Converts a value with `Number()`. |
-| `TrimCharactersPipe` | `trimCharacters` | `trim-characters/trim-characters.pipe.ts` | Yes | Truncates text to a maximum length and appends `...`. |
-| `TruncatePipe` | `truncate` | `truncate/truncate.pipe.ts` | Yes | Truncates text to a maximum length and appends a trailing string. |
+| `TruncatePipe` | `truncate` | `truncate/truncate.pipe.ts` | Yes | Truncates text to a maximum length and appends a trailing string; empty string for a falsy value. |
 
 ## ApiResponsePipe
 
@@ -337,14 +324,14 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   - `text`: The string to truncate.
   - `size`: Maximum number of characters to keep.
   - `trail`: Optional suffix appended when text is truncated. Defaults to `...`.
-- **Output:** The original string when it fits, otherwise the first `size` characters followed by `trail`.
+- **Output:** The original string when it fits, otherwise the first `size` characters followed by `trail`; an empty string for a falsy value.
 - **Example:**
 
   ```html
   {{ longDescription | truncate: 85 }}
   ```
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/truncate.pipe.ts`; now standalone.
+- **Notes:** Migrated from `src/app/controls-to-port/pipes/truncate.pipe.ts`; now standalone. Consolidates the former `TrimCharactersPipe` (`trimCharacters`), which was removed during a cleanup pass; `truncate` accepts a custom trail and is null-safe.
 
 ## AbsolutePipe
 

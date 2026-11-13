@@ -2,6 +2,13 @@
 
 Items parked for future investigation; not part of the current migration scope.
 
+## Signals migration
+
+Migrate the entire remaining project to Angular signals instead of decorator-based reactivity.
+
+- **Scope:** replace every remaining `@Input()` with `input()`/`input.required()` (or `model()` where two-way), every `@Output() EventEmitter` with `output()`, and derive derived state from `computed()`/`linkedSignal()` instead of manual recalculation in `ngOnChanges`/`ngOnInit`.
+- **Guidance:** one control per pass, verified visually per pass; keep host bindings and `ControlValueAccessor` implementations intact; prefer `effect()` only for untrackable side effects, `computed()` for everything derivable.
+
 ## Navigation service
 
 Build a generic navigation/menu service. (Legacy source `src/app/controls-to-port/services/navigation.service.ts` was deleted without migration on 2026-11-13; the mechanics below were recorded before deletion.)
