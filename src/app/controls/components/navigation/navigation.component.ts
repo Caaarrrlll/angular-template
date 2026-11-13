@@ -9,6 +9,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { RouterLink } from "@angular/router";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
+import { environment } from "../../../../environments/environment";
 
 @Component({
 	selector: "app-navigation",
@@ -19,6 +20,8 @@ import { map, shareReplay } from "rxjs/operators";
 })
 export class NavigationComponent {
 	private readonly breakpointObserver = inject(BreakpointObserver);
+
+	protected readonly showSandbox: boolean = environment.environmentName !== "production";
 
 	isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Handset]).pipe(
 		map((result) => result.matches),

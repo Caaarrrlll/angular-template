@@ -1,3 +1,4 @@
 export const environment = {
-    environmentName: "development",
+	environmentName: "development",
+	isLocal: true,
 };

@@ -1,209 +1,287 @@
 # Controls Migration Tracker
 
-Tracks the migration of custom controls in `src/app/controls-to-port` to the newer Angular version used in this template.
+Tracks the migration of custom controls from `src/app/controls-to-port` to the newer Angular version used in this template.
 
-> **Note:** `src/app/controls-to-port` does not have to be kept in a working state. Once a control or supporting item is migrated, it can be removed from the old code.
+> **Migration completed 2026-11-13:** every row below is finalised and the `src/app/controls-to-port` folder has been removed from the repo. This file is kept as the historical record of what was migrated, dropped, or skipped.
+
+> **Animation migration:** Extract each animation into its own file in an `animations/` folder inside the owning control (for example `src/app/controls/components/accordion/animations/accordion-expansion-animation.ts`) and convert deprecated `@angular/animations` triggers to the newer `animate.enter`/`animate.leave` standard.
 
 ## Status key
 
-| Status | Meaning |
-| --- | --- |
-| Pending | Not yet started. |
-| In progress | Migration work has started. |
-| Migrated | Finalised and migrated into the template. |
-| Blocked | Waiting on a dependency or decision. |
+| Status      | Meaning                                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| Pending     | Not yet started.                                                                                           |
+| Ready       | Analysed: no prerequisites; can be migrated at any time.                                                   |
+| In progress | Migration work has started.                                                                                |
+| Migrated    | Finalised and migrated into the template.                                                                  |
+| Blocked     | Waiting on a dependency or decision.                                                                       |
+| Skipped     | Per developer decision: no source remains and the migrated equivalent covers the need; removed from scope. |
 
 ## Summary
 
-- Total controls: 63
-- Migrated: 0
-- In progress: 0
-- Pending: 63
+Tracked rows across controls, supporting items, services, and pipes (status-key definition lines excluded; duplicate legacy rows removed 2026-11-13):
 
-Update the summary whenever a control is finalised.
+- Migrated: 114
+- Ready: 0
+- Pending: 0
+- Blocked: 0
+- Dropped: 7 (incl. drag-drop-file-upload-with-comment and notification service, deleted per decision 2026-11-13)
+- Skipped: 3 (cust-tab tab, tabs, tab-actions)
+- In progress: 0
+
+Update the summary whenever a control, helper service, or pipe is finalised.
 
 ## Accordion
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Accordion | `accordion/` | Pending | |
+| Control   | Source       | Status   | Notes                                                                                                      |
+| --------- | ------------ | -------- | ---------------------------------------------------------------------------------------------------------- |
+| Accordion | `accordion/` | Migrated | Standalone in `src/app/controls/components/accordion`; expansion uses CSS `animate.enter`/`animate.leave`. |
 
 ## Checkbox Group
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Checkbox group | `checkbox-group/` | Pending | |
-| Checkbox | `checkbox-group/checkbox/` | Pending | |
+| Control        | Source                     | Status   | Notes                                                                                                               |
+| -------------- | -------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| Checkbox group | `checkbox-group/`          | Migrated | Standalone in `src/app/controls/components/checkbox-group`; implements `ControlValueAccessor`.                      |
+| Checkbox       | `checkbox-group/checkbox/` | Migrated | Standalone in `src/app/controls/components/checkbox-group/checkbox`; resolves the parent group with host injection. |
 
 ## Confirmation Dialog
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Confirmation dialog | `confirmation-dialog/` | Pending | |
+| Control             | Source                 | Status   | Notes                                                                                                           |
+| ------------------- | ---------------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| Confirmation dialog | `confirmation-dialog/` | Migrated | Standalone in `src/app/controls/components/confirmation-dialog`; ported as a dependency of the Expandable Grid. |
 
 ## Basic Controls
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Button primary | `cust-basic-controls/cust-button-primary/` | Pending | |
-| Button secondary | `cust-basic-controls/cust-button-secondary/` | Pending | |
-| Button tertiary | `cust-basic-controls/cust-button-tertiary/` | Pending | |
-| Button text | `cust-basic-controls/cust-button-text/` | Pending | |
-| Button toggle | `cust-basic-controls/cust-button-toggle/` | Pending | |
-| Button v2 | `cust-basic-controls/cust-button-v2/` | Pending | |
-| Chip status | `cust-basic-controls/cust-chip-status/` | Pending | |
-| Chips | `cust-basic-controls/cust-chips/` | Pending | |
-| DEKRA button | `cust-basic-controls/cust-dekra-button/` | Pending | |
-| Housing card | `cust-basic-controls/cust-housing-card/` | Pending | |
-| Info card | `cust-basic-controls/cust-info-card/` | Pending | |
-| Input currency | `cust-basic-controls/cust-input-currency/` | Pending | |
-| Input email | `cust-basic-controls/cust-input-email/` | Pending | |
-| Input number | `cust-basic-controls/cust-input-number/` | Pending | |
-| Input phone | `cust-basic-controls/cust-input-phone/` | Pending | |
-| Input select | `cust-basic-controls/cust-input-select/` | Pending | |
-| Input text | `cust-basic-controls/cust-input-text/` | Pending | |
-| List card | `cust-basic-controls/cust-list-card/` | Pending | |
-| Range date picker | `cust-basic-controls/cust-range-date-picker/` | Pending | |
-| Slide toggle | `cust-basic-controls/cust-slide-toggle/` | Pending | |
-| Tabs | `cust-basic-controls/cust-tabs/` | Pending | |
+| Control           | Source                                        | Status   | Notes                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ----------------- | --------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Button primary    | `cust-basic-controls/cust-button-primary/`    | Migrated | Wrapper in `src/app/controls/components/button/button-primary`; renders `app-button-v2`.                                                                                                                                                                                                                                                                                                                |
+| Button secondary  | `cust-basic-controls/cust-button-secondary/`  | Migrated | Wrapper in `src/app/controls/components/button/button-secondary`; renders `app-button-v2`.                                                                                                                                                                                                                                                                                                              |
+| Button tertiary   | `cust-basic-controls/cust-button-tertiary/`   | Migrated | Wrapper in `src/app/controls/components/button/button-tertiary`; renders `app-button-v2`.                                                                                                                                                                                                                                                                                                               |
+| Button text       | `cust-basic-controls/cust-button-text/`       | Migrated | Wrapper in `src/app/controls/components/button/button-text`; renders `app-button-v2`.                                                                                                                                                                                                                                                                                                                   |
+| Button toggle     | `cust-basic-controls/cust-button-toggle/`     | Migrated | Standalone in `src/app/controls/components/button-toggle`; typed `ButtonToggleInput`/`ButtonToggleResponse`.                                                                                                                                                                                                                                                                                            |
+| Button v2         | `cust-basic-controls/cust-button-v2/`         | Migrated | Standalone in `src/app/controls/components/button/button-v2`; OnPush with class/size getters; dangling `@controls/*` aliases re-pointed to the new `@shared/models/cust-basic-controls` file.                                                                                                                                                                                                           |
+| Chip status       | `cust-basic-controls/cust-chip-status/`       | Migrated | Standalone in `src/app/controls/components/chip-status`; ctor-as-module anti-pattern removed; `_ChipStatus` enum converted to a typed const map (`ChipStatus`).                                                                                                                                                                                                                                         |
+| Chips             | `cust-basic-controls/cust-chips/`             | Migrated | Standalone in `src/app/controls/components/chips`; unused `onClick`/`optionSelected` dropped; `count` typed as number; shared basic-controls interfaces moved to `@shared/models/cust-basic-controls`.                                                                                                                                                                                                  |
+| DEKRA button      | `cust-basic-controls/cust-dekra-button/`      | Dropped  | Deleted without migration, per developer decision (2026-11-11): relied on the missing `RoadworthyApiService` and is not relevant to the template.                                                                                                                                                                                                                                                       |
+| Housing card      | `cust-basic-controls/cust-housing-card/`      | Migrated | Standalone at `src/app/controls/components/housing-card` (`app-housing-card`); `UserSettingsModel` stripped (title/height inputs); ported without the settings-driven behaviour.                                                                                                                                                                                                                        |
+| Info card         | `cust-basic-controls/cust-info-card/`         | Migrated | Standalone at `src/app/controls/components/info-card`; `UserSettingsModel`/`LoginService`/`cust-distance`/`cust-sensitive-info` stripped; dekra case dropped; legacy `labelLen`/`cardHeight` template bugs fixed; full `CustButtonInput` objects passed.                                                                                                                                                |
+| Input currency    | `cust-basic-controls/cust-input-currency/`    | Migrated | Standalone in `src/app/controls/components/input/input-currency` (`app-input-currency`); rebuilt on the built-in Angular `getCurrencySymbol` + `LOCALE_ID` (default code `ZAR`, overridable); legacy invalid `type="money"` replaced with `type="text" inputmode="decimal"`; `LocalizeService` dropped per decision. Legacy folder removed.                                                             |
+| Input email       | `cust-basic-controls/cust-input-email/`       | Migrated | Standalone in `src/app/controls/components/input/input-email`; `debounceTime` subscription torn down with `takeUntilDestroyed`.                                                                                                                                                                                                                                                                         |
+| Input number      | `cust-basic-controls/cust-input-number/`      | Migrated | Standalone in `src/app/controls/components/input/input-number`.                                                                                                                                                                                                                                                                                                                                         |
+| Input phone       | `cust-basic-controls/cust-input-phone/`       | Migrated | Standalone in `src/app/controls/components/input/input-phone`; `takeUntilDestroyed`; input `type="tel"`; missing `minlength` now falls back to a digits-only pattern.                                                                                                                                                                                                                                   |
+| Input select      | `cust-basic-controls/cust-input-select/`      | Migrated | Standalone in `src/app/controls/components/input/input-select`; control created in `ngOnInit`; `(ngModelChange)` replaced with `(selectionChange)`.                                                                                                                                                                                                                                                     |
+| Input text        | `cust-basic-controls/cust-input-text/`        | Migrated | Standalone in `src/app/controls/components/input/input-text`; date-picker mode kept.                                                                                                                                                                                                                                                                                                                    |
+| List card         | `cust-basic-controls/cust-list-card/`         | Migrated | Standalone at `src/app/controls/components/list-card` (`app-list-card`); `LoginService` replaced with a `claims` input; `UserSettingsModel` replaced with `dateFormat`/`timeFormat` inputs; `cust-distance`/`cust-sensitive-info` cases dropped; "phased out" sales-card interface section dropped; dead `buttonActionOut` output dropped.                                                              |
+| Range date picker | `cust-basic-controls/cust-range-date-picker/` | Migrated | Standalone in `src/app/controls/components/range-date-picker` (`app-range-date-picker`); injects the library `DateTimeOpsService` for `en-ZA` date formatting; `provideNativeDateAdapter()` replaces the module-based date adapter; legacy `MatFormFieldControl` provider dropped (the component does not implement the interface and renders its own fields); new control flow. Legacy folder removed. |
+| Slide toggle      | `cust-basic-controls/cust-slide-toggle/`      | Migrated | Standalone in `src/app/controls/components/slide-toggle`; emits the checked state through the shared `CustInputReturn`.                                                                                                                                                                                                                                                                                 |
+| Tabs              | `cust-basic-controls/cust-tabs/`              | Migrated | Renamed to `app-tab-group` (`src/app/controls/components/tab-group`) to avoid the clash with the migrated `components/tabs`; `of(...).pipe(delay(100))` render hack replaced with a `hideContent` signal + `effect()` re-render cycle; unused `title` input and `_TabTypes` enum dropped.                                                                                                               |
 
 ## Button
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Button | `cust-button/button/` | Pending | |
-| FAB button | `cust-button/fab-button/` | Pending | |
+| Control    | Source                    | Status   | Notes                                                                                                                                                                                                                                                                                                                              |
+| ---------- | ------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Button     | `cust-button/button/`     | Migrated | No separate port needed (2026-11-12): the legacy folder only ever contained `fab-button/` (migrated batch 2), and the migrated `src/app/controls/components/button/button-v1` already implements the decided behaviour — Material `mat-menu` replacing Kendo `kendo-contextmenu`, contextmenu trigger, typed `CustButtonMenuItem`. |
+| FAB button | `cust-button/fab-button/` | Migrated | Standalone in `src/app/controls/components/button/fab-button`; dead Kendo icon classname replaced with `mat-icon`.                                                                                                                                                                                                                 |
 
 ## Card
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Card | `cust-card/card/` | Pending | |
-| Card header | `cust-card/card-header/` | Pending | |
+| Control     | Source                   | Status   | Notes                                                         |
+| ----------- | ------------------------ | -------- | ------------------------------------------------------------- |
+| Card        | `cust-card/card/`        | Migrated | Standalone in `src/app/controls/components/card`.             |
+| Card header | `cust-card/card-header/` | Migrated | Standalone in `src/app/controls/components/card/card-header`. |
 
 ## Card Table
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Card table | `cust-card-table/table/` | Pending | |
+| Control    | Source        | Status   | Notes                                                                                                                                                                                                                                                                                                                                      |
+| ---------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Card table | `card-table/` | Migrated | Standalone in `src/app/controls/components/card-table` (shared models `cust-table.enum.ts` + `cust-card-table.interface.ts` consolidated in the same folder, duplicates merged, dekra dropped); `claims` input added for list-card contexts; unused `detailExpand` animation and `destroy$` subject dropped; `defaultSort` input declared. |
 
 ## Carousel
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Carousel | `cust-carousel/carousel/` | Pending | |
+| Control  | Source                    | Status   | Notes                                                                                                                                                                                                                                 |
+| -------- | ------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Carousel | `cust-carousel/carousel/` | Migrated | Standalone in `src/app/controls/components/carousel`; binds `src` directly (ZoomableImage sanitises internally, so the `safe` pipe is no longer needed); legacy `title` binding was silently ignored and dropped; SCSS de-duplicated. |
 
 ## Count Down
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Count down | `cust-count-down/` | Pending | |
+| Control    | Source             | Status   | Notes                                                                                             |
+| ---------- | ------------------ | -------- | ------------------------------------------------------------------------------------------------- |
+| Count down | `cust-count-down/` | Migrated | Standalone in `src/app/controls/components/count-down`; `setInterval` torn down via `DestroyRef`. |
 
 ## Currency
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Currency | `cust-currency/currency/` | Pending | |
+| Control  | Source                    | Status   | Notes                                                                                                                                                                                                                                                                                              |
+| -------- | ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Currency | `cust-currency/currency/` | Migrated | Standalone in `src/app/controls/components/currency` (`app-currency`); rebuilt on the built-in `CurrencyPipe` (symbol-narrow, default `1.0-0`) with an overridable `currencyCode` (default `ZAR`, matching `CurrencyInStringPipe`); `LocalizeService` dropped per decision. Legacy folder removed. |
 
 ## Gallery
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Gallery | `cust-gallery/gallery/` | Pending | |
-| Gallery preview | `cust-gallery/gallery-preview/` | Pending | |
+| Control         | Source                          | Status   | Notes                                                                                                                                                                                                                                                                                                                                    |
+| --------------- | ------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Gallery         | `cust-gallery/gallery/`         | Migrated | Standalone at `src/app/controls/components/gallery` (`app-gallery`) with rebuilt minimal models (`Image`/`PreviewImage`/`_DeconstructedFlatView`) and a minimal `evaluation-comparison` seam; re-pointed to the library `ZoomDirective`; svg icons replaced with `mat-icon`; hammer swipes dropped (no hammerjs); fullscreen modernized. |
+| Gallery preview | `cust-gallery/gallery-preview/` | Migrated | Standalone in `src/app/controls/components/gallery-preview`; missing `gallery-icons/*.svg` assets replaced with `mat-icon` chevrons; legacy `galleryPreviewActiveImageIndex` undefined-variable bug fixed to `activeImageIndex`; `(mousewheel)` → `(wheel)`.                                                                             |
 
 ## Input
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Input | `cust-input/input/` | Pending | |
+| Control | Source              | Status   | Notes                                              |
+| ------- | ------------------- | -------- | -------------------------------------------------- |
+| Input   | `cust-input/input/` | Migrated | Standalone in `src/app/controls/components/input`. |
 
 ## Key Value
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Key value | `cust-key-value/key-value/` | Pending | |
-| Key value v2 | `cust-key-value/key-value-v2/` | Pending | |
-| Key value v3 | `cust-key-value/key-value-v3/` | Pending | |
+| Control      | Source                         | Status   | Notes                                                                                                                |
+| ------------ | ------------------------------ | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| Key value    | `cust-key-value/key-value/`    | Migrated | Standalone in `src/app/controls/components/key-value/key-value`.                                                     |
+| Key value v2 | `cust-key-value/key-value-v2/` | Migrated | Standalone in `src/app/controls/components/key-value/key-value-v2`.                                                  |
+| Key value v3 | `cust-key-value/key-value-v3/` | Migrated | Standalone in `src/app/controls/components/key-value/key-value-v3`; consolidation of v1/v2/v3 deliberately deferred. |
 
 ## Loader
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Loader | `cust-loader/loader/` | Pending | |
+| Control | Source                | Status   | Notes                                               |
+| ------- | --------------------- | -------- | --------------------------------------------------- |
+| Loader  | `cust-loader/loader/` | Migrated | Standalone in `src/app/controls/components/loader`. |
 
 ## Media Dialog
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Media dialog | `cust-media-dialog/` | Pending | |
+| Control      | Source               | Status   | Notes                                                                                                                                                                                                                                                |
+| ------------ | -------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Media dialog | `cust-media-dialog/` | Migrated | Standalone at `src/app/controls/components/media-dialog` (`app-media-dialog`); `MediaApiService`/`_FileUploadResponse` stripped — upload integration left behind a `MEDIA_LOADER` `InjectionToken` seam; uses the `apiResponse` pipe + `app-loader`. |
 
 ## Select
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Select | `cust-select/select/` | Pending | |
-| Option | `cust-select/option/` | Pending | |
+| Control | Source                | Status   | Notes                                                                                                                                                        |
+| ------- | --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Select  | `cust-select/select/` | Migrated | Standalone in `src/app/controls/components/select/select`; `ControlContainer`/`SkipSelf` pattern kept. Unused `options`/`type`/`controlName` inputs dropped. |
+| Option  | `cust-select/option/` | Migrated | Standalone in `src/app/controls/components/select/option`; `selected` now emits the option `value`.                                                          |
 
 ## Tab
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Tab | `cust-tab/tab/` | Pending | |
-| Tabs | `cust-tab/tabs/` | Pending | |
-| Tab actions | `cust-tab/tab-actions/` | Pending | |
+| Control     | Source                  | Status  | Notes                                                                                                                   |
+| ----------- | ----------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Tab         | `cust-tab/tab/`         | Skipped | Per developer decision (2026-11-11): no source left and the migrated `components/tabs` covers tabs; removed from scope. |
+| Tabs        | `cust-tab/tabs/`        | Skipped | Per developer decision (2026-11-11): no source left and the migrated `components/tabs` covers tabs; removed from scope. |
+| Tab actions | `cust-tab/tab-actions/` | Skipped | Per developer decision (2026-11-11): no source left; removed from scope.                                                |
 
 ## Table
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Table | `cust-table/table/` | Pending | |
+| Control           | Source               | Status   | Notes                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ----------------- | -------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Table             | `table/`             | Migrated | Standalone in `src/app/controls/components/table`; `linq-grid-filters` rebuilt best-effort (custom-backend filter logic omitted per decision); `_Dictionary` type lives with the `_TableTypes` enum; `setTimeout` scroll-restore recursion refactored to `requestAnimationFrame`; `expandedElement`/`defaultSort` inputs declared; broken `dateTime` cell markup fixed; `cust-key-value` template reference dropped (unused). |
+| LinQ grid filters | `linq-grid-filters/` | Migrated | Rebuilt at `src/app/controls/components/linq-grid-filters`; legacy source never existed in the repo — minimal Material filter bar rebuilt against the API consumed by table/card-table (`_LinQGridFilterItem` model + `LinQRequestState`); custom-backend filter logic omitted per decision.                                                                                                                                  |
 
 ## Table Dialogue
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Table dialogue | `cust-table-dialogue/` | Pending | |
+| Control        | Source                 | Status   | Notes                                                                                                                                                       |
+| -------------- | ---------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Table dialogue | `cust-table-dialogue/` | Migrated | Standalone at `src/app/controls/components/table-dialogue`; Material-only, full `CustButtonInput` for the view button; uses `table/` `_CustTableInterface`. |
 
 ## Zoom Image
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Zoom image | `cust-zoom-image/` | Pending | |
+| Control    | Source             | Status   | Notes                                                   |
+| ---------- | ------------------ | -------- | ------------------------------------------------------- |
+| Zoom image | `cust-zoom-image/` | Migrated | Standalone in `src/app/controls/components/zoom-image`. |
 
 ## Other Controls
 
-| Control | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Drag drop file upload | `drag-drop-file-upload/` | Pending | |
-| Drag drop file upload with comment | `drag-drop-file-upload-with-comment/` | Pending | |
-| Dynamic material dialog | `dynamic-material-dialog/` | Pending | |
-| Dynamic window | `dynamic-window/` | Pending | |
-| Expandable grid | `expandable-grid/` | Pending | |
-| Expandable grid form | `expandable-grid/components/expandable-grid-form/` | Pending | |
-| Numeric up/down | `numeric-up-down/` | Pending | |
-| Query builder | `query-builder/` | Pending | |
-| Range checkbox group | `range-checkbox-group/` | Pending | |
-| Range checkbox | `range-checkbox-group/range-checkbox/` | Pending | |
-| Range slider | `range-slider/` | Pending | |
-| Search address | `search-address/` | Pending | |
-| Time span picker | `time-span-picker/` | Pending | |
-| Zoomable image | `zoomable-image/` | Pending | |
+| Control                            | Source                                                   | Status   | Notes                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------- | -------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Drag drop file upload              | `drag-drop-file-upload/`                                 | Migrated | Standalone in `src/app/controls/components/drag-drop-file-upload`; uses the library `DragAndDropFilesDirective`; Kendo icon classnames replaced with `mat-icon`.                                                                                                                                                                                           |
+| Tabs                               | `tabs/` (migrated to `src/app/controls/components/tabs`) | Migrated | Standalone `TabsComponent` with `TabComponent` in `tabs/tab/`; back/next button directives live alongside.                                                                                                                                                                                                                                                 |
+| Drag drop file upload with comment | `drag-drop-file-upload-with-comment/`                    | Dropped  | Deleted without migration, per developer decision (2026-11-13): needs a comment-handling directive (does not exist) and Kendo floatinglabel/textarea replacements; deleted with the rest of `controls-to-port`. Revisit if a fork needs it.                                                                                                                |
+| Dynamic material dialog            | `dynamic-material-dialog/`                               | Migrated | Standalone in `src/app/controls/components/dynamic-material-dialog`; NgModule removed, typed model surface (`_DialogControl`/`_FormData`), strict-template fixes (removed `appearance="legacy"`, broken `[matCalendar]` binding), and a `google-places.d.ts` shim.                                                                                         |
+| Dynamic window                     | `dynamic-window/`                                        | Migrated | Ported as a Material dialog at `src/app/controls/components/dynamic-window`; `DialogSetup`/`_DialogWindowControl` models rebuilt; Kendo widgets replaced with Material (slider/button-toggle/select/datepicker/checkbox/radio); `openDynamicWindow()` helper replaces the Kendo `WindowRef` flow (developer decision 2026-11-12: port as Material window). |
+| Expandable grid                    | `expandable-grid/`                                       | Migrated | Standalone in `src/app/controls/components/expandable-grid`; detail expansion uses CSS `animate.enter`/`animate.leave`.                                                                                                                                                                                                                                    |
+| Expandable grid form               | `expandable-grid/components/expandable-grid-form/`       | Migrated | Standalone; `timeSpanPicker` and `chipList` field types omitted until those controls are migrated. The `timeSpanPicker` control is now available for wiring.                                                                                                                                                                                               |
+| Numeric up/down                    | `numeric-up-down/`                                       | Migrated | Standalone in `src/app/controls/components/numeric-up-down`; `upDownCallback` function input kept as-is for now.                                                                                                                                                                                                                                           |
+| Range checkbox group               | `range-checkbox-group/`                                  | Migrated | Standalone in `src/app/controls/components/range-checkbox-group`; typed `RangeCheckboxValue`.                                                                                                                                                                                                                                                              |
+| Range checkbox                     | `range-checkbox-group/range-checkbox/`                   | Migrated | Standalone in `src/app/controls/components/range-checkbox-group/range-checkbox`.                                                                                                                                                                                                                                                                           |
+| Range slider                       | `range-slider/`                                          | Migrated | Standalone in `src/app/controls/components/range-slider`; `detectChanges()`/fake-event patterns removed in favour of pure clamp helpers; migrated to the M3 `mat-slider` API (`matSliderStartThumb`/`matSliderEndThumb` + `(valueChange)`); `vertical` input dropped (API no longer supports it); numeric parsing replaces legacy string comparisons.      |
+| Search address                     | `search-address/`                                        | Migrated | Standalone at `src/app/controls/components/search-address`; Kendo field replaced with Material input; Google Places kept per developer decision (2026-11-12) — ambient `google.maps.places` typings now shared at `library/models/google-places.d.ts`; Google Maps JS script must be loaded by the host app.                                               |
+| Time span picker                   | `time-span-picker/`                                      | Migrated | Standalone CVA control in `src/app/controls/components/time-span-picker`; legacy `toLocaleString` zero-padding replaced with `padStart`; on `touch` now marked.                                                                                                                                                                                            |
+| Zoomable image                     | `zoomable-image/`                                        | Migrated | Standalone in `src/app/controls/components/zoomable-image`; `setTimeout` replaced with an `effect()` on a `showZoomLens` signal; legacy `mousewheel`/`DOMMouseScroll` listeners replaced with a standard `(wheel)` binding.                                                                                                                                |
+
+## Services
+
+Helper services that were in `src/app/controls-to-port/services`; every row below is finalised.
+
+| Service                            | Source                                           | Status   | Notes                                                                                                                                                                                                                                                                                                                                                                   |
+| ---------------------------------- | ------------------------------------------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| App shell service                  | `services/app-shell.service.ts`                  | Migrated | Root service at `src/app/library/services/app-shell.service.ts`; menu behaviour now typed as `"over" \| "side"`.                                                                                                                                                                                                                                                        |
+| Base64 to blob service             | `services/b64-to-blob.service.ts`                | Migrated | Root service at `src/app/library/services/b64-to-blob.service.ts`; ported as-is.                                                                                                                                                                                                                                                                                        |
+| Custom preloading strategy service | `services/custom-preloading-strategy.service.ts` | Migrated | Root service at `src/app/library/services/custom-preloading-strategy.service.ts`; wire up via `withPreloading` when used.                                                                                                                                                                                                                                               |
+| Date/time ops service              | `services/date-time-ops.service.ts`              | Migrated | Root service at `src/app/library/services/date-time-ops.service.ts`; `DatePipe` injection replaced with `formatDate` + `LOCALE_ID`; time-period params typed as the exported `DateTimePeriod` union. Unblocks the `timeElapsed` pipe and range date picker.                                                                                                             |
+| Error handling service             | `services/error-handling.service.ts`             | Migrated | Root service at `src/app/library/services/error-handling.service.ts`; registers as app `ErrorHandler`, logs through `LoggerService`, notifies through the Material `SnackbarService`.                                                                                                                                                                                   |
+| Grid storage service               | `services/grid-storage.service.ts`               | Migrated | Root service at `src/app/library/services/grid-storage.service.ts`; Kendo `DataSourceRequestState`/`GridFilter` replaced with the rebuilt `LinQRequestState` and `_LinQGridFilterItem` models (best-effort rebuild per decision).                                                                                                                                       |
+| Locale service                     | `services/locale.service.ts`                     | Dropped  | Deleted without migration, per developer decision (2026-11-11): purely Kendo (`@progress/kendo-angular-intl`) and Angular locale is static at bootstrap (`LOCALE_ID`); revisit only if a fork needs runtime locale switching.                                                                                                                                           |
+| Login service                      | `services/login.service.ts`                      | Migrated | Cleaned base at `src/app/library/services/login.service.ts` + `_User` model in `src/app/library/models/user.ts`. Per developer decision (2026-11-11): Identity Server login/refresh flows and `NotificationService` hub calls removed; JWT decoding reimplemented dependency-free (base64url) with user state as a signal (`setUser`/`clearUser` + claims helpers).     |
+| Navigation service                 | `services/navigation.service.ts`                 | Dropped  | Per developer decision (2026-11-11): the template's existing navigation base covers the need and the legacy menu data is app-specific; generic mechanics (claim/country filtering, `Navigation` model) recorded in `ROADMAP.md` for future investigation.                                                                                                               |
+| Notification service               | `services/notification.service.ts`               | Dropped  | Deleted without migration, per developer decision (2026-11-13): needs `@microsoft/signalr` (not installed), Kendo notification, `CommsApiService`, and app-specific routing; legacy source deleted with the rest of `controls-to-port`. Revisit if a fork needs push notifications.                                                                                     |
+| Open page service                  | `services/open-page.service.ts`                  | Migrated | Generic core at `src/app/library/services/open-page.service.ts` (`openPage` + `open_in_new_tab` localStorage preference); renamed to `OpenPageService`; app-specific `goTo*` route helpers dropped.                                                                                                                                                                     |
+| Search retain service              | `services/search-retain.service.ts`              | Migrated | Root service at `src/app/library/services/search-retain.service.ts`; search term typed as `string`.                                                                                                                                                                                                                                                                     |
+| Snackbar service                   | `services/snackbar.service.ts`                   | Migrated | Replaced by the Material-based `SnackbarService` in `src/app/library/services/snackbar.service.ts`; duplicate suppression preserved. Stacked notifications/"Close All", the `errorList` buffer with `dev_show_error` gating, and the Kendo slide animation are intentionally dropped. All legacy consumers migrated; legacy file removed (see `SERVICES_CONTRACTS.md`). |
+
+## Pipes
+
+Contracts for migrated pipes live in `src/app/library/pipes/PIPES_CONTRACTS.md`.
+
+| Pipe                    | Source                                 | Status   | Notes                                                                                                                               |
+| ----------------------- | -------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Absolute                | `pipes/absolute.pipe.ts`               | Migrated | Standalone in `src/app/library/pipes/absolute`.                                                                                     |
+| Camel to title          | `pipes/camel-to-title.pipe.ts`         | Migrated | Standalone in `src/app/library/pipes/camel-to-title`.                                                                               |
+| Currency in string      | `pipes/currency-in-string-pipe/`       | Migrated | Standalone in `src/app/library/pipes/currency-in-string`; uses `formatCurrency`.                                                    |
+| Day and hours           | `pipes/day-and-hour-pipe/`             | Migrated | Standalone in `src/app/library/pipes/day-and-hours`.                                                                                |
+| Format null             | `pipes/format-null-pipe/`              | Migrated | Standalone in `src/app/library/pipes/format-null`; template name `formatNull`.                                                      |
+| Obscure text            | `pipes/obscure-text-pipe/`             | Migrated | Standalone in `src/app/library/pipes/obscure-text`.                                                                                 |
+| Pascal to title         | `pipes/pascal-to-title-pipe/`          | Migrated | Standalone in `src/app/library/pipes/pascal-to-title`.                                                                              |
+| Postfix                 | `pipes/postfix/`                       | Migrated | Standalone in `src/app/library/pipes/postfix`.                                                                                      |
+| Remove spaces           | `pipes/remove-spaces-pipe/`            | Migrated | Standalone in `src/app/library/pipes/remove-spaces`.                                                                                |
+| Remove underscore       | `pipes/underscore-to-title.pipe.ts`    | Migrated | Standalone in `src/app/library/pipes/remove-underscore`; template name `removeUnderscore`.                                          |
+| Round to Nth            | `pipes/round-to-nth-pipe/`             | Migrated | Standalone in `src/app/library/pipes/round-to-nth`.                                                                                 |
+| Safe                    | `pipes/safe.pipe.ts`                   | Migrated | Standalone in `src/app/library/pipes/safe`; injects `DomSanitizer`.                                                                 |
+| Space between uppercase | `pipes/space-between-uppercase-pipe/`  | Migrated | Standalone in `src/app/library/pipes/space-between-uppercase`; class renamed to `SpaceBetweenUppercasePipe`.                        |
+| Thousand separator      | `pipes/thousand-separator-pipe/`       | Migrated | Standalone in `src/app/library/pipes/thousand-separator`.                                                                           |
+| Character spacing       | `pipes/character-spacing.pipe.ts`      | Migrated | Standalone in `src/app/library/pipes/character-spacing`; name `characterSpacing`.                                                   |
+| Contains                | `pipes/contains.pipe.ts`               | Migrated | Standalone in `src/app/library/pipes/contains`; name `contains`.                                                                    |
+| Email to initials       | `pipes/email-to-initials.pipe.ts`      | Migrated | Standalone in `src/app/library/pipes/email-to-initials`; name `emailToInitials`.                                                    |
+| Filter                  | `pipes/filter.pipe.ts`                 | Migrated | Standalone in `src/app/library/pipes/array-filter`; name `arrayFilter`, class kept as `FilterPipe`.                                 |
+| Group by date           | `pipes/group-by-date.pipe.ts`          | Migrated | Standalone in `src/app/library/pipes/group-by-date`; injects `DatePipe`.                                                            |
+| Hide trade retail       | `pipes/hide-trade-retail-pipe/`        | Dropped  | Deleted without migration, per developer request.                                                                                   |
+| Highlight search match  | `pipes/highlight-search-match.pipe.ts` | Migrated | Standalone in `src/app/library/pipes/highlight-search-match`; name `searchMatch`.                                                   |
+| Kebab to title          | `pipes/kebab-to-title.pipe.ts`         | Migrated | Standalone in `src/app/library/pipes/kebab-to-title`.                                                                               |
+| Name to initials        | `pipes/name-to-initials.pipe.ts`       | Migrated | Standalone in `src/app/library/pipes/name-to-initials`.                                                                             |
+| Nearest                 | `pipes/nearest.pipe.ts`                | Migrated | Standalone in `src/app/library/pipes/nearest`.                                                                                      |
+| Order by                | `pipes/order-by.pipe.ts`               | Migrated | Standalone in `src/app/library/pipes/order-by`; comparator-function input only.                                                     |
+| Ordinal                 | `pipes/ordinal.pipe.ts`                | Migrated | Standalone in `src/app/library/pipes/ordinal`.                                                                                      |
+| Percentage              | `pipes/percentage.pipe.ts`             | Migrated | Standalone in `src/app/library/pipes/percentage`.                                                                                   |
+| Remove email domain     | `pipes/remove-email-domain.pipe.ts`    | Migrated | Standalone in `src/app/library/pipes/remove-email-domain`; name `removeDomain`.                                                     |
+| Sort                    | `pipes/sort.pipe.ts`                   | Migrated | Standalone in `src/app/library/pipes/sort`; name `sort`, class kept as `ArraySortPipe`.                                             |
+| Time elapsed            | `pipes/time-elapsed.pipe.ts`           | Migrated | Standalone impure pipe in `src/app/library/pipes/time-elapsed`; name `timeElapsedFormat`; injects the library `DateTimeOpsService`. |
+| Time format             | `pipes/time-format.pipe.ts`            | Migrated | Standalone in `src/app/library/pipes/time-format`; impure pipe kept impure.                                                         |
+| Time in string          | `pipes/time-in-string-pipe/`           | Migrated | Standalone in `src/app/library/pipes/time-in-string`; injects `DatePipe`.                                                           |
+| Time mask               | `pipes/time-mask.pipe.ts`              | Migrated | Standalone in `src/app/library/pipes/time-mask`.                                                                                    |
+| To number               | `pipes/to-number.pipe.ts`              | Migrated | Standalone in `src/app/library/pipes/to-number`.                                                                                    |
+| Trim characters         | `pipes/trim-characters.pipe.ts`        | Migrated | Standalone in `src/app/library/pipes/trim-characters`; overlaps with `truncate`, flagged in `PIPES_CONTRACTS.md`.                   |
 
 ## Supporting Code
 
 These are dependencies of the controls above and should be migrated alongside them.
 
-| Item | Source | Status | Notes |
-| --- | --- | --- | --- |
-| Page base class | `cust-page/cust-page.class.ts` | Pending | |
-| Basic controls service | `cust-basic-controls/cust-basic-controls.service.ts` | Pending | |
-| Dynamic dialog service | `dynamic-material-dialog/dynamic-dialog.service.ts` | Pending | |
-| Submit directive | `directives/submit.directive.ts` | Pending | |
-| Focus directive | `directives/focus.directive.ts` | Pending | |
-| After value change directive | `directives/after-value-change.directive.ts` | Pending | |
-| Click elsewhere directive | `cust-select/select/cust-click-elsewhere.directive.ts` | Pending | |
-| Tab next button directive | `cust-tab/tab-next-button.directive.ts` | Pending | |
-| Tab back button directive | `cust-tab/tab-back-button.directive.ts` | Pending | |
-| Accordion directives | `accordion/directives/` | Pending | |
-| Shared grid filters | `shared-controls/grid-filters/` | Pending | Folder is currently empty. |
+| Item                      | Source                                                 | Status   | Notes                                                                                                                                                                                                                                    |
+| ------------------------- | ------------------------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page base class           | `cust-page/cust-page.class.ts`                         | Migrated | Class at `src/app/library/models/cust-page.ts`; `_LinQGridFilterItem` model rebuilt as part of the linq-grid-filters port; uses `sessionStorage` caching.                                                                                |
+| Basic controls service    | `cust-basic-controls/cust-basic-controls.service.ts`   | Dropped  | Deleted without migration, per developer decision (2026-11-11): unused and the email part duplicates the library email validator.                                                                                                        |
+| Basic controls models     | new `src/app/library/models/cust-basic-controls.ts`    | Migrated | Shared interfaces/enums for the chips/buttons/inputs family; created during the batch 2 port (new `@shared/models/*` tsconfig alias). Legacy `cust-basic-controls.interface.ts`/`.enum.ts` removed with `controls-to-port` (2026-11-13). |
+| Dynamic dialog service    | `dynamic-material-dialog/dynamic-dialog.service.ts`    | Migrated | Standalone root service at `src/app/controls/components/dynamic-material-dialog/dynamic-dialog.service.ts`.                                                                                                                              |
+| Shared directives         | `directives/`                                          | Migrated | Migrated to `src/app/library/directives`; legacy copies removed.                                                                                                                                                                         |
+| Shared validators         | `validators/`                                          | Migrated | Migrated to `src/app/library/validators`; legacy copies removed.                                                                                                                                                                         |
+| Click elsewhere directive | `cust-select/select/cust-click-elsewhere.directive.ts` | Migrated | Standalone `ClickElsewhereDirective` at `src/app/library/directives/click-elsewhere.directive.ts`; selector renamed to `[appClickElsewhere]`.                                                                                            |
+| Tab next button directive | `cust-tab/tab-next-button.directive.ts`                | Migrated | Standalone at `src/app/controls/components/tabs/tab-next-button.directive.ts`.                                                                                                                                                           |
+| Tab back button directive | `cust-tab/tab-back-button.directive.ts`                | Migrated | Standalone at `src/app/controls/components/tabs/tab-back-button.directive.ts`.                                                                                                                                                           |
+| Accordion directives      | `accordion/directives/`                                | Migrated | Standalone attribute directives: `appAccordionItem`, `appAccordionHeader`, `appAccordionContent`.                                                                                                                                        |
+| Shared grid filters       | `shared-controls/grid-filters/`                        | Migrated | Covered by the rebuilt `linq-grid-filters` control + `_LinQGridFilterItem`/`LinQRequestState` models (legacy folder was empty); custom-backend filter logic omitted per decision.                                                        |
+
+## Interceptors
+
+| Item                | Source                                | Status   | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------- | ------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Request interceptor | `interceptors/request.interceptor.ts` | Migrated | Functional interceptor at `src/app/library/interceptors/request.interceptor.ts` (`authTokenInterceptor`, new `@shared/interceptors/*` alias). Per developer decision (2026-11-12): token-attach core only — Bearer header + `excludeauthorization` opt-out; the 401/refresh half dropped along with the Identity Server refresh flows removed from the migrated `LoginService`. Wire up via `withInterceptors([authTokenInterceptor])` when used. Legacy folder removed. |

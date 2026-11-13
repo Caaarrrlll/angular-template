@@ -1,0 +1,302 @@
+<mat-card>
+	<mat-card-header>
+		<div class="row">
+			@for (headCol of cardHeaders; track $index) {
+				<div class="column-header" [style.--alignment]="headCol.alignment">
+					@if (headCol.type === "Display") {
+						<div class="no-wrap-text header-text">
+							<b [style]="{ 'font-size': headCol.fontSize ? headCol.fontSize : '16px', 'padding-left': '4px' }">
+								@if (headCol.textPre) {
+									<span class="header-pre-text">{{ headCol.textPre }}</span>
+								}
+								@if (headCol.textPre && headCol.text.length > 0) {
+									<span class="header-pre-text-devider">|</span>
+								}
+								@if (headCol.icon) {
+									<mat-icon class="header-icons">{{ headCol.icon }}</mat-icon>
+								}
+								@if (headCol.textPre) {
+									<span class="header-with-pre-text no-wrap-text" [title]="headCol.text">
+										{{ headCol.text.slice(0, headCol.length ? headCol.length : 40) }}
+										@if (headCol.text.length > (headCol.length ? headCol.length : 40)) {
+											<i>...</i>
+										}
+									</span>
+								}
+								@if (!headCol.textPre) {
+									<span [style.color]="headCol.textColor ? headCol.textColor : '#000'">{{ headCol.text }}</span>
+								}
+								@if (headCol.textExtended) {
+									<span class="header-pre-text-devider">|</span>
+									<span [style.color]="headCol.textColor ? headCol.textColor : '#000'">{{ headCol.textExtended }}</span>
+								}
+							</b>
+						</div>
+					}
+					@if (headCol.type === "status") {
+						<div>
+							@if (headCol.text.length) {
+								<span class="column-header-status" [style.--alignment]="headCol.alignment">
+									@if (headCol.postText?.length) {
+										<span class="header-date-display">
+											<b>{{ headCol.postLable }}: </b> {{ headCol.postText | date: dateFormat }}
+											<b class="header-pre-text-devider">|</b>
+										</span>
+									}
+									<app-chip-status [text]="headCol.text" [type]="headCol.statusType ?? ''"></app-chip-status>
+								</span>
+							}
+						</div>
+					}
+					@if (headCol.type === "chipsStatus") {
+						<div>
+							@if (headCol.text.length) {
+								<span class="column-header-status">
+									<app-chip-status [text]="headCol.text" [type]="headCol.statusType ?? ''" [showSolid]="false" [isSmall]="false"></app-chip-status>
+								</span>
+							}
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</mat-card-header>
+	<mat-card-content>
+		<div class="card-height" [style.--height]="tablePropertiesConfig[0].height ? tablePropertiesConfig[0].height : maxLines * 30 + 'px'">
+			@for (row of cardRows; track $index) {
+				<div
+					class="{{ row.colSCSS }} col-left column"
+					[style]="{
+						'--col-width': row.width ?? '100%',
+						'--height': tablePropertiesConfig[0].height ? tablePropertiesConfig[0].height : maxLines * 30 + 'px',
+					}">
+					@if (row.item[row.item.length - 1].type === "button") {
+						<div class="main-button-container main-button-container-width">
+							<div class="main-button-style" [style.--height]="maxLines * 30 + 18 + 'px'" [class]="row.pulse ? pulseColour : ''">
+								@for (detail of row.item; track $index) {
+									@if (detail.type !== "taskHeading") {
+										<div
+											class="element element-ext"
+											[style]="{
+												'--top':
+													row.item.length > 5 && row.item[0].type === 'taskHeading'
+														? '20px'
+														: row.item.length > 3 && row.item[0].type === 'taskHeading'
+															? '0px'
+															: row.item.length > 4
+																? row.item[0].type === 'taskHeading'
+																	? row.item.length === 2
+																		? '-15px'
+																		: '15px'
+																	: '15px'
+																: row.item.length < 3
+																	? '35%'
+																	: '25%',
+												display:
+													row.item.length > 5 && row.item[0].type === 'taskHeading'
+														? 'inline-block'
+														: row.item.length > 3 && row.item[0].type === 'taskHeading'
+															? 'flex'
+															: row.item.length > 3
+																? 'inline-block'
+																: row.item[0].type !== 'taskHeading'
+																	? 'inline-block'
+																	: 'flex',
+											}">
+											@if (detail.type === "countDown") {
+												<div class="element-count-down">
+													<app-count-down [timeLeft]="countDownTime(detail)" [textFormat]="true" (timeRemaining)="setPulseColour($event)"></app-count-down>
+												</div>
+											}
+											@if (detail.type === "button") {
+												<div class="button-item">
+													@if (detail.buttonType === "Primary") {
+														<app-button-primary [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button-primary>
+													}
+													@if (detail.buttonType === "Secondary") {
+														<app-button-secondary [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button-secondary>
+													}
+													@if (!detail.buttonType || detail.buttonType === "Tertiary") {
+														<app-button-tertiary [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button-tertiary>
+													}
+												</div>
+											}
+										</div>
+									}
+								}
+							</div>
+						</div>
+					}
+
+					@if (row.item[row.item.length - 1].type !== "button") {
+						@for (detail of row.item; track $index) {
+							@switch (detail.type) {
+								@case ("heading") {
+									<p class="text-link-underlined paragraph-heading">{{ detail.value }}</p>
+								}
+								@case ("boldText") {
+									<div class="left-text-border content-font content-height">
+										<div class="no-wrap-text" [title]="detail.value">
+											<b>{{ detail.value }}</b>
+										</div>
+									</div>
+								}
+								@case ("boolean") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 8 + 'px'">
+												<b>{{ detail.label }}:</b>
+											</div>
+										}
+										@if (!detail.label) {
+											<div>
+												@if (detail.extendedText) {
+													<div class="content-font content-height" style="float: left">
+														{{ detail.value }}
+													</div>
+												}
+											</div>
+										}
+										@if (detail.label) {
+											<div
+												class="float-child-rigth right-text-border content-font content-height"
+												[style]="{
+													'text-align': 'right',
+													color: detail.valueColor ? detail.valueColor : '#000',
+													'font-weight': detail.valueColor ? '700' : '500',
+												}">
+												<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
+											</div>
+										}
+									</div>
+								}
+								@case ("text") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 10 + 'px'">
+												<b>{{ detail.label }}:</b>
+											</div>
+										}
+										@if (!detail.label) {
+											<div>
+												@if (detail.extendedText) {
+													<div class="content-font content-height" style="float: left">
+														{{ detail.value }}
+													</div>
+												}
+											</div>
+										}
+										@if (detail.label) {
+											<div
+												class="float-child-rigth right-text-border content-font content-height"
+												[style]="{
+													'text-align': 'right',
+													color: detail.valueColor ? detail.valueColor : '#000',
+													'font-weight': detail.valueColor ? '700' : '400',
+												}">
+												<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
+											</div>
+										}
+									</div>
+								}
+								@case ("imageIconsWithLabel") {
+									<div class="float-container left-text-border content-font content-height">
+										<div class="float-child-left" [style.width]="(detail.label ?? '').length * 10 + 'px'">
+											<b>{{ detail.label }}:</b>
+										</div>
+										<div class="image-icons right-text-border">
+											@for (image of detail.imageIcons; track $index) {
+												<img style="height: 1.3rem" [style.opacity]="image.opacity" [src]="image.path" />
+											}
+										</div>
+									</div>
+								}
+								@case ("chipsStatus") {
+									@if (detail.value && detail.value.length > 0) {
+										<div class="float-container-chip content-font content-height" style="padding-left: 5px; height: 20px">
+											<div class="float-child content-font content-height">
+												<b>{{ detail.label }}:</b>
+											</div>
+											<div class="float-child-2 content-height">
+												<app-chip-status [text]="detail.value" [type]="detail.valueColor ?? ''" [isSmall]="false"></app-chip-status>
+											</div>
+										</div>
+									}
+								}
+								@case ("coloredText") {
+									<p class="left-text-border content-font content-height">
+										<b [style.color]="detail.extendedColour ? detail.extendedColour : '#000000'">{{ detail.value }}</b>
+									</p>
+								}
+								@case ("money") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left">
+												<b>{{ detail.label }}:</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="float-child-rigth currency-text content-font content-height">
+												<app-currency [amount]="detail.value"></app-currency>
+											</div>
+										}
+									</div>
+								}
+								@case ("date") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 8 + 'px'">
+												<b>{{ detail.label }}:</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="content-font content-height right-text-border-ext">
+												{{ detail.value | date: dateFormat }}
+											</div>
+										}
+									</div>
+								}
+								@case ("dateTime") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 8 + 'px'">
+												<b>{{ detail.label }}:</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="content-font content-height right-text-border-ext">
+												{{ detail.value | date: dateFormat + " " + timeFormat }}
+											</div>
+										}
+									</div>
+								}
+								@case ("store") {
+									<div class="float-container left-text-border content-font content-height"><mat-icon class="inline-icons">storefront</mat-icon> {{ detail.value }}</div>
+								}
+								@case ("textWithColorBlock") {
+									{{ detail.value }}
+									<div class="colored-block" [style.background-color]="detail.coloredBlock"></div>
+								}
+								@case ("iconWithDisplay") {
+									<div [title]="detail.iconTooltip">
+										<div class="float-container left-text-border content-font content-height no-wrap-text" [title]="detail.value">
+											<mat-icon class="inline-icons" [style.color]="detail.iconColour">{{ detail.iconName }}</mat-icon> {{ detail.value }}
+										</div>
+									</div>
+								}
+								@case ("buttonAction") {
+									<p [title]="detail.iconTooltip">
+										<mat-icon class="inline-icons">{{ detail.iconName }}</mat-icon>
+									</p>
+								}
+								@default {
+									<p>Type {{ detail.type }} not found for {{ detail.label }}</p>
+								}
+							}
+						}
+					}
+				</div>
+			}
+		</div>
+	</mat-card-content>
+</mat-card>

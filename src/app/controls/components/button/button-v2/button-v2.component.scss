@@ -1,0 +1,108 @@
+.color-set {
+	&-primary {
+		background-color: #f47920;
+		color: #fff;
+
+		&:hover {
+			background-color: #e6670b;
+			color: #fff;
+		}
+
+		&:disabled {
+			background-color: #dcdcdc;
+			color: #888888;
+		}
+	}
+
+	&-secondary {
+		background-color: #3d444d;
+		color: #fff;
+
+		&:hover {
+			background-color: #4e525c;
+			color: #fff;
+		}
+
+		&:disabled {
+			background-color: #dcdcdc;
+			color: #888888;
+		}
+	}
+
+	&-tertiary {
+		background-color: #fff;
+		border-color: #3f607c;
+		color: #3f607c;
+
+		&:hover {
+			background-color: #fff;
+			border-color: #000;
+			color: #000;
+		}
+
+		&:disabled {
+			background-color: #fff;
+			color: #dcdcdc;
+			border-color: #dcdcdc;
+			cursor: unset;
+		}
+	}
+
+	&-icon {
+		color: #3f607c;
+
+		&:hover {
+			background-color: #fff;
+			border-color: #000;
+			color: #000;
+		}
+
+		&:disabled {
+			background-color: #fff;
+			color: #dcdcdc;
+			border-color: #dcdcdc;
+			cursor: unset;
+		}
+	}
+}
+
+.color-set-text {
+	background-color: #fff;
+	color: #f47920;
+}
+
+.color-set-text:hover {
+	background-color: #fffffd;
+	color: #e6670b;
+}
+
+.button-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: var(--button-padding);
+	min-width: var(--button-width);
+	height: var(--button-height);
+	font-size: var(--font-size);
+}
+
+.icon-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	.mat-icon {
+		overflow: visible;
+		width: 20px;
+	}
+}
+
+.icon-button-container {
+	width: 40px !important;
+	height: 36px !important;
+	min-width: unset !important;
+}
+
+.button-width-ext {
+	width: var(--button-width) !important;
+	min-width: unset !important;
+}

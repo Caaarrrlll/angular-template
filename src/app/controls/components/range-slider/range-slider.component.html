@@ -1,0 +1,58 @@
+<div class="sliderDiv">
+	<div class="sliderInnerDiv">
+		<mat-slider [disabled]="disabled" [color]="color" [min]="min" [max]="max" [step]="step" [showTickMarks]="false" [displayWith]="displayWith">
+			<input matSliderStartThumb [value]="values.minValue" (valueChange)="minUpdated($event)" />
+			<input matSliderEndThumb [value]="values.maxValue" (valueChange)="maxUpdated($event)" />
+		</mat-slider>
+	</div>
+</div>
+<br />
+<div class="inputDiv">
+	<mat-form-field class="rangeInput" appearance="outline">
+		<mat-label>Min</mat-label>
+		<input
+			matInput
+			placeholder="Min"
+			type="number"
+			#minNumberInput
+			[disabled]="disabled"
+			[step]="step"
+			[min]="min"
+			[max]="values.maxValue - 1"
+			[value]="values.minValue"
+			(input)="minInputUpdated(minNumberInput)" />
+		@if (prefix) {
+			<mat-hint matPrefix>{{ unit }}</mat-hint>
+		}
+		@if (suffix) {
+			<mat-hint matSuffix>{{ unit }}</mat-hint>
+		}
+	</mat-form-field>
+	-
+	<mat-form-field class="rangeInput" appearance="outline">
+		<mat-label>Max</mat-label>
+		<input
+			matInput
+			placeholder="Max"
+			type="number"
+			#maxNumberInput
+			[disabled]="disabled"
+			[step]="step"
+			[min]="values.minValue + 1"
+			[max]="max"
+			[value]="values.maxValue"
+			(input)="maxInputUpdated(maxNumberInput)" />
+		@if (prefix) {
+			<mat-hint matPrefix>{{ unit }}</mat-hint>
+		}
+		@if (suffix) {
+			<mat-hint matSuffix>{{ unit }}</mat-hint>
+		}
+	</mat-form-field>
+</div>
+
+<div style="text-align: center">
+	@if (values.minValue >= values.maxValue) {
+		<mat-error>Range is not valid</mat-error>
+	}
+</div>

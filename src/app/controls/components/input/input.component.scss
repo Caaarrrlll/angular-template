@@ -1,0 +1,78 @@
+.input-container {
+	margin: 0px 0px 10px 0px;
+	position: relative;
+	height: 50px;
+	> input {
+		background: #ffffff;
+		width: 100%;
+		height: 100%;
+		color: black;
+		border: none;
+		font-size: 18px;
+		&:focus + .input-label .input-label-span {
+			margin: 0px 5px 0 5px;
+			transform: translateY(-195%);
+			background-color: #ffffff;
+			z-index: 1;
+			font-size: 12px;
+			opacity: 1;
+			color: black;
+		}
+		&:not(:placeholder-shown) + .input-label .input-label-span {
+			margin: 0px 5px 0 5px;
+			transform: translateY(-195%);
+			background-color: #ffffff;
+			z-index: 1;
+			font-size: 12px;
+			opacity: 1;
+			color: black;
+		}
+		&:focus + .input-label::after {
+			opacity: 1;
+			transform: opacity 1s;
+		}
+		&:not(:placeholder-shown) + .input-label::after {
+			opacity: 1;
+			transform: opacity 1s;
+		}
+	}
+	> label {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		border: 1px solid #6d767e;
+		box-sizing: border-box;
+		border-radius: 10px;
+		&:hover {
+			border: 2px solid #6d767e;
+			border-radius: 10px;
+			box-sizing: border-box;
+			display: inline-block;
+		}
+		> span {
+			color: gray;
+			opacity: 0.6;
+			display: flex;
+			font-size: 15px;
+			position: absolute;
+			bottom: 15px;
+			left: 10px;
+			transition: all 0.3s ease;
+		}
+		&::after {
+			content: "";
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			border: 2px solid orange;
+			bottom: -2px;
+			left: -2px;
+			border-radius: 10px;
+			opacity: 0;
+			transition: all 0.3s ease;
+		}
+	}
+}

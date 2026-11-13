@@ -1,0 +1,22 @@
+.closeButton {
+	float: right;
+	cursor: pointer;
+}
+
+.no-data {
+	display: block;
+	text-align: center;
+}
+
+.image-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.image {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}

@@ -1,0 +1,30 @@
+@if (!action || action.value !== "calendar") {
+	<mat-form-field appearance="fill">
+		<mat-label>{{ label }}</mat-label>
+		<input type="text" [formControl]="inputControl.inputControl" matInput [placeholder]="placeholder" [readonly]="isReadOnly" [maxlength]="inputControl.maxlen ?? 524288" />
+		@if (action) {
+			<button mat-button class="button-wrapper" [title]="action.tooltip" (click)="buttonClick(action.value, action.parameters)">
+				<mat-icon class="button-icon">{{ action.icon }}</mat-icon>
+			</button>
+		}
+		@if (inputControl.inputControl.value && inputControl.clear && !isReadOnly) {
+			<button mat-icon-button class="button-wrapper" matSuffix aria-label="Clear" (click)="inputControl.inputControl.reset()">
+				<mat-icon>close</mat-icon>
+			</button>
+		}
+		@for (error of inputControl.errors; track error.name) {
+			@if (inputControl.inputControl.hasError(error.name)) {
+				<mat-error>{{ error.message }}</mat-error>
+			}
+		}
+	</mat-form-field>
+} @else {
+	<mat-form-field appearance="fill">
+		<mat-label>{{ label }}</mat-label>
+		<input matInput [matDatepicker]="picker" [formControl]="inputControl.inputControl" (dateChange)="dateChange()" />
+		<button mat-icon-button class="button-wrapper" matSuffix aria-label="picker">
+			<mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+		</button>
+		<mat-datepicker #picker></mat-datepicker>
+	</mat-form-field>
+}

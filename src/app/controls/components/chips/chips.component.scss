@@ -1,0 +1,52 @@
+.circle {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: var(--width);
+	height: 18px;
+
+	background-color: var(--background);
+	color: var(--color);
+	border-radius: var(--radius);
+	font-size: 10px;
+}
+
+.circle-count {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-bottom: 0.5px;
+	padding-right: 1px;
+}
+
+.chip-button {
+	background-color: var(--background);
+	color: var(--color);
+	border-color: var(--border);
+	border-width: 1px;
+	border-style: solid;
+}
+
+.chip-button:hover {
+	background-color: var(--hover-color);
+	color: var(--hover-text-color);
+}
+
+.mat-icon-custom {
+	display: inline-table;
+	position: relative;
+	top: 5px;
+	height: 100%;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.mat-icon-content {
+	font-size: 18px;
+}
+
+.mat-icon-count {
+	font-size: 16px;
+	padding-left: 2px;
+	padding-top: 2px;
+}

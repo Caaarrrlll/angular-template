@@ -1,27 +1,80 @@
-# AngularTemplate
+# Angular Template
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
+Angular starter template for rapid client website and app development.
+A pre-built library of reusable controls, pipes, services, validators, and
+page segments — fork it, theme it, and build the client's features on top.
 
-## Development server
+## Quick start
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+npm install
+npm start          # dev server on http://localhost:4200/
+npm run build      # production build in dist/
+npm run lint       # eslint
+npm run format     # prettier
+```
 
-## Code scaffolding
+The sandbox segment (route `/sandbox`) demos every control live. It is only
+registered in development builds (`environment.isLocal` in
+`src/environments/`), so it never ships to production.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## What's inside
 
-## Build
+| Folder             | Purpose                                                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `src/app/controls` | ~40 reusable controls: cards, buttons, tables, grids, dialogs, galleries, carousels, inputs, pickers, navigation, loaders, etc. |
+| `src/app/library`  | Shared code: ~35 pipes, services (logger, grid storage, ...), directives, and validators                                        |
+| `src/app/segments` | Whole-page features wired into routes: landing (`/home`), contact (`/contact-us`), not-found, sandbox (`/sandbox`, dev only)    |
+| `src/assets`       | Client images and static assets (empty by design)                                                                               |
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Routes live in `src/app/app.routes.ts`; the navigation control
+(`src/app/controls/components/navigation`) wraps the router outlet in
+`app.component.html`.
 
-## Running unit tests
+## Browsing the library
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- The **sandbox segment** is the living reference — run `npm start` and
+  open `/sandbox` to see each control with its inputs.
+- Usage contracts and examples per category (the single source of truth):
+  - `src/app/library/pipes/PIPES_CONTRACTS.md`
+  - `src/app/library/services/SERVICES_CONTRACTS.md`
+  - `src/app/library/validators/VALIDATORS_CONTRACTS.md`
+- Controls follow a common pattern: standalone components, OnPush change
+  detection, signals-first APIs (see `ROADMAP.md` for the ongoing
+  migration), and control-owned animations in `<control>/animations/`.
 
-## Running end-to-end tests
+## Theming a new client (checklist)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1. **Fonts** — swap the Google Fonts links and icon font in
+   `src/index.html`, and the `font-family` in `src/styles.scss`.
+2. **Colors** — the Material theme is a prebuilt palette
+   (`@angular/material/prebuilt-themes/indigo-pink.css`, referenced in
+   `angular.json`); replace it with a custom theme for the client's
+   palette. Accent colors are currently hard-coded per control
+   (`button-v1`, `chip-status`, `carousel`, ...), so sweep those SCSS
+   files for hex values when rebranding. The snackbar colors use Material
+   CSS variables in `src/styles.scss`.
+3. **Title, meta, favicon** — `src/index.html` (title is still
+   `AngularTemplate`) and `src/favicon.ico`.
+4. **Assets** — client logos and images go in `src/assets`.
+5. **Navigation** — configure the links in the navigation control.
+6. **Routes** — add client pages as lazy segments in
+   `src/app/app.routes.ts`; remove the landing/contact segments you
+   don't need.
+7. **Prune** — delete unused controls from `src/app/controls` and unused
+   pipes/validators from `src/app/library`.
 
-## Further help
+## Conventions
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+See `AGENTS.md` for the full coding standards: path aliases
+(`@shared/*`), the new Angular control flow syntax (`@if`/`@for`),
+explicit types, `inject()` over constructor injection, and more.
+Component styles are budgeted in `angular.json` (6 kB warning / 10 kB
+error per component).
+
+## Project docs
+
+- `MIGRATION_TRACKER.md` — record of the legacy `controls-to-port`
+  migration (complete).
+- `ROADMAP.md` — planned work (signals migration, navigation service).
+- `INSTRUCTIONS.md` — working instructions for development sessions.

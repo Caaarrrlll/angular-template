@@ -1,0 +1,22 @@
+.center {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+.header-container {
+	display: flex;
+	width: 100%;
+}
+
+.divider-line {
+	position: absolute;
+	top: var(--div-top);
+	left: 25px;
+	width: var(--tabwidth);
+	height: 2px;
+	background-color: #293640;
+	z-index: 999;
+}

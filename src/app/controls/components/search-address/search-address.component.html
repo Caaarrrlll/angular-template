@@ -1,0 +1,15 @@
+<mat-form-field [style.width]="width">
+	<mat-label>{{ labelText }}</mat-label>
+	<input
+		matInput
+		#mapSearchField
+		(keydown.enter)="allowManualInput ? null : $event.preventDefault()"
+		[placeholder]="labelText"
+		autocorrect="off"
+		type="search"
+		autocapitalize="off"
+		spellcheck="off"
+		[disabled]="disabled"
+		[value]="value"
+		(input)="allowManualInput ? manualUpdateAddress.emit($event.target.value) : null" />
+</mat-form-field>

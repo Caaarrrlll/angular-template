@@ -10,6 +10,9 @@
 		<mat-nav-list>
 			<a mat-list-item routerLink="/home" (click)="drawer.close()">Home</a>
 			<a mat-list-item routerLink="/contact-us" (click)="drawer.close()">About Us</a>
+			@if (showSandbox) {
+				<a mat-list-item routerLink="/sandbox" (click)="drawer.close()">Sandbox</a>
+			}
 		</mat-nav-list>
 	</mat-sidenav>
 	<mat-sidenav-content>
@@ -24,6 +27,9 @@
 				<div>
 					<a mat-button routerLink="/home">Home</a>
 					<a mat-button routerLink="/contact-us">About Us</a>
+					@if (showSandbox) {
+						<a mat-button routerLink="/sandbox">Sandbox</a>
+					}
 				</div>
 			}
 

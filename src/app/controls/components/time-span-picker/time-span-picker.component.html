@@ -1,0 +1,26 @@
+<mat-label class="time-span-picker-label">{{ label }}</mat-label>
+<form [formGroup]="formGroup" class="d-flex">
+	<mat-form-field class="input">
+		<mat-label>Days</mat-label>
+		<input matInput formControlName="days" (change)="validateTime('days')" type="number" (keypress)="restrictToNumeric($event, 'days')" />
+		@if (formGroup.controls.days.invalid) {
+			<mat-error>Days between 0 and 2</mat-error>
+		}
+	</mat-form-field>
+	<span class="mx-3 pt-3 fw-bold">:</span>
+	<mat-form-field class="input">
+		<mat-label>Hrs.</mat-label>
+		<input matInput formControlName="hours" (change)="validateTime('hours')" type="number" (keypress)="restrictToNumeric($event, 'hours')" />
+		@if (formGroup.controls.hours.invalid) {
+			<mat-error>Hours between 0 and 23</mat-error>
+		}
+	</mat-form-field>
+	<span class="mx-3 pt-3 fw-bold">:</span>
+	<mat-form-field class="input">
+		<mat-label>Min.</mat-label>
+		<input matInput formControlName="minutes" (change)="validateTime('minutes')" type="number" (keypress)="restrictToNumeric($event, 'minutes')" />
+		@if (formGroup.controls.minutes.invalid) {
+			<mat-error>Minutes between 0 and 59</mat-error>
+		}
+	</mat-form-field>
+</form>

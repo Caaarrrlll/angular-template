@@ -1,0 +1,10 @@
+<mat-form-field appearance="fill">
+	<mat-label>{{ inputObj.label }}</mat-label>
+	<mat-select [disabled]="inputObj.isReadOnly ?? false" [formControl]="inputControl" (selectionChange)="onClick($event.value)">
+		@for (option of inputObj.inputList ?? []; track option) {
+			<mat-option [value]="option.value">
+				{{ option.display }}
+			</mat-option>
+		}
+	</mat-select>
+</mat-form-field>

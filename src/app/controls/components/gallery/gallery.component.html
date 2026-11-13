@@ -1,0 +1,87 @@
+<div id="fullScreen" class="outerGalleryContainer">
+	@if (arrLength > 1 && !onlyShowPreview) {
+		<div class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerPrev" [class.galleryNavButtonContainerPrevFS]="fullscreenOpen" (click)="prev()" #prevDiv>
+			<button class="generalGalleryBtn galleryNavButton prevButton" matRipple [matRippleTrigger]="prevDiv">
+				<mat-icon class="galleryIcon" [class.galleryIconOrange]="orangeIcons">chevron_left</mat-icon>
+			</button>
+		</div>
+	}
+
+	<div
+		#galleryContainer
+		class="galleryImageContainer"
+		[class.galleryContainerBorder]="border && !onlyShowPreview"
+		[class.galleryImageContainerFillWidth]="galleryWidth === 'fillWidth' || fullscreenOpen"
+		[class.noImageGalleryContainer]="onlyShowPreview"
+		(wheel)="horizontalScroll($event)">
+		@if (!onlyShowPreview && fullscreenOpen) {
+			<div class="galleryControlsContainerTop galleryControlsContainerTopLeft">
+				<button (click)="toggleZoomBox()" class="generalGalleryBtn galleryNavButton" matRipple>
+					<mat-icon class="galleryIcon" [class.galleryIconOrange]="orangeIcons">{{ imageZoom ? "zoom_out" : "zoom_in" }}</mat-icon>
+				</button>
+			</div>
+		}
+
+		<span id="galleryZoomBox" class="galleryZoomBox" [style.background-image]="'url(' + currentImageUrl + ')'"></span>
+
+		@if (!flatView) {
+			<img
+				id="mainGalleryImage"
+				(load)="onImageLoad()"
+				[src]="currentImageUrl"
+				[alt]="currentImage?.title"
+				[style.object-fit]="imageSize"
+				[title]="currentImage?.description"
+				[cursorFollowZoom]="imageZoom && fullscreenOpen" />
+		} @else {
+			<div class="galleryFlatView" [class.galleryFlatViewFullscreen]="fullscreenOpen">
+				<app-evaluation-comparison [buyleadCode]="stockNumber" [flatViewCompare]="flatViewCompare"></app-evaluation-comparison>
+			</div>
+		}
+
+		@if (!onlyShowPreview) {
+			<div class="galleryPagerScollContainer" #pagerScrollContainer (wheel)="pagerHorizontalScroll($event)">
+				<div class="galleryPager">
+					@for (image of images; track $index) {
+						<span class="generalGalleryBtn galleryPagerButton" [class.selectedGalleryPagerButton]="$index === currentIndex" (click)="navigateToIndex($index)"></span>
+					}
+				</div>
+			</div>
+
+			<div class="galleryControlsContainer galleryControlsContainerLeft" [class.galleryControlsContainerLeftFS]="fullscreenOpen">
+				@if (showAutoplay && arrLength > 1) {
+					<button (click)="toggleAutoplay()" class="generalGalleryBtn galleryNavButton" matRipple>
+						<mat-icon class="galleryIcon" [class.galleryIconOrange]="orangeIcons">{{ autoplayGo ? "pause" : "play_arrow" }}</mat-icon>
+					</button>
+				}
+			</div>
+			<div class="galleryControlsContainer galleryControlsContainerRight" [class.galleryControlsContainerRightFS]="fullscreenOpen">
+				<button (click)="toggleFullScreen()" class="generalGalleryBtn galleryNavButton" matRipple>
+					<mat-icon class="galleryIcon" [class.galleryIconOrange]="orangeIcons">{{ fullscreenOpen ? "fullscreen_exit" : "fullscreen" }}</mat-icon>
+				</button>
+			</div>
+		}
+	</div>
+
+	@if (arrLength > 1 && !onlyShowPreview) {
+		<div class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerNext" [class.galleryNavButtonContainerNextFS]="fullscreenOpen" (click)="next()" #nextDiv>
+			<button class="generalGalleryBtn galleryNavButton nextButton" matRipple [matRippleTrigger]="nextDiv">
+				<mat-icon class="galleryIcon" [class.galleryIconOrange]="orangeIcons">chevron_right</mat-icon>
+			</button>
+		</div>
+	}
+</div>
+
+@if (showGalleryPreview && arrLength > 0 && !fullscreenOpen) {
+	<div class="galleryPreviewContainer">
+		<app-gallery-preview
+			(imageSelected)="navigateToIndex($event)"
+			[images]="images ?? []"
+			[imageWidth]="galleryPreviewImageMaxWidth"
+			[totalWidth]="galleryContainerWidth"
+			[activeImageIndex]="currentIndex"
+			[onlyShowPreview]="onlyShowPreview"
+			[orangeIcons]="orangeIcons">
+		</app-gallery-preview>
+	</div>
+}

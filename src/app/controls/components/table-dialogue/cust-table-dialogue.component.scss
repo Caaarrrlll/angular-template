@@ -1,0 +1,40 @@
+.mat-table {
+	width: 100%;
+	text-align: left !important;
+	.mat-header-cell {
+		white-space: normal;
+		word-wrap: break-word;
+	}
+}
+.empty-table-message {
+	text-align: center;
+}
+th.mat-sort-header-sorted {
+	color: black;
+}
+.table-wrapper {
+	min-height: 200px;
+	max-width: 100%;
+}
+.closeBtn {
+	float: right;
+	position: relative;
+	position: relative;
+	bottom: 10px;
+	left: 10px;
+}
+.title {
+	display: inline-block;
+	margin-top: 2px;
+	font-size: large;
+}
+
+.title-bar {
+	margin-top: -10px;
+	margin-right: -10px;
+	margin-left: -10px;
+}
+
+.col-width {
+	min-width: var(--width);
+}

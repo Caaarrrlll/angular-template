@@ -1,0 +1,11 @@
+.checkbox-wrapper {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.inner-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	column-gap: 20px;
+}

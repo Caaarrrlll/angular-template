@@ -1,0 +1,38 @@
+<mat-tab-group
+	dynamicHeight
+	[(selectedIndex)]="tabToUse"
+	[class]="tabList.tabType"
+	[style]="matTabGroupConfig"
+	style="height: 100%; background-color: #fff"
+	(selectedTabChange)="tabButtonClick($event)">
+	@for (item of tabList.tab; track item.index) {
+		<mat-tab [label]="item.tabName" [disabled]="!item.isProcess ? false : item.canProgress ? false : true">
+			<ng-template mat-tab-label>
+				@if (item.icon) {
+					<mat-icon style="padding-right: 4px; color: #b45108">{{ item.icon }}</mat-icon>
+				}
+				<div [style]="{ 'font-size': tabList.fontSize }">{{ item.tabName }}</div>
+			</ng-template>
+
+			@if (tabList.tabType === "vertical" && !hideContent()) {
+				<div
+					class="header-container"
+					style="height: 48px; color: #fff; vertical-align: middle"
+					[style]="{ 'background-color': tabList.tabLabelBackgroundColor, 'font-size': tabList.fontSize }">
+					<div class="center">
+						<b>{{ item.tabName }}</b>
+					</div>
+				</div>
+			}
+			@if (activeTab === item.index && !hideContent()) {
+				<ng-content [select]="item.classSelect"></ng-content>
+			}
+		</mat-tab>
+	}
+</mat-tab-group>
+
+@for (item of tabList.tab; track item.index; let i = $index) {
+	@if (i > 0 && tabList.tab[i - 1].isProcess && !item.isProcess) {
+		<div class="divider-line" [style]="{ '--div-top': (i + 1) * buttonSpace + offset[i] + 'px', '--tabwidth': tabList.matTabMinWidth ?? '200px' }"></div>
+	}
+}

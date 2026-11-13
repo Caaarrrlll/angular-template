@@ -1,0 +1,123 @@
+<form [formGroup]="form" class="grid-form">
+	@for (item of editableColumns; track item.key) {
+		@switch (item.type) {
+			@case ("input") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<input
+						[disabled]="isDisabled"
+						matInput
+						[placeholder]="item.key | titlecase"
+						[formControlName]="item.key"
+						#formValue
+						[attr.title]="formValue.value"
+						[attr.maxlength]="item.maxLength ?? 100" />
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+					@if (hasError(item.key, "maxlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too long</mat-error>
+					}
+					@if (hasError(item.key, "minlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too short</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("password") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<input [disabled]="isDisabled" type="password" matInput [placeholder]="item.key | titlecase" [formControlName]="item.key" [attr.maxlength]="item.maxLength ?? 100" />
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+					@if (hasError(item.key, "maxlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too long</mat-error>
+					}
+					@if (hasError(item.key, "minlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too short</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("textarea") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<textarea
+						[disabled]="isDisabled"
+						matInput
+						[placeholder]="item.key | titlecase"
+						[formControlName]="item.key"
+						cdkTextareaAutosize
+						cdkAutosizeMinRows="1"
+						[attr.maxlength]="item.maxLength ?? 100"></textarea>
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+					@if (hasError(item.key, "maxlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too long</mat-error>
+					}
+					@if (hasError(item.key, "minlength")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is too short</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("dropdown") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<mat-select [disabled]="isDisabled" [formControlName]="item.key" [compareWith]="compareFn">
+						@for (option of item.typeValues ?? {} | keyvalue; track option.key) {
+							<mat-option [value]="option.key">{{ option.value }}</mat-option>
+						}
+					</mat-select>
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("multi-select-dropdown") {
+				<mat-form-field class="form-field">
+					<mat-label>{{ item.title || item.key | titlecase }}</mat-label>
+					<mat-select [disabled]="isDisabled" [formControlName]="item.key" [compareWith]="compareFn" multiple>
+						@for (option of item.typeValues ?? {} | keyvalue; track option.key) {
+							<mat-option [value]="option.key">{{ option.value }}</mat-option>
+						}
+					</mat-select>
+					@if (item.hint) {
+						<mat-hint>{{ item.hint }}</mat-hint>
+					}
+					@if (hasError(item.key, "required")) {
+						<mat-error>{{ item.title || item.key | titlecase }} is required</mat-error>
+					}
+				</mat-form-field>
+			}
+			@case ("checkbox") {
+				<div class="form-field checkbox-container">
+					<mat-checkbox [disabled]="isDisabled" [formControlName]="item.key">{{ item.title || item.key | titlecase }}</mat-checkbox>
+				</div>
+			}
+		}
+	}
+
+	<div class="button-container">
+		<button type="button" mat-stroked-button color="accent" class="form-button" (click)="cancel()">Cancel</button>
+		<button type="button" [disabled]="isDisabled || !form.valid" mat-raised-button color="primary" class="form-button text-white" (click)="submit()">
+			<span>Save</span>
+		</button>
+		@if (additionalButton) {
+			<button type="button" [disabled]="isDisabled" mat-raised-button color="primary" class="form-button text-white" (click)="additionalButton.action()">
+				<span>{{ additionalButton.name }}</span>
+			</button>
+		}
+	</div>
+</form>

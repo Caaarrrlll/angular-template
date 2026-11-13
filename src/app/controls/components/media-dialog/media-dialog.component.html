@@ -1,0 +1,16 @@
+<span class="closeButton" (click)="close()">
+	<mat-icon>close</mat-icon>
+</span>
+@if (imageData$ | apiResponse | async; as imageData) {
+	@if (imageData.noData || imageData.error) {
+		<span class="no-data">No images available</span>
+	}
+	@if (imageData.payload) {
+		<div class="image-container">
+			<img [src]="mediaSrc(imageData)" class="image" />
+		</div>
+	}
+	@if (imageData.loading) {
+		<app-loader [fontSize]="60"></app-loader>
+	}
+}

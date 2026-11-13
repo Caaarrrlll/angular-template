@@ -1,0 +1,112 @@
+.chip-button {
+	white-space: nowrap;
+	user-select: none;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	color: var(--color);
+	border-width: 2px;
+	border-style: solid;
+	min-height: var(--chip-height);
+	font-size: var(--fontSize);
+	font-weight: var(--font-weight);
+	padding: 8px;
+
+	&.negative {
+		border: 2px solid #ff3826;
+	}
+
+	&.solid {
+		background-color: #2d4559;
+	}
+
+	&.default-background {
+		background-color: #fff;
+	}
+
+	&.action {
+		border: 2px solid #f79147;
+	}
+
+	&.informative {
+		border: 2px solid #75bf44;
+	}
+
+	&.progress {
+		border: 2px solid #f79147;
+	}
+
+	&.new {
+		border: 2px solid #65a1c3;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.newSale,
+	&.stock,
+	&.reserved,
+	&.bought,
+	&.toBePriced {
+		border: 2px solid #4f94bb;
+	}
+
+	// white background, coloured border
+	&.Assigned,
+	&.awaitingCustomerAction,
+	&.customerContactAttemptFailed,
+	&.Escalated,
+	&.noAgreementReached,
+	&.rejectionLetterReviewed {
+		border: 2px solid #f79147;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.Approved,
+	&.resolved,
+	&.vehicleReleased,
+	&.completedNatisDelivered,
+	&.sold,
+	&.saleInitiated {
+		border: 2px solid #75bf44;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.feedbackRequired {
+		border: 2px solid #8a8a92;
+		background-color: #fff;
+		color: #000;
+	}
+
+	&.legalActionRequired,
+	&.miosaReferred,
+	&.thirdPartyFeedbackRequired {
+		border: 2px solid #8a8a92;
+		background-color: #f3f3f3;
+		color: #000;
+	}
+
+	&.rejected {
+		border: 2px solid #ff3826;
+		background-color: #f3f3f3;
+		color: #000;
+	}
+
+	&.forSale,
+	&.online {
+		border: 2px solid #f79147;
+	}
+
+	&.inTransit {
+		border: 2px solid #8a8a92;
+	}
+
+	&.NFS {
+		border: 2px solid #ff3826;
+	}
+
+	&.default {
+		// Do not change the default colour
+		border: 2px solid #2d4559;
+	}
+}

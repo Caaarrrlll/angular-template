@@ -1,0 +1,12 @@
+.field-width {
+	width: var(--width);
+	padding: 10px;
+}
+
+.flex.row {
+	display: flex;
+}
+
+.flex.col {
+	flex: 1;
+}

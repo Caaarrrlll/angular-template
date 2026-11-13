@@ -12,3 +12,29 @@ app-root {
 	display: block;
 	height: 100%;
 }
+
+.mat-mdc-snack-bar-container {
+	&.snackbar-info {
+		--mat-snack-bar-container-color: #0288d1;
+		--mat-snack-bar-supporting-text-color: #ffffff;
+		--mat-snack-bar-button-color: #ffffff;
+	}
+
+	&.snackbar-success {
+		--mat-snack-bar-container-color: #2e7d32;
+		--mat-snack-bar-supporting-text-color: #ffffff;
+		--mat-snack-bar-button-color: #ffffff;
+	}
+
+	&.snackbar-warning {
+		--mat-snack-bar-container-color: #ed6c02;
+		--mat-snack-bar-supporting-text-color: #ffffff;
+		--mat-snack-bar-button-color: #ffffff;
+	}
+
+	&.snackbar-error {
+		--mat-snack-bar-container-color: #d32f2f;
+		--mat-snack-bar-supporting-text-color: #ffffff;
+		--mat-snack-bar-button-color: #ffffff;
+	}
+}

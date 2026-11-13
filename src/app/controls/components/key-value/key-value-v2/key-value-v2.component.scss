@@ -1,0 +1,54 @@
+.kv-container-row {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 2px;
+	font-size: 14px;
+
+	.key {
+		white-space: nowrap;
+		align-self: center;
+		font-size: 13px;
+	}
+
+	.value {
+		align-self: center;
+		margin-left: 10px;
+
+		.show-pointer {
+			cursor: pointer;
+		}
+	}
+}
+
+.right {
+	justify-content: right;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.red {
+	color: #d50000;
+}
+
+.orange {
+	color: #f47920;
+}
+
+.green {
+	color: #219653;
+}
+
+.icon-size {
+	font-size: 16px;
+	height: initial;
+	width: initial;
+	padding-left: 4px;
+}
+
+.center-align {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

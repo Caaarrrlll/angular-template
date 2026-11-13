@@ -1,0 +1,27 @@
+.red {
+	color: red;
+}
+
+.green {
+	color: green;
+}
+
+.h3 {
+	display: block;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.icon {
+	height: unset;
+	width: unset;
+	font-size: 20px;
+	color: #2d4559;
+}
+
+.text-container {
+	justify-content: center;
+	display: flex;
+	gap: 5px;
+	align-items: center;
+}
