@@ -65,7 +65,7 @@ The goal is pragmatic cleanup, not forcing signals everywhere. These stay on the
 Build a generic navigation/menu service. (Legacy source `src/app/controls-to-port/services/navigation.service.ts` was deleted without migration on 2026-11-13; the mechanics below were recorded before deletion.)
 
 - **Original:** builds claim- and country-filtered menus (`navSetup`, `canDisplay`, distinct-claims aggregation) from a large app-specific menu tree, gated by `LoginService` claims.
-- **Why parked:** the template's existing navigation base covers current needs, and the legacy menu data is app-specific (Webuycars).
+- **Why parked:** the template's existing navigation base covers current needs, and the legacy menu data is app-specific (old-company).
 - **Future investigation points:**
   - A generic `Navigation` model (name, path, icon, claims, allowed countries, children).
   - Tree aggregation of child claims/countries onto parents.

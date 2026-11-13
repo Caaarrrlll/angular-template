@@ -11,7 +11,7 @@ Task: critical signals-readiness check of the project and a concrete migration p
 
 ## Follow-up (2026-11-13): pragmatic scope cut for the signals plan (developer-approved)
 
-[✓] ROADMAP.md amended: Phases 4 & 5 dropped; "Do not migrate" subsection added (heavy coupled controls table/card-table/linq-grid-filters/expandable-grid/dynamic-material-dialog/dynamic-window/info-card/list-card/gallery/search-address; CVA trio inputs; library directives sweep; standalone getter→computed; standalone viewChild swaps; input.required() restricted). Phase 2 loses the CVA trio; Phase 3 narrowed to ngOnChanges redesigns (carousel, gallery-preview, tab-group, count-down) + opportunistic accordion/zoom-* viewChild swaps
+[✓] ROADMAP.md amended: Phases 4 & 5 dropped; "Do not migrate" subsection added (heavy coupled controls table/card-table/linq-grid-filters/expandable-grid/dynamic-material-dialog/dynamic-window/info-card/list-card/gallery/search-address; CVA trio inputs; library directives sweep; standalone getter→computed; standalone viewChild swaps; input.required() restricted). Phase 2 loses the CVA trio; Phase 3 narrowed to ngOnChanges redesigns (carousel, gallery-preview, tab-group, count-down) + opportunistic accordion/zoom-\* viewChild swaps
 [•] Summarize the revised plan for the developer (chat only)
 
 ## Task (2026-11-13): signals migration Phase 0 — finish button-v1's `@Output()` (developer-approved)

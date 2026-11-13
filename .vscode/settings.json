@@ -1,5 +1,11 @@
 {
-	"cSpell.words": ["Parens"],
+	"cSpell.language": "en-GB",
+	"cSpell.words": [
+		"dialog",
+		"linq",
+		"Parens",
+		"standalone"
+	],
 
 	"editor.tabSize": 2,
 	"editor.formatOnSave": true,
