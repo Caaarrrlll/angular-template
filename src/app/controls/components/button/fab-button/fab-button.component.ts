@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, Output } from "@angular/core";
-import { EventEmitter } from "@angular/core";
+import { ChangeDetectionStrategy, Component, output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
@@ -10,7 +9,7 @@ import { MatIconModule } from "@angular/material/icon";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FabButtonComponent {
-	@Output() public emitClick: EventEmitter<void> = new EventEmitter<void>();
+	public readonly emitClick = output<void>();
 
 	public onClick(): void {
 		this.emitClick.emit();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Output, computed, inject, input, signal, viewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal, viewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatRippleModule } from "@angular/material/core";
 import { MatIconModule } from "@angular/material/icon";
@@ -15,7 +15,7 @@ import { CustButtonMenuItem } from "@shared/models/cust-basic-controls";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonV1Component {
-	@Output() public selected: EventEmitter<CustButtonMenuItem> = new EventEmitter<CustButtonMenuItem>();
+	public readonly selected = output<CustButtonMenuItem>();
 
 	public readonly value = input<string>("");
 	public readonly color = input<string>("default");

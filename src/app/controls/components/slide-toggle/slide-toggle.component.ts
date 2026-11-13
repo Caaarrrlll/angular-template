@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-controls";
 
@@ -10,8 +10,8 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SlideToggleComponent {
-	@Input({ required: true }) public inputObj!: CustInputGeneral;
-	@Output() public inputChanged: EventEmitter<CustInputReturn> = new EventEmitter<CustInputReturn>();
+	public readonly inputObj = input.required<CustInputGeneral>();
+	public readonly inputChanged = output<CustInputReturn>();
 
 	public onChange(event: MatSlideToggleChange): void {
 		this.inputChanged.emit({

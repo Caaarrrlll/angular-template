@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { ButtonV2Component } from "../button-v2/button-v2.component";
 import { CustButtonInput, CustButtonType, CustChipReturn, CustInputReturn } from "@shared/models/cust-basic-controls";
 
@@ -9,16 +9,16 @@ import { CustButtonInput, CustButtonType, CustChipReturn, CustInputReturn } from
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonSecondaryComponent {
-	@Input({ required: true }) public type!: CustButtonInput;
-	@Output() public buttonClick: EventEmitter<CustChipReturn> = new EventEmitter<CustChipReturn>();
+	public readonly type = input.required<CustButtonInput>();
+	public readonly buttonClick = output<CustChipReturn>();
 
 	public get button(): CustButtonInput {
-		return { ...this.type, type: CustButtonType.secondary };
+		return { ...this.type(), type: CustButtonType.secondary };
 	}
 
 	public action(click: CustInputReturn): void {
 		this.buttonClick.emit({
-			value: this.type.value,
+			value: this.type().value,
 			action: "click",
 			event: click.event ?? null,
 		});
