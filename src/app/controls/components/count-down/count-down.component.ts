@@ -12,7 +12,7 @@ export class CountDownComponent {
 	@Input() public textFormat: boolean = false;
 	@Output() public timeRemaining: EventEmitter<number> = new EventEmitter<number>();
 
-	public set timeLeft(value: number) {
+	@Input() public set timeLeft(value: number) {
 		if (!value || value <= 0) {
 			return;
 		}

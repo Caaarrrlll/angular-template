@@ -2,7 +2,7 @@
 
 This file documents the shared pipes in `src/app/library/pipes`. Review it before creating a new pipe, and update it whenever a pipe is added, changed, or removed.
 
-> Pipes in `src/app/controls-to-port/pipes` are legacy code and are not yet part of this contract. Add them here as they are migrated. Only `time-elapsed.pipe.ts` remains there (blocked on the un-ported `DateTimeOpsService`).
+> All pipes previously in `src/app/controls-to-port/pipes` have been migrated into this contract; the legacy folder was removed on 2026-11-13.
 
 ## Pipe Index
 
@@ -37,6 +37,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 | `SafePipe` | `safe` | `safe/safe.pipe.ts` | Yes | Bypasses resource URL sanitization. |
 | `SpaceBetweenUppercasePipe` | `spaceBetweenUppercase` | `space-between-uppercase/space-between-uppercase.pipe.ts` | Yes | Inserts a space between an uppercase letter and a following lowercase letter. |
 | `ThousandSeparatorPipe` | `thousandSeparator` | `thousand-separator/thousand-separator.pipe.ts` | Yes | Groups digit runs with spaces. |
+| `TimeElapsedFormatPipe` | `timeElapsedFormat` | `time-elapsed/time-elapsed.pipe.ts` | Yes (impure) | Renders a date as a relative time string. |
 
 ## CharacterSpacingPipe
 
@@ -222,6 +223,18 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ rows | sort: "name" }}
   ```
 - **Notes:** Migrated from `src/app/controls-to-port/pipes/sort.pipe.ts`; item field identities (`Record<string, any>`) are intentionally loosely typed to keep the original numeric/string compare behaviour.
+
+## TimeElapsedFormatPipe
+
+- **Purpose:** Renders a date as a relative time string: past dates as `"5 minutes ago"`-style text, future dates as `"in 3 hours"`-style text.
+- **Inputs:**
+  - `date`: date string to compare against now.
+- **Output:** Relative time via `DateTimeOpsService.getRelativeTime` (past) or `timeTillNow(true, ...)` (future).
+- **Example:**
+  ```html
+  {{ record.createdAt | timeElapsedFormat }}
+  ```
+- **Notes:** Migrated from `src/app/controls-to-port/pipes/time-elapsed.pipe.ts`; now standalone, injects the library `DateTimeOpsService`. Kept impure so values recompute as time passes.
 
 ## TimeFormatPipe
 

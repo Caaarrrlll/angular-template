@@ -1,0 +1,26 @@
+<div class="container" appDragAndDropFiles (fileDropped)="handleFilesDropped($event)">
+	@if (!isInDialog) {
+		<div class="exit" (click)="onClose()">
+			<mat-icon>close</mat-icon>
+		</div>
+	}
+
+	<div>
+		@if (files.length > 0) {
+			<div class="uploaded-files">
+				<div style="color: #f47920; margin-bottom: 10px">Attached files</div>
+				@for (file of files; track file) {
+					<div>{{ file.name }}</div>
+				}
+			</div>
+		}
+
+		<div>
+			<input type="file" id="fileDropRef" #fileDropRef multiple [accept]="filesToAccept ?? ''" (change)="handleFilesDropped(fileDropRef.files)" />
+			<mat-icon>description</mat-icon>
+			<h3>Drag and drop file here</h3>
+			<h3>or</h3>
+			<label for="fileDropRef">Browse for file</label>
+		</div>
+	</div>
+</div>

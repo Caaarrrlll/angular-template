@@ -1,0 +1,38 @@
+<button
+	class="cust-button"
+	[class]="color()"
+	[class.disabled]="disabled()"
+	[class.loading]="loading()"
+	(click)="clicked($event)"
+	(contextmenu)="openMenu($event)"
+	[disabled]="disabled() || loading()"
+	matRipple
+	[matRippleDisabled]="disabled() || loading()"
+	[style.font-size]="fontSize()"
+	[style.font-weight]="fontWeight()"
+	[style.padding]="padding()"
+	[style.width]="width()"
+	[style.margin]="margin()"
+	[style.display]="display()"
+	[style.align-items]="alignItems()"
+>
+	{{ displayValue() }}
+	@if (loading()) {
+		<app-loader class="btn-loader" [fontSize]="loaderFontSize"></app-loader>
+	}
+	@if (numberOfClicks() === 1) {
+		<div class="progress-bar" [class]="color()"></div>
+	}
+	@if (icon() !== "") {
+		<div class="icon" style="display: flex">
+			<mat-icon [style]="iconStyle()">{{ icon() }}</mat-icon>
+		</div>
+	}
+	<span class="menu-anchor" [matMenuTriggerFor]="menu"></span>
+</button>
+
+<mat-menu #menu="matMenu">
+	@for (item of menuItems(); track item.text) {
+		<button mat-menu-item [disabled]="item.disabled ?? false" (click)="onSelect(item)">{{ item.text }}</button>
+	}
+</mat-menu>

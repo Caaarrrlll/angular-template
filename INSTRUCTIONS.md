@@ -2,9 +2,7 @@
 
 ## Migration Tracker
 
-The `MIGRATION_TRACKER.md` file tracks the controls in `src/app/controls-to-port` that are planned for migration to the newer Angular version in this template.
-
-When a control is finalised, update `MIGRATION_TRACKER.md` to reflect its current status (for example, mark it as `Migrated` and add any relevant notes), and update the summary counts accordingly.
+The `MIGRATION_TRACKER.md` file tracked the controls in `src/app/controls-to-port` that were planned for migration to the newer Angular version in this template. That migration is complete (2026-11-13) and the folder was removed; the tracker is retained as a historical record. When a shared control, service, pipe, or validator is added or changed, update the corresponding contracts file instead.
 
 ## Pipe Contracts
 

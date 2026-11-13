@@ -1,0 +1,170 @@
+@if (loading) {
+	<div class="loader">
+		<app-loader [fontSize]="64"></app-loader>
+	</div>
+}
+
+<form [formGroup]="form" class="content">
+	@if (dialogSetup.instructionText) {
+		<div style="padding-bottom: 20px">{{ dialogSetup.instructionText }}</div>
+	}
+	@if (dialogSetup.optionSelected) {
+		<div style="padding-bottom: 20px"><b>{{ dialogSetup.optionSelected }}</b></div>
+	}
+	@if (dialogSetup.additionalText) {
+		<div style="padding-bottom: 20px">{{ dialogSetup.additionalText }}</div>
+	}
+
+	@for (control of dialogSetup.controls; track control.formName) {
+		<div style="display: flex; justify-content: center; width: 500px; padding-bottom: 30px">
+			@if (control.instructionText) {
+				<div>{{ control.instructionText }}</div>
+			}
+
+			@if (control.type === "Image") {
+				<div style="width: 100%; padding-bottom: 20px; text-align: center">
+					<img [src]="(control.imgUrl ?? '') | safe" alt="Image unavailable" />
+				</div>
+			}
+
+			@if (control.type === "Slider") {
+				<span style="margin-bottom: 15px"><strong>{{ form.controls[control.formName].value | currency: "ZAR" : "symbol-narrow" : "1.0-0" }}</strong></span>
+				<mat-slider [min]="control.minValue" [max]="control.maxValue" [step]="control.increment" [discrete]="true" [formControlName]="control.formName" style="width: 500px; padding-bottom: 30px">
+					<input matSliderThumb />
+				</mat-slider>
+			}
+
+			@if (control.type === "BtnGroup") {
+				<mat-button-toggle-group [formControlName]="control.formName" (change)="setFromValue(control, $event.value)">
+					@for (btn of control.data; track btn.value) {
+						<mat-button-toggle [value]="btn.value">{{ btn.display }}</mat-button-toggle>
+					}
+				</mat-button-toggle-group>
+			}
+
+			@if (control.type === "DropDown") {
+				<mat-form-field style="width: 100%; padding-bottom: 10px; min-width: 450px" subscriptSizing="dynamic">
+					<mat-label>{{ control.placeholder }}</mat-label>
+					<mat-select [formControlName]="control.formName">
+						@for (option of control.data; track option.value) {
+							<mat-option [value]="option.value">{{ option.display }}</mat-option>
+						}
+					</mat-select>
+					@if (form.controls[control.formName].hasError("required")) {
+						<mat-error style="color: red">This field is required</mat-error>
+					}
+				</mat-form-field>
+			}
+
+			@if (control.type === "TextArea") {
+				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
+					<mat-label>{{ control.placeholder }}</mat-label>
+					<textarea matInput cdkTextareaAutosize [formControlName]="control.formName"></textarea>
+					@if (form.controls[control.formName].validator != null) {
+						<mat-hint style="color: red">This field is required</mat-hint>
+					}
+					@if (form.controls[control.formName].validator == null) {
+						<mat-hint>This field is optional</mat-hint>
+					}
+					@if (form.controls[control.formName].hasError("required")) {
+						<mat-error style="color: red">This field is required</mat-error>
+					}
+				</mat-form-field>
+			}
+
+			@if (control.type === "Input") {
+				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
+					<mat-label>{{ control.placeholder }}</mat-label>
+					<input matInput [formControlName]="control.formName" [type]="control.valueType ? control.valueType : 'text'" />
+					@if (form.controls[control.formName].hasError("required")) {
+						<mat-error>This field is required</mat-error>
+					}
+					@if (form.controls[control.formName].hasError("pattern")) {
+						<mat-error>The value entered is not a valid phone number</mat-error>
+					}
+				</mat-form-field>
+			}
+
+			@if (control.type === "CurrencyShortHand") {
+				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
+					<mat-label>
+						{{ !form.controls[control.formName].value ? control.placeholder : control.placeholder + " of " + (form.controls[control.formName].value * 1000 | currency: "ZAR" : "symbol-narrow" : "1.0-0") }}
+					</mat-label>
+					<input matInput [formControlName]="control.formName" type="number" />
+					@if (form.controls[control.formName].hasError("required")) {
+						<mat-error>This field is required</mat-error>
+					}
+				</mat-form-field>
+			}
+
+			@if (control.type === "MultiSelect") {
+				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
+					<mat-label>{{ control.placeholder }}</mat-label>
+					<mat-select [formControlName]="control.formName" multiple>
+						@for (option of control.data; track option.value) {
+							<mat-option [value]="option.value">{{ option.displayText ?? option.display }}</mat-option>
+						}
+					</mat-select>
+				</mat-form-field>
+			}
+
+			@if (control.type === "SingleDate") {
+				<div style="width: 500px; padding-bottom: 30px; text-align: center">
+					<span style="font-weight: bold">{{ control.placeholder }}</span>
+					<mat-form-field style="width: 100%" subscriptSizing="dynamic">
+						<input matInput [matDatepicker]="picker" [min]="control.disabledBefore" [formControlName]="control.formName" />
+						<mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker #picker></mat-datepicker>
+						@if (form.controls[control.formName].hasError("required")) {
+							<mat-error>This field is required</mat-error>
+						}
+					</mat-form-field>
+				</div>
+			}
+
+			@if (control.type === "DateTime") {
+				<div style="display: flex; gap: 10px">
+					<span style="font-weight: bold">{{ control.placeholder }}</span>
+					<mat-form-field subscriptSizing="dynamic">
+						<input matInput type="datetime-local" [formControlName]="control.formName" />
+						@if (form.controls[control.formName].hasError("required")) {
+							<mat-error>This field is required</mat-error>
+						}
+					</mat-form-field>
+				</div>
+			}
+
+			@if (control.type === "Checkbox") {
+				<div>
+					<mat-checkbox [formControlName]="control.formName">{{ control.label }}</mat-checkbox>
+				</div>
+			}
+
+			@if (control.type === "radio") {
+				<div class="space-between">
+					<mat-radio-group [formControlName]="control.formName">
+						@for (item of control.data; track item.text) {
+							<mat-radio-button [value]="item.text">{{ item.label }}</mat-radio-button>
+						}
+					</mat-radio-group>
+				</div>
+			}
+
+			@if (control.type === "approval") {
+				<div class="space-between-row">
+					<app-button-secondary [type]="buttonInput('Reject', 'Reject', !form.valid)" (buttonClick)="submitApproval('Reject')"></app-button-secondary>
+					<app-button-primary [type]="buttonInput('Approve', 'Approve', !form.valid)" (buttonClick)="submitApproval('Approve')"></app-button-primary>
+				</div>
+			}
+		</div>
+	}
+</form>
+
+<div class="row flex" [style.justify-content]="dialogSetup.hideBackButton || dialogSetup.hideSubmitButton ? 'flex-end' : 'space-between'">
+	@if (!dialogSetup.hideBackButton) {
+		<app-button-secondary [type]="buttonInput(dialogSetup.backButtonText, 'back')" (buttonClick)="close()"></app-button-secondary>
+	}
+	@if (!dialogSetup.hideSubmitButton) {
+		<app-button-primary [type]="buttonInput(dialogSetup.submitButtonText, 'submit', !form.valid)" (buttonClick)="submit()"></app-button-primary>
+	}
+</div>

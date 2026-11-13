@@ -1,0 +1,16 @@
+.linq-grid-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	padding: 4px 8px;
+}
+
+.linq-grid-filter-item mat-form-field {
+	width: 180px;
+	font-size: 12px;
+}
+
+.exporting-indicator {
+	color: #f47920;
+}

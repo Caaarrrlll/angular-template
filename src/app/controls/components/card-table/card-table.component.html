@@ -1,0 +1,67 @@
+<div class="table-filters">
+	<div class="table-filters">
+		<app-linq-grid-filters
+			[gridFilters]="filters"
+			[showSortButton]="showSortButton"
+			[showAddButton]="showAddButton"
+			[showCustomButton]="showCustomButton"
+			[customButtonTooltip]="customButtonTooltip"
+			[customButtonIcon]="customButtonIcon"
+			[showUpperToggle]="showUpperToggle"
+			[upperToggle]="upperToggle"
+			(refreshClicked)="refreshLeads()"
+			(clearButtonClicked)="filtersClear()"
+			(filterChanged)="updateFilter($event)"
+			(sortChanged)="updateSort($event)"
+			(addButtonClicked)="navigateToCreateLead()"
+			(filterRefresh)="filterRefresh($event)"
+			(customButtonClicked)="customButtonClicked()"
+			(upperToggleChanged)="upperToggleChange()"
+		>
+		</app-linq-grid-filters>
+	</div>
+</div>
+<div class="table-container">
+	@if (listObservable | apiResponse | async; as leads) {
+		<div class="table-wrapper">
+			@if (!leads.loading) {
+				<table mat-table [dataSource]="$any(leads.payload)" matSort [matSortActive]="defaultSort" [matSortDirection]="'desc'" (matSortChange)="announceSortChange($event)">
+					<ng-container matColumnDef="lead">
+						<th mat-header-cell *matHeaderCellDef class="sticky-header"></th>
+						<td mat-cell *matCellDef="let element">
+							<app-list-card
+								[data]="element"
+								[cardHeader]="cardHeader"
+								[tableButtonConfig]="tableButtonConfig"
+								[tableConfig]="tableConfig"
+								[tablePropertiesConfig]="tablePropertiesConfig"
+								[parentDataProcess]="parentDataProcess"
+								[parentButtonProcess]="parentButtonProcess"
+								[claims]="claims"
+								[spinner]="spinner"
+								(buttonClick)="buttonAction($event)"
+							></app-list-card>
+						</td>
+					</ng-container>
+					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+					<tr id="{{ row.stockNumber }}" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+				</table>
+			}
+			@if (leads.loading) {
+				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
+			}
+			@if (leads.error) {
+				<p style="padding-left: 20px">Error retrieving data from the server</p>
+			}
+		</div>
+		<div class="paginator">
+			<mat-paginator
+				(page)="pageChange($event)"
+				[length]="custPage.pageTotal"
+				[pageIndex]="custPage.page"
+				[pageSize]="custPage.pageSize"
+				[pageSizeOptions]="custPage.pageSizeOptions"
+			></mat-paginator>
+		</div>
+	}
+</div>

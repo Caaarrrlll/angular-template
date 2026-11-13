@@ -1,0 +1,333 @@
+<div class="table-container">
+	@if (filters != null) {
+		<div class="table-filters">
+			<app-linq-grid-filters
+				(filterChanged)="buttonEmit($event, 'updateFilters')"
+				(refreshClicked)="buttonEmit(filters, 'Refresh')"
+				[gridFilters]="filters"
+				[showCustomButton]="showCustomButton"
+				[showAddButton]="showAddButton"
+				[selectableColumns]="selectableColumns"
+				[displayedColumns]="columnsToDisplayWithExpand"
+				(customButtonClicked)="buttonEmit(null, 'exportToExcel')"
+				(addButtonClicked)="buttonEmit(null, 'add')"
+				(displayedColumnsChanged)="buttonEmit($event, 'displayedColumnsChanged')"
+				[exporting]="exporting"
+			></app-linq-grid-filters>
+		</div>
+	}
+
+	@if (listObservable | apiResponse | async; as listObs) {
+		<div class="table-wrapper" [class.table-wrapper-height-no-filter]="filters == null" [class.table-wrapper-height]="filters != null">
+			<table
+				mat-table
+				[dataSource]="$any(listObs.payload)"
+				matSort
+				multiTemplateDataRows
+				[matSortActive]="defaultSort"
+				[matSortDirection]="'desc'"
+				(matSortChange)="announceSortChange($event)"
+			>
+				@for (col of displayedColumns; track col; let i = $index) {
+					<ng-container matColumnDef="{{ col }}" [sticky]="tableConfig[i].sticky">
+						<th
+							mat-header-cell
+							*matHeaderCellDef
+							mat-sort-header="{{ col }}"
+							class="col-width"
+							style="--width: {{ tableConfig[i].width }}"
+							[disabled]="tableConfig[i].disableSort"
+						>
+							@if (!tableConfig[i].type?.includes("button")) {
+								{{ tableConfig[i].display }}
+							}
+						</th>
+						@switch (tableConfig[i].type) {
+							@case ("text") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									{{ element[col] }}
+								</td>
+							}
+							@case ("titleText") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									{{ (element[col] ?? "None") | titlecase }}
+								</td>
+							}
+							@case ("spaceUpperCase") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									{{ (element[col] ?? "None") | spaceBetweenUppercase }}
+								</td>
+							}
+							@case ("date") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									{{ element[col] | date: "yyyy/MM/dd" }}
+								</td>
+							}
+							@case ("dateTime") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									{{ element[col] | date: "yyyy/MM/dd HH:mm" : tableConfig[i].timeZone }}
+								</td>
+							}
+							@case ("dateInPast") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="isDateInPast(element[col]) ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="isDateInPast(element[col]) ? '800' : '400'"
+								>
+									{{ element[col] | date: "yyyy/MM/dd" }}
+								</td>
+							}
+							@case ("timeAgo") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									@if (element[col]) {
+										{{ element[col] | date: "yyyy/MM/dd" }} ({{ element[col] | date: "yyyy/MM/dd HH:mm" | dayAndHours }})
+									}
+								</td>
+							}
+							@case ("currency") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									<app-currency [amount]="element[col]"></app-currency>
+								</td>
+							}
+							@case ("booleanInverse") {
+								<td mat-cell *matCellDef="let element">
+									@if (!element[col]) {
+										<mat-icon style="color: #75bf44">check</mat-icon>
+									}
+									@if (element[col]) {
+										<mat-icon style="color: #ff3826">close</mat-icon>
+									}
+								</td>
+							}
+							@case ("boolean") {
+								<td mat-cell *matCellDef="let element">
+									@if (element[col]) {
+										<mat-icon style="color: #75bf44">check</mat-icon>
+									}
+									@if (!element[col]) {
+										<mat-icon style="color: #ff3826">close</mat-icon>
+									}
+								</td>
+							}
+							@case ("yesNo") {
+								<td mat-cell *matCellDef="let element">
+									@if (element[col]) {
+										<span>Yes</span>
+									}
+									@if (!element[col]) {
+										<span>No</span>
+									}
+								</td>
+							}
+							@case ("yesNoInverted") {
+								<td mat-cell *matCellDef="let element">
+									@if (element[col]) {
+										<span style="color: red">Yes</span>
+									}
+									@if (!element[col]) {
+										<span>No</span>
+									}
+								</td>
+							}
+							@case ("odometer") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									{{ element[col] | thousandSeparator | postfix: "km" : true }}
+								</td>
+							}
+							@case ("buttonConditional") {
+								<td mat-cell *matCellDef="let row">
+									@if (row[tableConfig[i].colName]) {
+										<app-button-tertiary [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-tertiary>
+									}
+								</td>
+							}
+							@case ("buttonTertiary") {
+								<td mat-cell *matCellDef="let row">
+									<app-button-tertiary [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-tertiary>
+								</td>
+							}
+							@case ("buttonPrimary") {
+								<td mat-cell *matCellDef="let row">
+									<app-button-primary [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-primary>
+								</td>
+							}
+							@case ("button") {
+								<td mat-cell *matCellDef="let row">
+									<app-button-secondary [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-secondary>
+								</td>
+							}
+							@case ("percentage") {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									{{ element[col] | postfix: (element[col] !== "" ? "%" : "") }}
+								</td>
+							}
+							@case ("probabilityReverse") {
+								<td mat-cell *matCellDef="let element">{{ 1 - element[col] | percent }}</td>
+							}
+							@case ("textLink") {
+								<td mat-cell *matCellDef="let row" style="cursor: pointer" (click)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)">
+									<u>{{ row[col] }}</u>
+								</td>
+							}
+							@case ("textLinkCurrency") {
+								<td mat-cell *matCellDef="let row" style="cursor: pointer" (click)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)">
+									<u>
+										<app-currency [amount]="row[col]"></app-currency>
+									</u>
+								</td>
+							}
+							@case ("dictionary") {
+								<td mat-cell *matCellDef="let element; let j = dataIndex">
+									{{ tableConfig[i]?.dictionary?.[element[col]] }}
+								</td>
+							}
+							@case ("favouriteButton") {
+								<td mat-cell *matCellDef="let row">
+									<app-button-tertiary
+										[type]="tableButton(tableConfig[i], row[col] ? 'star' : 'star_border', '')"
+										(buttonClick)="buttonEmit(row, tableConfig[i].display)"
+									></app-button-tertiary>
+								</td>
+							}
+							@case ("listPopupHover") {
+								<td mat-cell *matCellDef="let element; let j = dataIndex" (mouseover)="mouseOver(j, col)" (mouseleave)="mouseLeave()">
+									@if (element[col].length > 1) {
+										{{ element[col][0] }}, ...
+									}
+									@if (element[col].length === 1) {
+										{{ element[col][0] }}
+									}
+									@if (currentHover.index === j && currentHover.column === col && element[col].length > 0) {
+										<div class="card-popup">
+											@for (item of element[col]; track $index) {
+												<div class="list-item">{{ item }}</div>
+											}
+										</div>
+									}
+								</td>
+							}
+							@default {
+								<td
+									mat-cell
+									*matCellDef="let element; let j = dataIndex"
+									[style.color]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? tableConfig[i]?.highlightColor?.[j] : '#000'"
+									[style.font-weight]="(tableConfig[i]?.highlightColor?.length ?? 0) > 0 && tableConfig[i]?.highlightColor?.[j] ? '800' : '400'"
+								>
+									{{ element[col] }}
+								</td>
+							}
+						}
+					</ng-container>
+				}
+
+				<ng-container matColumnDef="expand" sticky>
+					<th style="width: 2em" mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+					<td mat-cell *matCellDef="let element">
+						@if (element.expandable) {
+							<button
+								mat-flat-button
+								aria-label="expand row"
+								(click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation(); setInjector(element)"
+							>
+								@if (expandedElement !== element) {
+									<mat-icon>keyboard_arrow_down</mat-icon>
+								}
+								@if (expandedElement === element) {
+									<mat-icon>keyboard_arrow_up</mat-icon>
+								}
+							</button>
+						}
+					</td>
+				</ng-container>
+
+				<ng-container matColumnDef="expandedDetail" sticky>
+					<td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+						<div class="element-detail" [class.expanded]="element === expandedElement">
+					@if (element.expandable && template) {
+						<ng-container *ngComponentOutlet="template.componentType; injector: myInjector">element</ng-container>
+					}
+						</div>
+					</td>
+				</ng-container>
+
+				<tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand; sticky: true"></tr>
+				<tr
+					id="{{ row.stockNumber }}"
+					mat-row
+					*matRowDef="let row; columns: columnsToDisplayWithExpand"
+					class="element-row"
+					[class.selected]="row === selectedVehicle || row.stockNumber === scrollToId"
+				></tr>
+				<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+				<tr class="mat-row" *matNoDataRow>
+					<td class="mat-cell">No records available</td>
+				</tr>
+			</table>
+
+			@if (listObs.error) {
+				<div style="padding: 5px">No data</div>
+			}
+			@if (listObs.loading) {
+				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
+			}
+		</div>
+	}
+
+	@if (hasPagination && custPage) {
+		<div class="paginator">
+			<mat-paginator
+				(page)="buttonEmit($event, 'pageChange')"
+				[length]="custPage.pageTotal"
+				[pageIndex]="custPage.page"
+				[pageSize]="custPage.pageSize"
+				[pageSizeOptions]="custPage.pageSizeOptions"
+			></mat-paginator>
+		</div>
+	}
+</div>

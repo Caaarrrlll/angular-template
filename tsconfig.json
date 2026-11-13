@@ -25,7 +25,8 @@
       "@shared/directives/*": ["./src/app/library/directives/*"],
       "@shared/pipes/*": ["./src/app/library/pipes/*"],
       "@shared/services/*": ["./src/app/library/services/*"],
-      "@shared/validators/*": ["./src/app/library/validators/*"]
+      "@shared/validators/*": ["./src/app/library/validators/*"],
+      "@shared/interceptors/*": ["./src/app/library/interceptors/*"]
     },
     "useDefineForClassFields": false
   },

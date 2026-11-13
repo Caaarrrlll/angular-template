@@ -1,0 +1,575 @@
+<mat-card>
+	<mat-card-header>
+		<div class="row">
+			@for (headCol of cardHeaders; track $index) {
+				<div class="column-header" [style.--alignment]="headCol.alignment">
+					@if (headCol.type === "boldText") {
+						<div class="no-wrap-text header-text">
+							<span>
+								<b
+									[style]="{
+										'font-size': headCol.fontSize ? headCol.fontSize : '17px',
+										'padding-left': '4px',
+										color: headCol.textColor ? headCol.textColor : '#000'
+									}"
+									>{{ headCol.text }}</b
+								>
+							</span>
+						</div>
+					}
+					@if (headCol.type === "Display") {
+						<div class="no-wrap-text header-text">
+							<b
+								[style]="{
+									'font-size': headCol.fontSize ? headCol.fontSize : '17px',
+									'padding-left': '4px',
+									color: headCol.textColor ? headCol.textColor : '#000'
+								}"
+							>
+								@if (headCol.textPre) {
+									<span class="header-pre-text"><b>{{ headCol.textPre }} - {{ headCol.text }}</b></span>
+								}
+								@if (headCol.textPre) {
+									<span class="header-pre-text-devider">|</span>
+								}
+								@if (!headCol.textPre && !headCol.clickAction) {
+									<span [style.color]="headCol.textColor ? headCol.textColor : '#000'">
+										{{ headCol.text }}
+									</span>
+								}
+								@if (!headCol.textPre && headCol.clickAction) {
+									<span [style.color]="headCol.textColor ? headCol.textColor : '#000'" (click)="buttonAction(headCol.clickAction)" class="text-link">
+										{{ headCol.text }}
+									</span>
+								}
+								@if (headCol.icon) {
+									<mat-icon class="header-icons">{{ headCol.icon }}</mat-icon>
+								}
+								@if (headCol.textExtended) {
+									<span class="header-pre-text-devider">|</span>
+									<span [style.color]="headCol.textColor ? headCol.textColor : '#000'">{{ headCol.textExtended }}</span>
+								}
+							</b>
+						</div>
+					}
+					@if (headCol.type === "status") {
+						<div>
+							@if (headCol.text.length) {
+								<span class="column-header-status" [style.--alignment]="headCol.alignment">
+									<app-chip-status [text]="headCol.text" [type]="headCol.statusType ?? ''"></app-chip-status>
+								</span>
+							}
+						</div>
+					}
+					@if (headCol.type === "chipsStatus") {
+						<div>
+							@if (headCol.text.length) {
+								<span class="column-header-status">
+									<app-chip-status [text]="headCol.text" [type]="headCol.statusType ?? ''" [showSolid]="false" [isSmall]="false"></app-chip-status>
+								</span>
+							}
+						</div>
+					}
+				</div>
+			}
+			@if (tableHeaderMenu) {
+				<div style="padding-top: 5px">
+					@if (tableHeaderMenu.action) {
+						<div class="header-button">
+							<app-button-v2 [type]="headerButton(tableHeaderMenu)" (buttonClick)="buttonAction(tableHeaderMenu.action)"></app-button-v2>
+						</div>
+					}
+
+					@if (!tableHeaderMenu.action) {
+						<div class="dropdown">
+							<button class="dropbtn" (click)="getMenu(tableHeaderMenu.id)">
+								<mat-icon>{{ tableHeaderMenu.icon }}</mat-icon>
+							</button>
+							<div class="dropdown-content" [id]="tableHeaderMenu.id" style="padding-top: 16px; padding-bottom: 26px">
+								@for (menu of tableHeaderMenu.items; track $index) {
+									<div style="padding-left: 12px; padding-right: 12px">
+										<a style="border-bottom: 1px #e8ece9 solid; padding: 8px; cursor: pointer; height: 20px" (click)="menuClick(menu.action)">{{ menu.display }}</a>
+									</div>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</mat-card-header>
+	<mat-card-content>
+		<div class="card-height" [style.--height]="tableProperties.height">
+			@if (!data) {
+				<div style="padding-left: 8px">
+					<app-button-primary
+						[type]="{
+							type: '',
+							icon: '',
+							tooltip: '',
+							display: errorActionButton,
+							value: errorActionButton,
+							disabled: false,
+							isTableButton: false,
+							width: '160px'
+						}"
+						(buttonClick)="buttonAction(errorActionButton)"
+					></app-button-primary>
+				</div>
+			}
+			@for (row of cardRows; track $index) {
+				<div
+					class="{{ row.colSCSS }} col-left column"
+					[style]="{
+						'--col-width': row.width ?? '100%',
+						'--height': maxLines * 30 + 'px'
+					}"
+				>
+					<div>
+						@for (detail of row.item; track $index) {
+							@switch (detail.type) {
+								@case ("heading") {
+									<p class="text-link-underlined paragraph-heading">{{ detail.value }}</p>
+								}
+								@case ("boldText") {
+									<div class="left-text-border content-font content-height">
+										<div class="no-wrap-text" [title]="detail.value">
+											<b>{{ detail.value }}</b>
+										</div>
+									</div>
+								}
+								@case ("boolean") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 10 + 'px'">
+												<b>{{ detail.label }} </b>
+											</div>
+										}
+										@if (!detail.label) {
+											<div>
+												@if (detail.extendedText) {
+													<div class="content-font content-height" style="float: left">
+														{{ detail.value }}
+													</div>
+												}
+											</div>
+										}
+										@if (detail.label) {
+											<div
+												class="float-container right-text-border content-font content-height"
+												[style]="{
+													'text-align': 'right',
+													color: detail.valueColor ? detail.valueColor : '#000',
+													'font-weight': detail.valueColor ? '700' : '400'
+												}"
+											>
+												@if (detail.value) {
+													<mat-icon class="icons-infront" style="color: green" (click)="buttonAction(detail.buttonClick ?? '')">check</mat-icon>
+												}
+												@if (!detail.value) {
+													<mat-icon class="icons-infront" style="color: red" (click)="buttonAction(detail.buttonClick ?? '')">close</mat-icon>
+												}
+											</div>
+										}
+									</div>
+								}
+								@case ("textWithEdit") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 10 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (!detail.label) {
+											<div>
+												@if (detail.extendedText) {
+													<div class="content-font content-height" style="float: left">{{ detail.value }}</div>
+												}
+											</div>
+										}
+										@if (detail.label) {
+											<div
+												class="float-child-rigth right-text-border content-font content-height"
+												[style]="{
+													'text-align': 'right',
+													color: detail.valueColor ? detail.valueColor : '#000',
+													'font-weight': detail.valueColor ? '700' : '400'
+												}"
+											>
+												<div class="no-wrap-text" [title]="detail.value">
+													@if (detail.buttonClick != null) {
+														<mat-icon class="icons-infront" (click)="buttonAction(detail.buttonClick ?? '')">edit</mat-icon>
+													}
+													{{ detail.value }}
+												</div>
+											</div>
+										}
+									</div>
+								}
+								@case ("displayList") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 10 + 'px'">
+												<b>{{ detail.label }} </b>
+											</div>
+										}
+										<div style="float: left" (mouseover)="mouseOver($event, displayList(detail))" (mouseleave)="mouseOff()">
+											<mat-icon class="icons-infront">remove_red_eye</mat-icon>
+										</div>
+									</div>
+								}
+								@case ("textClick") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 10 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (!detail.label) {
+											<div>
+												@if (detail.extendedText) {
+													<div class="content-font content-height" style="float: left">{{ detail.value }}</div>
+												}
+											</div>
+										}
+										@if (detail.label) {
+											<div
+												class="float-child-rigth right-text-border content-font content-height"
+												[style]="{
+													'text-align': 'right',
+													color: detail.valueColor ? detail.valueColor : '#000',
+													'font-weight': detail.valueColor ? '700' : '400'
+												}"
+											>
+												<div class="no-wrap-text text-link" [title]="detail.value" (click)="buttonAction(detail.buttonClick ?? '')">
+													{{ detail.value }}
+												</div>
+											</div>
+										}
+									</div>
+								}
+								@case ("textCombined") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 10 + 'px'">
+												<b>{{ detail.label }}</b> {{ detail.value }}
+											</div>
+										}
+										@if (detail.buttonClick) {
+											<div>
+												<app-button-primary [type]="tableButton(detail, '150px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button-primary>
+											</div>
+										}
+									</div>
+								}
+								@case ("text") {
+									@if (detail.value !== "N/A") {
+										<div class="float-container left-text-border content-font content-height">
+											@if (detail.label) {
+												<div class="float-child-left" [style.width]="detail.label.length * 10 + 'px'">
+													<b>{{ detail.label }}</b>
+												</div>
+											}
+											@if (!detail.label) {
+												<div>
+													@if (detail.extendedText) {
+														<div class="content-font content-height" style="float: left">
+															{{ detail.value }}
+														</div>
+													}
+												</div>
+											}
+											@if (detail.label) {
+												<div
+													class="float-child-rigth right-text-border content-font content-height"
+													[style]="{
+														'text-align': 'right',
+														color: detail.valueColor ? detail.valueColor : '#000',
+														'font-weight': detail.valueColor ? '700' : '400'
+													}"
+												>
+													<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
+												</div>
+											}
+										</div>
+									}
+								}
+								@case ("chipsStatus") {
+									@if (detail.value && detail.value.length > 0) {
+										<div class="float-container-chip content-font content-height" style="padding-left: 5px; height: 20px">
+											<div class="float-child content-font content-height">
+												<b>{{ detail.label }}</b>
+											</div>
+											<div class="float-child-2 content-height">
+												<app-chip-status [text]="detail.value" [type]="detail.valueColor ?? ''" [isSmall]="true"></app-chip-status>
+											</div>
+										</div>
+									}
+								}
+								@case ("coloredText") {
+									<p class="left-text-border content-font content-height">
+										<b [style.color]="detail.extendedColour ? detail.extendedColour : '#000000'">{{ detail.value }}</b>
+									</p>
+								}
+								@case ("money") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="float-child-rigth currency-text content-font content-height">
+												<app-currency [amount]="detail.value"></app-currency>
+											</div>
+										}
+									</div>
+								}
+								@case ("date") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 8 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="content-font content-height right-text-border-ext">
+												{{ detail.value | date: dateFormat }}
+											</div>
+										}
+									</div>
+								}
+								@case ("IdNumber") {
+									@if (detail.value) {
+										<div class="float-container left-text-border content-font content-height">
+											@if (detail.label) {
+												<div class="float-child-left" [style.width]="detail.label.length * 15 + 'px'">
+													<b>{{ detail.label }}</b>
+												</div>
+											}
+											@if (detail.label) {
+												<div
+													class="float-child-rigth right-text-border content-font content-height"
+													[style]="{
+														'text-align': 'right',
+														color: detail.valueColor ? detail.valueColor : '#000',
+														'font-weight': detail.valueColor ? '700' : '400'
+													}"
+												>
+													<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
+												</div>
+											}
+										</div>
+									}
+								}
+								@case ("phone") {
+									@if (detail.value) {
+										<div class="float-container left-text-border content-font content-height">
+											@if (detail.label) {
+												<div class="float-child-left" [style.width]="detail.label.length * 15 + 'px'">
+													<b>{{ detail.label }}</b>
+												</div>
+											}
+											@if (detail.label) {
+												<div
+													class="float-child-rigth right-text-border content-font content-height"
+													[style]="{
+														'text-align': 'right',
+														color: detail.valueColor ? detail.valueColor : '#000',
+														'font-weight': detail.valueColor ? '700' : '400'
+													}"
+												>
+													<div class="no-wrap-text" [title]="detail.value">
+														<mat-icon class="inline-icons-before-value" style="color: #f57c00">phone</mat-icon>
+														{{ detail.value }}
+													</div>
+												</div>
+											}
+										</div>
+									}
+								}
+								@case ("phoneText") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 8 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="content-font content-height right-text-border-ext">
+												<a style="color: #000" [href]="'tel:' + detail.value" target="_top">
+													{{ detail.value }}
+												</a>
+											</div>
+										}
+									</div>
+								}
+								@case ("mail") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 15 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div
+												class="float-child-rigth right-text-border content-font content-height"
+												[style]="{
+													'text-align': 'right',
+													color: detail.valueColor ? detail.valueColor : '#000',
+													'font-weight': detail.valueColor ? '700' : '400'
+												}"
+											>
+												<div class="no-wrap-text" [title]="detail.value">
+													<mat-icon class="inline-icons-before-value" style="color: #f57c00">mail</mat-icon>
+													{{ detail.value }}
+												</div>
+											</div>
+										}
+									</div>
+								}
+								@case ("mailText") {
+									<div class="float-container left-text-border content-font content-height no-wrap-text">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 8 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="content-font content-height right-text-border-ext">
+												<a style="color: #000" [href]="'mailto:' + detail.value + '?Subject=Information for ' + detail.value" target="_top">
+													{{ detail.value }}
+												</a>
+											</div>
+										}
+									</div>
+								}
+								@case ("textLink") {
+									<div class="float-container left-text-border content-font content-height no-wrap-text">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 8 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="content-font content-height right-text-border-ext">
+												<a style="color: #000" [href]="detail.url" target="_top">
+													{{ detail.value }}
+												</a>
+											</div>
+										}
+									</div>
+								}
+								@case ("store") {
+									<div class="float-container left-text-border content-font content-height">
+										<mat-icon class="inline-icons">storefront</mat-icon> {{ detail.value }}
+									</div>
+								}
+								@case ("textWithColorBlock") {
+									{{ detail.value }}
+									<div class="colored-block" [style.background-color]="detail.coloredBlock"></div>
+								}
+								@case ("iconWithDisplay") {
+									<div [title]="detail.iconTooltip">
+										<mat-icon class="inline-icons">{{ detail.iconName }}</mat-icon> {{ detail.value }}
+									</div>
+								}
+								@case ("buttonAction") {
+									<p [title]="detail.iconTooltip">
+										<mat-icon class="inline-icons">{{ detail.iconName }}</mat-icon>
+									</p>
+								}
+								@case ("image") {
+									<div class="float-container left-text-border content-font content-height no-wrap-text">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 8 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+										}
+										@if (detail.label) {
+											<div class="content-font content-height right-text-border-ext">
+												<img [src]="detail.value" [title]="detail.value" />
+											</div>
+										}
+									</div>
+								}
+								@case ("button") {
+									<div class="float-container left-text-border content-font content-height">
+										@if (detail.label) {
+											<div class="float-child-left" [style.width]="detail.label.length * 10 + 'px'">
+												<b>{{ detail.label }}</b>
+											</div>
+											<div
+												class="float-child-rigth right-text-border content-font content-height"
+												[style]="{
+													'text-align': 'right',
+													color: detail.valueColor ? detail.valueColor : '#000',
+													'font-weight': detail.valueColor ? '700' : '400'
+												}"
+											>
+												<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
+											</div>
+											<div [style.width]="detail.label.length * 10 + 'px'">
+												<app-button-primary [type]="tableButton(detail, '110px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button-primary>
+											</div>
+										}
+										@if (!detail.label) {
+											<div>
+												@if (detail.extendedText) {
+													<div class="content-font content-height" style="float: left">
+														{{ detail.value }}
+													</div>
+												}
+											</div>
+										}
+									</div>
+								}
+								@case ("paragraph") {
+									<div class="display-paragraph" [style.--height]="tableProperties.height">
+										{{ detail.value }}
+									</div>
+								}
+								@default {
+									<p>Type {{ detail.type }} not found for {{ detail.label }}</p>
+								}
+							}
+						}
+					</div>
+				</div>
+			}
+		</div>
+		@if (footerChips) {
+			<div class="chip-footer">
+				<div class="chip-footer-item">
+					<b>{{ footerChips.label }}</b>
+				</div>
+				@for (footerChip of footerChips.chipList; track $index) {
+					<div class="chip-footer-item">
+						<app-chip-status [text]="footerChip.display" type="Default" [isSmall]="true" [showSolid]="true"></app-chip-status>
+					</div>
+				}
+			</div>
+		}
+	</mat-card-content>
+</mat-card>
+
+@if (showDetailCard) {
+	<div class="baseball-card-popup" [style.top]="top + 'px'" [style.left]="left + 'px'">
+		<span><b>Uploaded Documents:</b></span>
+		<mat-divider style="margin-top: 5px; margin-bottom: 5px"></mat-divider>
+
+		@if (displayDetails.length <= 1) {
+			<span><li>No Documents</li></span>
+		}
+
+		@if (displayDetails.length > 1) {
+			<div>
+				@for (doc of displayDetails; track $index) {
+					<ul>
+						<li>{{ doc.ficaUploadedDocName }}</li>
+					</ul>
+				}
+			</div>
+		}
+	</div>
+}

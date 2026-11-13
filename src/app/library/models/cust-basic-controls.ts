@@ -78,6 +78,11 @@ export interface CustButtonInputType {
 	parameters?: string[];
 }
 
+export interface CustButtonMenuItem {
+	text: string;
+	disabled?: boolean;
+}
+
 export interface CustInputAdvance {
 	inputControl: FormControl;
 	validations: ValidatorFn[];

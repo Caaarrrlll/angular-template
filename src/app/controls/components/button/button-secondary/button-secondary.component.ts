@@ -3,7 +3,7 @@ import { ButtonV2Component } from "../button-v2/button-v2.component";
 import { CustButtonInput, CustButtonType, CustChipReturn, CustInputReturn } from "@shared/models/cust-basic-controls";
 
 @Component({
-	selector: "app-button-primary",
+	selector: "app-button-secondary",
 	templateUrl: "./button-secondary.component.html",
 	imports: [ButtonV2Component],
 	changeDetection: ChangeDetectionStrategy.OnPush,
