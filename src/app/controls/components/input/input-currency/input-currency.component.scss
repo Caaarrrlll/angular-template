@@ -1,9 +1,11 @@
+@use "tokens" as *;
+
 .currency-symbol {
-	color: #75828e;
+	color: $color-blue-gray-light;
 }
 
 .button-icon {
-	color: #75828e;
+	color: $color-blue-gray-light;
 	height: unset;
 	width: unset;
 	cursor: pointer;

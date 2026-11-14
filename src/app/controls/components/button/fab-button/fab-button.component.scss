@@ -1,9 +1,11 @@
+@use "tokens" as *;
+
 .container {
 	opacity: 70% !important;
 	display: grid;
 	place-items: center;
 	position: fixed;
-	background-color: #f47920;
+	background-color: $color-orange;
 	width: 60px;
 	height: 60px;
 	border-radius: 100%;

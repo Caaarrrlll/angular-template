@@ -1,5 +1,7 @@
-$border-color: #f2f2f2;
-$deep-orange: #ff5722;
+@use "tokens" as *;
+
+$border-color: $color-gray-lightest;
+$deep-orange: $color-red-orange;
 .select-box {
 	position: relative;
 	display: flex;
@@ -9,8 +11,8 @@ $deep-orange: #ff5722;
 }
 
 .select-box .options-container {
-	background: #ffffff;
-	color: #1b2935;
+	background: $color-white;
+	color: $color-navy;
 	max-height: 0;
 	width: 100%;
 	opacity: 0;
@@ -61,12 +63,12 @@ $deep-orange: #ff5722;
 
 .select-box .option:hover {
 	background: #414b57;
-	color: #ffffff;
+	color: $color-white;
 }
 
 .selected {
-	background: #ffffff;
-	color: #1b2935;
+	background: $color-white;
+	color: $color-navy;
 	border-radius: 5px;
 	margin-bottom: 8px;
 	position: relative;

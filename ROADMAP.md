@@ -69,10 +69,38 @@ Priority order: current signals migration first, then these, then the navigation
 - Sweep the entire project's CSS: remove dead/unused styles, deduplicate repeated rules across controls, normalize spacing/naming conventions.
 - Work control-by-control with a sandbox visual check per batch (same cadence as the signals migration).
 
+#### Survey (2026-11-14)
+
+- 61 `.scss`/`.css` files, ~50 KB total, all component-scoped; global `styles.scss` is tiny (~40 lines, snackbar theming only).
+- **Zero shared SCSS foundation** — no `_variables`, no mixins, no utility partials anywhere.
+- Hardcoded color duplication (top counts): white `#fff`/`#ffffff` ×58, brand orange `#f47920` ×25 with five near-variants in use (`c5580a`, `f79147`, `e6670b`, `e25e00`, `ed6c02`), dark navy `#1b2935` ×19 plus variants (`18242e`, `2d4559`, `444c53`), assorted grays with near-duplicates (`dcdcdc`/`dedede`/`f2f2f2`).
+- Identical rules copy-pasted across components (e.g. `.show-pointer` in all three key-value variants); minor inconsistency: `#fff` vs `#ffffff` for the same white.
+- Material prebuilt theme `indigo-pink.css`; components override with hardcoded hex values.
+
+#### Plan (phases)
+
+1. **Phase 0 — token foundation:** create `src/app/library/styles/_tokens.scss` (brand palette incl. orange + its intentional variants, navy scale, grays, status colors matching the snackbar theming) and `_utilities.scss` (shared rules like `.show-pointer`); make it importable via angular.json `stylePreprocessorOptions.includePaths`. No dependencies added — plain SCSS.
+2. **Phase 1 — token replacement (done 2026-11-14):** replace hex literals with tokens, highest-traffic colors first (white → orange → navy → grays). Batch by control family, `ng build` + sandbox visual check per batch; decicions on near-variants (keep as named tokens vs unify) get recorded when first hit. Result: batches ran by color group instead of control family (white/black, orange incl. `rgba` for `#e25e0098`, navy/charcoal/slate/blue-gray, grays, semantic greens/reds/blues); 30 component scss files + `styles.scss` verified to `@use "tokens" as *;` and build + prettier verified per batch. Remaining literal hex in component scss = documented per-file singletons only (`_tokens.scss` comments list them). Deferred: hex inside HTML inline styles (chips, dynamic-material-dialog, drag-drop-file-upload, table check/close icons) and the tab-group TS default `--tab-label-hover-color` — those can't reference SCSS tokens until the styles move into scss/ts with real tokens.
+3. **Phase 2 — dedupe copy-pasted rules:** identical rules move into `_utilities.scss`/mixins and are `@include`d (keeps component encapsulation; avoids global-class collision risk). Only dedupe when rules are truly identical.
+4. **Phase 3 — dead-style removal:** per file, grep each selector against the component template before deleting; start with the largest files (list-card, info-card, gallery). Also delete the orphan `select/select/` scss/html/ts leftovers.
+5. **Phase 4 — naming normalization (optional, lowest priority):** only inside files already touched; keep selectors stable otherwise.
+
+#### Risks
+
+- View encapsulation: shared utilities must not rely on `::ng-deep`; `:host` contexts differ per component.
+- Token values must match the old hex exactly (case/variant) — verify visually per batch, not just by build.
+- Global utility classes could collide with Angular Material internals — prefer component-level `@use` + `@include` over global classes.
+- Material prebuilt theme overrides: snackbar colors live in `styles.scss`; keep them as status-color tokens, not touched per component.
+
 ### Button family merge investigation
 
 - Investigate how `button-primary`, `button-secondary` and `button-tertiary` can be merged — their differences are minimal (essentially styling), so a single parameterized control could replace the trio.
 - Compare against `button-v2`/`button-text` first: the end state may be one small button control family instead of five variants.
+
+### Sandbox flesh-out
+
+- Extend the sandbox (`/sandbox`, dev only) so every control in `src/app/controls` has a demo entry covering its inputs, outputs and visual states — today some controls have no demo at all, which makes migrations (like the button merge above) risky to verify.
+- Do this after the button family merge so merged/renamed controls only need demos once; the CSS cleanup batches below can then use the completed sandbox for their visual checks.
 
 ## Navigation service (TBD)
 

@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .tabs-container {
 	position: relative;
 	width: 150px;
@@ -6,22 +8,22 @@
 		display: contents;
 		position: relative;
 		padding: 10px;
-		color: #fff;
+		color: $color-white;
 		cursor: pointer;
 		list-style-type: none;
 		user-select: none;
 		> li {
 			&.active {
-				background-color: #1b2935;
-				color: #ffffff;
+				background-color: $color-navy;
+				color: $color-white;
 				&:hover {
-					background: #1b2935;
+					background: $color-navy;
 				}
 			}
 			> mat-icon {
 				margin: 7px 0 0 5px;
 				float: left;
-				color: #f47920;
+				color: $color-orange;
 				font-size: 26px;
 			}
 			> p {
@@ -53,22 +55,22 @@
 		display: contents;
 		position: relative;
 		padding: 10px;
-		color: #fff;
+		color: $color-white;
 		cursor: pointer;
 		list-style-type: none;
 		user-select: none;
 		> li {
 			&.active {
-				background-color: #1b2935;
-				color: #ffffff;
+				background-color: $color-navy;
+				color: $color-white;
 				&:hover {
-					background: #1b2935;
+					background: $color-navy;
 				}
 			}
 			> mat-icon {
 				margin: 7px 0 0 5px;
 				float: left;
-				color: #f47920;
+				color: $color-orange;
 				font-size: 26px;
 				display: inline;
 			}

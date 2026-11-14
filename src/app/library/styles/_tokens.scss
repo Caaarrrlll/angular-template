@@ -1,0 +1,67 @@
+// Design tokens — single source of truth for the project palette.
+// Values mirror the pre-cleanup hex literals exactly; near-variants stay separate
+// until a Phase 1 batch decides whether to unify them.
+// Colors that appear in only one file stay literal there for now.
+// Usage: `@use "tokens" as *;` (angular.json `stylePreprocessorOptions.includePaths`
+// points at this folder).
+
+// Neutrals
+$color-white: #fff;
+$color-black: #000;
+
+// Brand orange
+$color-orange: #f47920;
+$color-orange-light: #f79147;
+$color-orange-dark: #c5580a;
+$color-orange-deep: #e6670b;
+$color-orange-alt: #ef6c00;
+$color-orange-selected: #e25e00; // alpha variant replaces `#e25e0098` via rgba($color-orange-selected, 0.6)
+
+// Status (used by the snackbar theming in styles.scss)
+$color-info: #0288d1;
+$color-success: #2e7d32;
+$color-warning: #ed6c02;
+$color-error: #d32f2f;
+
+// Greens
+$color-green: #17aa57;
+$color-green-light: #75bf44;
+$color-green-lime: #bcd139;
+
+// Reds
+$color-red: #d50000;
+$color-red-dark: #dc0000;
+$color-red-bright: #ff3826;
+$color-red-crimson: #db203f;
+$color-red-orange: #ff5722;
+
+// Blues (mid tones used in cards/dialogs)
+$color-blue: #65a1c3;
+$color-blue-alt: #4f94bb;
+
+// Navy / dark scale (darkest → lightest)
+$color-navy-darkest: #0d141f;
+$color-navy: #1b2935;
+$color-navy-dark: #293640;
+$color-navy-mid: #2d4559;
+$color-navy-steel: #3f607c;
+
+// Charcoals / blue-grays (dark → light)
+$color-charcoal: #38424c;
+$color-charcoal-light: #3d444d;
+$color-slate: #444c53;
+$color-slate-light: #4e525c;
+$color-slate-mid: #525861;
+$color-blue-gray: #6d767e;
+$color-blue-gray-light: #75828e;
+
+// Grays (light → dark)
+$color-gray-lightest: #f2f2f2; // near-dups #f3f3f3 / #ecebed stay literal until a Phase 1 batch unifies them
+$color-gray-light: #dcdcdc;
+$color-gray-light-alt: #dedede;
+$color-gray-shorthand: #ddd; // note: #ddd = #dddddd, NOT the same value as #dcdcdc
+$color-gray: #979797;
+$color-gray-mid: #8f8f8f;
+$color-gray-mid-alt: #8a8a92;
+$color-gray-mid-dark: #888888;
+$color-gray-dark: #404040;

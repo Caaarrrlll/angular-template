@@ -1,5 +1,7 @@
+@use "tokens" as *;
+
 .button-icon {
-	color: #75828e;
+	color: $color-blue-gray-light;
 	height: unset;
 	width: unset;
 	cursor: pointer;

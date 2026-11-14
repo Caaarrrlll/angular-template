@@ -1,8 +1,10 @@
+@use "tokens" as *;
+
 .card-header {
 	position: relative;
-	background: #1b2935;
+	background: $color-navy;
 	border-radius: 0px 10px 0px 0px;
-	color: #ffffff;
+	color: $color-white;
 	text-align: center;
 	font-family: Roboto;
 	font-style: normal;
@@ -18,11 +20,11 @@
 }
 
 .red {
-	background: #d50000;
+	background: $color-red;
 }
 
 .green {
-	background: #bcd139;
+	background: $color-green-lime;
 }
 
 .white {
@@ -31,7 +33,7 @@
 }
 
 .orange {
-	background: #f47920;
+	background: $color-orange;
 }
 
 .gray {

@@ -1,10 +1,12 @@
+@use "tokens" as *;
+
 .kv-container {
 	display: flex;
 	flex-direction: column;
 	margin-bottom: 8px;
 
 	.key {
-		color: #f47920;
+		color: $color-orange;
 		font-size: small;
 	}
 
@@ -31,7 +33,7 @@
 	margin-bottom: 8px;
 
 	.key {
-		color: #f47920;
+		color: $color-orange;
 		min-width: 50%;
 		font-size: smaller;
 		text-align: right;
@@ -39,7 +41,7 @@
 	}
 
 	.value::before {
-		color: #f47920;
+		color: $color-orange;
 	}
 
 	.value {

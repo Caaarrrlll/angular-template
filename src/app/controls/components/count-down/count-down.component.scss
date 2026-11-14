@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .red {
 	color: red;
 }
@@ -16,7 +18,7 @@
 	height: unset;
 	width: unset;
 	font-size: 20px;
-	color: #2d4559;
+	color: $color-navy-mid;
 }
 
 .text-container {

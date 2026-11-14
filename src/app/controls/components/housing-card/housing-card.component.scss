@@ -1,13 +1,15 @@
+@use "tokens" as *;
+
 mat-card-header {
 	padding: 1px !important;
 	height: 36px;
-	border-bottom: 1px solid #000;
+	border-bottom: 1px solid $color-black;
 }
 
 mat-card {
 	padding: 0 !important;
 	box-shadow: unset !important;
-	border: 1px solid #dedede;
+	border: 1px solid $color-gray-light-alt;
 	border-radius: 8px;
 	height: var(--card-height);
 }
@@ -30,7 +32,7 @@ mat-card-content {
 .housing-card-title {
 	font-size: 17px;
 	padding-left: 4px;
-	color: #444c53;
+	color: $color-slate;
 	font-weight: bold;
 }
 

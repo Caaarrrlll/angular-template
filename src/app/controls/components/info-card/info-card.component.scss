@@ -1,13 +1,15 @@
+@use "tokens" as *;
+
 .mat-card-header {
 	padding: 1px !important;
 	height: 36px;
-	border-bottom: 1px solid #000;
+	border-bottom: 1px solid $color-black;
 }
 
 .mat-card {
 	padding: 0 !important;
 	box-shadow: unset !important;
-	border: 1px solid #dedede;
+	border: 1px solid $color-gray-light-alt;
 	border-radius: 8px;
 }
 
@@ -51,7 +53,7 @@
 }
 
 .col-with-border-left {
-	border-right: 0.5px solid #dedede;
+	border-right: 0.5px solid $color-gray-light-alt;
 	padding-left: 8px;
 	padding-right: 16px;
 }
@@ -80,12 +82,12 @@
 }
 
 .header-pre-text {
-	color: #000;
+	color: $color-black;
 	font-weight: 400;
 }
 
 .header-pre-text-devider {
-	color: #fff;
+	color: $color-white;
 	padding: 0 5px;
 }
 
@@ -99,7 +101,7 @@
 	text-decoration: underline;
 
 	&:hover {
-		color: #e6670b;
+		color: $color-orange-deep;
 		cursor: pointer;
 	}
 }
@@ -194,7 +196,7 @@
 
 .inline-icons,
 .inline-icons-before-value {
-	color: #000;
+	color: $color-black;
 }
 
 .colored-block {
@@ -213,7 +215,7 @@
 	font-size: 16px;
 	border: none;
 	outline: none;
-	color: #000;
+	color: $color-black;
 	padding-top: 4px;
 	background-color: inherit;
 	font-family: inherit;
@@ -222,15 +224,15 @@
 
 .dropdown:hover .dropbtn,
 .dropbtn:focus {
-	background-color: #ddd;
-	color: #000;
+	background-color: $color-gray-shorthand;
+	color: $color-black;
 }
 
 .dropdown-content {
 	right: 0;
 	display: none;
 	position: absolute;
-	background-color: #fff;
+	background-color: $color-white;
 	min-width: 260px;
 	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 	border-radius: 8px;
@@ -245,7 +247,7 @@
 		text-align: left;
 
 		&:hover {
-			background-color: #ddd;
+			background-color: $color-gray-shorthand;
 		}
 	}
 }
@@ -283,10 +285,10 @@
 	position: fixed;
 	border-radius: 10px;
 	padding: 1em;
-	background: #fff;
+	background: $color-white;
 	min-width: 270px;
 	z-index: 1002;
 	overflow: auto;
-	border: 1px solid #dedede;
+	border: 1px solid $color-gray-light-alt;
 	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
 }

@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .cust-button {
 	cursor: pointer;
 	border-radius: 10px;
@@ -7,28 +9,28 @@
 }
 
 .default {
-	border: 1px solid #404040;
-	color: #404040;
+	border: 1px solid $color-gray-dark;
+	color: $color-gray-dark;
 
 	&:hover {
-		box-shadow: 0px 0px 6px #404040;
+		box-shadow: 0px 0px 6px $color-gray-dark;
 	}
 }
 
 .primary {
-	background: #f47920;
-	border: 1px solid #f47920;
-	color: #ffffff;
+	background: $color-orange;
+	border: 1px solid $color-orange;
+	color: $color-white;
 
 	&:hover {
-		box-shadow: 0px 0px 6px #f47920;
+		box-shadow: 0px 0px 6px $color-orange;
 	}
 }
 
 .primary-underline {
 	background: none;
 	border: none;
-	color: #f47920;
+	color: $color-orange;
 
 	&:hover {
 		text-decoration: underline;
@@ -37,77 +39,77 @@
 
 .primary-inverted {
 	background: none;
-	border: 1px solid #f47920;
+	border: 1px solid $color-orange;
 	font-weight: bold;
-	color: #f47920;
+	color: $color-orange;
 
 	&:hover {
-		box-shadow: 0px 0px 6px #f47920;
+		box-shadow: 0px 0px 6px $color-orange;
 	}
 }
 
 .accent {
-	background: #1b2935;
-	border: 1px solid #1b2935;
-	color: #ffffff;
+	background: $color-navy;
+	border: 1px solid $color-navy;
+	color: $color-white;
 
 	&:hover {
-		box-shadow: 0px 0px 6px #1b2935;
+		box-shadow: 0px 0px 6px $color-navy;
 	}
 }
 
 .accept {
-	background: #17aa57;
-	border: 1px solid #17aa57;
-	color: #ffffff;
+	background: $color-green;
+	border: 1px solid $color-green;
+	color: $color-white;
 
 	&:hover {
-		box-shadow: 0px 0px 6px #17aa57;
+		box-shadow: 0px 0px 6px $color-green;
 	}
 }
 
 .tertiary {
-	background: #ffffff;
-	border: 1px solid #1b2935;
-	color: #1b2935;
+	background: $color-white;
+	border: 1px solid $color-navy;
+	color: $color-navy;
 
 	&:hover {
-		box-shadow: 0px 0px 6px #1b2935;
+		box-shadow: 0px 0px 6px $color-navy;
 	}
 }
 
 .tertiary-inverted {
 	background: none;
-	border: 1px solid #1b2935;
-	color: #1b2935;
+	border: 1px solid $color-navy;
+	color: $color-navy;
 
 	&:hover {
-		box-shadow: 0px 0px 6px #1b2935;
+		box-shadow: 0px 0px 6px $color-navy;
 	}
 }
 
 .primary-inverted-black {
 	background: none;
-	border: 1px solid #f47920;
+	border: 1px solid $color-orange;
 	font-weight: bold;
-	color: #1b2935;
-	box-shadow: 0px 0px 6px #f47920;
+	color: $color-navy;
+	box-shadow: 0px 0px 6px $color-orange;
 }
 
 .error {
-	background: #dc0000;
-	border: 1px solid #dc0000;
-	color: #ffffff;
+	background: $color-red-dark;
+	border: 1px solid $color-red-dark;
+	color: $color-white;
 
 	&:hover {
-		box-shadow: 0px 0px 6px #dc0000;
+		box-shadow: 0px 0px 6px $color-red-dark;
 	}
 }
 
 .disabled {
-	background: #ffffff !important;
-	border: 1px solid #8f8f8f !important;
-	color: #8f8f8f !important;
+	background: $color-white !important;
+	border: 1px solid $color-gray-mid !important;
+	color: $color-gray-mid !important;
 
 	&:hover {
 		cursor: default !important;
@@ -139,7 +141,7 @@
 $progress-bar-timer: 3000ms;
 .progress-bar {
 	height: 2px;
-	background-color: #ffffff;
+	background-color: $color-white;
 
 	animation: cssload-width $progress-bar-timer cubic-bezier(0.45, 0, 1, 1) infinite;
 }
@@ -157,25 +159,25 @@ $progress-bar-timer: 3000ms;
 }
 
 .default.progress-bar {
-	background-color: #404040 !important;
+	background-color: $color-gray-dark !important;
 }
 
 .primary.progress-bar {
-	background-color: #ffffff !important;
+	background-color: $color-white !important;
 }
 
 .accent.progress-bar {
-	background-color: #ffffff !important;
+	background-color: $color-white !important;
 }
 
 .tertiary.progress-bar {
-	background-color: #1b2935 !important;
+	background-color: $color-navy !important;
 }
 
 .error.progress-bar {
-	background-color: #ffffff !important;
+	background-color: $color-white !important;
 }
 
 .disabled.progress-bar {
-	background-color: #8f8f8f !important;
+	background-color: $color-gray-mid !important;
 }

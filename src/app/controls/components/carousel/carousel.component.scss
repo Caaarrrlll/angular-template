@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .selected-image {
 	height: 100%;
 	width: 100%;
@@ -38,7 +40,7 @@
 			}
 
 			.selected {
-				border: #c5580a 4px solid;
+				border: $color-orange-dark 4px solid;
 			}
 
 			img {
@@ -72,7 +74,7 @@
 			width: 30%;
 
 			.selected {
-				border: #c5580a 4px solid;
+				border: $color-orange-dark 4px solid;
 			}
 
 			img {
@@ -117,7 +119,7 @@
 			}
 
 			.selected {
-				border: #c5580a 4px solid;
+				border: $color-orange-dark 4px solid;
 			}
 
 			img {

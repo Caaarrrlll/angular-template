@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .dynamic-material-dialog {
 	display: flex;
 	flex-direction: column;
@@ -75,7 +77,7 @@ mat-radio-group {
 }
 
 .auto-complete-line:hover {
-	background-color: #ef6c00;
+	background-color: $color-orange-alt;
 	color: white;
 }
 
@@ -87,7 +89,7 @@ mat-radio-group {
 	padding-top: 2rem;
 	padding-bottom: 2rem;
 	text-align: center;
-	border: dashed 1px #979797;
+	border: dashed 1px $color-gray;
 	position: relative;
 	margin: 0 auto;
 	justify-content: space-evenly;
@@ -122,14 +124,14 @@ mat-radio-group {
 		width: 80%;
 		height: 44px;
 		border-radius: 22px;
-		background-color: #db203f;
+		background-color: $color-red-crimson;
 		padding: 8px 16px;
 	}
 
 	h3 {
 		font-size: 20px;
 		font-weight: 600;
-		color: #38424c;
+		color: $color-charcoal;
 	}
 }
 

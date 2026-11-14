@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .container {
 	display: flex;
 	flex-direction: row;
@@ -6,7 +8,7 @@
 	padding-top: 2rem;
 	padding-bottom: 2rem;
 	text-align: center;
-	border: dashed 1px #979797;
+	border: dashed 1px $color-gray;
 	position: relative;
 	margin: 0 auto;
 	justify-content: space-evenly;
@@ -32,7 +34,7 @@
 
 		mat-icon {
 			font-size: 25px;
-			color: #1b2935;
+			color: $color-navy;
 		}
 	}
 
@@ -55,13 +57,13 @@
 		width: 80%;
 		height: 44px;
 		border-radius: 22px;
-		background-color: #db203f;
+		background-color: $color-red-crimson;
 		padding: 8px 16px;
 	}
 
 	h3 {
 		font-size: 20px;
 		font-weight: 600;
-		color: #38424c;
+		color: $color-charcoal;
 	}
 }

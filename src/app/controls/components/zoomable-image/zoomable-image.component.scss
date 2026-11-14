@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .img-zoom-container {
 	position: relative;
 	z-index: 1000;
@@ -44,7 +46,7 @@
 			font-size: 36px;
 			width: unset;
 			height: unset;
-			color: #fff;
+			color: $color-white;
 			z-index: 10001;
 		}
 
@@ -67,7 +69,7 @@
 
 .img-zoom-result {
 	position: absolute;
-	border: 2px solid #c5580a;
+	border: 2px solid $color-orange-dark;
 	width: 150px;
 	height: 150px;
 	z-index: 1010;
@@ -97,7 +99,7 @@ img {
 
 .actions {
 	position: absolute;
-	color: #fff;
+	color: $color-white;
 	display: flex;
 	bottom: 8px;
 	right: 24px;
@@ -122,13 +124,13 @@ img {
 	padding: 8px;
 	width: unset;
 	height: unset;
-	color: #fff;
+	color: $color-white;
 	z-index: 10001;
 	.icon {
 		font-size: 28px;
 		width: unset;
 		height: unset;
-		color: #fff;
+		color: $color-white;
 		padding: 4px;
 		cursor: pointer;
 	}

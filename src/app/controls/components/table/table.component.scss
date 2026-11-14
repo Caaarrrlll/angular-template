@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .selected {
 	background-color: #d4d4d4 !important;
 }
@@ -66,7 +68,7 @@ tr.detail-row {
 	position: absolute;
 	border-radius: 10px;
 	padding: 1em 1em 1em 1em;
-	background: #f2f2f2;
+	background: $color-gray-lightest;
 	min-width: 4em;
 	z-index: 1002;
 

@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .kv-container-row {
 	display: flex;
 	flex-direction: row;
@@ -29,11 +31,11 @@
 }
 
 .red {
-	color: #d50000;
+	color: $color-red;
 }
 
 .orange {
-	color: #f47920;
+	color: $color-orange;
 }
 
 .green {

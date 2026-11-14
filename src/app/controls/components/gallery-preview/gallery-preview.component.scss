@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .galleryPreviewContainer {
 	display: flex;
 	justify-content: center;
@@ -37,7 +39,7 @@
 	border: none;
 	height: 50px;
 	width: 50px;
-	color: #fff;
+	color: $color-white;
 	background-color: rgb(180 180 180 / 15%);
 	margin: 0px 5px;
 	display: flex;
@@ -78,7 +80,7 @@
 }
 
 .galleryPreviewActiveImage {
-	border: 2px solid #f47920;
+	border: 2px solid $color-orange;
 	margin: 0px;
 }
 

@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .mat-card-header {
 	background-color: #ecebed;
 	padding: 1px !important;
@@ -126,7 +128,7 @@
 }
 
 .col-with-border-left {
-	border-right: 0.5px solid #dedede;
+	border-right: 0.5px solid $color-gray-light-alt;
 	height: 100%;
 	padding-left: 8px;
 	padding-right: 16px;
@@ -263,12 +265,12 @@
 }
 
 .header-pre-text-devider {
-	color: #fff;
+	color: $color-white;
 	padding: 0 5px;
 }
 
 .header-pre-text {
-	color: #000;
+	color: $color-black;
 	font-weight: 400;
 }
 

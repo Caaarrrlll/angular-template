@@ -1,6 +1,8 @@
+@use "tokens" as *;
+
 .card {
 	position: relative;
-	background: #ffffff;
+	background: $color-white;
 	border-radius: 15px;
 	overflow: hidden;
 	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
@@ -26,8 +28,8 @@
 }
 
 .selected {
-	border: #f47920 2px solid;
-	box-shadow: 0 0 5px #f47920;
+	border: $color-orange 2px solid;
+	box-shadow: 0 0 5px $color-orange;
 	margin: 0;
 }
 
@@ -36,15 +38,15 @@
 }
 
 .red {
-	background: #d50000;
+	background: $color-red;
 }
 
 .green {
-	background: #bcd139;
+	background: $color-green-lime;
 }
 
 .orange {
-	background: #f47920;
+	background: $color-orange;
 }
 
 .white {

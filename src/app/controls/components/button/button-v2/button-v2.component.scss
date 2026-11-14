@@ -1,79 +1,81 @@
+@use "tokens" as *;
+
 .color-set {
 	&-primary {
-		background-color: #f47920;
-		color: #fff;
+		background-color: $color-orange;
+		color: $color-white;
 
 		&:hover {
-			background-color: #e6670b;
-			color: #fff;
+			background-color: $color-orange-deep;
+			color: $color-white;
 		}
 
 		&:disabled {
-			background-color: #dcdcdc;
-			color: #888888;
+			background-color: $color-gray-light;
+			color: $color-gray-mid-dark;
 		}
 	}
 
 	&-secondary {
 		background-color: #3d444d;
-		color: #fff;
+		color: $color-white;
 
 		&:hover {
 			background-color: #4e525c;
-			color: #fff;
+			color: $color-white;
 		}
 
 		&:disabled {
-			background-color: #dcdcdc;
-			color: #888888;
+			background-color: $color-gray-light;
+			color: $color-gray-mid-dark;
 		}
 	}
 
 	&-tertiary {
-		background-color: #fff;
-		border-color: #3f607c;
-		color: #3f607c;
+		background-color: $color-white;
+		border-color: $color-navy-steel;
+		color: $color-navy-steel;
 
 		&:hover {
-			background-color: #fff;
-			border-color: #000;
-			color: #000;
+			background-color: $color-white;
+			border-color: $color-black;
+			color: $color-black;
 		}
 
 		&:disabled {
-			background-color: #fff;
-			color: #dcdcdc;
-			border-color: #dcdcdc;
+			background-color: $color-white;
+			color: $color-gray-light;
+			border-color: $color-gray-light;
 			cursor: unset;
 		}
 	}
 
 	&-icon {
-		color: #3f607c;
+		color: $color-navy-steel;
 
 		&:hover {
-			background-color: #fff;
-			border-color: #000;
-			color: #000;
+			background-color: $color-white;
+			border-color: $color-black;
+			color: $color-black;
 		}
 
 		&:disabled {
-			background-color: #fff;
-			color: #dcdcdc;
-			border-color: #dcdcdc;
+			background-color: $color-white;
+			color: $color-gray-light;
+			border-color: $color-gray-light;
 			cursor: unset;
 		}
 	}
 }
 
 .color-set-text {
-	background-color: #fff;
-	color: #f47920;
+	background-color: $color-white;
+	color: $color-orange;
 }
 
 .color-set-text:hover {
 	background-color: #fffffd;
-	color: #e6670b;
+	color: $color-orange-deep;
 }
 
 .button-container {

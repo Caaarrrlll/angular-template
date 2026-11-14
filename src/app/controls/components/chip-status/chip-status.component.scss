@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .chip-button {
 	white-space: nowrap;
 	user-select: none;
@@ -12,33 +14,33 @@
 	padding: 8px;
 
 	&.negative {
-		border: 2px solid #ff3826;
+		border: 2px solid $color-red-bright;
 	}
 
 	&.solid {
-		background-color: #2d4559;
+		background-color: $color-navy-mid;
 	}
 
 	&.default-background {
-		background-color: #fff;
+		background-color: $color-white;
 	}
 
 	&.action {
-		border: 2px solid #f79147;
+		border: 2px solid $color-orange-light;
 	}
 
 	&.informative {
-		border: 2px solid #75bf44;
+		border: 2px solid $color-green-light;
 	}
 
 	&.progress {
-		border: 2px solid #f79147;
+		border: 2px solid $color-orange-light;
 	}
 
 	&.new {
-		border: 2px solid #65a1c3;
-		background-color: #fff;
-		color: #000;
+		border: 2px solid $color-blue;
+		background-color: $color-white;
+		color: $color-black;
 	}
 
 	&.newSale,
@@ -46,7 +48,7 @@
 	&.reserved,
 	&.bought,
 	&.toBePriced {
-		border: 2px solid #4f94bb;
+		border: 2px solid $color-blue-alt;
 	}
 
 	// white background, coloured border
@@ -56,9 +58,9 @@
 	&.Escalated,
 	&.noAgreementReached,
 	&.rejectionLetterReviewed {
-		border: 2px solid #f79147;
-		background-color: #fff;
-		color: #000;
+		border: 2px solid $color-orange-light;
+		background-color: $color-white;
+		color: $color-black;
 	}
 
 	&.Approved,
@@ -67,46 +69,46 @@
 	&.completedNatisDelivered,
 	&.sold,
 	&.saleInitiated {
-		border: 2px solid #75bf44;
-		background-color: #fff;
-		color: #000;
+		border: 2px solid $color-green-light;
+		background-color: $color-white;
+		color: $color-black;
 	}
 
 	&.feedbackRequired {
-		border: 2px solid #8a8a92;
-		background-color: #fff;
-		color: #000;
+		border: 2px solid $color-gray-mid-alt;
+		background-color: $color-white;
+		color: $color-black;
 	}
 
 	&.legalActionRequired,
 	&.miosaReferred,
 	&.thirdPartyFeedbackRequired {
-		border: 2px solid #8a8a92;
+		border: 2px solid $color-gray-mid-alt;
 		background-color: #f3f3f3;
-		color: #000;
+		color: $color-black;
 	}
 
 	&.rejected {
-		border: 2px solid #ff3826;
+		border: 2px solid $color-red-bright;
 		background-color: #f3f3f3;
-		color: #000;
+		color: $color-black;
 	}
 
 	&.forSale,
 	&.online {
-		border: 2px solid #f79147;
+		border: 2px solid $color-orange-light;
 	}
 
 	&.inTransit {
-		border: 2px solid #8a8a92;
+		border: 2px solid $color-gray-mid-alt;
 	}
 
 	&.NFS {
-		border: 2px solid #ff3826;
+		border: 2px solid $color-red-bright;
 	}
 
 	&.default {
 		// Do not change the default colour
-		border: 2px solid #2d4559;
+		border: 2px solid $color-navy-mid;
 	}
 }

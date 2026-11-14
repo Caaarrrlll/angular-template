@@ -1,0 +1,7 @@
+// Shared mixins for component styles. Grows as Phase 2 finds more
+// copy-pasted rules to dedupe. Usage: `@use "utilities" as *;`
+// (angular.json `stylePreprocessorOptions.includePaths` points at this folder).
+
+@mixin cursor-pointer {
+	cursor: pointer;
+}

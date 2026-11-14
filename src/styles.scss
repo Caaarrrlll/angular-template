@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@use "tokens" as *;
 
 html,
 body {
@@ -15,26 +16,26 @@ app-root {
 
 .mat-mdc-snack-bar-container {
 	&.snackbar-info {
-		--mat-snack-bar-container-color: #0288d1;
-		--mat-snack-bar-supporting-text-color: #ffffff;
-		--mat-snack-bar-button-color: #ffffff;
+		--mat-snack-bar-container-color: #{$color-info};
+		--mat-snack-bar-supporting-text-color: #{$color-white};
+		--mat-snack-bar-button-color: #{$color-white};
 	}
 
 	&.snackbar-success {
-		--mat-snack-bar-container-color: #2e7d32;
-		--mat-snack-bar-supporting-text-color: #ffffff;
-		--mat-snack-bar-button-color: #ffffff;
+		--mat-snack-bar-container-color: #{$color-success};
+		--mat-snack-bar-supporting-text-color: #{$color-white};
+		--mat-snack-bar-button-color: #{$color-white};
 	}
 
 	&.snackbar-warning {
-		--mat-snack-bar-container-color: #ed6c02;
-		--mat-snack-bar-supporting-text-color: #ffffff;
-		--mat-snack-bar-button-color: #ffffff;
+		--mat-snack-bar-container-color: #{$color-warning};
+		--mat-snack-bar-supporting-text-color: #{$color-white};
+		--mat-snack-bar-button-color: #{$color-white};
 	}
 
 	&.snackbar-error {
-		--mat-snack-bar-container-color: #d32f2f;
-		--mat-snack-bar-supporting-text-color: #ffffff;
-		--mat-snack-bar-button-color: #ffffff;
+		--mat-snack-bar-container-color: #{$color-error};
+		--mat-snack-bar-supporting-text-color: #{$color-white};
+		--mat-snack-bar-button-color: #{$color-white};
 	}
 }

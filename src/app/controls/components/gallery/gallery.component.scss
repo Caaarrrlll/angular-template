@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .outerGalleryContainer {
 	display: flex;
 	justify-content: center;
@@ -22,7 +24,7 @@
 	border: none;
 	height: 50px;
 	width: 50px;
-	color: #fff;
+	color: $color-white;
 	background-color: rgb(180 180 180 / 30%);
 	display: flex;
 	align-self: center;
@@ -117,14 +119,14 @@
 }
 
 .galleryPagerButton:hover {
-	border: 1px solid #f47920;
+	border: 1px solid $color-orange;
 	background: rgb(110 110 110 / 90%);
 	cursor: pointer;
 }
 
 .selectedGalleryPagerButton {
-	border: 1px solid #e25e00;
-	background: #e25e0098;
+	border: 1px solid $color-orange-selected;
+	background: rgba($color-orange-selected, 0.6);
 }
 
 .galleryControlsContainer {

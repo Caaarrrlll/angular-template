@@ -64,3 +64,28 @@ Task: critical signals-readiness check of the project and a concrete migration p
 [✓] Batch 4: count-down — `seconds` → `linkedSignal` from `timeLeft` (Angular 22 API: no `initialValue` option — computation supplies the initial null via `previous?.value ?? null`; annotated `WritableSignal<number | null>`); interval start moved to an `effect` (side effect out of the computation); textFormat → `input()`, timeRemaining → `output()`. Bonus fix: seconds mutation now properly re-renders under OnPush (the old plain-field mutation could not). list-card consumer API-compatible (verified). Build + eslint + prettier clean
 [✓] Verify after each batch: `npx ng build` + eslint/prettier on changed files
 [✓] Final verify (2026-11-14): full `npx ng build` passes (only pre-existing bundle-budget warning); eslint clean across all four Phase 3 controls; clean tracker boundary. Phase 3 done — ROADMAP opportunistic accordion/zoom-* viewChild swaps remain deferred (only when those files are touched for another reason). Next = the follow-up projects in ROADMAP.md (CSS cleanup, button family merge) or developer-directed work
+
+## Task (2026-11-14): roadmap updates — sandbox item + CSS cleanup migration plan (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Add "sandbox flesh-out" item to ROADMAP.md, placed after the button family merge
+[✓] Survey the project's CSS (file counts, sizes, duplication patterns, global styles, theming vars): 61 files ~50KB, zero SCSS partials/mixins, white ×58 / orange ×25+5 variants / navy ×19+variants hardcoded, .show-pointer duplicated in key-value trio, orphan select/ scss noted
+[✓] Write the CSS cleanup migration plan into ROADMAP.md (survey + 5 phases: token foundation → token replacement → dedupe → dead-style removal → optional naming pass; risks documented)
+## Task (2026-11-14): CSS cleanup Phase 0 — token foundation (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Full color inventory (all hex counts + usage spots for variant naming): 58 distinct hex values; recurring set tokenized, singletons left literal
+[✓] Check duplicated rule bodies (.show-pointer etc.): trivially identical (`cursor: pointer`) in all key-value variants
+[✓] Create src/app/library/styles/_tokens.scss (33 palette/status tokens, near-variants kept separate, documented) and _utilities.scss (cursor-pointer mixin, grows in Phase 2)
+[✓] Wire angular.json stylePreprocessorOptions.includePaths = src/app/library/styles (build + test targets)
+[✓] Smoke-test wiring: styles.scss snackbar theming converted to tokens (`@use "tokens" as *;`); ng build passes, compiled styles css verified to contain token values; prettier clean
+## Task (2026-11-14): CSS cleanup Phase 1 — token replacement (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Batch 1: neutrals — #fff/#ffffff → $color-white, #000 → $color-black across src scss (15 files; build + prettier verified, no leftover literals)
+[✓] Batch 2: orange family — 17 files; alpha variant → rgba($color-orange-selected, 0.6); build + prettier verified; leftovers = 2 HTML inline styles (deferred) + 2 gradient singletons (intentional)
+[✓] Batch 3: navy/charcoal/slate/blue-gray — 15 files; build + prettier verified; leftovers = HTML inline styles only (deferred to scss move)
+[✓] Batch 4: grays — 11 files; build + prettier verified; leftovers = chips HTML inline styles + tab-group TS string default (both deferred — not scss)
+[✓] Batch 5: semantic — greens/reds/blues → tokens, 9 files; build + prettier verified; leftovers = table check/close HTML inline styles only (deferred)
+[✓] Final verify (2026-11-14): full residual-hex inventory scanned — remaining literal hex in component scss = documented per-file singletons only (button-v2 #3d444d/#4e525c, card-header+list-card #ecebed, chip-status #f3f3f3, select #0d141f/#525861, tab-group #293640, card-header gradient #fb9d17/#f5871f); ROADMAP.md Phase 1 annotated done; prettier clean; ng build passes
+[✓] Clean boundary reached: Phase 1 done. Next = Phase 2 dedupe copy-pasted rules into _utilities.scss mixins (start: .show-pointer in key-value trio); also queued: move HTML inline hex styles into scss where touched
