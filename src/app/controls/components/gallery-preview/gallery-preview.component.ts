@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal, untracked } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
 import { GalleryPreviewImage } from "./gallery-preview.interface";
@@ -10,43 +10,55 @@ import { GalleryPreviewImage } from "./gallery-preview.interface";
 	imports: [MatRippleModule, MatIconModule],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GalleryPreviewComponent implements OnChanges {
-	@Input({ required: true }) public images!: GalleryPreviewImage[];
-	@Output() public imageSelected: EventEmitter<number> = new EventEmitter<number>();
-	@Input() public totalWidth: number = 0;
-	@Input() public imageWidth: number = 160;
-	@Input() public imageHeight: number = 90;
-	@Input() public activeImageIndex: number = 0;
-	@Input() public onlyShowPreview: boolean = false;
-	@Input() public orangeIcons: boolean = false;
+export class GalleryPreviewComponent {
+	private static readonly widthOfNavButtons: number = 120;
 
-	public maxWidth: number = 0;
-	public visibleImages: number = 0;
-	public firstVisibleIndex: number = 0;
-	public lastVisibleIndex: number = 0;
-	public lastIndexOfArray: number = 0;
+	public readonly images = input.required<GalleryPreviewImage[]>();
+	public readonly imageSelected = output<number>();
+	public readonly totalWidth = input<number>(0);
+	public readonly imageWidth = input<number>(160);
+	public readonly imageHeight = input<number>(90);
+	public readonly activeImageIndex = input<number>(0);
+	public readonly onlyShowPreview = input<boolean>(false);
+	public readonly orangeIcons = input<boolean>(false);
 
-	private readonly widthOfNavButtons: number = 120;
-	private prevActiveIndex: number = 0;
+	public readonly firstVisibleIndex = signal(0);
 
-	public ngOnChanges(changes: SimpleChanges): void {
-		this.prevActiveIndex = changes["activeImageIndex"]?.previousValue ?? changes["activeImageIndex"]?.currentValue ?? 0;
-		this.maxWidth = this.totalWidth - this.widthOfNavButtons;
-		this.lastIndexOfArray = this.images.length - 1;
-		this.calcVisibleImages();
+	public readonly maxWidth = computed((): number => this.totalWidth() - GalleryPreviewComponent.widthOfNavButtons);
+	public readonly lastIndexOfArray = computed((): number => this.images().length - 1);
+	public readonly visibleImages = computed((): number => Math.max(Math.floor(this.maxWidth() / this.imageWidth()), 1));
+	public readonly lastVisibleIndex = computed((): number => Math.min(this.firstVisibleIndex() + this.visibleImages() - 1, this.lastIndexOfArray()));
+
+	private prevActiveIndex = 0;
+	private prevVisibleImages = 0;
+
+	constructor() {
+		effect(() => {
+			// mirrors the old ngOnChanges: re-center the window on the active image when the
+			// active index changes or the visible-window size changes
+			const activeIndex: number = this.activeImageIndex();
+			const visibleCount: number = this.visibleImages();
+			const keepActiveVisible: boolean = visibleCount !== this.prevVisibleImages || this.prevActiveIndex !== activeIndex;
+			this.prevActiveIndex = activeIndex;
+			this.prevVisibleImages = visibleCount;
+			if (!keepActiveVisible) {
+				return;
+			}
+			untracked(() => {
+				this.centerOnActive(activeIndex);
+			});
+		});
 	}
 
 	public prev(): void {
-		if (this.firstVisibleIndex > 0) {
-			this.firstVisibleIndex--;
-			this.setVisibleIndexes();
+		if (this.firstVisibleIndex() > 0) {
+			this.firstVisibleIndex.set(this.firstVisibleIndex() - 1);
 		}
 	}
 
 	public next(): void {
-		if (this.lastVisibleIndex < this.lastIndexOfArray) {
-			this.firstVisibleIndex++;
-			this.setVisibleIndexes();
+		if (this.lastVisibleIndex() < this.lastIndexOfArray()) {
+			this.firstVisibleIndex.set(this.firstVisibleIndex() + 1);
 		}
 	}
 
@@ -63,44 +75,14 @@ export class GalleryPreviewComponent implements OnChanges {
 		}
 	}
 
-	private calcVisibleImages(): void {
-		const prevVisible: number = this.visibleImages;
-		const visible: number = Math.floor(this.maxWidth / this.imageWidth);
-		this.visibleImages = visible > 0 ? visible : 1;
-		if (prevVisible !== this.visibleImages || this.prevActiveIndex !== this.activeImageIndex) {
-			this.setVisibleIndexes(true);
-		}
+	public isImageVisible(index: number): boolean {
+		return index >= this.firstVisibleIndex() && index <= this.lastVisibleIndex();
 	}
 
-	private setVisibleIndexes(keepActiveIndexVisible: boolean = false): void {
-		this.hideAllImages();
-		if (keepActiveIndexVisible) {
-			this.firstVisibleIndex = this.activeImageIndex;
+	private centerOnActive(activeIndex: number): void {
+		this.firstVisibleIndex.set(activeIndex);
+		if (this.firstVisibleIndex() > this.lastVisibleIndex() - (this.visibleImages() - 1)) {
+			this.firstVisibleIndex.set(Math.max(this.lastVisibleIndex() - (this.visibleImages() - 1), 0));
 		}
-		this.lastVisibleIndex = this.firstVisibleIndex + (this.visibleImages - 1);
-		if (this.lastVisibleIndex > this.lastIndexOfArray) {
-			this.lastVisibleIndex = this.lastIndexOfArray;
-		}
-		if (this.firstVisibleIndex > this.lastVisibleIndex - (this.visibleImages - 1)) {
-			this.firstVisibleIndex = this.lastVisibleIndex - (this.visibleImages - 1);
-			if (this.firstVisibleIndex < 0) {
-				this.firstVisibleIndex = 0;
-			}
-		}
-		this.showAllVisibleIndex();
-	}
-
-	private showAllVisibleIndex(): void {
-		for (let index: number = this.firstVisibleIndex; index <= this.lastVisibleIndex; index++) {
-			if (this.images[index]) {
-				this.images[index].visible = "block";
-			}
-		}
-	}
-
-	private hideAllImages(): void {
-		this.images.forEach((image: GalleryPreviewImage): void => {
-			image.visible = "none";
-		});
 	}
 }

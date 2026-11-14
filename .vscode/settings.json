@@ -4,7 +4,9 @@
 		"dialog",
 		"linq",
 		"Parens",
-		"standalone"
+		"standalone",
+		"timelapse",
+		"Zoomable"
 	],
 
 	"editor.tabSize": 2,

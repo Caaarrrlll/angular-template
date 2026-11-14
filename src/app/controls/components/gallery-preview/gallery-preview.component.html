@@ -1,35 +1,38 @@
-@if (images) {
-	@if (visibleImages - 1 < lastIndexOfArray) {
+@if (images()) {
+	@if (visibleImages() - 1 < lastIndexOfArray()) {
 		<button
-			[disabled]="firstVisibleIndex === 0"
+			[disabled]="firstVisibleIndex() === 0"
 			(click)="prev()"
 			class="generalGalleryPreviewBtn galleryPreviewNavButton galleryPreviewControlButtonPrev"
 			matRipple
-			[matRippleDisabled]="firstVisibleIndex === 0">
-			<mat-icon class="galleryPreviewSvgIcon" [class.galleryPreviewSvgIconOrange]="orangeIcons">chevron_left</mat-icon>
+			[matRippleDisabled]="firstVisibleIndex() === 0">
+			<mat-icon class="galleryPreviewSvgIcon" [class.galleryPreviewSvgIconOrange]="orangeIcons()">chevron_left</mat-icon>
 		</button>
 	}
 
-	<div class="galleryPreviewImageRow" [style.width]="maxWidth + 'px'" (wheel)="horizontalScroll($event)">
-		@for (image of images; track image; let i = $index) {
-			<div class="galleryPreviewImageContainer" [style]="{ width: imageWidth + 'px', 'max-width': maxWidth + 'px', display: image.visible }">
+	<div class="galleryPreviewImageRow" [style.width]="maxWidth() + 'px'" (wheel)="horizontalScroll($event)">
+		@for (image of images(); track image; let i = $index) {
+			<div class="galleryPreviewImageContainer" [style]="{ width: imageWidth() + 'px', 'max-width': maxWidth() + 'px', display: isImageVisible(i) ? 'block' : 'none' }">
 				<div
 					class="galleryPreviewImage"
-					[style]="{ 'background-image': 'url(' + image.url + ')', height: imageHeight + 'px' }"
-					[class.galleryPreviewActiveImage]="i === activeImageIndex && !onlyShowPreview"
-					(click)="selectImage(i)"></div>
+					role="button"
+					tabindex="0"
+					[style]="{ 'background-image': 'url(' + image.url + ')', height: imageHeight() + 'px' }"
+					[class.galleryPreviewActiveImage]="i === activeImageIndex() && !onlyShowPreview()"
+					(click)="selectImage(i)"
+					(keydown.enter)="selectImage(i)"></div>
 			</div>
 		}
 	</div>
 
-	@if (visibleImages - 1 < lastIndexOfArray) {
+	@if (visibleImages() - 1 < lastIndexOfArray()) {
 		<button
-			[disabled]="lastVisibleIndex === lastIndexOfArray"
+			[disabled]="lastVisibleIndex() === lastIndexOfArray()"
 			(click)="next()"
 			class="generalGalleryPreviewBtn galleryPreviewNavButton galleryPreviewControlButtonNext"
 			matRipple
-			[matRippleDisabled]="lastVisibleIndex === lastIndexOfArray">
-			<mat-icon class="galleryPreviewSvgIcon" [class.galleryPreviewSvgIconOrange]="orangeIcons">chevron_right</mat-icon>
+			[matRippleDisabled]="lastVisibleIndex() === lastIndexOfArray()">
+			<mat-icon class="galleryPreviewSvgIcon" [class.galleryPreviewSvgIconOrange]="orangeIcons()">chevron_right</mat-icon>
 		</button>
 	}
 }

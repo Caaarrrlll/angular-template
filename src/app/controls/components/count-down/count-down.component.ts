@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, Output, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, WritableSignal, effect, inject, input, linkedSignal, output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
@@ -9,20 +9,20 @@ import { MatIconModule } from "@angular/material/icon";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CountDownComponent {
-	@Input() public textFormat: boolean = false;
-	@Output() public timeRemaining: EventEmitter<number> = new EventEmitter<number>();
+	public readonly textFormat = input<boolean>(false);
+	public readonly timeLeft = input<number>();
+	public readonly timeRemaining = output<number>();
 
-	@Input() public set timeLeft(value: number) {
-		if (!value || value <= 0) {
-			return;
-		}
-		this.seconds = Math.floor(value);
-		if (this.timer === null) {
-			this.timer = setInterval((): void => this.tick(), 1000);
-		}
-	}
-
-	public seconds: number | null = null;
+	public readonly seconds: WritableSignal<number | null> = linkedSignal<number | undefined, number | null>({
+		source: this.timeLeft,
+		computation: (source, previous): number | null => {
+			if (!source || source <= 0) {
+				// mirrors the old setter guard: ignore non-positive values, keep the previous count
+				return previous?.value ?? null;
+			}
+			return Math.floor(source);
+		},
+	});
 
 	private timer: ReturnType<typeof setInterval> | null = null;
 
@@ -30,6 +30,13 @@ export class CountDownComponent {
 
 	constructor() {
 		this.destroyRef.onDestroy((): void => this.clearTimer());
+
+		effect(() => {
+			const timeLeft: number | undefined = this.timeLeft();
+			if (timeLeft && timeLeft > 0 && this.timer === null) {
+				this.timer = setInterval((): void => this.tick(), 1000);
+			}
+		});
 	}
 
 	/** Formats the remaining seconds, either as text or as `DD:HH:MM:SS`. */
@@ -42,11 +49,11 @@ export class CountDownComponent {
 		const hours: number = Math.floor((secondsInput / (60 * 60)) % 24);
 		const days: number = Math.floor(secondsInput / (60 * 60 * 24));
 
-		if (this.textFormat) {
+		if (this.textFormat()) {
 			const day: string = days > 1 ? `${days} days` : days > 0 ? `${days} day` : "";
 			const hour: string = hours > 1 ? `${hours} hours` : hours > 0 ? `${hours} hour` : "";
 			const minute: string = minutes > 1 ? `${minutes} minutes` : minutes > 0 ? `${minutes} minute` : "";
-			const second: string = `${seconds} seconds left`;
+			const second = `${seconds} seconds left`;
 
 			return `${day !== "" ? `${day}, ${hour}` : hour !== "" ? `${hour}, ${minute}` : minute !== "" ? `${minute}, ${second}` : second}`;
 		}
@@ -55,13 +62,15 @@ export class CountDownComponent {
 	}
 
 	private tick(): void {
-		if (this.seconds === null) {
+		const current: number | null = this.seconds();
+		if (current === null) {
 			this.clearTimer();
 			return;
 		}
-		this.seconds--;
-		this.timeRemaining.emit(this.seconds);
-		if (this.seconds <= 0) {
+		const next: number = current - 1;
+		this.seconds.set(next);
+		this.timeRemaining.emit(next);
+		if (next <= 0) {
 			this.clearTimer();
 		}
 	}

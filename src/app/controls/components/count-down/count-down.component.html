@@ -1,8 +1,8 @@
-@if (textFormat) {
-	<div [class.green]="seconds !== null && seconds > 59" [class.red]="seconds === null || seconds <= 59" class="h3 text-container">
+@if (textFormat()) {
+	<div [class.green]="seconds() !== null && seconds()! > 59" [class.red]="seconds() === null || seconds()! <= 59" class="h3 text-container">
 		<mat-icon class="icon">timelapse</mat-icon>
-		{{ getTimeRemaining(seconds) }}
+		{{ getTimeRemaining(seconds()) }}
 	</div>
 } @else {
-	{{ getTimeRemaining(seconds) }}
+	{{ getTimeRemaining(seconds()) }}
 }
