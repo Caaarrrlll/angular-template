@@ -3,12 +3,12 @@
 		<div class="tabs-container">
 			<ul>
 				@for (tab of tabs; track tab; let i = $index) {
-					<li [ngClass]="{ active: tab.active }" (click)="selectTab(tab)">
-						@if (tab.completed) {
+					<li [ngClass]="{ active: tab.active() }" role="button" tabindex="0" (click)="selectTab(tab)" (keydown.enter)="selectTab(tab)">
+						@if (tab.completed()) {
 							<mat-icon>check_circle_outline</mat-icon>
 						}
 						<p>{{ i + 1 }}</p>
-						{{ tab.title }}
+						{{ tab.title() }}
 					</li>
 				}
 			</ul>
@@ -18,11 +18,11 @@
 	<div class="small-tabs-container" class="hide-gt-sm">
 		<ul>
 			@for (tab of tabs; track tab; let i = $index) {
-				<li [ngClass]="{ active: tab.active }" (click)="selectTab(tab)">
-					@if (tab.completed) {
+				<li [ngClass]="{ active: tab.active() }" role="button" tabindex="0" (click)="selectTab(tab)" (keydown.enter)="selectTab(tab)">
+					@if (tab.completed()) {
 						<mat-icon>check_circle_outline</mat-icon>
 					}
-					@if (!tab.completed) {
+					@if (!tab.completed()) {
 						<p>{{ i + 1 }}</p>
 					}
 				</li>

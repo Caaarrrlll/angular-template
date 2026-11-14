@@ -45,3 +45,12 @@ Task: critical signals-readiness check of the project and a concrete migration p
 ## Follow-up (2026-11-14): gallery a11y lint fixes
 
 [✓] gallery.component.html: prev/next nav container divs and pager dot spans got `role="button"`, `tabindex="0"` and `(keydown.enter)` handlers (full-size click areas kept — handlers not moved to the inner 50px buttons); eslint + prettier clean, build passes (verified)
+
+## Task (2026-11-14): signals migration Phase 2 — input family + simple mid-size controls (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Batch 1: `input` + input-text, input-email, input-number, input-phone, input-currency, input-select — inputs → `input()`, ngOnInit wiring untouched; no external consumers (verified by grep); build + prettier + eslint clean
+[✓] Batch 2: button-v2, button-toggle, drag-drop-file-upload — build + eslint + prettier clean (fixed TS narrowing across signal calls in button-toggle ngOnInit; `close` output renamed `closed` (no-output-native, zero consumers); pre-existing `==` in button-v2 html)
+[✓] Batch 3: tabs + tab (sub) + tab-back/next-button.directive — `active`/`completed` converted to `model()` (input bindings preserved, parent/directives write via `.set()`); title/isConfig/stepControl → `input()`; linear → `input()`, tabSelectedEvent → `output()`; ContentChildren/QueryList kept. Directive selectors renamed `cust*TabButton` → `app*TabButton` (app-prefix lint rule; zero consumers). Tab `<li>` elements got role/tabindex/keydown.enter. Build + eslint + prettier clean
+[✓] Verify after each batch: `npx ng build` + eslint/prettier on changed files
+[✓] Final verify (2026-11-14): full `npx ng build` passes (only pre-existing bundle-budget warning); clean tracker boundary. Next = Phase 3 per ROADMAP.md (ngOnChanges redesigns: carousel, gallery-preview, tab-group, count-down; opportunistic accordion/zoom-* viewChild swaps)

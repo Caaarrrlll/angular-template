@@ -1,4 +1,4 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject, input, output } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { debounceTime } from "rxjs";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -13,15 +13,15 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
 })
 export class InputEmailComponent implements OnInit {
-	@Input({ required: true }) public inputObj!: CustInputGeneral;
-	@Output() public inputChanged: EventEmitter<CustInputReturn> = new EventEmitter<CustInputReturn>();
+	public readonly inputObj = input.required<CustInputGeneral>();
+	public readonly inputChanged = output<CustInputReturn>();
 
 	public readonly inputControl: FormControl<string | null> = new FormControl<string | null>("", Validators.pattern(/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/));
 
 	private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
 	public ngOnInit(): void {
-		this.inputControl.setValue(this.inputObj.value ?? null);
+		this.inputControl.setValue(this.inputObj().value ?? null);
 
 		this.inputControl.valueChanges.pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef)).subscribe((value: string | null): void => {
 			this.inputControl.markAsTouched();

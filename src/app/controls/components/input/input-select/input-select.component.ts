@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, OnInit, input, output } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -12,13 +12,13 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule],
 })
 export class InputSelectComponent implements OnInit {
-	@Input({ required: true }) public inputObj!: CustInputGeneral;
-	@Output() public inputChanged: EventEmitter<CustInputReturn> = new EventEmitter<CustInputReturn>();
+	public readonly inputObj = input.required<CustInputGeneral>();
+	public readonly inputChanged = output<CustInputReturn>();
 
 	public inputControl: FormControl<unknown> = new FormControl<unknown>("");
 
 	public ngOnInit(): void {
-		this.inputControl.setValue(this.inputObj.value ?? "");
+		this.inputControl.setValue(this.inputObj().value ?? "");
 	}
 
 	public onClick(name: unknown): void {

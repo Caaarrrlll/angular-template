@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { DragAndDropFilesDirective } from "@shared/directives/drag-and-drop-files.directive";
 
@@ -10,11 +10,11 @@ import { DragAndDropFilesDirective } from "@shared/directives/drag-and-drop-file
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DragDropFileUploadComponent {
-	@Input() public files: File[] = [];
-	@Input() public isInDialog: boolean = false;
-	@Input() public filesToAccept?: string;
-	@Output() public fileAdded: EventEmitter<File[]> = new EventEmitter<File[]>();
-	@Output() public close: EventEmitter<boolean> = new EventEmitter<boolean>();
+	public readonly files = input<File[]>([]);
+	public readonly isInDialog = input<boolean>(false);
+	public readonly filesToAccept = input<string | undefined>();
+	public readonly fileAdded = output<File[]>();
+	public readonly closed = output<boolean>();
 
 	public handleFilesDropped(files: FileList | File[] | null): void {
 		if (files === null) {
@@ -24,6 +24,6 @@ export class DragDropFileUploadComponent {
 	}
 
 	public onClose(): void {
-		this.close.emit(true);
+		this.closed.emit(true);
 	}
 }

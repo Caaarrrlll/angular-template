@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 @Component({
 	selector: "app-input",
@@ -7,6 +7,6 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent {
-	@Input() public type?: string;
-	@Input() public label?: string;
+	public readonly type = input<string | undefined>();
+	public readonly label = input<string | undefined>();
 }

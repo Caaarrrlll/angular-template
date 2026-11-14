@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, OnInit, input, output } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -14,15 +14,15 @@ import { CustButtonInputType, CustInputAdvance } from "@shared/models/cust-basic
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDatepickerModule],
 })
 export class InputTextComponent implements OnInit {
-	@Input({ required: true }) public label!: string;
-	@Input() public isReadOnly: boolean = false;
-	@Input() public placeholder: string = "";
-	@Input({ required: true }) public inputControl!: CustInputAdvance;
-	@Input() public action?: CustButtonInputType;
-	@Output() public actionOut: EventEmitter<{ action: string; parameters?: string[] }> = new EventEmitter<{ action: string; parameters?: string[] }>();
+	public readonly label = input.required<string>();
+	public readonly isReadOnly = input<boolean>(false);
+	public readonly placeholder = input<string>("");
+	public readonly inputControl = input.required<CustInputAdvance>();
+	public readonly action = input<CustButtonInputType | undefined>();
+	public readonly actionOut = output<{ action: string; parameters?: string[] }>();
 
 	public ngOnInit(): void {
-		this.inputControl.inputControl.setValidators(this.inputControl.validations);
+		this.inputControl().inputControl.setValidators(this.inputControl().validations);
 	}
 
 	public buttonClick(action: string, parameters?: string[]): void {

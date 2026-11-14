@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -13,15 +13,15 @@ import { CustButtonInput, CustButtonType, CustInputReturn } from "@shared/models
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonV2Component {
-	@Input({ required: true }) public type!: CustButtonInput;
-	@Output() public buttonClick: EventEmitter<CustInputReturn> = new EventEmitter<CustInputReturn>();
+	public readonly type = input.required<CustButtonInput>();
+	public readonly buttonClick = output<CustInputReturn>();
 
 	public get displayLength(): number {
-		return this.type.display?.length ?? 0;
+		return this.type().display?.length ?? 0;
 	}
 
 	public get buttonClass(): string {
-		switch (this.type.type) {
+		switch (this.type().type) {
 			case CustButtonType.primary: {
 				return "mat-flat-button color-set-primary";
 			}
@@ -50,15 +50,15 @@ export class ButtonV2Component {
 		if (this.displayLength === 0) {
 			return "0px";
 		}
-		return this.type.isTableButton ? "4px" : "8px";
+		return this.type().isTableButton ? "4px" : "8px";
 	}
 
 	public get buttonHeight(): string {
-		return this.type.isTableButton ? "32px" : "36px";
+		return this.type().isTableButton ? "32px" : "36px";
 	}
 
 	public get buttonFontSize(): string {
-		return this.type.isTableButton ? "12px" : "14px";
+		return this.type().isTableButton ? "12px" : "14px";
 	}
 
 	public onClick(selected: string, event?: Event): void {

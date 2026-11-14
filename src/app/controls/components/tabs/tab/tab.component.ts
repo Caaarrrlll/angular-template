@@ -1,17 +1,14 @@
-import { CommonModule } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { Component, input, model } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 
 @Component({
 	selector: "app-tab",
 	templateUrl: "./tab.component.html",
-	standalone: true,
-	imports: [CommonModule],
 })
 export class TabComponent {
-	@Input({ required: true }) public title!: string;
-	@Input() public active = false;
-	@Input() public completed = false;
-	@Input() public isConfig = false;
-	@Input() public stepControl?: FormGroup;
+	public readonly title = input.required<string>();
+	public readonly active = model<boolean>(false);
+	public readonly completed = model<boolean>(false);
+	public readonly isConfig = input<boolean>(false);
+	public readonly stepControl = input<FormGroup | undefined>();
 }
