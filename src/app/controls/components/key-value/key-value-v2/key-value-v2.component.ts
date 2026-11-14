@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { PercentPipe } from "@angular/common";
 
@@ -10,20 +10,20 @@ import { PercentPipe } from "@angular/common";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeyValueV2Component {
-	@Input({ required: true }) public key!: string;
-	@Input({ required: true }) public value!: string;
-	@Input() public valPercent?: number;
-	@Input() public alignRight: boolean = false;
-	@Input() public showEdit: boolean = false;
-	@Input() public showView: boolean = false;
-	@Input() public title?: string;
-	@Input() public keyTitle?: string;
-	@Input() public boldValue: boolean = false;
-	@Input() public keyColor?: "red" | "green" | "orange";
-	@Input() public valueColor?: "red" | "green" | "orange";
+	public readonly key = input.required<string>();
+	public readonly value = input.required<string>();
+	public readonly valPercent = input<number | undefined>();
+	public readonly alignRight = input<boolean>(false);
+	public readonly showEdit = input<boolean>(false);
+	public readonly showView = input<boolean>(false);
+	public readonly title = input<string | undefined>();
+	public readonly keyTitle = input<string | undefined>();
+	public readonly boldValue = input<boolean>(false);
+	public readonly keyColor = input<"red" | "green" | "orange" | undefined>();
+	public readonly valueColor = input<"red" | "green" | "orange" | undefined>();
 
-	@Output() public edit: EventEmitter<void> = new EventEmitter<void>();
-	@Output() public view: EventEmitter<void> = new EventEmitter<void>();
+	public readonly edit = output<void>();
+	public readonly view = output<void>();
 
 	public editField(): void {
 		this.edit.emit();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 
 @Component({
 	selector: "app-select-option",
@@ -7,12 +7,12 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionComponent {
-	@Input() public value: unknown = undefined;
-	@Input() public type: string = "radio";
+	public readonly value = input<unknown>();
+	public readonly type = input<string>("radio");
 
-	@Output() public selected: EventEmitter<unknown> = new EventEmitter<unknown>();
+	public readonly selected = output<unknown>();
 
 	public selectedOption(): void {
-		this.selected.emit(this.value);
+		this.selected.emit(this.value());
 	}
 }

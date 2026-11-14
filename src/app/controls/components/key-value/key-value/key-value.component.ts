@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 
 @Component({
 	selector: "app-key-value",
@@ -7,13 +7,13 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeyValueComponent {
-	@Input({ required: true }) public key!: string;
-	@Input({ required: true }) public value!: string;
-	@Input() public row: boolean = false;
-	@Input() public showEdit: boolean = false;
-	@Input() public removeValuePadding: boolean = false;
-	@Input() public sameFontSize: boolean = false;
-	@Output() public edit: EventEmitter<void> = new EventEmitter<void>();
+	public readonly key = input.required<string>();
+	public readonly value = input.required<string>();
+	public readonly row = input<boolean>(false);
+	public readonly showEdit = input<boolean>(false);
+	public readonly removeValuePadding = input<boolean>(false);
+	public readonly sameFontSize = input<boolean>(false);
+	public readonly edit = output<void>();
 
 	public editField(): void {
 		this.edit.emit();

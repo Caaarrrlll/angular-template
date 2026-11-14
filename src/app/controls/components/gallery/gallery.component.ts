@@ -1,12 +1,11 @@
 import { Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, ViewChild, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
-import { Observable, Subject, debounceTime } from "rxjs";
+import { Subject, debounceTime } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { GalleryPreviewComponent } from "@shared/components/gallery-preview/gallery-preview.component";
 import { ZoomDirective } from "@shared/directives/zoom.directive";
-import { EvaluationComparisonComponent } from "./evaluation-comparison/evaluation-comparison.component";
-import { Image, _DeconstructedFlatView } from "./gallery.models";
+import { Image } from "./gallery.models";
 
 const imageNotFoundUrl = "assets/images/image_not_found.png";
 
@@ -14,7 +13,7 @@ const imageNotFoundUrl = "assets/images/image_not_found.png";
 	selector: "app-gallery",
 	templateUrl: "./gallery.component.html",
 	styleUrls: ["./gallery.component.scss"],
-	imports: [MatRippleModule, MatIconModule, ZoomDirective, GalleryPreviewComponent, EvaluationComparisonComponent],
+	imports: [MatRippleModule, MatIconModule, ZoomDirective, GalleryPreviewComponent],
 	host: {
 		"(window:keydown)": "onKeyDown($event)",
 		"(window:resize)": "onResize()",
@@ -24,9 +23,6 @@ const imageNotFoundUrl = "assets/images/image_not_found.png";
 })
 export class GalleryComponent implements OnChanges, OnInit {
 	@Input() public images?: Image[];
-	@Input() public stockNumber: string = "";
-	@Input() public flatView: boolean = false;
-	@Input() public flatViewCompare: Array<Observable<_DeconstructedFlatView>> = [];
 
 	// ------- optional defaults that don't often need to be changed ------ //
 	@Input() public autoplay = true;
@@ -100,28 +96,6 @@ export class GalleryComponent implements OnChanges, OnInit {
 		if (!this.images) {
 			return;
 		}
-		if (this.stockNumber && this.flatView && this.currentIndex === 0) {
-			this.startAutoplay();
-			this.flatView = !this.flatView;
-			if (this.images[0].url !== imageNotFoundUrl) {
-				this.images.unshift({ url: imageNotFoundUrl });
-				this.arrLength = this.arrLength + 1;
-			}
-			this.currentIndex = this.currentIndex + 1;
-			this.autoplayEvent.next();
-			return;
-		}
-
-		if (this.stockNumber && !this.flatView && this.arrLength - 1 === this.currentIndex) {
-			this.flatView = !this.flatView;
-			this.currentIndex = 0;
-			this.autoplayEvent.next();
-			return;
-		}
-
-		if (!this.images) {
-			return;
-		}
 
 		if (this.currentIndex < this.arrLength - 1) {
 			this.currentIndex = this.currentIndex + 1;
@@ -134,18 +108,6 @@ export class GalleryComponent implements OnChanges, OnInit {
 	}
 
 	public prev(): void {
-		if (this.stockNumber && !this.flatView && this.currentIndex === 1) {
-			this.flatView = !this.flatView;
-			this.currentIndex = 0;
-			this.autoplayEvent.next();
-			return;
-		}
-		if (this.stockNumber && this.flatView && this.currentIndex === 0) {
-			this.flatView = !this.flatView;
-			this.currentIndex = this.arrLength - 1;
-			this.autoplayEvent.next();
-			return;
-		}
 		if (!this.images) {
 			return;
 		}
@@ -161,12 +123,6 @@ export class GalleryComponent implements OnChanges, OnInit {
 	}
 
 	public navigateToIndex(index: number): void {
-		if (this.stockNumber && !this.flatView && index === 0) {
-			this.flatView = !this.flatView;
-		}
-		if (this.stockNumber && this.flatView && index !== 0) {
-			this.flatView = false;
-		}
 		this.currentIndex = index;
 		if (this.autoplayGo) {
 			this.autoplayEvent.next();

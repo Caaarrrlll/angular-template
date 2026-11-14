@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import { MatChipsModule } from "@angular/material/chips";
 import { ChipStatus } from "./chip-status.enum";
 
@@ -10,12 +10,12 @@ import { ChipStatus } from "./chip-status.enum";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipStatusComponent {
-	@Input({ required: true }) public text: string = "";
-	@Input() public type: string = ChipStatus["Default"];
-	@Input() public isSmall?: boolean;
-	@Input() public showSolid?: boolean;
+	public readonly text = input<string>("");
+	public readonly type = input<string>(ChipStatus["Default"]);
+	public readonly isSmall = input<boolean | undefined>();
+	public readonly showSolid = input<boolean | undefined>();
 
 	public get statusClass(): string {
-		return ChipStatus[this.type] ?? ChipStatus["Default"];
+		return ChipStatus[this.type()] ?? ChipStatus["Default"];
 	}
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
 import { CustChipInput, CustChipReturn, CustInputReturn } from "@shared/models/cust-basic-controls";
@@ -10,10 +10,10 @@ import { CustChipInput, CustChipReturn, CustInputReturn } from "@shared/models/c
 	imports: [MatChipsModule, MatIconModule],
 })
 export class ChipsComponent {
-	@Input({ required: true }) public input!: CustChipInput[];
-	@Output() public inputChanged: EventEmitter<CustChipReturn | CustInputReturn> = new EventEmitter<CustChipReturn | CustInputReturn>();
+	public readonly input = input.required<CustChipInput[]>();
+	public readonly inputChanged = output<CustChipReturn | CustInputReturn>();
 
-	private chipClear: boolean = false;
+	private chipClear = false;
 
 	public mouseOver(item: CustChipInput): void {
 		item.mouseOver = true;

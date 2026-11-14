@@ -1,6 +1,13 @@
 <div id="fullScreen" class="outerGalleryContainer">
 	@if (arrLength > 1 && !onlyShowPreview) {
-		<div class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerPrev" [class.galleryNavButtonContainerPrevFS]="fullscreenOpen" (click)="prev()" #prevDiv>
+		<div
+			class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerPrev"
+			[class.galleryNavButtonContainerPrevFS]="fullscreenOpen"
+			role="button"
+			tabindex="0"
+			(click)="prev()"
+			(keydown.enter)="prev()"
+			#prevDiv>
 			<button class="generalGalleryBtn galleryNavButton prevButton" matRipple [matRippleTrigger]="prevDiv">
 				<mat-icon class="galleryIcon" [class.galleryIconOrange]="orangeIcons">chevron_left</mat-icon>
 			</button>
@@ -24,26 +31,26 @@
 
 		<span id="galleryZoomBox" class="galleryZoomBox" [style.background-image]="'url(' + currentImageUrl + ')'"></span>
 
-		@if (!flatView) {
-			<img
-				id="mainGalleryImage"
-				(load)="onImageLoad()"
-				[src]="currentImageUrl"
-				[alt]="currentImage?.title"
-				[style.object-fit]="imageSize"
-				[title]="currentImage?.description"
-				[cursorFollowZoom]="imageZoom && fullscreenOpen" />
-		} @else {
-			<div class="galleryFlatView" [class.galleryFlatViewFullscreen]="fullscreenOpen">
-				<app-evaluation-comparison [buyleadCode]="stockNumber" [flatViewCompare]="flatViewCompare"></app-evaluation-comparison>
-			</div>
-		}
+		<img
+			id="mainGalleryImage"
+			(load)="onImageLoad()"
+			[src]="currentImageUrl"
+			[alt]="currentImage?.title"
+			[style.object-fit]="imageSize"
+			[title]="currentImage?.description"
+			[cursorFollowZoom]="imageZoom && fullscreenOpen" />
 
 		@if (!onlyShowPreview) {
 			<div class="galleryPagerScollContainer" #pagerScrollContainer (wheel)="pagerHorizontalScroll($event)">
 				<div class="galleryPager">
 					@for (image of images; track $index) {
-						<span class="generalGalleryBtn galleryPagerButton" [class.selectedGalleryPagerButton]="$index === currentIndex" (click)="navigateToIndex($index)"></span>
+						<span
+							class="generalGalleryBtn galleryPagerButton"
+							[class.selectedGalleryPagerButton]="$index === currentIndex"
+							role="button"
+							tabindex="0"
+							(click)="navigateToIndex($index)"
+							(keydown.enter)="navigateToIndex($index)"></span>
 					}
 				</div>
 			</div>
@@ -64,7 +71,14 @@
 	</div>
 
 	@if (arrLength > 1 && !onlyShowPreview) {
-		<div class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerNext" [class.galleryNavButtonContainerNextFS]="fullscreenOpen" (click)="next()" #nextDiv>
+		<div
+			class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerNext"
+			[class.galleryNavButtonContainerNextFS]="fullscreenOpen"
+			role="button"
+			tabindex="0"
+			(click)="next()"
+			(keydown.enter)="next()"
+			#nextDiv>
 			<button class="generalGalleryBtn galleryNavButton nextButton" matRipple [matRippleTrigger]="nextDiv">
 				<mat-icon class="galleryIcon" [class.galleryIconOrange]="orangeIcons">chevron_right</mat-icon>
 			</button>

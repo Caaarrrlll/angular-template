@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
@@ -9,19 +9,19 @@ import { MatIconModule } from "@angular/material/icon";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeyValueV3Component {
-	@Input({ required: true }) public key!: string;
-	@Input({ required: true }) public value!: string;
-	@Input() public showEdit: boolean = false;
-	@Input() public showView: boolean = false;
-	@Input() public alignRight: boolean = false;
-	@Input() public title?: string;
-	@Input() public keyTitle?: string;
-	@Input() public boldValue: boolean = false;
-	@Input() public colon: boolean = true;
-	@Input() public bottomPadding: string = "10px";
+	public readonly key = input.required<string>();
+	public readonly value = input.required<string>();
+	public readonly showEdit = input<boolean>(false);
+	public readonly showView = input<boolean>(false);
+	public readonly alignRight = input<boolean>(false);
+	public readonly title = input<string | undefined>();
+	public readonly keyTitle = input<string | undefined>();
+	public readonly boldValue = input<boolean>(false);
+	public readonly colon = input<boolean>(true);
+	public readonly bottomPadding = input<string>("10px");
 
-	@Output() public edit: EventEmitter<void> = new EventEmitter<void>();
-	@Output() public view: EventEmitter<void> = new EventEmitter<void>();
+	public readonly edit = output<void>();
+	public readonly view = output<void>();
 
 	public editField(): void {
 		this.edit.emit();

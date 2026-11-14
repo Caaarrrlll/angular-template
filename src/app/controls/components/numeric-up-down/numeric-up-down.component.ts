@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
@@ -9,14 +9,14 @@ import { MatIconModule } from "@angular/material/icon";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NumericUpDownComponent {
-	@Input({ required: true }) public upDownCallback!: (value: number) => void;
-	@Input() public upValue?: number;
-	@Input() public downValue?: number;
+	public readonly upDownCallback = input.required<(value: number) => void>();
+	public readonly upValue = input<number | undefined>();
+	public readonly downValue = input<number | undefined>();
 
 	public call(value?: number): void {
 		if (value === undefined) {
 			return;
 		}
-		this.upDownCallback(value);
+		this.upDownCallback()(value);
 	}
 }

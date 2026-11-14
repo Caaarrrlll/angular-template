@@ -8,7 +8,3 @@ export interface Image {
 export interface PreviewImage extends Image {
 	visible: "block" | "none";
 }
-
-export interface _DeconstructedFlatView {
-	[key: string]: unknown;
-}

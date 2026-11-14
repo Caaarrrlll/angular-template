@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 @Component({
 	selector: "app-card",
@@ -7,9 +7,9 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-	@Input() public color?: string;
-	@Input() public showSidebar: boolean = false;
-	@Input() public marginRight: boolean = false;
-	@Input() public selected: boolean = false;
-	@Input() public fillHeight: boolean = false;
+	public readonly color = input<string | undefined>();
+	public readonly showSidebar = input<boolean>(false);
+	public readonly marginRight = input<boolean>(false);
+	public readonly selected = input<boolean>(false);
+	public readonly fillHeight = input<boolean>(false);
 }

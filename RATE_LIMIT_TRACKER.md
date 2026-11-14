@@ -25,8 +25,23 @@ Task: critical signals-readiness check of the project and a concrete migration p
 
 [✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
 [✓] Batch 1: loader, fab-button, button-primary, button-secondary, button-tertiary, button-text, slide-toggle, currency — build + eslint clean (CRLF fix via prettier)
-[•] Batch 2: housing-card, card, card-header, option, select, checkbox (sub), range-checkbox (sub)
-[ ] Batch 3: chips, chip-status, numeric-up-down, tab (sub), confirmation-dialog, media-dialog, evaluation-comparison
-[ ] Batch 4: key-value, key-value-v2, key-value-v3
-[ ] Verify after each batch: `npx ng build` + eslint on changed files
-[ ] Final verify: full `npx ng build` + sandbox visual check reminder; clean tracker boundary (next = Phase 2)
+[✓] Batch 2: housing-card, card, card-header, option, checkbox (sub), range-checkbox (sub) — build + eslint clean. `select` control already deleted in e7d4619 (empty .ts + orphan html/scss, zero consumers — skipped); consider deleting the orphan select files
+[✓] Batch 3: chips, chip-status, numeric-up-down, confirmation-dialog (no @Input/@Output — no-op), media-dialog (no @Input/@Output; teardown modernized to takeUntilDestroyed per coding standards), evaluation-comparison — build + eslint clean. `tab` (sub) moved to Phase 2: tabs.component + tab-back/next-button directives read/write child tab props directly (`tab.active = true`, `tab.completed`, `tab.isConfig`) — migrating the sub alone breaks them
+[✓] Batch 4: key-value, key-value-v2, key-value-v3 — build + eslint clean (no external consumers; templates only)
+[✓] Final verify (2026-11-14): full `npx ng build` passes (only pre-existing bundle-budget warning), prettier + eslint clean on every file touched in batches 2–4
+[✓] Clean boundary reached (2026-11-14): Phase 1 done. Developer reminders: (a) sandbox visual check of migrated controls; (b) orphan select files (`src/app/controls/components/select/select/` empty .ts + html/scss, zero consumers) can be deleted; (c) `tab` (sub) deferred to Phase 2 (parent/directives mutate child props). Next = Phase 2 per ROADMAP.md (input family, button-v2, button-toggle, drag-drop-file-upload, tabs + tab directives + tab sub)
+
+## Follow-up (2026-11-14): chips a11y lint fix
+
+[✓] chips.component.html clear-circle div: added `tabindex="0"`, `role="button"` and `(keydown.enter)="chipClearAction(item)"` to satisfy `click-events-have-key-events`; eslint + prettier clean (verified)
+
+## Task (2026-11-14): remove company-specific evaluation-comparison (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Deleted `src/app/controls/components/gallery/evaluation-comparison/`; removed `_DeconstructedFlatView` from gallery.models.ts
+[✓] Removed the flat-view path it solely hosted from gallery: `stockNumber`/`flatView`/`flatViewCompare` inputs, flat-view branches in next()/prev()/navigateToIndex(), `@if (!flatView)` template wrapper, `.galleryFlatView` styles
+[✓] Verify (2026-11-14): `npx ng build` passes (only pre-existing bundle-budget warning); eslint + prettier clean on gallery files; no remaining references in src (remaining `stockNumber` hits are unrelated card-table/table logic)
+
+## Follow-up (2026-11-14): gallery a11y lint fixes
+
+[✓] gallery.component.html: prev/next nav container divs and pager dot spans got `role="button"`, `tabindex="0"` and `(keydown.enter)` handlers (full-size click areas kept — handlers not moved to the inner 50px buttons); eslint + prettier clean, build passes (verified)

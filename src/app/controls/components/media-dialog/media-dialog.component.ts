@@ -1,8 +1,9 @@
 import { CommonModule } from "@angular/common";
-import { Component, InjectionToken, OnDestroy, OnInit, inject } from "@angular/core";
+import { Component, DestroyRef, InjectionToken, OnInit, inject } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
-import { Observable, Subject, map, takeUntil } from "rxjs";
+import { Observable, map } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ApiResponsePipe, ApiResponseState } from "@shared/pipes/api-response/api-response.pipe";
 import { LoaderComponent } from "@shared/components/loader/loader.component";
 import { MediaFile, _MediaDialogData } from "./media-dialog.models";
@@ -20,27 +21,22 @@ export const MEDIA_LOADER = new InjectionToken<(mediaKey: string) => Observable<
 	styleUrls: ["./media-dialog.component.scss"],
 	imports: [CommonModule, LoaderComponent, MatIconModule, ApiResponsePipe],
 })
-export class MediaDialogComponent implements OnInit, OnDestroy {
+export class MediaDialogComponent implements OnInit {
 	public imageData$ = new Observable<MediaFile | null>((subscriber) => subscriber.next(null));
 
 	private readonly mediaLoader = inject(MEDIA_LOADER, { optional: true });
 	private readonly dialogRef: MatDialogRef<MediaDialogComponent> = inject(MatDialogRef);
 	private readonly dialogData: _MediaDialogData = inject(MAT_DIALOG_DATA);
-	private readonly destroy$ = new Subject<void>();
+	private readonly destroyRef = inject(DestroyRef);
 
 	public ngOnInit(): void {
 		this.imageData$ = (this.mediaLoader?.(this.dialogData.mediaKey) ?? new Observable<MediaFile | null>((subscriber) => subscriber.next(null))).pipe(
-			takeUntil(this.destroy$),
+			takeUntilDestroyed(this.destroyRef),
 			map((media: MediaFile | null) => {
 				// strip `type` so the `apiResponse` pipe passes the raw file through as payload
 				return { ...media, type: undefined } as MediaFile;
 			}),
 		);
-	}
-
-	public ngOnDestroy(): void {
-		this.destroy$.next();
-		this.destroy$.complete();
 	}
 
 	public mediaSrc(state: ApiResponseState): string {

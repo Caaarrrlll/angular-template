@@ -31,7 +31,7 @@ Migrate the entire project to Angular signals instead of decorator-based reactiv
 
 **Phase 0 — establish the pattern (done):** `button-v1` already migrated. Finish its remaining `@Output()` (`selected`) as the first live example of `output()`.
 
-**Phase 1 — trivial leaf controls** (no ngOnChanges, no ViewChild, no CVA, ≤ ~6 inputs): `loader`, `fab-button`, `button-primary`, `button-secondary`, `button-tertiary`, `button-text`, `slide-toggle`, `currency`, `housing-card`, `card`, `card-header`, `option`, `select`, `checkbox` (sub), `range-checkbox` (sub), `chips`, `chip-status`, `numeric-up-down`, `key-value`, `key-value-v2`, `key-value-v3`, `tab` (sub), `media-dialog`, `confirmation-dialog`, `evaluation-comparison`.
+**Phase 1 — trivial leaf controls** (done 2026-11-14; exceptions: `tab` (sub) deferred to Phase 2 because the tabs parent/directives mutate child tab props directly; `select` had already been deleted from the project; `evaluation-comparison` was removed from the project on 2026-11-14): `loader`, `fab-button`, `button-primary`, `button-secondary`, `button-tertiary`, `button-text`, `slide-toggle`, `currency`, `housing-card`, `card`, `card-header`, `option`, `select`, `checkbox` (sub), `range-checkbox` (sub), `chips`, `chip-status`, `numeric-up-down`, `key-value`, `key-value-v2`, `key-value-v3`, `tab` (sub), `media-dialog`, `confirmation-dialog`, `evaluation-comparison`.
 
 **Phase 2 — input family + simple mid-size controls:** `input` + `input-text`, `input-email`, `input-number`, `input-phone`, `input-currency`, `input-select` (these carry subscription setup in `ngOnInit` — convert inputs to `input()` but leave the subscription wiring alone); `button-v2`, `button-toggle`, `drag-drop-file-upload`, `tabs` + `tab-back-button.directive` + `tab-next-button.directive`. (CVA trio moved to "Do not migrate".)
 
@@ -60,9 +60,23 @@ The goal is pragmatic cleanup, not forcing signals everywhere. These stay on the
 4. **CVA ordering**: `input()` changes when values arrive relative to `writeValue`; test form interactions, not just initial render.
 5. **`@ViewChild` on conditionally-rendered refs** (`@if` blocks): `viewChild()` returns a signal that updates when the ref appears — verify the old `undefined`-handling logic still holds.
 
-## Navigation service
+## Follow-up projects (priority: after the signals migration, before the navigation service)
 
-Build a generic navigation/menu service. (Legacy source `src/app/controls-to-port/services/navigation.service.ts` was deleted without migration on 2026-11-13; the mechanics below were recorded before deletion.)
+Priority order: current signals migration first, then these, then the navigation service (TBD).
+
+### Project CSS cleanup
+
+- Sweep the entire project's CSS: remove dead/unused styles, deduplicate repeated rules across controls, normalize spacing/naming conventions.
+- Work control-by-control with a sandbox visual check per batch (same cadence as the signals migration).
+
+### Button family merge investigation
+
+- Investigate how `button-primary`, `button-secondary` and `button-tertiary` can be merged — their differences are minimal (essentially styling), so a single parameterized control could replace the trio.
+- Compare against `button-v2`/`button-text` first: the end state may be one small button control family instead of five variants.
+
+## Navigation service (TBD)
+
+Status: TBD — no real need for it right now; revisit only when a forked app actually needs claim/country-filtered menus. Lower priority than the follow-up projects below. (Legacy source `src/app/controls-to-port/services/navigation.service.ts` was deleted without migration on 2026-11-13; the mechanics below were recorded before deletion.)
 
 - **Original:** builds claim- and country-filtered menus (`navSetup`, `canDisplay`, distinct-claims aggregation) from a large app-specific menu tree, gated by `LoginService` claims.
 - **Why parked:** the template's existing navigation base covers current needs, and the legacy menu data is app-specific (old-company).
