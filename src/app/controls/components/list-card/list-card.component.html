@@ -111,13 +111,13 @@
 											@if (detail.type === "button") {
 												<div class="button-item">
 													@if (detail.buttonType === "Primary") {
-														<app-button-primary [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button-primary>
+														<app-button-v2 [type]="tableButton(detail, 'Primary')" (buttonClick)="buttonAction(detail)"></app-button-v2>
 													}
 													@if (detail.buttonType === "Secondary") {
-														<app-button-secondary [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button-secondary>
+														<app-button-v2 [type]="tableButton(detail, 'Secondary')" (buttonClick)="buttonAction(detail)"></app-button-v2>
 													}
 													@if (!detail.buttonType || detail.buttonType === "Tertiary") {
-														<app-button-tertiary [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button-tertiary>
+														<app-button-v2 [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button-v2>
 													}
 												</div>
 											}

@@ -9,7 +9,6 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 @Component({
 	selector: "app-input-email",
 	templateUrl: "./input-email.component.html",
-	styleUrls: ["./input-email.component.scss"],
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
 })
 export class InputEmailComponent implements OnInit {

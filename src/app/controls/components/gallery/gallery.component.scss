@@ -1,4 +1,5 @@
 @use "tokens" as *;
+@use "utilities" as *;
 
 .outerGalleryContainer {
 	display: flex;
@@ -182,7 +183,7 @@
 }
 
 .galleryIconOrange {
-	filter: invert(55%) sepia(59%) saturate(2200%) hue-rotate(347deg) brightness(98%) contrast(95%);
+	@include orange-svg-filter;
 }
 
 .galleryControlsContainerTop {

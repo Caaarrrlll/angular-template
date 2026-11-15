@@ -17,7 +17,6 @@ import { _TableTypes } from "@shared/components/card-table/cust-table.enum";
 import { _HeaderAlignment, _HeaderTypes, _StatusChip } from "@shared/components/list-card/list-card.enum";
 import { _CardCol, _CardRow } from "@shared/components/list-card/list-card.interface";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
-import { ButtonPrimaryComponent } from "@shared/components/button/button-primary/button-primary.component";
 import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
 import { ChipStatusComponent } from "@shared/components/chip-status/chip-status.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
@@ -33,7 +32,7 @@ export interface _InfoCardParentDataContext {
 	selector: "app-info-card",
 	templateUrl: "./info-card.component.html",
 	styleUrls: ["./info-card.component.scss"],
-	imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, ButtonPrimaryComponent, ButtonV2Component, ChipStatusComponent, CurrencyComponent],
+	imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, ButtonV2Component, ChipStatusComponent, CurrencyComponent],
 })
 export class InfoCardComponent implements AfterContentInit {
 	@Input() public data!: Record<string, any>;

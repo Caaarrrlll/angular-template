@@ -14,8 +14,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { Observable } from "rxjs";
-import { ButtonPrimaryComponent } from "@shared/components/button/button-primary/button-primary.component";
-import { ButtonSecondaryComponent } from "@shared/components/button/button-secondary/button-secondary.component";
+import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
 import { LoaderComponent } from "@shared/components/loader/loader.component";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
 import { SafePipe } from "@shared/pipes/safe/safe.pipe";
@@ -32,8 +31,7 @@ import { DialogSetup, _DialogWindowControl } from "./dynamic-window.models";
 		TextFieldModule,
 		SafePipe,
 		LoaderComponent,
-		ButtonPrimaryComponent,
-		ButtonSecondaryComponent,
+		ButtonV2Component,
 		MatButtonModule,
 		MatButtonToggleModule,
 		MatCheckboxModule,
@@ -163,9 +161,9 @@ export class DynamicWindowComponent implements OnInit {
 		this.dialogRef.close(false);
 	}
 
-	public buttonInput(display: string, value: string, disabled: boolean = false): CustButtonInput {
+	public buttonInput(display: string, value: string, disabled = false, type = "Primary"): CustButtonInput {
 		return {
-			type: "",
+			type: type,
 			icon: "",
 			tooltip: "",
 			display: display,

@@ -166,8 +166,8 @@
 
 			@if (control.type === "approval") {
 				<div class="space-between-row">
-					<app-button-secondary [type]="buttonInput('Reject', 'Reject', !form.valid)" (buttonClick)="submitApproval('Reject')"></app-button-secondary>
-					<app-button-primary [type]="buttonInput('Approve', 'Approve', !form.valid)" (buttonClick)="submitApproval('Approve')"></app-button-primary>
+					<app-button-v2 [type]="buttonInput('Reject', 'Reject', !form.valid, 'Secondary')" (buttonClick)="submitApproval('Reject')"></app-button-v2>
+					<app-button-v2 [type]="buttonInput('Approve', 'Approve', !form.valid)" (buttonClick)="submitApproval('Approve')"></app-button-v2>
 				</div>
 			}
 		</div>
@@ -176,9 +176,9 @@
 
 <div class="row flex" [style.justify-content]="dialogSetup.hideBackButton || dialogSetup.hideSubmitButton ? 'flex-end' : 'space-between'">
 	@if (!dialogSetup.hideBackButton) {
-		<app-button-secondary [type]="buttonInput(dialogSetup.backButtonText, 'back')" (buttonClick)="close()"></app-button-secondary>
+		<app-button-v2 [type]="buttonInput(dialogSetup.backButtonText, 'back', false, 'Secondary')" (buttonClick)="close()"></app-button-v2>
 	}
 	@if (!dialogSetup.hideSubmitButton) {
-		<app-button-primary [type]="buttonInput(dialogSetup.submitButtonText, 'submit', !form.valid)" (buttonClick)="submit()"></app-button-primary>
+		<app-button-v2 [type]="buttonInput(dialogSetup.submitButtonText, 'submit', !form.valid)" (buttonClick)="submit()"></app-button-v2>
 	}
 </div>

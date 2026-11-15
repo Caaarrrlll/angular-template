@@ -1,7 +1,25 @@
-// Shared mixins for component styles. Grows as Phase 2 finds more
-// copy-pasted rules to dedupe. Usage: `@use "utilities" as *;`
+// Shared mixins for component styles. Only truly-identical rules that recur
+// across multiple files belong here; file-local duplication stays in the file.
+// Usage: `@use "utilities" as *;`
 // (angular.json `stylePreprocessorOptions.includePaths` points at this folder).
+@use "tokens" as *;
 
 @mixin cursor-pointer {
 	cursor: pointer;
+}
+
+@mixin orange-svg-filter {
+	filter: invert(55%) sepia(59%) saturate(2200%) hue-rotate(347deg) brightness(98%) contrast(95%);
+}
+
+@mixin input-button-icon {
+	color: $color-blue-gray-light;
+	height: unset;
+	width: unset;
+	@include cursor-pointer;
+}
+
+@mixin input-button-wrapper {
+	background-color: unset;
+	border: none;
 }

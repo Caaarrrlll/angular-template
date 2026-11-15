@@ -1,9 +1,5 @@
 @use "tokens" as *;
-
-.galleryPreviewContainer {
-	display: flex;
-	justify-content: center;
-}
+@use "utilities" as *;
 
 .galleryPreviewImageRow {
 	display: flex;
@@ -65,7 +61,7 @@
 }
 
 .galleryPreviewSvgIconOrange {
-	filter: invert(55%) sepia(59%) saturate(2200%) hue-rotate(347deg) brightness(98%) contrast(95%);
+	@include orange-svg-filter;
 }
 
 .galleryPreviewImage {
@@ -76,7 +72,7 @@
 }
 
 .galleryPreviewImage:hover {
-	cursor: pointer;
+	@include cursor-pointer;
 }
 
 .galleryPreviewActiveImage {

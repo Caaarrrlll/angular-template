@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { ButtonTertiaryComponent } from "@shared/components/button/button-tertiary/button-tertiary.component";
+import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
 import { _CustTableInterface } from "@shared/components/table/cust-table.interface";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
@@ -15,7 +15,7 @@ import { ThousandSeparatorPipe } from "@shared/pipes/thousand-separator/thousand
 	selector: "app-cust-table-dialogue",
 	templateUrl: "./cust-table-dialogue.component.html",
 	styleUrls: ["./cust-table-dialogue.component.scss"],
-	imports: [CommonModule, MatButtonModule, MatIconModule, MatTableModule, CurrencyComponent, ButtonTertiaryComponent, PostfixPipe, ThousandSeparatorPipe],
+	imports: [CommonModule, MatButtonModule, MatIconModule, MatTableModule, CurrencyComponent, ButtonV2Component, PostfixPipe, ThousandSeparatorPipe],
 })
 export class CustTableDialogueComponent implements OnInit {
 	@Input() public dataSource!: MatTableDataSource<Record<string, unknown>>;
@@ -39,7 +39,7 @@ export class CustTableDialogueComponent implements OnInit {
 
 	public tableButton(column: _CustTableInterface): CustButtonInput {
 		return {
-			type: "",
+			type: "Tertiary",
 			icon: column.icon ? column.icon : "",
 			iconSide: column.icon ? "left" : "",
 			tooltip: column.tooltip ? column.tooltip : "",

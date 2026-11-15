@@ -103,9 +103,9 @@
 		<div class="card-height" [style.--height]="tableProperties.height">
 			@if (!data) {
 				<div style="padding-left: 8px">
-					<app-button-primary
+					<app-button-v2
 						[type]="{
-							type: '',
+							type: 'Primary',
 							icon: '',
 							tooltip: '',
 							display: errorActionButton,
@@ -114,7 +114,7 @@
 							isTableButton: false,
 							width: '160px',
 						}"
-						(buttonClick)="buttonAction(errorActionButton)"></app-button-primary>
+						(buttonClick)="buttonAction(errorActionButton)"></app-button-v2>
 				</div>
 			}
 			@for (row of cardRows; track $index) {
@@ -253,7 +253,7 @@
 										}
 										@if (detail.buttonClick) {
 											<div>
-												<app-button-primary [type]="tableButton(detail, '150px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button-primary>
+												<app-button-v2 [type]="tableButton(detail, '150px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button-v2>
 											</div>
 										}
 									</div>
@@ -499,7 +499,7 @@
 												<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
 											</div>
 											<div [style.width]="detail.label.length * 10 + 'px'">
-												<app-button-primary [type]="tableButton(detail, '110px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button-primary>
+												<app-button-v2 [type]="tableButton(detail, '110px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button-v2>
 											</div>
 										}
 										@if (!detail.label) {

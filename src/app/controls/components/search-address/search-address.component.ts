@@ -11,7 +11,6 @@ export interface _AddressResult {
 @Component({
 	selector: "app-search-address",
 	templateUrl: "./search-address.component.html",
-	styleUrls: ["./search-address.component.scss"],
 	imports: [CommonModule, MatFormFieldModule, MatInputModule],
 })
 export class SearchAddressComponent implements AfterViewInit, OnChanges {
@@ -20,12 +19,12 @@ export class SearchAddressComponent implements AfterViewInit, OnChanges {
 	@Output() public updateAddress: EventEmitter<_AddressResult[]> = new EventEmitter<_AddressResult[]>();
 	@Output() public manualUpdateAddress: EventEmitter<string> = new EventEmitter<string>();
 
-	@Input() public disabled: boolean = false;
-	@Input() public width: string = "100%";
-	@Input() public types: string = "address";
-	@Input() public labelText: string = "Search Address";
-	@Input() public value: string = "";
-	@Input() public allowManualInput: boolean = false;
+	@Input() public disabled = false;
+	@Input() public width = "100%";
+	@Input() public types = "address";
+	@Input() public labelText = "Search Address";
+	@Input() public value = "";
+	@Input() public allowManualInput = false;
 
 	public neededTypes: string[] = ["postal_code", "administrative_area_level_1", "locality", "sublocality_level_1", "sublocality_level_2", "route", "street_number"];
 

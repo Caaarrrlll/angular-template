@@ -4,9 +4,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { ChipStatusComponent } from "@shared/components/chip-status/chip-status.component";
 import { CountDownComponent } from "@shared/components/count-down/count-down.component";
-import { ButtonPrimaryComponent } from "@shared/components/button/button-primary/button-primary.component";
-import { ButtonSecondaryComponent } from "@shared/components/button/button-secondary/button-secondary.component";
-import { ButtonTertiaryComponent } from "@shared/components/button/button-tertiary/button-tertiary.component";
+import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
 import {
@@ -35,17 +33,7 @@ export interface _ListCardParentButtonContext {
 	selector: "app-list-card",
 	templateUrl: "./list-card.component.html",
 	styleUrls: ["./list-card.component.scss"],
-	imports: [
-		CommonModule,
-		MatCardModule,
-		MatIconModule,
-		ChipStatusComponent,
-		CountDownComponent,
-		ButtonPrimaryComponent,
-		ButtonSecondaryComponent,
-		ButtonTertiaryComponent,
-		CurrencyComponent,
-	],
+	imports: [CommonModule, MatCardModule, MatIconModule, ChipStatusComponent, CountDownComponent, ButtonV2Component, CurrencyComponent],
 })
 export class ListCardComponent implements OnChanges, OnInit {
 	@Input() public data?: Record<string, any>;
@@ -111,9 +99,9 @@ export class ListCardComponent implements OnChanges, OnInit {
 		this.pulseColour = timeRemaining >= 60 ? "pulse" : timeRemaining > 0 ? "urgent" : "";
 	}
 
-	public tableButton(detail: _CardCol): CustButtonInput {
+	public tableButton(detail: _CardCol, type = "Tertiary"): CustButtonInput {
 		return {
-			type: "",
+			type: type,
 			icon: "",
 			tooltip: "",
 			display: detail.value,

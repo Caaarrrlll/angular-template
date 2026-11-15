@@ -12,7 +12,7 @@ Task: critical signals-readiness check of the project and a concrete migration p
 ## Follow-up (2026-11-13): pragmatic scope cut for the signals plan (developer-approved)
 
 [✓] ROADMAP.md amended: Phases 4 & 5 dropped; "Do not migrate" subsection added (heavy coupled controls table/card-table/linq-grid-filters/expandable-grid/dynamic-material-dialog/dynamic-window/info-card/list-card/gallery/search-address; CVA trio inputs; library directives sweep; standalone getter→computed; standalone viewChild swaps; input.required() restricted). Phase 2 loses the CVA trio; Phase 3 narrowed to ngOnChanges redesigns (carousel, gallery-preview, tab-group, count-down) + opportunistic accordion/zoom-\* viewChild swaps
-[•] Summarize the revised plan for the developer (chat only)
+[✓] Summarize the revised plan for the developer (chat only) — closed 2026-11-15: plan was approved and executed (Phases 0–3 done; Phase 4/5 dropped to "Do not migrate"); stale in-progress marker resolved
 
 ## Task (2026-11-13): signals migration Phase 0 — finish button-v1's `@Output()` (developer-approved)
 
@@ -88,4 +88,32 @@ Task: critical signals-readiness check of the project and a concrete migration p
 [✓] Batch 4: grays — 11 files; build + prettier verified; leftovers = chips HTML inline styles + tab-group TS string default (both deferred — not scss)
 [✓] Batch 5: semantic — greens/reds/blues → tokens, 9 files; build + prettier verified; leftovers = table check/close HTML inline styles only (deferred)
 [✓] Final verify (2026-11-14): full residual-hex inventory scanned — remaining literal hex in component scss = documented per-file singletons only (button-v2 #3d444d/#4e525c, card-header+list-card #ecebed, chip-status #f3f3f3, select #0d141f/#525861, tab-group #293640, card-header gradient #fb9d17/#f5871f); ROADMAP.md Phase 1 annotated done; prettier clean; ng build passes
-[✓] Clean boundary reached: Phase 1 done. Next = Phase 2 dedupe copy-pasted rules into _utilities.scss mixins (start: .show-pointer in key-value trio); also queued: move HTML inline hex styles into scss where touched
+## Task (2026-11-14): CSS cleanup Phase 2 — dedupe copy-pasted rules (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Survey: 74 truly-identical duplicate rule bodies found across component scss (normalized-body grouping)
+[✓] Mixins decided by criteria (multi-file + semantic): cursor-pointer, orange-svg-filter, input-button-icon, input-button-wrapper added to _utilities.scss; single-file dupes + standalone cursor:pointer left as-is (KISS); select orphan usage skipped
+[✓] Replaced 9 usages across 6 files: key-value trio (.show-pointer ×4), gallery + gallery-preview (orange-svg-filter, hover cursor), input family (button-icon/button-wrapper ×2 each); @use "utilities" added to all 6
+[✓] Final verify (2026-11-14): ng build passes, prettier clean, token/mixin wiring confirmed via build; ROADMAP.md Phase 2 annotated done with deferrals recorded
+## Task (2026-11-14): CSS cleanup Phase 3 — dead-style removal (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Delete orphan select/select/ leftovers: folder removed after verifying empty .ts + zero consumers
+[✓] Script survey: 43 class-selector candidates absent from all src ts/html; first run had a $null-Get-Content bug leaking stale names — re-run fixed; 8 zero-byte scss files identified
+[✓] Manual review: kept false positives (card/card-header/button-v1 dynamic color inputs, accordion animation states, carousel 'vehicle-imgs-'+preview(), galleryZoomBoxVisible via ZoomDirective, comment text); confirmed dead: card-table demo leftovers ×3, dynamic-window unused utilities ×6, gallery-preview duplicate .galleryPreviewContainer (live copy in gallery scss)
+[✓] Deleted confirmed dead blocks + 8 zero-byte scss files + their styleUrls entries; fixed pre-existing no-inferrable-types lint errors in search-address.component.ts while touched
+[✓] Verify (2026-11-14): ng build passes, eslint clean on touched ts, prettier clean; ROADMAP.md Phase 3 annotated
+[✓] Clean boundary reached: Phase 3 done. Next = Phase 4 naming normalization (optional, lowest priority — only inside files already touched); still open: developer decision on the two clone families (shared partial vs component merge), HTML inline hex styles, tab-group TS default color
+
+## Task (2026-11-15): button family merge investigation (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Read all button controls (v1, v2, primary, secondary, tertiary, text): ts/html/scss
+[✓] Survey consumers of each button control across src (segments, sandbox)
+[✓] Diff API surfaces + styles; identify overlap and merge shape
+[✓] Write the merge proposal/investigation results into ROADMAP.md; present options to the developer (developer decides before any code change)
+[✓] Developer decision: Option A (delete wrapper layer, use app-button-v2 directly) + delete button-v1
+[✓] Delete button-v1, button-primary, button-secondary, button-tertiary, button-text
+[✓] Update consumers: dynamic-window, info-card, list-card, table, table-dialogue (tags → app-button-v2 with real CustButtonType; imports)
+[✓] Verify: ng build + eslint/prettier on touched files; ROADMAP.md annotated; clean tracker boundary
+[✓] Clean boundary reached (2026-11-15): button family merge done — end state is button-v2 + fab-button. Optional follow-ups: button-v2 rename (`app-button`), pre-existing eslint debt in heavy controls (info-card/list-card/table/dynamic-window/table-dialogue). Next per ROADMAP.md = sandbox flesh-out (demos for every control) or developer-directed work

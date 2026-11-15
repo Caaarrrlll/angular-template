@@ -160,23 +160,29 @@
 							@case ("buttonConditional") {
 								<td mat-cell *matCellDef="let row">
 									@if (row[tableConfig[i].colName]) {
-										<app-button-tertiary [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-tertiary>
+										<app-button-v2
+											[type]="tableButton(tableConfig[i], '', '', '', 'Tertiary')"
+											(buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-v2>
 									}
 								</td>
 							}
 							@case ("buttonTertiary") {
 								<td mat-cell *matCellDef="let row">
-									<app-button-tertiary [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-tertiary>
+									<app-button-v2
+										[type]="tableButton(tableConfig[i], '', '', '', 'Tertiary')"
+										(buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-v2>
 								</td>
 							}
 							@case ("buttonPrimary") {
 								<td mat-cell *matCellDef="let row">
-									<app-button-primary [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-primary>
+									<app-button-v2 [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-v2>
 								</td>
 							}
 							@case ("button") {
 								<td mat-cell *matCellDef="let row">
-									<app-button-secondary [type]="tableButton(tableConfig[i])" (buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-secondary>
+									<app-button-v2
+										[type]="tableButton(tableConfig[i], '', '', '', 'Secondary')"
+										(buttonClick)="buttonEmit(row, tableConfig[i].display, tableConfig[i].colName)"></app-button-v2>
 								</td>
 							}
 							@case ("percentage") {
@@ -210,9 +216,9 @@
 							}
 							@case ("favouriteButton") {
 								<td mat-cell *matCellDef="let row">
-									<app-button-tertiary
-										[type]="tableButton(tableConfig[i], row[col] ? 'star' : 'star_border', '')"
-										(buttonClick)="buttonEmit(row, tableConfig[i].display)"></app-button-tertiary>
+									<app-button-v2
+										[type]="tableButton(tableConfig[i], row[col] ? 'star' : 'star_border', '', '', 'Tertiary')"
+										(buttonClick)="buttonEmit(row, tableConfig[i].display)"></app-button-v2>
 								</td>
 							}
 							@case ("listPopupHover") {

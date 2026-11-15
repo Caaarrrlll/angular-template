@@ -5,7 +5,6 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 @Component({
 	selector: "app-slide-toggle",
 	templateUrl: "./slide-toggle.component.html",
-	styleUrls: ["./slide-toggle.component.scss"],
 	imports: [MatSlideToggleModule],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

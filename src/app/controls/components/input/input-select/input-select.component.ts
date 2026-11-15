@@ -8,7 +8,6 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 @Component({
 	selector: "app-input-select",
 	templateUrl: "./input-select.component.html",
-	styleUrls: ["./input-select.component.scss"],
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule],
 })
 export class InputSelectComponent implements OnInit {

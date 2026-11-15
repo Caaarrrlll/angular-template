@@ -1,17 +1,14 @@
 @use "tokens" as *;
+@use "utilities" as *;
 
 .currency-symbol {
 	color: $color-blue-gray-light;
 }
 
 .button-icon {
-	color: $color-blue-gray-light;
-	height: unset;
-	width: unset;
-	cursor: pointer;
+	@include input-button-icon;
 }
 
 .button-wrapper {
-	background-color: unset;
-	border: none;
+	@include input-button-wrapper;
 }

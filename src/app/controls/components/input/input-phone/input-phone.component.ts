@@ -9,7 +9,6 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 @Component({
 	selector: "app-input-phone",
 	templateUrl: "./input-phone.component.html",
-	styleUrls: ["./input-phone.component.scss"],
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
 })
 export class InputPhoneComponent implements OnInit {

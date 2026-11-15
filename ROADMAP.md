@@ -81,8 +81,8 @@ Priority order: current signals migration first, then these, then the navigation
 
 1. **Phase 0 — token foundation:** create `src/app/library/styles/_tokens.scss` (brand palette incl. orange + its intentional variants, navy scale, grays, status colors matching the snackbar theming) and `_utilities.scss` (shared rules like `.show-pointer`); make it importable via angular.json `stylePreprocessorOptions.includePaths`. No dependencies added — plain SCSS.
 2. **Phase 1 — token replacement (done 2026-11-14):** replace hex literals with tokens, highest-traffic colors first (white → orange → navy → grays). Batch by control family, `ng build` + sandbox visual check per batch; decicions on near-variants (keep as named tokens vs unify) get recorded when first hit. Result: batches ran by color group instead of control family (white/black, orange incl. `rgba` for `#e25e0098`, navy/charcoal/slate/blue-gray, grays, semantic greens/reds/blues); 30 component scss files + `styles.scss` verified to `@use "tokens" as *;` and build + prettier verified per batch. Remaining literal hex in component scss = documented per-file singletons only (`_tokens.scss` comments list them). Deferred: hex inside HTML inline styles (chips, dynamic-material-dialog, drag-drop-file-upload, table check/close icons) and the tab-group TS default `--tab-label-hover-color` — those can't reference SCSS tokens until the styles move into scss/ts with real tokens.
-3. **Phase 2 — dedupe copy-pasted rules:** identical rules move into `_utilities.scss`/mixins and are `@include`d (keeps component encapsulation; avoids global-class collision risk). Only dedupe when rules are truly identical.
-4. **Phase 3 — dead-style removal:** per file, grep each selector against the component template before deleting; start with the largest files (list-card, info-card, gallery). Also delete the orphan `select/select/` scss/html/ts leftovers.
+3. **Phase 2 — dedupe copy-pasted rules (done 2026-11-14):** identical rules move into `_utilities.scss`/mixins and are `@include`d (keeps component encapsulation; avoids global-class collision risk). Only dedupe when rules are truly identical. Result: 4 mixins added (`cursor-pointer`, `orange-svg-filter`, `input-button-icon`, `input-button-wrapper`), 9 usages replaced across 6 files (key-value trio `.show-pointer`, gallery/gallery-preview orange SVG filter + hover, input family `.button-icon`/`.button-wrapper`). **Deferred — needs developer decision:** the two near-clone families (info-card ↔ list-card with ~15 identical rule pairs; drag-drop-file-upload ↔ dynamic-material-dialog with ~5 identical pairs) share copy-pasted styles; the clean fix is a shared partial `@use`d by both or a component merge — not a pile of global mixins. Also skipped: option ↔ orphan `select/select/` identical `.checkbox` blocks (orphan dies in Phase 3); standalone single `cursor: pointer` declarations left as-is (mixin adds no value).
+4. **Phase 3 — dead-style removal (done 2026-11-14):** per file, grep each selector against the component template before deleting; start with the largest files (list-card, info-card, gallery). Also delete the orphan `select/select/` scss/html/ts leftovers. Result: orphan `select/select/` folder deleted (empty .ts, zero consumers); survey script (class-selector extraction vs whole-src ts/html grep) found 43 candidates — after manual verification all but 10 were false positives kept: dynamic `[class]="color()"` inputs (card, card-header, button-v1), animation state strings (accordion), `'vehicle-imgs-' + preview()` dynamic classes (carousel), ZoomDirective `renderer.addClass` (`galleryZoomBoxVisible`), comment text (`_tokens.scss`/`_utilities.scss`). Deleted: card-table Material expansion-table demo leftovers (`tr.detail-row`, `.element-row td`, `.element-detail`), dynamic-window unused utilities (`.rotateButton`, `.k-textarea`, `.k-form-hint`, `.j-c-end`, `.j-c-space-between`, `.a-i-center` — component has ng-content but no `::ng-deep`, so emulated encapsulation can never match them), gallery-preview's dead duplicate `.galleryPreviewContainer` (the live styling lives in gallery's own scss), and 8 zero-byte scss files with their `styleUrls` entries (app, input-email, input-phone, input-select, search-address, slide-toggle, contact, landing). Pre-existing eslint `no-inferrable-types` debt in search-address.component.ts fixed while touched. Build + eslint + prettier verified.
 5. **Phase 4 — naming normalization (optional, lowest priority):** only inside files already touched; keep selectors stable otherwise.
 
 #### Risks
@@ -92,10 +92,42 @@ Priority order: current signals migration first, then these, then the navigation
 - Global utility classes could collide with Angular Material internals — prefer component-level `@use` + `@include` over global classes.
 - Material prebuilt theme overrides: snackbar colors live in `styles.scss`; keep them as status-color tokens, not touched per component.
 
-### Button family merge investigation
+### Button family merge investigation (surveyed 2026-11-15)
 
-- Investigate how `button-primary`, `button-secondary` and `button-tertiary` can be merged — their differences are minimal (essentially styling), so a single parameterized control could replace the trio.
-- Compare against `button-v2`/`button-text` first: the end state may be one small button control family instead of five variants.
+#### Inventory (6 controls in `src/app/controls/components/button/`)
+
+- **`button-v1`** — legacy custom-styled button (not Material): 15 string-typed style inputs (`color`, `fontSize`, `padding`, …), `askToConfirm` double-click confirm with progress bar, contextmenu `mat-menu` of items. **Zero consumers** anywhere in src.
+- **`button-v2`** — the real engine: takes `CustButtonInput` (incl. `CustButtonType`: Primary/Secondary/Tertiary/Text/Disabled/Icon), renders Material buttons with `color-set-*` classes, icon/tooltip/loading/isTableButton handling. **1 consumer file** (info-card ×2).
+- **`button-primary` / `button-secondary` / `button-tertiary`** — three **byte-identical 26-line wrappers** around button-v2 that overwrite `type` with their own variant. Consumers: dynamic-window (4+4), list-card (2+2+2), info-card (6 primary), table (2 primary + 2 secondary + 6 tertiary), table-dialogue (2 tertiary).
+- **`button-text`** — identical 4th wrapper forcing `type: text`. **Zero consumers.** Bug: its selector is `app-button-primary` (duplicate of button-primary — latent collision if both are imported).
+
+#### Findings
+
+1. The wrapper layer is pure sugar that creates friction: consumers must build a full `CustButtonInput` including a **throwaway `type: ""`** that the wrapper discards (table/info-card `tableButton()` helpers do exactly this).
+2. button-v2 already covers every variant via `CustButtonType` — a single tag `<app-button-v2>` with the correct `type` in the input object replaces all four wrappers. The table/list-card config strings already use the enum spellings (`"Primary"`/`"Secondary"`/`"Tertiary"`).
+3. `button-v1` is a different design language and dead code; it is not part of the v2-family merge.
+4. Inputs render their own inline Material action button (via `_utilities.scss` mixins) — separate concern, unaffected by this merge.
+5. Sandbox currently demos no buttons; per roadmap order, sandbox flesh-out lands after this merge.
+
+#### Merge options (developer decision)
+
+- **Option A — delete the wrapper layer (recommended):** remove `button-primary/secondary/tertiary/text`; update ~20 tags across 5 consumer files to `<app-button-v2 [type]="...">` with the real `CustButtonType` set in the object they already build. CustButtonType becomes mandatory in `CustButtonInput` usages. End state: one engine (v2) + optional rename (`app-button`).
+- **Option B — keep the wrapper API, prune dead code:** delete only `button-text` (dead + broken selector) and decide on `button-v1` (delete or keep as the custom-style alternate). Wrappers stay as-is; zero template churn.
+- **Either option:** decide `button-v1` — zero consumers; delete or park.
+
+#### Result (done 2026-11-15, developer-approved Option A + delete button-v1)
+
+- Deleted all five dead/derivative controls: `button-v1`, `button-primary`, `button-secondary`, `button-tertiary`, `button-text`. End state: `button-v2` + `fab-button` (one engine, no wrapper layer).
+- Consumers switched to `<app-button-v2>` with the real variant in the object they already build: dynamic-window (`buttonInput` gained a `type = "Primary"` param; the two secondary call sites pass `"Secondary"`), info-card (`tableButton` hardcodes `"Primary"`; the inline object literal sets `type: 'Primary'`), list-card (`tableButton` gained `type = "Tertiary"`; the Primary/Secondary `@if` branches pass their variant), table (`tableButton` gained a 5th `type = "Primary"` param; tertiary/favourite/secondary call sites pass their variant), table-dialogue (`tableButton` hardcodes `"Tertiary"`).
+- Behavior-preserving: the old wrappers only overwrote `type`; no consumer reads the emitted payload's `action`/`event` fields (verified by grep), so the payload-shape difference (CustChipReturn vs CustInputReturn) is inert.
+- Verify: `ng build` passes (only pre-existing bundle-budget warning); prettier clean; no new lint errors introduced (remaining eslint output = pre-existing debt in the do-not-migrate heavy controls: `no-inferrable-types` on old `@Input`s/params, `no-explicit-any`, a11y `mouseover`/click handlers, `eqeqeq` — tracked as candidate future cleanup, not part of this merge).
+- Optional follow-up (not done): rename `button-v2` → `button`/`app-button` if the version suffix should go.
+
+#### Risks
+
+- `CustButtonType` values are case-sensitive strings (`"Primary"`, `"icon"`); every rewritten tag must use the exact spelling.
+- The wrappers strip down nothing — the only behavioral surface is the forced `type`; renaming to v2 directly is behavior-preserving.
+- `disabled` variant (`CustButtonType.disabled`) is reachable only through v2 today and stays so.
 
 ### Sandbox flesh-out
 

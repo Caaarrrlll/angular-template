@@ -6,9 +6,7 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSortModule, Sort } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
-import { ButtonPrimaryComponent } from "@shared/components/button/button-primary/button-primary.component";
-import { ButtonSecondaryComponent } from "@shared/components/button/button-secondary/button-secondary.component";
-import { ButtonTertiaryComponent } from "@shared/components/button/button-tertiary/button-tertiary.component";
+import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
 import { LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
 import { _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
@@ -44,9 +42,7 @@ import { PASSED_INFO } from "./table-constants.const";
 		MatButtonModule,
 		MatIconModule,
 		CurrencyComponent,
-		ButtonPrimaryComponent,
-		ButtonSecondaryComponent,
-		ButtonTertiaryComponent,
+		ButtonV2Component,
 	],
 	providers: [{ provide: PASSED_INFO, useValue: "" }],
 })
@@ -212,10 +208,10 @@ export class TableComponent implements OnDestroy, AfterContentInit {
 		};
 	}
 
-	public tableButton(config: _CustTableInterface, icon: string = "", display: string = "", iconSide: string = ""): CustButtonInput {
+	public tableButton(config: _CustTableInterface, icon: string = "", display: string = "", iconSide: string = "", type = "Primary"): CustButtonInput {
 		const resolvedIcon = icon || config.icon || "";
 		return {
-			type: "",
+			type: type,
 			icon: resolvedIcon,
 			iconSide: iconSide || (resolvedIcon ? "left" : ""),
 			tooltip: config.tooltip ?? "",

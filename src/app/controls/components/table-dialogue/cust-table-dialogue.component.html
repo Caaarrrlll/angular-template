@@ -24,7 +24,7 @@
 						@default {
 							<td mat-cell *matCellDef="let element">
 								@if (column.colName.includes("view")) {
-									<app-button-tertiary [type]="tableButton(column)" (buttonClick)="navigateToStock(element)"></app-button-tertiary>
+									<app-button-v2 [type]="tableButton(column)" (buttonClick)="navigateToStock(element)"></app-button-v2>
 								}
 								{{ element[column.colName] }}
 							</td>
