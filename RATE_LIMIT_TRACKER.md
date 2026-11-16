@@ -117,3 +117,73 @@ Task: critical signals-readiness check of the project and a concrete migration p
 [✓] Update consumers: dynamic-window, info-card, list-card, table, table-dialogue (tags → app-button-v2 with real CustButtonType; imports)
 [✓] Verify: ng build + eslint/prettier on touched files; ROADMAP.md annotated; clean tracker boundary
 [✓] Clean boundary reached (2026-11-15): button family merge done — end state is button-v2 + fab-button. Optional follow-ups: button-v2 rename (`app-button`), pre-existing eslint debt in heavy controls (info-card/list-card/table/dynamic-window/table-dialogue). Next per ROADMAP.md = sandbox flesh-out (demos for every control) or developer-directed work
+
+## Task (2026-11-15): planning session — sandbox plan + fab-button merge plan + Angular best-practices critique (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Sandbox flesh-out: survey controls inventory + current sandbox structure; write plan into ROADMAP.md (do not start implementation)
+[✓] fab-button: survey ts/html/scss + consumers; write merge plan into ROADMAP.md (developer decides before any code change)
+[✓] Angular best-practices critique: survey project-wide patterns/decorators/structs; write findings into ROADMAP.md (notes only, no code changes)
+[✓] Clean boundary: all three plans recorded; present summary + next options to developer
+[✓] Developer decisions (2026-11-15): fab-button = keep + parameterize (icon/aria inputs + a11y); audit dead infra = KEEP for future forks (annotated in ROADMAP.md); next task = OnPush sweep
+[✓] Update ROADMAP.md annotations for both decisions
+
+## Task (2026-11-15): OnPush sweep — add ChangeDetectionStrategy.OnPush to the 34 components missing it (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Batch 1: segments + app (app.component, contact, landing, not-found, sandbox) — add OnPush, build + prettier
+[✓] Batch 2: input family (input-text/email/number/phone/currency/select) — add OnPush, build + prettier
+[✓] Batch 3: tabs family (tabs, tab, tab-group) + accordion — add OnPush, build + prettier
+[✓] Batch 4: mid-size controls (chips, checkbox-group, range-checkbox-group, range-date-picker, button-toggle, media-dialog, confirmation-dialog, info-card, list-card) — add OnPush, build + prettier
+[✓] Batch 5: heavy controls (table, card-table, gallery, dynamic-window, dynamic-material-dialog, search-address, linq-grid-filters, expandable-grid + expandable-grid-form, navigation, table-dialogue) — add OnPush, build + prettier
+[✓] Final verify (2026-11-15): zero components without OnPush (re-scan clean); full ng build passes (pre-existing bundle-budget warning only); prettier clean on all 35 touched files. Sandbox-verification flags recorded: CVA pair writeValue rendering; heavy mutation-driven controls rely on template-event CD
+[✓] Clean boundary reached (2026-11-15): OnPush sweep done; ROADMAP.md audit annotated (OnPush item marked done). Open: fab-button parameterization (approved, not started), sandbox plan (not started), remaining audit items (medium/low)
+
+## Task (2026-11-15): strict-typing lint settings + signal-forms applicability survey (developer-approved)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Survey current eslint/tsconfig typing settings; determine what strict-typing changes are needed (done 2026-11-15: strictTypeChecked + stylisticTypeChecked adopted)
+[✓] Apply strict-typing lint changes + fix resulting violations in src (build + eslint clean) — (2026-11-16 done: ~278 errors fixed across all of src via parallel agent batches B/C/D/E; project-wide eslint = zero @typescript-eslint errors; ng build passes with pre-existing bundle-budget warning only)
+[✓] Survey forms usage (reactive/template-driven); assess signal-forms conversion applicability; record findings in ROADMAP.md — (2026-11-16 done: Signal Forms stable in Angular 22; 13 reactive-forms files + 12 ngModel templates surveyed; recommendation = no bulk migration, new work on Signal Forms, opportunistic conversion only, dynamic-material-dialog + CVA trio stay reactive; recorded under Follow-up projects in ROADMAP.md)
+[✓] Clean boundary reached (2026-11-16): strict-typing lint settings applied and all violations fixed (zero @typescript-eslint errors in src, ng build green), signal-forms survey recorded. Task complete
+
+## Sub-task (2026-11-15): agent B batch — strict-typing fixes for info-card + list-card (95 @typescript-eslint errors)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Fix info-card.component.ts + info-card.models.ts (45 fixed, 4 prefer-nullish string-ternaries skipped per rule)
+[✓] Fix list-card.component.ts + list-card.interface.ts (46 errors, same patterns); eslint verify
+[✓] Verify (2026-11-16): eslint zero @typescript-eslint errors on all 4 files; prettier clean (both unchanged). The 7 prefer-nullish string/number ternaries (4 info-card + 3 list-card) were intentional truthiness checks (empty string/0 must fall back — `??` would change behavior for external parent apps since no in-repo consumers exist); suppressed with inline eslint-disable directives instead of conversion
+[✓] Report (2026-11-16): agent B batch done — 91 errors fixed total, 7 intentional truthiness ternaries preserved via disable directives; clean tracker boundary
+
+## Sub-task (2026-11-15): strict-typing lint fixes — agent C batch (5 files, 65 @typescript-eslint errors)
+
+[✓] Record task checklist in RATE_LIMIT_TRACKER.md (this list)
+[✓] Fix linq-grid-filters.component.ts (8 errors: unused import, DateAdapter inject generic, rangeStart/rangeEnd `!`+`??`)
+[✓] Fix table.component.ts (5 @typescript-eslint errors: JSON.parse sorts, scrollToPosition redundant check, isDateInPast param, config.icon `??`)
+[✓] Fix cust-page.ts (25 errors: typed JSON.parse cache, `??` in setAttributes)
+[✓] Fix api-response.pipe.ts (9 errors + 2 follow-ups: drop `any` overloads, narrow payload envelope, impl return `unknown`, drop redundant assertion)
+[✓] Fix date-time-ops.service.ts (18 errors: String() in template literals)
+[✓] Verify (2026-11-15): eslint = zero @typescript-eslint errors on all 5 files (only pre-existing out-of-scope @angular-eslint/no-empty-lifecycle-method in table.component.ts:192); tsc --noEmit exit 0; prettier clean (all 5 unchanged); apiResponse consumers verified overload-compatible. Skipped: none. Clean boundary reached — agent C batch done
+[✓] Clean boundary + report next roadmap item to developer (2026-11-16: agent C batch confirmed done; all parallel strict-typing batches reported below)
+
+### Sub-task (2026-11-16): strict-typing fixes — agent E batch (10 files, dynamic-material-dialog family + expandable-grid etc.)
+
+[✓] Survey eslint error dump + read all 10 assigned files
+[✓] Fix time-span-picker (1), input-phone (1), search-address (1 ts error; prettier import wrap too), cust-table-dialogue (0 @typescript-eslint — 1 out-of-scope @angular-eslint/prefer-inject skipped)
+[✓] Fix dynamic-window (1 ts error + prettier), expandable-grid (2 + 1 follow-up no-base-to-string), expandable-grid-form (4 + 2 follow-up no-base-to-string)
+[✓] Fix dynamic-material-dialog: dynamic-dialog.service.ts (2, empty ctor removed), setup.model.ts (42 — all `value?: any` → `unknown`), dialog.component.ts (~51 — casts for unknown value/error.value, `??`/`??=` conversions, hour/min padStart stringification, Validators .bind(Validators) ×8, no-op `?? ""` removals on required formName, AbstractControl|undefined cast in clear(), ElementRef<HTMLElement>; dialog html: 2 `[value]="$any(...)"` added because unknown broke strictTemplates bindings)
+[✓] Verify (2026-11-16): eslint = zero @typescript-eslint errors on all 10 assigned files (remaining: @angular-eslint/prefer-inject in cust-table-dialogue + pre-existing template/a11y errors in dialog html — out of scope); project-wide `tsc --noEmit` exit 0; prettier --write clean on all touched ts files (html prettier-check passed)
+[✓] Report (2026-11-16): 4 suppressions via eslint-disable comments (dynamic-window + dialog default FormControl init: falsy 0/"" must fall back to null; expandable-grid formatCell + expandable-grid-form compareFn: no-base-to-string intentional generic stringification). Behavior notes: 5 truthiness→`??` conversions in dialog FormControl inits (falsy-non-nullish values impossible in those value domains); RangeDate start/end ""→"" instead of null (impossible for dates); removed no-op `?? ""` on required formName (crash behavior identical). Clean boundary reached — agent E batch done
+
+## Sub-task (2026-11-15): agent-d — strict-typing fixes for assigned files (type-only fixes; skip+record anything requiring behavior change)
+
+[✓] Survey assigned error dump + read all assigned files (32 @typescript-eslint errors across the 13 files) (agent-d directives+pipes subset: 4 directives + 10 pipes)
+[✓] Fix controls batch 1: button-toggle, button-v2, chips, count-down, tab-group, time-span-picker, zoomable-image, housing-card, input-currency, input-phone — (2026-11-16) most verified already zero-error; time-span-picker (`??` conversion) + input-phone (String() in template literal) fixed; zoomable-image errors are html a11y only (out of scope)
+[✓] Fix controls batch 2: media-dialog, range-date-picker, search-address, tab-next-button.directive, tabs, cust-table-dialogue — (2026-11-16) most verified already zero-error; search-address SimpleChange narrowing fixed; cust-table-dialogue clean (only out-of-scope prefer-inject remains)
+[✓] Fix controls batch 3: dynamic-window, expandable-grid + expandable-grid-form, gallery — (2026-11-16) done via agent E batch (see its section above); gallery verified clean
+[✓] Fix library directives: auto-focus-input, click-else-where, copy-text, n-digit-decimal-number, zoom — 2026-11-16 (directives+pipes subset): zoom fixed (8 restrict-template-expressions via String()); auto-focus-input/copy-text/n-digit-decimal-number verified already free of @typescript-eslint errors, untouched; click-else-where not in this batch's assigned list
+[✓] Fix library pipes: array-filter, character-spacing, day-and-hours, group-by-date, name-to-initials, obscure-text, ordinal, postfix, array-sort, to-number (directives 2–4 verified already clean of @typescript-eslint errors; zoom: 8 restrict-template-expressions). 2026-11-16: 25 @typescript-eslint errors fixed across zoom + 10 pipes (String() in template literals, widened FilterPipe filter param, Object.hasOwn in group-by-date, charAt in name-to-initials, typed ordinals array + final fallback, String(value) in postfix, unknown + comparison casts in array-sort, dead `??` removed in to-number); 0 skipped; eslint zero @typescript-eslint on all 14 files (only 4 pre-existing out-of-scope directive-selector remain); tsc --noEmit exit 0; prettier unchanged/clean
+[✓] Fix library services/validators: error-handling, logger, open-page, at-least-n-valid, email, identity-number, number-comparison (10 errors fixed: error-handling 6 — unknown-narrowed error body + String() conversions + intentional-truthiness disable; logger 5 — String() in template literals, public API unchanged; open-page 1 — void on router.navigate; validators 7 — `: unknown` on control values, String() precompute in email/identity)
+[✓] Fix segments + main.ts: contact, landing, not-found, sandbox, sandbox-expandable-grid-data.service, main.ts (9 errors fixed: no-extraneous-class ×3 — intentional empty template-only components, disable directives; sandbox 2 — String(expanded) + id narrowed to `number | null | undefined` via assertion; sandbox data service 5 unbound-method — static Validators references, disable directives; main.ts 1 — `catch (err: unknown)`)
+[✓] Verify (2026-11-16, agent-d services/validators/segments+main portion): eslint = zero errors total (0 @typescript-eslint, 0 other rules) on all 13 files; prettier --write = all unchanged; tsc --noEmit = exit 0. Skipped: none. Items "controls batch 1-3" above are outside this batch's 13-file assignment
+[✓] Report (2026-11-16, agent-d 13-file portion): 19/19 assigned @typescript-eslint errors fixed, 0 skipped (4 no-extraneous-class + 5 unbound-method preserved via intentional-disable directives, rest via type-only fixes); eslint/prettier/tsc verified; clean boundary for this portion — next: coordinator's full build

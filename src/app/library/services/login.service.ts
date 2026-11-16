@@ -77,7 +77,7 @@ export class LoginService {
 	}
 
 	getApiClaims(prefix: string): string[] {
-		return this.getClaims().filter((claim) => claim.indexOf(prefix) === 0);
+		return this.getClaims().filter((claim) => claim.startsWith(prefix));
 	}
 
 	userHasClaim(searchForClaim: string): boolean {

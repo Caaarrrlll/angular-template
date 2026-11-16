@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { ChipStatusComponent } from "@shared/components/chip-status/chip-status.component";
@@ -14,18 +14,19 @@ import {
 	_CustTablePropertiesConfig,
 	_DataProcessResponse,
 } from "@shared/components/card-table/cust-card-table.interface";
+import { _TableTypes } from "@shared/components/card-table/cust-table.enum";
 import { _HeaderAlignment, _HeaderTypes, _StatusChip } from "./list-card.enum";
 import { _CardCol, _CardListButtons, _CardRow, _ListCardButtonClick } from "./list-card.interface";
 import { _CustCardHeaderDataInterface } from "./list-card-data-header.interface";
 
 export interface _ListCardParentDataContext {
-	data: Record<string, any>;
+	data: Record<string, unknown>;
 	config: unknown;
 	claims: string[];
 }
 
 export interface _ListCardParentButtonContext {
-	data: Record<string, any>;
+	data: Record<string, unknown>;
 	claims: string[];
 }
 
@@ -34,31 +35,33 @@ export interface _ListCardParentButtonContext {
 	templateUrl: "./list-card.component.html",
 	styleUrls: ["./list-card.component.scss"],
 	imports: [CommonModule, MatCardModule, MatIconModule, ChipStatusComponent, CountDownComponent, ButtonV2Component, CurrencyComponent],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListCardComponent implements OnChanges, OnInit {
-	@Input() public data?: Record<string, any>;
+	@Input() public data?: Record<string, unknown>;
 	@Input() public cardHeader!: _CustCardHeaderTableInterface[];
-	@Input() public tableButtonConfig!: _CustCardButtonTableInterface[];
+	@Input() public tableButtonConfig?: _CustCardButtonTableInterface[];
 	@Input() public tableConfig!: _CustCardTableInterface[];
 	@Input() public tablePropertiesConfig!: _CustTablePropertiesConfig[];
 	@Input() public parentDataProcess: ((context: _ListCardParentDataContext) => _DataProcessResponse | undefined) | undefined;
 	@Input() public parentButtonProcess: ((context: _ListCardParentButtonContext) => _CardListButtons) | undefined;
 	@Input() public claims: string[] = [];
-	@Input() public dateFormat: string = "yyyy/MM/dd";
-	@Input() public timeFormat: string = "HH:mm:ss";
+	@Input() public dateFormat = "yyyy/MM/dd";
+	@Input() public timeFormat = "HH:mm:ss";
 	@Input() public spinner?: number;
 
 	@Output() public buttonClick: EventEmitter<_ListCardButtonClick> = new EventEmitter<_ListCardButtonClick>();
 
-	public pulseColour: string = "";
+	public pulseColour = "";
 	public taskName: string | undefined = undefined;
 	public cardRows: _CardRow[] = [];
 	public cardCols: _CardCol[] = [];
 	public cardHeaders: _CustCardHeaderDataInterface[] = [];
-	public maxLines: number = 0;
+	public maxLines = 0;
 
 	public ngOnChanges(changes: SimpleChanges): void {
-		if (!changes["spinner"]?.firstChange) {
+		const spinnerChange = changes["spinner"] as SimpleChange | undefined;
+		if (!spinnerChange?.firstChange) {
 			for (const row of this.cardRows) {
 				for (const col of row.item) {
 					if (col.type === "button" && col.loading) {
@@ -151,7 +154,7 @@ export class ListCardComponent implements OnChanges, OnInit {
 	}
 
 	private mapButton(): void {
-		for (const config of this.tableButtonConfig) {
+		for (const config of this.tableButtonConfig ?? []) {
 			this.cardCols.push({
 				value: config.value,
 				type: "button",
@@ -161,7 +164,7 @@ export class ListCardComponent implements OnChanges, OnInit {
 		}
 	}
 
-	private mapDataParent(data: Record<string, any>, config: Record<string, any>): void {
+	private mapDataParent(data: Record<string, unknown>, config: _CustCardTableInterface): void {
 		const resp = this.parentDataProcess?.({
 			data: data,
 			config: config,
@@ -171,15 +174,17 @@ export class ListCardComponent implements OnChanges, OnInit {
 		if (resp) {
 			if (resp.type === "chipsStatus") {
 				this.cardCols.push({
-					label: config["display"],
+					label: config.display,
 					value: resp.response,
-					type: resp.type ? resp.type : "text",
+					type: resp.type,
 					valueColor: resp.action,
 				});
 			} else {
 				this.cardCols.push({
-					label: resp.label ? resp.label : config["display"],
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: empty string must fall back
+					label: resp.label ? resp.label : config.display,
 					value: resp.response,
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: empty string must fall back
 					type: resp.type ? resp.type : "text",
 					iconName: resp.iconName,
 					iconColour: resp.iconColour,
@@ -189,10 +194,10 @@ export class ListCardComponent implements OnChanges, OnInit {
 		}
 	}
 
-	private mapField(data: Record<string, any>): void {
-		let currentCol: number = 1;
+	private mapField(data: Record<string, unknown>): void {
+		let currentCol = 1;
 
-		let lines: number = 0;
+		let lines = 0;
 		for (const config of this.tableConfig) {
 			if (currentCol !== config.column) {
 				this.cardRows.push({
@@ -212,8 +217,8 @@ export class ListCardComponent implements OnChanges, OnInit {
 				currentCol = config.column;
 			}
 
-			if (config.type === "Parent" && this.parentDataProcess) {
-				this.mapDataParent(data, config as unknown as Record<string, any>);
+			if (config.type === _TableTypes.Parent && this.parentDataProcess) {
+				this.mapDataParent(data, config);
 			} else {
 				const field: string = config.field,
 					sub: string | undefined = config.fieldSub;
@@ -221,23 +226,26 @@ export class ListCardComponent implements OnChanges, OnInit {
 				if (!sub && data[field]) {
 					this.cardCols.push({
 						label: config.display,
-						value: data[field],
+						value: data[field] as string,
 						type: config.type ?? "",
 					});
 				} else if (sub) {
+					const fieldValue: unknown = data[field];
+					const subValue: unknown = fieldValue ? (fieldValue as Record<string, unknown>)[sub] : undefined;
+
 					this.cardCols.push({
 						label: config.display,
-						value: !data[field]
+						value: !fieldValue
 							? "N/A"
-							: data[field][sub]
-								? data[field][sub]
-								: config.type === "text"
+							: subValue
+								? (subValue as string)
+								: config.type === _TableTypes.Text
 									? "N/A"
-									: config.type === "boolean"
-										? data[field][sub]
+									: config.type === _TableTypes.Boolean
+										? subValue
 											? "Yes"
 											: "No"
-										: data[field][sub],
+										: (subValue as string),
 						type: config.type ?? "",
 					});
 				}
@@ -258,7 +266,7 @@ export class ListCardComponent implements OnChanges, OnInit {
 		this.cardCols.splice(0, this.cardCols.length);
 	}
 
-	private mapHeaderParent(data: Record<string, any>, config: Record<string, any>): void {
+	private mapHeaderParent(data: Record<string, unknown>, config: _CustCardHeaderTableInterface): void {
 		const resp = this.parentDataProcess?.({
 			data: data,
 			config: config,
@@ -270,24 +278,25 @@ export class ListCardComponent implements OnChanges, OnInit {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.chipsStatus,
-					alignment: (resp.alignment as _HeaderAlignment) ?? _HeaderAlignment.center,
+					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
 					statusType: resp.action,
 				});
 			} else if (resp.textPre) {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.display,
-					alignment: (resp.alignment as _HeaderAlignment) ?? _HeaderAlignment.center,
-					textColor: config["textColor"],
+					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
+					textColor: config.textColor,
 					textPre: resp.textPre,
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: 0 must fall back
 					length: resp.length ? resp.length : 40,
 				});
 			} else if (resp.postText) {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.status,
-					alignment: (resp.alignment as _HeaderAlignment) ?? _HeaderAlignment.center,
-					textColor: config["textColor"],
+					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
+					textColor: config.textColor,
 					postText: resp.postText,
 					postLable: resp.postLable,
 					statusType: resp.action,
@@ -296,46 +305,53 @@ export class ListCardComponent implements OnChanges, OnInit {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.display,
-					alignment: (resp.alignment as _HeaderAlignment) ?? _HeaderAlignment.center,
-					textColor: config["textColor"],
+					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
+					textColor: config.textColor,
 				});
 			}
 		}
 	}
 
-	private mapHeader(data: Record<string, any>): void {
+	private mapHeader(data: Record<string, unknown>): void {
 		for (const config of this.cardHeader) {
 			if (config.type === "Parent" && this.parentDataProcess) {
-				this.mapHeaderParent(data, config as unknown as Record<string, any>);
+				this.mapHeaderParent(data, config);
 			} else {
 				const field: string = config.field,
 					sub: string | undefined = config.fieldSub;
 
 				if (config.type && config.type === "status") {
 					this.cardHeaders.push({
-						text: data[field],
+						text: data[field] as string,
 						type: _HeaderTypes.status,
 						alignment: _HeaderAlignment.end,
-						statusType: this.setStatusChip(data[config.field]),
-						postText: data[config.postText as string],
+						statusType: this.setStatusChip(data[config.field] as string),
+						postText: config.postText !== undefined ? (data[config.postText] as string) : undefined,
 						postLable: config.postLable,
 					});
 				} else if (sub && !config.textPre) {
 					this.cardHeaders.push({
-						text: data[field][sub],
+						text: (data[field] as Record<string, unknown>)[sub] as string,
 						type: config.type ?? "",
 						alignment: _HeaderAlignment.start,
 					});
-				} else if (config.textPre) {
+				} else if (sub && config.textPre) {
 					this.cardHeaders.push({
-						text: data[field][sub as string],
+						text: (data[field] as Record<string, unknown>)[sub] as string,
 						type: _HeaderTypes.display,
 						alignment: _HeaderAlignment.start,
-						textPre: data[config.textPre],
+						textPre: data[config.textPre] as string,
+					});
+				} else if (config.textPre) {
+					this.cardHeaders.push({
+						text: (data[field] as Record<string, unknown>)[sub ?? "undefined"] as string,
+						type: _HeaderTypes.display,
+						alignment: _HeaderAlignment.start,
+						textPre: data[config.textPre] as string,
 					});
 				} else {
 					this.cardHeaders.push({
-						text: data[field],
+						text: data[field] as string,
 						type: config.type ?? "",
 						alignment: _HeaderAlignment.start,
 					});

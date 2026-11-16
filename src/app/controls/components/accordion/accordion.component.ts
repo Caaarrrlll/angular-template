@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from "@angular/common";
-import { Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList } from "@angular/core";
 import { accordionExpansionAnimation } from "@shared/components/accordion/animations/accordion-expansion-animation";
 import { AccordionItemDirective } from "@shared/components/accordion/directives/accordion-item.directive";
 
@@ -9,6 +9,7 @@ import { AccordionItemDirective } from "@shared/components/accordion/directives/
 	styleUrls: ["./accordion.component.scss"],
 	standalone: true,
 	imports: [NgTemplateOutlet],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionComponent implements OnInit {
 	public readonly animation = accordionExpansionAnimation;

@@ -66,6 +66,7 @@ Do not:
 - Do not attempt to lint new files after every change.
 - Do not attempt to build the project before all planned changes are done when attempting to find errors.
 - Do not pass callbacks into methods unless completely needed or explicitly stated.
+- Never touch the `dist/` folder (agents and sub-agents included): it is build output generated from source, so any change made there is pointless and will be overwritten by the next build. All changes go in `src/`; verify results by building, not by editing `dist/`.
 
 ## Project Overview
 

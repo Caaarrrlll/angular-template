@@ -13,7 +13,7 @@ export class KeyValueComponent {
 	public readonly showEdit = input<boolean>(false);
 	public readonly removeValuePadding = input<boolean>(false);
 	public readonly sameFontSize = input<boolean>(false);
-	public readonly edit = output<void>();
+	public readonly edit = output();
 
 	public editField(): void {
 		this.edit.emit();

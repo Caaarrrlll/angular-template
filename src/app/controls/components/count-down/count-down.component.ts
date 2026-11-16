@@ -29,12 +29,16 @@ export class CountDownComponent {
 	private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
 	constructor() {
-		this.destroyRef.onDestroy((): void => this.clearTimer());
+		this.destroyRef.onDestroy((): void => {
+			this.clearTimer();
+		});
 
 		effect(() => {
 			const timeLeft: number | undefined = this.timeLeft();
 			if (timeLeft && timeLeft > 0 && this.timer === null) {
-				this.timer = setInterval((): void => this.tick(), 1000);
+				this.timer = setInterval((): void => {
+					this.tick();
+				}, 1000);
 			}
 		});
 	}
@@ -50,15 +54,15 @@ export class CountDownComponent {
 		const days: number = Math.floor(secondsInput / (60 * 60 * 24));
 
 		if (this.textFormat()) {
-			const day: string = days > 1 ? `${days} days` : days > 0 ? `${days} day` : "";
-			const hour: string = hours > 1 ? `${hours} hours` : hours > 0 ? `${hours} hour` : "";
-			const minute: string = minutes > 1 ? `${minutes} minutes` : minutes > 0 ? `${minutes} minute` : "";
-			const second = `${seconds} seconds left`;
+			const day: string = days > 1 ? `${String(days)} days` : days > 0 ? `${String(days)} day` : "";
+			const hour: string = hours > 1 ? `${String(hours)} hours` : hours > 0 ? `${String(hours)} hour` : "";
+			const minute: string = minutes > 1 ? `${String(minutes)} minutes` : minutes > 0 ? `${String(minutes)} minute` : "";
+			const second = `${String(seconds)} seconds left`;
 
-			return `${day !== "" ? `${day}, ${hour}` : hour !== "" ? `${hour}, ${minute}` : minute !== "" ? `${minute}, ${second}` : second}`;
+			return day !== "" ? `${day}, ${hour}` : hour !== "" ? `${hour}, ${minute}` : minute !== "" ? `${minute}, ${second}` : second;
 		}
 
-		return ("0" + days).slice(-2) + ":" + ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+		return ("0" + String(days)).slice(-2) + ":" + ("0" + String(hours)).slice(-2) + ":" + ("0" + String(minutes)).slice(-2) + ":" + ("0" + String(seconds)).slice(-2);
 	}
 
 	private tick(): void {

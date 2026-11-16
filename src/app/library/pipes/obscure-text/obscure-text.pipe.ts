@@ -10,7 +10,7 @@ export class ObscureTextPipe implements PipeTransform {
 			return "";
 		}
 
-		const regExp = new RegExp(`.(?=.{${keepLast}})`, "g");
+		const regExp = new RegExp(`.(?=.{${String(keepLast)}})`, "g");
 		return value.replace(regExp, "*");
 	}
 }

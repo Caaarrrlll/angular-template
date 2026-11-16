@@ -22,8 +22,8 @@ export class KeyValueV2Component {
 	public readonly keyColor = input<"red" | "green" | "orange" | undefined>();
 	public readonly valueColor = input<"red" | "green" | "orange" | undefined>();
 
-	public readonly edit = output<void>();
-	public readonly view = output<void>();
+	public readonly edit = output();
+	public readonly view = output();
 
 	public editField(): void {
 		this.edit.emit();

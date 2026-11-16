@@ -20,8 +20,8 @@ export class KeyValueV3Component {
 	public readonly colon = input<boolean>(true);
 	public readonly bottomPadding = input<string>("10px");
 
-	public readonly edit = output<void>();
-	public readonly view = output<void>();
+	public readonly edit = output();
+	public readonly view = output();
 
 	public editField(): void {
 		this.edit.emit();

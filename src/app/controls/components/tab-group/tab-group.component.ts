@@ -1,4 +1,4 @@
-import { Component, WritableSignal, computed, effect, input, output, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, WritableSignal, computed, effect, input, output, signal } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTabChangeEvent, MatTabsModule } from "@angular/material/tabs";
 import { CustTab, CustTabConfig } from "./tab-group.interface";
@@ -8,6 +8,7 @@ import { CustTab, CustTabConfig } from "./tab-group.interface";
 	templateUrl: "./tab-group.component.html",
 	styleUrls: ["./tab-group.component.scss"],
 	imports: [MatTabsModule, MatIconModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabGroupComponent {
 	public readonly activeTab = input<number | undefined>();
@@ -39,9 +40,9 @@ export class TabGroupComponent {
 		};
 
 		tabList.tab.forEach((tab: CustTab, count: number): void => {
-			config[`--margin${count + 1}`] = "10px";
+			config[`--margin${String(count + 1)}`] = "10px";
 			if (tabList.tabType === "vertical" && count > 0 && tabList.tab[count - 1].isProcess !== tab.isProcess) {
-				config[`--margin${count}`] = "30px";
+				config[`--margin${String(count)}`] = "30px";
 			}
 		});
 

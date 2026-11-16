@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, DestroyRef, InjectionToken, OnInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, InjectionToken, OnInit, inject } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { Observable, map } from "rxjs";
@@ -20,21 +20,29 @@ export const MEDIA_LOADER = new InjectionToken<(mediaKey: string) => Observable<
 	templateUrl: "./media-dialog.component.html",
 	styleUrls: ["./media-dialog.component.scss"],
 	imports: [CommonModule, LoaderComponent, MatIconModule, ApiResponsePipe],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaDialogComponent implements OnInit {
-	public imageData$ = new Observable<MediaFile | null>((subscriber) => subscriber.next(null));
+	public imageData$ = new Observable<MediaFile | null>((subscriber) => {
+		subscriber.next(null);
+	});
 
 	private readonly mediaLoader = inject(MEDIA_LOADER, { optional: true });
-	private readonly dialogRef: MatDialogRef<MediaDialogComponent> = inject(MatDialogRef);
-	private readonly dialogData: _MediaDialogData = inject(MAT_DIALOG_DATA);
+	private readonly dialogRef = inject<MatDialogRef<MediaDialogComponent>>(MatDialogRef);
+	private readonly dialogData = inject<_MediaDialogData>(MAT_DIALOG_DATA);
 	private readonly destroyRef = inject(DestroyRef);
 
 	public ngOnInit(): void {
-		this.imageData$ = (this.mediaLoader?.(this.dialogData.mediaKey) ?? new Observable<MediaFile | null>((subscriber) => subscriber.next(null))).pipe(
+		this.imageData$ = (
+			this.mediaLoader?.(this.dialogData.mediaKey) ??
+			new Observable<MediaFile | null>((subscriber) => {
+				subscriber.next(null);
+			})
+		).pipe(
 			takeUntilDestroyed(this.destroyRef),
 			map((media: MediaFile | null) => {
 				// strip `type` so the `apiResponse` pipe passes the raw file through as payload
-				return { ...media, type: undefined } as MediaFile;
+				return { ...media, type: undefined };
 			}),
 		);
 	}

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
@@ -26,6 +26,7 @@ export type _ExpandableGridData<T> = _ExpandableGridPaginatedDataInterface<T> | 
 	styleUrls: ["./expandable-grid.component.scss"],
 	standalone: true,
 	imports: [MatButtonModule, MatDialogModule, MatIconModule, MatPaginatorModule, MatProgressSpinnerModule, MatTableModule, ExpandableGridFormComponent, TruncatePipe],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpandableGridComponent implements OnInit {
 	private readonly dialog = inject(MatDialog);
@@ -85,6 +86,7 @@ export class ExpandableGridComponent implements OnInit {
 
 	public formatCell(column: _ExpandableGridDisplayOptionsInterface<_ExpandableGridRow>, element: _ExpandableGridRow): string {
 		const value = column.cell?.(element) ?? element[column.columnDef];
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string -- formatCell intentionally stringifies arbitrary row/cell values (numbers, booleans, objects) exactly as before
 		return value === null || value === undefined || value === "null" ? "" : String(value);
 	}
 

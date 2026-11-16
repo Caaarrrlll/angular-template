@@ -55,9 +55,13 @@ export class SandboxExpandableGridDataService {
 	public createForm(): FormGroup {
 		return this.formBuilder.group({
 			id: [null],
+			// eslint-disable-next-line @typescript-eslint/unbound-method -- static Validators method references; they do not use `this`
 			name: ["", [Validators.required, Validators.maxLength(80)]],
+			// eslint-disable-next-line @typescript-eslint/unbound-method -- static Validators method references; they do not use `this`
 			email: ["", [Validators.required, Validators.email]],
+			// eslint-disable-next-line @typescript-eslint/unbound-method -- static Validators method reference; it does not use `this`
 			status: ["active", [Validators.required]],
+			// eslint-disable-next-line @typescript-eslint/unbound-method -- static Validators method reference; it does not use `this`
 			balance: [0, [Validators.required]],
 		});
 	}

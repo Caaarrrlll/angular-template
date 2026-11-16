@@ -123,16 +123,93 @@ Priority order: current signals migration first, then these, then the navigation
 - Verify: `ng build` passes (only pre-existing bundle-budget warning); prettier clean; no new lint errors introduced (remaining eslint output = pre-existing debt in the do-not-migrate heavy controls: `no-inferrable-types` on old `@Input`s/params, `no-explicit-any`, a11y `mouseover`/click handlers, `eqeqeq` — tracked as candidate future cleanup, not part of this merge).
 - Optional follow-up (not done): rename `button-v2` → `button`/`app-button` if the version suffix should go.
 
+### Fab-button merge investigation (surveyed 2026-11-15)
+
+**Current state:** `fab-button` is a fixed-position floating help widget — hardcoded `help` icon, no inputs at all, one `emitClick` output, 60px orange circle pinned bottom-right with custom styles. **Zero consumers** anywhere in src.
+
+**Verdict: it cannot meaningfully merge into button-v2.** The two are different control models: button-v2 is an inline-flow Material button driven by `CustButtonInput` (display/icon/tooltip/disabled/loading/table sizing); the fab is a page-level floating widget with fixed positioning, opposite styling (circular, fixed, opacity-hover) and no state. A merge would mean bolting `isFab`-style branches and fab-specific fields onto `CustButtonInput` — machinery for zero reuse, against KISS.
+
+Options (developer decision — resolved 2026-11-15: **keep + parameterize**, do not delete):
+
+- Parameterize: `icon = input("help")`, `aria-label`/tooltip input for a11y (the clickable `<div>` currently fails a11y rules — not keyboard focusable, no role). Reasonable to keep since this is a fork template and a help-fab is a plausible widget.
+
 #### Risks
 
 - `CustButtonType` values are case-sensitive strings (`"Primary"`, `"icon"`); every rewritten tag must use the exact spelling.
 - The wrappers strip down nothing — the only behavioral surface is the forced `type`; renaming to v2 directly is behavior-preserving.
 - `disabled` variant (`CustButtonType.disabled`) is reachable only through v2 today and stays so.
 
-### Sandbox flesh-out
+### Sandbox flesh-out (planned 2026-11-15 — not started)
 
-- Extend the sandbox (`/sandbox`, dev only) so every control in `src/app/controls` has a demo entry covering its inputs, outputs and visual states — today some controls have no demo at all, which makes migrations (like the button merge above) risky to verify.
-- Do this after the button family merge so merged/renamed controls only need demos once; the CSS cleanup batches below can then use the completed sandbox for their visual checks.
+Extend the sandbox (`/sandbox`, dev only) so every control in `src/app/controls` has a demo entry covering its inputs, outputs and visual states. Today only accordion + expandable-grid have demos; the sandbox is a single page (`segments/sandbox/components/sandbox/`) with mock-data services (`sandbox-accordion-data.service.ts`, `sandbox-expandable-grid-data.service.ts`) and is already dev-gated (`environment.isLocal` in `app.routes.ts`).
+
+#### Survey (2026-11-15)
+
+- 41 control folders under `src/app/controls/components` (~45 components incl. subs/directives): signal-API controls (~25 migrated ones), decorator-API heavy controls (table, card-table, info-card, list-card, gallery, dynamic-window, dynamic-material-dialog, linq-grid-filters, search-address, range-slider), CVA trio, dialogs, plus library directives/pipes worth demonstrating alongside.
+- Mock data today is deterministic (no random) — keep that.
+
+#### Plan (phases)
+
+1. **Phase 0 — sandbox skeleton:** convert `/sandbox` from one page to an index page (card per control linking to its demo) + a demo route per control family (`sandbox/:family`, lazy `loadComponent`). Keep the existing page/section structure per family; mock data stays in per-family `sandbox-*-data.service.ts` files.
+2. **Phase 1 — signal-API controls (highest value: verifies the recent migrations):** button-v2 + button-toggle + fab-button, input family (text/email/number/phone/currency/select), key-value trio, chips + chip-status, card/card-header/housing-card, loader/currency/slide-toggle/numeric-up-down/count-down, carousel + gallery + gallery-preview, tab-group + tabs + tab, checkbox/range-checkbox groups, range-date-picker, table-dialogue (dialog opened from a demo), media-dialog/confirmation-dialog, drag-drop-file-upload. Every demo covers: default state, all inputs varied, every output wired to a visible log, visual states (loading/disabled/error/empty).
+3. **Phase 2 — heavy decorator-API controls:** table, card-table, info-card, list-card, gallery (incl. zoom), dynamic-window, dynamic-material-dialog (button/menu/form-type coverage), linq-grid-filters, search-address, range-slider, accordion (already done), expandable-grid (already done), time-span-picker. Their APIs are config-object heavy — demos double as living usage documentation for forked apps.
+4. **Phase 3 — directives/pipes:** demo `copy-text`, `zoom`, `min-max*`, `numeric-input`, `currency-mask`, `drag-and-drop-files`, `highlight-search-match`, `safe`, `api-response` inside relevant control demos (no standalone pages unless needed).
+
+#### Rules
+
+- One family per batch; verify each demo against the control's real API (no invented inputs).
+- Deterministic mock data only; in-memory state only (existing pattern).
+- The sandbox stays dev-only; no prod bundle impact (routes already gated, lazy chunks).
+- Demos use the signals API themselves (`input()`, `computed()`) — the sandbox is the codebase's modern-pattern reference.
+
+### Angular best-practices audit (surveyed 2026-11-15 — notes only, no code changes yet)
+
+Project-wide critique of patterns that deviate from Angular best practices (Angular 22, standalone, signals in progress). Grouped by severity; each item is a candidate for a future approved task.
+
+#### High — dead infrastructure / broken wiring
+
+**Decision (2026-11-15, developer): all of these are KEEP — do not delete.** They are intended functionality for forked apps and simply have no consumers yet because the sandbox doesn't exercise them. When the sandbox or a forked app starts using them, the wiring items below must be fixed.
+
+- **`request.interceptor.ts` is unwired:** no `provideHttpClient`/`withInterceptors` anywhere in src, and no `HttpClient` usage at all — the auth-token interceptor is never registered and can never run. When a forked app first needs HTTP, `provideHttpClient(withInterceptors([authTokenInterceptor]))` must be added to the bootstrap providers.
+- **Services without consumers (kept for future forks):** `app-shell.service`, `error-handling.service` (also never registered as an app `ErrorHandler` — wire via `provideErrorHandler` when used), `open-page.service`, `search-retain.service`, `b64-to-blob.service`.
+- **`custom-preloading-strategy.service.ts` unused:** routes never set `preloadingStrategy`; wire into `provideRouter` when lazy loading needs it.
+- **Bootstrap providers live inline in `main.ts`** (`provideZoneChangeDetection` + `provideRouter` only) — should move to an `app.config.ts` with `provideHttpClient` etc. when HTTP wiring lands. The only `console.error` outside the logger is main.ts's bootstrap catch.
+
+#### Medium — consistency / modernization
+
+- **34 components without `ChangeDetectionStrategy.OnPush`** — **done 2026-11-15 (OnPush sweep):** every component in src now sets `changeDetection: ChangeDetectionStrategy.OnPush`; build + prettier verified. Caveats for sandbox verification: the CVA pair (`checkbox-group`, `range-checkbox-group`) — programmatic `writeValue`/`form.patchValue` updates may not re-render until the next event under OnPush (form interactions need testing, same risk family as the CVA input() rule); heavy mutation-driven controls (`table`, `card-table`, `gallery`, `dynamic-material-dialog`) rely on template-event-driven CD — visually verify sort/filter/pagination once the sandbox demos land.
+- **Mixed service decorators:** 10 services use the newer `@Service()`, 4 still use `@Injectable({ providedIn: "root" })` (dynamic-dialog, grid-storage, both sandbox data services). Unify on one.
+- **Legacy `*ngIf`/`*ngFor`/`*ngSwitch`** remain only in `dynamic-material-dialog` (the largest template in the repo, ~370 lines) — convert to `@if/@for/@switch`; high-value since it is a do-not-migrate control otherwise frozen on old syntax.
+- **`@HostListener`/`@HostBinding` ×~20** (library directives, tabs directives, zoomable-image) — Angular 20+ prefers the `host: {}` metadata object; mechanical, low-risk, also required before those decorators can be dropped with `experimentalDecorators`.
+- **`constructor()` blocks that only run `inject()` calls** (carousel, gallery-preview, count-down, tab-group, zoomable-image, dynamic-material-dialog, copy-text/currency-input directives): convert to field initializers per project standards. Also `cust-table-dialogue` uses constructor `@Inject(MAT_DIALOG_DATA)` → `inject(MAT_DIALOG_DATA)`.
+- **Redundant `standalone: true` ×63** — default since Angular 19; cosmetic cleanup.
+- **Untyped `any`:** `dynamic-material-dialog-setup.model.ts` has 23 × `value?: any` (type as a union per form-type); `api-response.pipe` uses `any` params; `info-card`/`list-card` data inputs are `Record<string, any>`.
+- **Unused public field:** `app.component.ts` `title` (not referenced in the template).
+- **Empty lifecycle hook:** `table.component` `ngOnDestroy` is empty (lint flags it).
+
+#### Low — security & perf notes (verify, don't assume wrong)
+
+- **Three `bypassSecurityTrust*` uses:** `safe.pipe` (resource URL for external images — legitimate), `highlight-search-match.pipe` (`bypassSecurityTrustHtml` on data-driven highlights — confirm the source data can't be user-supplied), `zoomable-image` (`bypassSecurityTrustStyle("url(...)")` built from an image path — confirm path provenance).
+- **Teardown-less subscriptions in `dynamic-material-dialog`:** a form-control `valueChanges` and `dialogRef.backdropClick()` have no `takeUntilDestroyed`/`first()` — dialog-scoped so leak impact is small, but inconsistent with the project standard.
+- **Getters called in templates** (button-v2's `displayLength`/`buttonClass`/sizing getters) — re-evaluated every CD cycle; fine under OnPush, worth converting to `computed()` when the file is next touched.
+- **`tsconfig`:** `experimentalDecorators: true` + `useDefineForClassFields: false` are needed while decorator-API controls remain; both become removable if the do-not-migrate controls are ever converted.
+- **`::ng-deep` ×2 in `range-slider`** for Material internals — acceptable last resort; noted so it doesn't spread.
+
+### Signal Forms applicability survey (surveyed 2026-11-16 — notes only, no code changes)
+
+Status of the API: Signal Forms (`form()` from `@angular/forms/signals`, `[formField]` template binding, schema-based validation) are **stable as of Angular 22** — the version this template runs on. Reactive Forms are NOT deprecated and remain a supported choice for existing apps; `compatForm` enables field-by-field interop if a partial migration is ever wanted.
+
+#### Survey — where forms live today (13 files with ReactiveFormsModule, 12 templates with `formControl`/`ngModel`)
+
+- **Input family** (`input-text/email/number/phone/currency/select`): thin reactive wrappers around a single `FormControl` — highest conversion applicability, but the CVA pair already proven fragile under OnPush (see audit) suggests verifying writeValue rendering before any conversion.
+- **CVA trio** (`checkbox-group`, `range-checkbox-group`, `time-span-picker`): implement `ControlValueAccessor` + internal FormGroup/FormControl. Signal Forms custom controls use `FormValueControl`/`FormCheckboxControl` interfaces instead — a full rewrite of the control wiring, not a mechanical swap.
+- **Mid-size reactive users** (`button-toggle`, `range-date-picker`, `linq-grid-filters`, `dynamic-window`, `expandable-grid-form`): FormGroup/FormBuilder patterns, moderate applicability.
+- **`dynamic-material-dialog`: do not convert.** It builds a `FormGroup` entirely at runtime from config (`addControl` per `FormType` with dynamic validators via the `ValidatorType` enum) — Signal Forms dynamic schemas exist in v22 but this is the repo's riskiest control (also flagged "do not migrate" for signals and frozen on legacy template syntax). Revisit only if a forked app needs it.
+- **Custom validators** (`at-least-n-valid`, `email`, `identity-number`, `number-comparison`): written as reactive-forms `ValidatorFn`s. Signal Forms validation is schema/rule-based (`required()`, `email()`, custom rules with `{ message }`) — these would need parallel rule implementations, doubling validator maintenance while both systems coexist.
+
+#### Recommendation
+
+No bulk migration. Reactive forms remain stable and the template's purpose is a fork base — mixing is officially supported. Suggested policy: use Signal Forms for new form work (sandbox demos, future fork features), convert existing controls only opportunistically when a file is already touched for other reasons, and keep `dynamic-material-dialog` + the CVA trio on reactive forms.
 
 ## Navigation service (TBD)
 

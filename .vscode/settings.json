@@ -4,8 +4,10 @@
 		"dialog",
 		"linq",
 		"Parens",
+		"rgba",
 		"standalone",
 		"timelapse",
+		"writable",
 		"Zoomable"
 	],
 

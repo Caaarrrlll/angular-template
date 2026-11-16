@@ -22,14 +22,14 @@ export class NDigitDecimalNumberDirective {
 
 	@HostListener("keydown", ["$event"])
 	onKeyDown(event: KeyboardEvent): void {
-		if (this.specialKeys.indexOf(event.key) !== -1) {
+		if (this.specialKeys.includes(event.key)) {
 			return;
 		}
 		const current: string = this.element.nativeElement.value;
 		const position = this.element.nativeElement.selectionStart ?? 0;
 		const next: string = [current.slice(0, position), event.key == "Decimal" ? "." : event.key, current.slice(position)].join("");
 		const regex = new RegExp(`^\\d*\\.?\\d{0,${this.numberOfDecimals}}$`, "g");
-		if (next && !String(next).match(regex)) {
+		if (next && !next.match(regex)) {
 			event.preventDefault();
 		}
 	}

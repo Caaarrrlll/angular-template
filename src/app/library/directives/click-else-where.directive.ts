@@ -7,7 +7,7 @@ import { Directive, ElementRef, EventEmitter, HostListener, Output, inject } fro
 export class ClickElseWhereDirective {
 	@Output() public clickElsewhere: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
-	private readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+	private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
 	@HostListener("document:click", ["$event"])
 	public onDocumentClick(event: MouseEvent): void {

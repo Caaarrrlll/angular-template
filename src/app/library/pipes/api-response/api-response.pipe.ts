@@ -11,21 +11,28 @@ export interface ApiResponseState {
 	noData?: boolean;
 }
 
+/** Envelope shape used by API streams that signal loading/error state themselves. */
+interface ApiResponseEnvelope {
+	type?: unknown;
+	value?: unknown;
+}
+
 @Pipe({ name: "apiResponse", standalone: true })
 export class ApiResponsePipe implements PipeTransform {
 	private readonly logger = inject(LoggerService);
 
 	transform(apiCall: Observable<unknown> | null | undefined, ignoreNotFound?: boolean): Observable<ApiResponseState> | undefined;
-	transform(apiCall: any, ignoreNotFound?: boolean): any;
-	transform(apiCall: any, ignoreNotFound: boolean = true): Observable<ApiResponseState> | ApiResponseState | null | undefined {
+	transform(apiCall: unknown, ignoreNotFound?: boolean): unknown;
+	transform(apiCall: unknown, ignoreNotFound = true): unknown {
 		return isObservable(apiCall)
 			? apiCall.pipe(
-					map((payload: any) => {
-						return payload?.type === "error"
+					map((payload: unknown): ApiResponseState => {
+						const envelope: ApiResponseEnvelope | null = typeof payload === "object" && payload !== null ? payload : null;
+						return envelope?.type === "error"
 							? { loading: false, error: true }
 							: {
-									loading: payload?.type === "start",
-									payload: payload?.type ? payload?.value : payload,
+									loading: envelope?.type === "start",
+									payload: envelope?.type ? envelope.value : payload,
 								};
 					}),
 					startWith({ loading: true }),

@@ -13,7 +13,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 	standalone: true,
 })
 export class TimeFormatPipe implements PipeTransform {
-	public transform(date: string, timeZone: string = "CAT"): string {
+	public transform(date: string, timeZone = "CAT"): string {
 		return new Date(date).toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit", timeZone: timeZone, hour12: false });
 	}
 }

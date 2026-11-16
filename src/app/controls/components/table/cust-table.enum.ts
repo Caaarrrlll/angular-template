@@ -26,4 +26,4 @@ export enum _TableTypes {
 	ListPopupHover = "listPopupHover",
 }
 
-export type _Dictionary<T> = { [key: string]: T };
+export type _Dictionary<T> = Record<string, T>;

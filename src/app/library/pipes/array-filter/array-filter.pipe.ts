@@ -12,7 +12,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 	standalone: true,
 })
 export class FilterPipe implements PipeTransform {
-	public transform<T extends object>(items: T[] | undefined | null, filter: Partial<T> | ((item: T) => boolean)): T[] {
+	public transform<T extends object>(items: T[] | undefined | null, filter: Partial<T> | ((item: T) => boolean) | undefined | null): T[] {
 		if (!items || !filter) {
 			return items ?? [];
 		}
@@ -24,7 +24,7 @@ export class FilterPipe implements PipeTransform {
 	}
 
 	private compare<T extends object>(item: T, filter: Partial<T>): boolean {
-		for (const prop of Object.keys(filter) as Array<keyof T>) {
+		for (const prop of Object.keys(filter) as (keyof T)[]) {
 			if (filter[prop] !== item[prop]) {
 				return false;
 			}

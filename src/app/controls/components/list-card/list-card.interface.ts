@@ -36,5 +36,5 @@ export interface _CardListButtons {
 
 export interface _ListCardButtonClick {
 	action: _CardCol;
-	data: Record<string, any>;
+	data: Record<string, unknown>;
 }

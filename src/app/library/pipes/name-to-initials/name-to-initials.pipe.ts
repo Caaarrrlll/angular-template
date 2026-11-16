@@ -20,7 +20,7 @@ export class NameToInitialsPipe implements PipeTransform {
 
 		return value
 			.split(" ")
-			.map((name) => name[0] ?? "")
+			.map((name) => name.charAt(0))
 			.join("")
 			.slice(0, 2)
 			.toUpperCase();

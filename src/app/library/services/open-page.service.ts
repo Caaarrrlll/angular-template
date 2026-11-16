@@ -16,6 +16,6 @@ export class OpenPageService {
 			window.open(url, "_blank", "noreferrer");
 			return;
 		}
-		this.router.navigate([url], queryParam);
+		void this.router.navigate([url], queryParam);
 	}
 }

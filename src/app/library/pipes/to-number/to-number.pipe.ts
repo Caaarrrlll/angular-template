@@ -13,6 +13,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class ToNumberPipe implements PipeTransform {
 	public transform(value: unknown): unknown {
-		return Number(value) ?? value;
+		return Number(value);
 	}
 }

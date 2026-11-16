@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, forwar
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { noop } from "rxjs";
 
-const DEFAULT_TIMESPAN: string = "00:00:00";
+const DEFAULT_TIMESPAN = "00:00:00";
 
 type TimeField = "days" | "hours" | "minutes";
 
@@ -22,18 +23,18 @@ type TimeField = "days" | "hours" | "minutes";
 	],
 })
 export class TimeSpanPickerComponent implements ControlValueAccessor {
-	@Input() public label: string = "";
+	@Input() public label = "";
 
 	@Output() public valueChange: EventEmitter<string> = new EventEmitter<string>();
 
-	public formGroup: FormGroup<{ days: FormControl<string | null>; hours: FormControl<string | null>; minutes: FormControl<string | null> }> = new FormGroup({
-		days: new FormControl<string | null>("", [Validators.required, Validators.min(0), Validators.max(2)]),
-		hours: new FormControl<string | null>("", [Validators.required, Validators.min(0), Validators.max(23)]),
-		minutes: new FormControl<string | null>("", [Validators.required, Validators.min(0), Validators.max(59)]),
+	public formGroup = new FormGroup<{ days: FormControl<string | null>; hours: FormControl<string | null>; minutes: FormControl<string | null> }>({
+		days: new FormControl<string | null>("", [Validators.required.bind(Validators), Validators.min(0), Validators.max(2)]),
+		hours: new FormControl<string | null>("", [Validators.required.bind(Validators), Validators.min(0), Validators.max(23)]),
+		minutes: new FormControl<string | null>("", [Validators.required.bind(Validators), Validators.min(0), Validators.max(59)]),
 	});
 
-	public onChange: (value: string) => void = (): void => {};
-	public onTouched: () => void = (): void => {};
+	public onChange: (value: string) => void = noop;
+	public onTouched: () => void = noop;
 
 	private _value: string = DEFAULT_TIMESPAN;
 
@@ -70,7 +71,7 @@ export class TimeSpanPickerComponent implements ControlValueAccessor {
 			return false;
 		}
 		const control: FormControl<string | null> = this.formGroup.controls[field];
-		const currentTime: string = control.value !== null ? control.value.toString() : "";
+		const currentTime: string = control.value ?? "";
 		const newTimeInt: number = parseInt(currentTime.concat(event.key), 10);
 		const currentTimeInt: number = parseInt(currentTime, 10);
 		if (newTimeInt.toString().length > 2) {

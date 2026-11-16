@@ -11,5 +11,5 @@ import { MatCardModule } from "@angular/material/card";
 export class HousingCardComponent {
 	public readonly title = input.required<string>();
 	public readonly height = input.required<string>();
-	public readonly contentHeight = computed((): string => `${parseInt(this.height(), 10) - 50}px`);
+	public readonly contentHeight = computed((): string => `${String(parseInt(this.height(), 10) - 50)}px`);
 }

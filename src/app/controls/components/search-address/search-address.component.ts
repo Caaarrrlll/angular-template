@@ -1,5 +1,19 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, OnChanges, Output, SimpleChanges, ViewChild, inject } from "@angular/core";
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	EventEmitter,
+	Input,
+	NgZone,
+	OnChanges,
+	Output,
+	SimpleChange,
+	SimpleChanges,
+	ViewChild,
+	inject,
+} from "@angular/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 
@@ -12,9 +26,10 @@ export interface _AddressResult {
 	selector: "app-search-address",
 	templateUrl: "./search-address.component.html",
 	imports: [CommonModule, MatFormFieldModule, MatInputModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAddressComponent implements AfterViewInit, OnChanges {
-	@ViewChild("mapSearchField") public searchField: ElementRef | undefined;
+	@ViewChild("mapSearchField") public searchField: ElementRef<HTMLElement> | undefined;
 
 	@Output() public updateAddress: EventEmitter<_AddressResult[]> = new EventEmitter<_AddressResult[]>();
 	@Output() public manualUpdateAddress: EventEmitter<string> = new EventEmitter<string>();
@@ -35,7 +50,8 @@ export class SearchAddressComponent implements AfterViewInit, OnChanges {
 	}
 
 	public ngOnChanges(changes: SimpleChanges): void {
-		if (changes["types"] && changes["types"].currentValue !== changes["types"].previousValue) {
+		const typesChange = changes["types"] as SimpleChange | undefined;
+		if (typesChange && typesChange.currentValue !== typesChange.previousValue) {
 			this.loadMaps();
 		}
 	}

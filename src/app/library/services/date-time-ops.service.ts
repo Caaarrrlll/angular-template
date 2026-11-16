@@ -12,38 +12,38 @@ export class DateTimeOpsService {
 		date = new Date(date);
 		const currentTime: Date = new Date();
 		const timeDifference: number = Math.abs(currentTime.getTime() - date.getTime()) / 1000;
-		const secondsInHour: number = 3600;
+		const secondsInHour = 3600;
 		const secondsInDay: number = secondsInHour * 24;
 
 		if (timeDifference < secondsInHour) {
 			const minutes = Math.round(timeDifference / 60);
-			return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+			return `${String(minutes)} minute${minutes === 1 ? "" : "s"} ago`;
 		}
 
 		if (timeDifference < secondsInDay) {
 			const hours = Math.round(timeDifference / secondsInHour);
-			return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+			return `${String(hours)} hour${hours === 1 ? "" : "s"} ago`;
 		}
 
 		const days = Math.round(timeDifference / secondsInDay);
 		if (days < 29) {
-			return `${days} day${days === 1 ? "" : "s"} ago`;
+			return `${String(days)} day${days === 1 ? "" : "s"} ago`;
 		}
 
 		const months = currentTime.getTime() >= date.getTime() ? this.getMonthDifference(date, currentTime) : this.getMonthDifference(currentTime, date);
 		if (months.months < 12) {
 			if (months.days > 0) {
-				return `${months.months} month${months.months === 1 ? "" : "s"} ${months.days}d ago`;
+				return `${String(months.months)} month${months.months === 1 ? "" : "s"} ${String(months.days)}d ago`;
 			}
-			return `${months.months} month${months.months === 1 ? "" : "s"} ago`;
+			return `${String(months.months)} month${months.months === 1 ? "" : "s"} ago`;
 		}
 
 		const years = Math.floor(months.months / 12);
 		const remainderMonths = months.months % 12;
 		if (remainderMonths > 0) {
-			return `${years} yr${years === 1 ? "" : "s "} ${remainderMonths} mo ago`;
+			return `${String(years)} yr${years === 1 ? "" : "s "} ${String(remainderMonths)} mo ago`;
 		}
-		return `${years} year${years === 1 ? "" : "s"} ago`;
+		return `${String(years)} year${years === 1 ? "" : "s"} ago`;
 	}
 
 	// Produces a string that calculates a time period until now in a format of 'in 2 years' or '2 years' given a boolean
@@ -52,38 +52,38 @@ export class DateTimeOpsService {
 		date = new Date(date);
 		const currentTime: Date = new Date();
 		const timeDifference: number = Math.abs(currentTime.getTime() - date.getTime()) / 1000;
-		const secondsInHour: number = 3600;
+		const secondsInHour = 3600;
 		const secondsInDay: number = secondsInHour * 24;
 
 		if (timeDifference < secondsInHour) {
 			const minutes = Math.round(timeDifference / 60);
-			return `${prefix ? "in " : ""}${minutes} minute${minutes === 1 ? "" : "s"}`;
+			return `${prefix ? "in " : ""}${String(minutes)} minute${minutes === 1 ? "" : "s"}`;
 		}
 
 		if (timeDifference < secondsInDay) {
 			const hours = Math.round(timeDifference / secondsInHour);
-			return `${prefix ? "in " : ""}${hours} hour${hours === 1 ? "" : "s"}`;
+			return `${prefix ? "in " : ""}${String(hours)} hour${hours === 1 ? "" : "s"}`;
 		}
 
 		const days = Math.round(timeDifference / secondsInDay);
 		if (days < 29) {
-			return `${prefix ? "in " : ""}${days} day${days === 1 ? "" : "s"}`;
+			return `${prefix ? "in " : ""}${String(days)} day${days === 1 ? "" : "s"}`;
 		}
 
 		const months = currentTime.getTime() >= date.getTime() ? this.getMonthDifference(date, currentTime) : this.getMonthDifference(currentTime, date);
 		if (months.months < 12) {
 			if (months.days > 0) {
-				return `${prefix ? "in " : ""}${months.months} month${months.months === 1 ? "" : "s"} ${months.days}d`;
+				return `${prefix ? "in " : ""}${String(months.months)} month${months.months === 1 ? "" : "s"} ${String(months.days)}d`;
 			}
-			return `${prefix ? "in " : ""}${months.months} month${months.months === 1 ? "" : "s"}`;
+			return `${prefix ? "in " : ""}${String(months.months)} month${months.months === 1 ? "" : "s"}`;
 		}
 
 		const years = Math.floor(months.months / 12);
 		const remainderMonths = months.months % 12;
 		if (remainderMonths > 0) {
-			return `${prefix ? "in " : ""} ${years} yr${years === 1 ? "" : "s "} ${remainderMonths} mo`;
+			return `${prefix ? "in " : ""} ${String(years)} yr${years === 1 ? "" : "s "} ${String(remainderMonths)} mo`;
 		}
-		return `${prefix ? "in " : ""}${years} year${years === 1 ? "" : "s"}`;
+		return `${prefix ? "in " : ""}${String(years)} year${years === 1 ? "" : "s"}`;
 	}
 
 	getMonthDifference(startDate: Date, endDate: Date): { months: number; days: number } {
@@ -204,7 +204,7 @@ export class DateTimeOpsService {
 
 	// Subtract amount from the time period specified
 	subtract(date: Date, amount: number, timePeriod: DateTimePeriod): Date {
-		let modDate = new Date(date);
+		const modDate = new Date(date);
 		switch (timePeriod) {
 			case "year": {
 				modDate.setFullYear(modDate.getFullYear() - amount);
@@ -240,7 +240,7 @@ export class DateTimeOpsService {
 
 	// Add amount to the time period specified
 	add(date: Date, amount: number, timePeriod: DateTimePeriod): Date {
-		let modDate = new Date(date);
+		const modDate = new Date(date);
 		switch (timePeriod) {
 			case "year": {
 				modDate.setFullYear(modDate.getFullYear() + amount);

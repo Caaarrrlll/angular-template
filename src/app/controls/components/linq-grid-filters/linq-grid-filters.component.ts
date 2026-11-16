@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
-import { DateAdapter, MatNativeDateModule, provideNativeDateAdapter } from "@angular/material/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
+import { DateAdapter, MatNativeDateModule } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -43,20 +43,20 @@ export interface _DisplayedColumnChoice {
 		MatSlideToggleModule,
 		MatTooltipModule,
 	],
-	providers: [provideNativeDateAdapter()],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinqGridFiltersComponent implements OnInit {
 	@Input() public gridFilters: _LinQGridFilterItem | _LinQGridFilterItem[] | null | undefined = null;
-	@Input() public showSortButton: boolean = false;
-	@Input() public showAddButton: boolean = true;
-	@Input() public showCustomButton: boolean = false;
+	@Input() public showSortButton = false;
+	@Input() public showAddButton = true;
+	@Input() public showCustomButton = false;
 	@Input() public customButtonTooltip?: string = "";
 	@Input() public customButtonIcon?: string = "";
-	@Input() public showUpperToggle: boolean = false;
+	@Input() public showUpperToggle = false;
 	@Input() public upperToggle?: CustInputGeneral;
-	@Input() public selectableColumns: boolean = false;
+	@Input() public selectableColumns = false;
 	@Input() public displayedColumns: string[] = [];
-	@Input() public exporting: boolean = false;
+	@Input() public exporting = false;
 
 	@Output() public refreshClicked: EventEmitter<void> = new EventEmitter<void>();
 	@Output() public clearButtonClicked: EventEmitter<void> = new EventEmitter<void>();
@@ -72,7 +72,7 @@ export class LinqGridFiltersComponent implements OnInit {
 	public filterItems: _LinQGridFilterItem[] = [];
 	public columnChoices: _DisplayedColumnChoice[] = [];
 
-	private readonly dateAdapter: DateAdapter<Date> = inject(DateAdapter);
+	private readonly dateAdapter: DateAdapter<Date> = inject<DateAdapter<Date>>(DateAdapter);
 
 	public ngOnInit(): void {
 		this.filterItems = this.normalizeFilters(this.gridFilters);
@@ -115,14 +115,14 @@ export class LinqGridFiltersComponent implements OnInit {
 
 	public textChanged(item: _LinQGridFilterItem, value: string): void {
 		item.active = value.length > 0;
-		item.config.options["text"] = value;
+		item.config.options.text = value;
 		item.filter.filters = value.length > 0 ? [{ field: item.name, operator: "contains", value: value }] : [];
 		this.filterChanged.emit(item);
 	}
 
 	public dateChanged(item: _LinQGridFilterItem, value: Date | null): void {
 		item.active = value !== null;
-		item.config.options["date"] = value ?? undefined;
+		item.config.options.date = value ?? undefined;
 		item.filter.filters = value ? [{ field: item.name, operator: "eq", value: value }] : [];
 		this.filterChanged.emit(item);
 	}
@@ -130,7 +130,7 @@ export class LinqGridFiltersComponent implements OnInit {
 	public rangeChanged(item: _LinQGridFilterItem, bound: "start" | "end", value: Date | null): void {
 		const range = item.config.options.range ?? { start: null as Date | null, end: null as Date | null };
 		range[bound] = value;
-		item.config.options["range"] = range;
+		item.config.options.range = range;
 		item.active = range.start !== null && range.end !== null;
 		item.filter.filters = item.active
 			? [
@@ -157,11 +157,11 @@ export class LinqGridFiltersComponent implements OnInit {
 	}
 
 	public rangeStart(item: _LinQGridFilterItem): Date | null {
-		return (item.config.options.range?.start as Date) ?? null;
+		return item.config.options.range?.start ?? null;
 	}
 
 	public rangeEnd(item: _LinQGridFilterItem): Date | null {
-		return (item.config.options.range?.end as Date) ?? null;
+		return item.config.options.range?.end ?? null;
 	}
 
 	private normalizeFilters(gridFilters: _LinQGridFilterItem | _LinQGridFilterItem[] | null | undefined): _LinQGridFilterItem[] {
@@ -174,13 +174,13 @@ export class LinqGridFiltersComponent implements OnInit {
 	private rehydrateFilterDates(item: _LinQGridFilterItem): void {
 		// cached filters come back from sessionStorage as ISO strings
 		if (item.active && item.config.type === "date" && item.config.options.date) {
-			item.config.options.date = this.dateAdapter.parse(item.config.options.date as unknown as string, "yyyy/MM/dd") ?? item.config.options.date;
+			item.config.options.date = this.dateAdapter.parse(item.config.options.date, "yyyy/MM/dd") ?? item.config.options.date;
 		}
 		if (item.active && item.config.type === "dateRange" && item.config.options.range) {
-			item.config.options.range.start = this.dateAdapter.parse(item.config.options.range.start as unknown as string, "yyyy/MM/dd") ?? item.config.options.range.start;
-			item.config.options.range.end = this.dateAdapter.parse(item.config.options.range.end as unknown as string, "yyyy/MM/dd") ?? item.config.options.range.end;
+			item.config.options.range.start = this.dateAdapter.parse(item.config.options.range.start, "yyyy/MM/dd") ?? item.config.options.range.start;
+			item.config.options.range.end = this.dateAdapter.parse(item.config.options.range.end, "yyyy/MM/dd") ?? item.config.options.range.end;
 			for (const condition of item.filter.filters) {
-				condition.value = new Date(condition.value as unknown as string);
+				condition.value = new Date(condition.value as string);
 			}
 		}
 	}

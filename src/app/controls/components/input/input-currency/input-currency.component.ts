@@ -1,5 +1,5 @@
 import { getCurrencySymbol } from "@angular/common";
-import { Component, LOCALE_ID, OnInit, inject, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, LOCALE_ID, OnInit, inject, input, output } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -12,6 +12,7 @@ import { CustButtonInputType, CustInputAdvance } from "@shared/models/cust-basic
 	templateUrl: "./input-currency.component.html",
 	styleUrls: ["./input-currency.component.scss"],
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputCurrencyComponent implements OnInit {
 	public readonly label = input.required<string>();
@@ -25,6 +26,7 @@ export class InputCurrencyComponent implements OnInit {
 	private readonly localeId: string = inject(LOCALE_ID);
 
 	public get currencySymbol(): string {
+		// eslint-disable-next-line @typescript-eslint/no-deprecated
 		return getCurrencySymbol(this.currencyCode(), "narrow", this.localeId);
 	}
 

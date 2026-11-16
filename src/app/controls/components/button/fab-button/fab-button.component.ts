@@ -9,7 +9,7 @@ import { MatIconModule } from "@angular/material/icon";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FabButtonComponent {
-	public readonly emitClick = output<void>();
+	public readonly emitClick = output();
 
 	public onClick(): void {
 		this.emitClick.emit();

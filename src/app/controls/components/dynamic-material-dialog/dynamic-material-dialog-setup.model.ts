@@ -13,7 +13,7 @@ export interface _ControlInterface {
 export interface _DialogControl {
 	type: FormType;
 	formName: string;
-	value?: any;
+	value?: unknown;
 	label?: string;
 	placeholder?: string;
 	inputType?: string;
@@ -85,7 +85,7 @@ export class DynamicDialogSetup {
 export class GenericControl {
 	public type: FormType;
 	public instructionText?: string;
-	public value?: any;
+	public value?: unknown;
 	public formName?: string;
 	public disabled?: boolean;
 	public hintText?: string;
@@ -104,7 +104,7 @@ export class GenericControl {
 	}: {
 		type: FormType;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -143,7 +143,7 @@ export class TextArea extends GenericControl {
 		placeholder?: string;
 		inputType?: string;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -189,7 +189,7 @@ export class DialogInput extends GenericControl {
 		placeholder?: string;
 		inputType?: string;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -232,7 +232,7 @@ export class CurrencyShortHand extends GenericControl {
 		label: string;
 		placeholder?: string;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -264,7 +264,7 @@ export class DropDown extends GenericControl {
 		label,
 		placeholder,
 		multiple = false,
-		data = [],
+		data,
 		instructionText,
 		value,
 		formName,
@@ -278,7 +278,7 @@ export class DropDown extends GenericControl {
 		multiple?: boolean;
 		data: _FormData[];
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -315,7 +315,7 @@ export class DropDownGroups extends GenericControl {
 		label,
 		placeholder,
 		multiple = false,
-		groups = [],
+		groups,
 		instructionText,
 		value,
 		formName,
@@ -332,7 +332,7 @@ export class DropDownGroups extends GenericControl {
 			data: _FormData[];
 		}[];
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -381,7 +381,7 @@ export class ButtonGroup extends GenericControl {
 	}: {
 		data?: _FormData[];
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -416,7 +416,7 @@ export class CUSTButtonGroup extends GenericControl {
 	public data: _FormData[];
 
 	constructor({
-		data = [],
+		data,
 		instructionText,
 		value,
 		formName,
@@ -427,7 +427,7 @@ export class CUSTButtonGroup extends GenericControl {
 	}: {
 		data: _FormData[];
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -469,7 +469,7 @@ export class SingleDate extends GenericControl {
 		placeholder?: string;
 		disabledBefore?: Date;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -513,7 +513,7 @@ export class SingleDateString extends GenericControl {
 		placeholder?: string;
 		disabledBefore?: Date;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -557,7 +557,7 @@ export class RangeDate extends GenericControl {
 		placeholder?: string;
 		disabledBefore?: Date;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -601,7 +601,7 @@ export class RangeDateString extends GenericControl {
 		placeholder?: string;
 		disabledBefore?: Date;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -645,7 +645,7 @@ export class DateTime extends GenericControl {
 		placeholder?: string;
 		disabledBefore?: Date;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -689,7 +689,7 @@ export class Slider extends GenericControl {
 		maxValue?: number;
 		increment?: number;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -731,7 +731,7 @@ export class CheckBox extends GenericControl {
 	}: {
 		data: _FormData[];
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -760,7 +760,7 @@ export class RadioButton extends GenericControl {
 	public data: _FormData[];
 
 	constructor({
-		data = [],
+		data,
 		instructionText,
 		value,
 		formName,
@@ -771,7 +771,7 @@ export class RadioButton extends GenericControl {
 	}: {
 		data: _FormData[];
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -811,7 +811,7 @@ export class CheckBoxRange extends GenericControl {
 	}: {
 		data: _FormData[];
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -871,7 +871,7 @@ export class Address extends GenericControl {
 		placeholder?: string;
 		inputType?: string;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -933,7 +933,7 @@ export class Numeric extends GenericControl {
 		placeholder?: string;
 		inputType?: string;
 		instructionText?: string;
-		value?: any;
+		value?: unknown;
 		formName?: string;
 		disabled?: boolean;
 		hintText?: string;
@@ -967,7 +967,7 @@ export class Numeric extends GenericControl {
 //Slide Toggle
 
 export interface _FormData {
-	value: any;
+	value: unknown;
 	display: string;
 	range?: RangeCheckboxValue;
 	activated?: boolean;
@@ -980,7 +980,7 @@ export interface _ButtonGroupInput {
 
 export interface _ErrorValidation {
 	validator: ValidatorType;
-	value?: any;
+	value?: unknown;
 	errorMessage: string;
 }
 

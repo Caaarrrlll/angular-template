@@ -2,7 +2,7 @@ import { Service } from "@angular/core";
 
 @Service()
 export class B64ToBlobService {
-	public b64ToBlob(b64Data: string, contentType: string = "application/pdf", sliceSize: number = 512): Blob {
+	public b64ToBlob(b64Data: string, contentType = "application/pdf", sliceSize = 512): Blob {
 		const byteCharacters = atob(b64Data);
 		const byteArrays: BlobPart[] = [];
 		for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {

@@ -10,7 +10,7 @@ export class SnackbarService {
 	private readonly destroyRef: DestroyRef = inject(DestroyRef);
 	private previousMessage: string | null = null;
 
-	open(message: string = "", state: SnackbarState = "error", duration: number = 5555): MatSnackBarRef<TextOnlySnackBar> | null {
+	open(message = "", state: SnackbarState = "error", duration = 5555): MatSnackBarRef<TextOnlySnackBar> | null {
 		if (this.previousMessage === message) {
 			return null;
 		}

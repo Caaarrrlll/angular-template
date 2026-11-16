@@ -7,7 +7,7 @@ import { AfterViewInit, Directive, ElementRef, HostListener, Input, inject } fro
 	standalone: true,
 })
 export class DateTransformDirective implements AfterViewInit {
-	@Input() dateTransform: string = "";
+	@Input() dateTransform = "";
 	private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
 	private readonly datePipe = inject(DatePipe);
 

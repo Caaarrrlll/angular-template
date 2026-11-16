@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { RangeCheckboxValue } from "@shared/components/range-checkbox-group/range-checkbox-group.interface";
 
@@ -7,6 +7,7 @@ import { RangeCheckboxValue } from "@shared/components/range-checkbox-group/rang
 	templateUrl: "./range-checkbox-group.component.html",
 	styleUrls: ["./range-checkbox-group.component.scss"],
 	standalone: true,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

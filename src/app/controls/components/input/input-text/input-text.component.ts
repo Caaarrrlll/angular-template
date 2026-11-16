@@ -1,4 +1,4 @@
-import { Component, OnInit, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, input, output } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -12,6 +12,7 @@ import { CustButtonInputType, CustInputAdvance } from "@shared/models/cust-basic
 	templateUrl: "./input-text.component.html",
 	styleUrls: ["./input-text.component.scss"],
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDatepickerModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputTextComponent implements OnInit {
 	public readonly label = input.required<string>();

@@ -1,25 +1,26 @@
 import { _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
 
 export class _CUSTPage {
-	page: number = 0;
-	pageSize: number = 25;
-	pageTotal: number = 0;
+	page = 0;
+	pageSize = 25;
+	pageTotal = 0;
 	pageSizeOptions: number[] = [25, 50, 100, 200];
 	filters: _LinQGridFilterItem[] = [];
-	lastScrollPosition: string = "";
+	lastScrollPosition = "";
 
 	constructor(pageStorageName: string) {
 		const cacheString: string | null = sessionStorage.getItem(pageStorageName);
 
 		if (typeof cacheString === "string") {
-			const cache = JSON.parse(cacheString);
+			const cache: unknown = JSON.parse(cacheString);
 			if (cache) {
-				this.page = cache.page;
-				this.pageSize = cache.pageSize;
-				this.pageTotal = cache.pageTotal;
-				this.pageSizeOptions = cache.pageSizeOptions;
-				this.filters = cache.filters;
-				this.lastScrollPosition = cache.lastScrollPosition;
+				const parsedCache = cache as _CUSTPage;
+				this.page = parsedCache.page;
+				this.pageSize = parsedCache.pageSize;
+				this.pageTotal = parsedCache.pageTotal;
+				this.pageSizeOptions = parsedCache.pageSizeOptions;
+				this.filters = parsedCache.filters;
+				this.lastScrollPosition = parsedCache.lastScrollPosition;
 			}
 		}
 	}
@@ -37,12 +38,12 @@ export class _CUSTPage {
 		pageSizeOptions?: number[],
 		lastScrollPosition?: string,
 	): void {
-		this.page = page != undefined && page != null ? page : this.page;
-		this.pageSize = pageSize != undefined && pageSize != null ? pageSize : this.pageSize;
-		this.pageTotal = pageTotal != undefined && pageTotal != null ? pageTotal : this.pageTotal;
-		this.pageSizeOptions = pageSizeOptions != undefined && pageSizeOptions != null ? pageSizeOptions : this.pageSizeOptions;
-		this.filters = filters !== undefined && filters !== null ? filters : this.filters;
-		this.lastScrollPosition = lastScrollPosition != undefined && lastScrollPosition != null ? lastScrollPosition : this.lastScrollPosition;
+		this.page = page ?? this.page;
+		this.pageSize = pageSize ?? this.pageSize;
+		this.pageTotal = pageTotal ?? this.pageTotal;
+		this.pageSizeOptions = pageSizeOptions ?? this.pageSizeOptions;
+		this.filters = filters ?? this.filters;
+		this.lastScrollPosition = lastScrollPosition ?? this.lastScrollPosition;
 		this.setPageCache(pageStorageName);
 	}
 }

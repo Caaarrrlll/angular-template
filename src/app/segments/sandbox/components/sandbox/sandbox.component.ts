@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { _SandboxAccordionItem, SandboxAccordionDataService } from "@segments/sandbox/services/sandbox-accordion-data.service";
@@ -17,6 +17,7 @@ import { LoggerService } from "@shared/services/logger.service";
 	styleUrls: ["./sandbox.component.scss"],
 	standalone: true,
 	imports: [MatIconModule, AccordionComponent, AccordionContentDirective, AccordionHeaderDirective, AccordionItemDirective, ExpandableGridComponent],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SandboxComponent {
 	private readonly logger = inject(LoggerService);
@@ -31,7 +32,7 @@ export class SandboxComponent {
 	public gridRows: _ExpandableGridRow[] = this.expandableGridData.rows;
 
 	public onAccordionExpanded(expanded: boolean): void {
-		this.logger.log(`Accordion item toggled: ${expanded}`);
+		this.logger.log(`Accordion item toggled: ${String(expanded)}`);
 	}
 
 	public onGridDelete(row: _ExpandableGridRow): void {
@@ -41,7 +42,7 @@ export class SandboxComponent {
 
 	public onGridSave(value: unknown): void {
 		const row = value as _ExpandableGridRow;
-		const id = row["id"];
+		const id = row["id"] as number | null | undefined;
 
 		if (id === null || id === undefined) {
 			this.gridRows = [{ ...row, id: this.nextId() }, ...this.gridRows];

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, Component, EventEmitter, Input, Output } from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -23,7 +23,7 @@ import { CurrencyComponent } from "@shared/components/currency/currency.componen
 import { _DisplayDetail, _InfoCardButtonClick } from "./info-card.models";
 
 export interface _InfoCardParentDataContext {
-	data: Record<string, any>;
+	data: Record<string, unknown>;
 	config: unknown;
 	claims: string[];
 }
@@ -33,9 +33,10 @@ export interface _InfoCardParentDataContext {
 	templateUrl: "./info-card.component.html",
 	styleUrls: ["./info-card.component.scss"],
 	imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, ButtonV2Component, ChipStatusComponent, CurrencyComponent],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoCardComponent implements AfterContentInit {
-	@Input() public data!: Record<string, any>;
+	@Input() public data?: Record<string, unknown>;
 	@Input({ required: true }) public cardHeader!: _CustCardHeaderTableInterface[];
 	@Input() public tableHeaderMenu?: _CustCardHeaderMenuInterface;
 	@Input() public tableButtonConfig?: _CustCardButtonTableInterface[];
@@ -43,7 +44,7 @@ export class InfoCardComponent implements AfterContentInit {
 	@Input({ required: true }) public tableProperties!: _CustTablePropertiesExtConfig;
 	@Input() public parentDataProcess: ((context: _InfoCardParentDataContext) => _DataProcessResponse | undefined) | undefined;
 	@Input() public claims: string[] = [];
-	@Input() public dateFormat: string = "yyyy/MM/dd";
+	@Input() public dateFormat = "yyyy/MM/dd";
 	@Input() public footerChips?: _CustFooterChips;
 
 	@Output() public buttonClick: EventEmitter<_InfoCardButtonClick> = new EventEmitter<_InfoCardButtonClick>();
@@ -52,32 +53,32 @@ export class InfoCardComponent implements AfterContentInit {
 	public cardRows: _CardRow[] = [];
 	public cardCols: _CardCol[] = [];
 	public cardHeaders: _CustCardHeaderDataInterface[] = [];
-	public maxLines: number = 0;
-	public showDetailCard: boolean = false;
-	public top: number = 0;
-	public left: number = 0;
+	public maxLines = 0;
+	public showDetailCard = false;
+	public top = 0;
+	public left = 0;
 	public displayDetails: _DisplayDetail[] = [];
-	public errorActionButton: string = "";
+	public errorActionButton = "";
 
 	public ngAfterContentInit(): void {
 		this.mapData();
 
 		if (this.tableProperties.heightAuto) {
-			this.tableProperties.height = this.tableConfig.length * 22 + "px";
+			this.tableProperties.height = `${String(this.tableConfig.length * 22)}px`;
 		}
 	}
 
 	public buttonAction(action: string): void {
 		const retObj: _InfoCardButtonClick = {
 			action: action,
-			data: this.data,
+			data: this.data ?? {},
 		};
 
 		this.buttonClick.emit(retObj);
 	}
 
 	public displayList(detail: _CardCol): _DisplayDetail[] {
-		return (detail.list as _DisplayDetail[]) ?? [];
+		return (detail.list ?? []) as _DisplayDetail[];
 	}
 
 	public tableButton(detail: _CardCol, width: string): CustButtonInput {
@@ -110,7 +111,7 @@ export class InfoCardComponent implements AfterContentInit {
 		this.mapField(this.data);
 	}
 
-	private mapDataParent(data: Record<string, any>, config: Record<string, any>): void {
+	private mapDataParent(data: Record<string, unknown>, config: _CustCardTableInterface): void {
 		const resp = this.parentDataProcess?.({
 			data: data,
 			config: config,
@@ -121,9 +122,9 @@ export class InfoCardComponent implements AfterContentInit {
 			switch (resp.type) {
 				case _TableTypes.DisplayList: {
 					this.cardCols.push({
-						label: config["display"],
+						label: config.display,
 						value: resp.response,
-						type: resp.type ? resp.type : _TableTypes.Text,
+						type: resp.type,
 						valueColor: resp.action,
 						buttonClick: resp.buttonAction,
 						list: resp.displayList,
@@ -132,9 +133,9 @@ export class InfoCardComponent implements AfterContentInit {
 				}
 				case "button": {
 					this.cardCols.push({
-						label: config["display"],
+						label: config.display,
 						value: resp.response,
-						type: resp.type ? resp.type : _TableTypes.Text,
+						type: resp.type,
 						valueColor: resp.action,
 						buttonClick: resp.buttonAction,
 					});
@@ -142,18 +143,18 @@ export class InfoCardComponent implements AfterContentInit {
 				}
 				case "chipsStatus": {
 					this.cardCols.push({
-						label: config["display"],
+						label: config.display,
 						value: resp.response,
-						type: resp.type ? resp.type : _TableTypes.Text,
+						type: resp.type,
 						valueColor: resp.action,
 					});
 					break;
 				}
 				case "textLink": {
 					this.cardCols.push({
-						label: config["display"],
+						label: config.display,
 						value: resp.response,
-						type: resp.type ? resp.type : _TableTypes.Text,
+						type: resp.type,
 						valueColor: resp.action,
 						url: resp.url,
 					});
@@ -161,7 +162,7 @@ export class InfoCardComponent implements AfterContentInit {
 				}
 				case "textWithEdit": {
 					this.cardCols.push({
-						label: config["display"],
+						label: config.display,
 						value: resp.response,
 						type: resp.type,
 						buttonClick: resp.editAction,
@@ -170,7 +171,7 @@ export class InfoCardComponent implements AfterContentInit {
 				}
 				case "textCombined": {
 					this.cardCols.push({
-						label: config["display"],
+						label: config.display,
 						value: resp.response,
 						type: resp.type,
 						buttonClick: resp.buttonAction,
@@ -179,8 +180,10 @@ export class InfoCardComponent implements AfterContentInit {
 				}
 				default: {
 					this.cardCols.push({
-						label: resp.label ? resp.label : config["display"],
+						// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: empty string must fall back
+						label: resp.label ? resp.label : config.display,
 						value: resp.response,
+						// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: empty string must fall back
 						type: resp.type ? resp.type : _TableTypes.Text,
 					});
 					break;
@@ -189,8 +192,8 @@ export class InfoCardComponent implements AfterContentInit {
 		}
 	}
 
-	private mapField(data: Record<string, any>): void {
-		let currentCol: number = 1;
+	private mapField(data: Record<string, unknown> | undefined): void {
+		let currentCol = 1;
 
 		if (!data) {
 			return;
@@ -214,8 +217,8 @@ export class InfoCardComponent implements AfterContentInit {
 				currentCol = config.column;
 			}
 
-			if (config.type === "Parent" && this.parentDataProcess) {
-				this.mapDataParent(data, config as unknown as Record<string, any>);
+			if (config.type === _TableTypes.Parent && this.parentDataProcess) {
+				this.mapDataParent(data, config);
 			} else {
 				const field: string = config.field,
 					sub: string | undefined = config.fieldSub;
@@ -223,23 +226,26 @@ export class InfoCardComponent implements AfterContentInit {
 				if (!sub && data[field]) {
 					this.cardCols.push({
 						label: config.display,
-						value: data[field],
+						value: data[field] as string,
 						type: config.type,
 						buttonClick: config.editAction,
 					});
 				} else if (sub) {
-					if (data[field]) {
+					const fieldValue: unknown = data[field];
+					const subValue: unknown = fieldValue ? (fieldValue as Record<string, unknown>)[sub] : undefined;
+
+					if (fieldValue) {
 						this.cardCols.push({
 							label: config.display,
-							value: data[field][sub]
-								? data[field][sub]
+							value: subValue
+								? (subValue as string)
 								: config.type === _TableTypes.Text
 									? "N/A"
-									: config.type === "boolean"
-										? data[field][sub]
+									: config.type === _TableTypes.Boolean
+										? subValue
 											? "Yes"
 											: "No"
-										: data[field][sub],
+										: (subValue as string),
 							type: config.type,
 							buttonClick: config.editAction,
 						});
@@ -264,7 +270,7 @@ export class InfoCardComponent implements AfterContentInit {
 		this.cardCols.splice(0, this.cardCols.length);
 	}
 
-	private mapHeaderParent(data: Record<string, any>, config: Record<string, any>): void {
+	private mapHeaderParent(data: Record<string, unknown>, config: _CustCardHeaderTableInterface): void {
 		const resp = this.parentDataProcess?.({
 			data: data,
 			config: config,
@@ -276,6 +282,7 @@ export class InfoCardComponent implements AfterContentInit {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.chipsStatus,
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: empty string must fall back
 					alignment: resp.alignment ? resp.alignment : _HeaderAlignment.center,
 					statusType: resp.action,
 				});
@@ -283,14 +290,15 @@ export class InfoCardComponent implements AfterContentInit {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.display,
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: empty string must fall back
 					alignment: resp.alignment ? resp.alignment : _HeaderAlignment.center,
-					textColor: config["textColor"],
+					textColor: config.textColor,
 				});
 			}
 		}
 	}
 
-	private mapHeader(data: Record<string, any>): void {
+	private mapHeader(data: Record<string, unknown> | undefined): void {
 		if (data == null) {
 			this.cardHeaders.push({
 				text: this.cardHeader[0].display,
@@ -305,7 +313,7 @@ export class InfoCardComponent implements AfterContentInit {
 		}
 		for (const config of this.cardHeader) {
 			if (config.type === "Parent" && this.parentDataProcess) {
-				this.mapHeaderParent(data, config as unknown as Record<string, any>);
+				this.mapHeaderParent(data, config);
 			} else {
 				const field: string = config.field,
 					sub: string | undefined = config.fieldSub;
@@ -319,17 +327,17 @@ export class InfoCardComponent implements AfterContentInit {
 					});
 				} else if (config.type && config.type === "status") {
 					this.cardHeaders.push({
-						text: data[field],
+						text: data[field] as string,
 						type: _HeaderTypes.status,
 						alignment: _HeaderAlignment.end,
-						statusType: this.setStatusChip(data[config.field]),
-						postText: data[config.postText as string],
+						statusType: this.setStatusChip(data[config.field] as string),
+						postText: config.postText !== undefined ? (data[config.postText] as string) : undefined,
 						postLable: config.postLable,
 						textColor: config.textColor,
 					});
 				} else if (!sub && !config.textPre) {
 					this.cardHeaders.push({
-						text: data[field],
+						text: data[field] as string,
 						type: config.type ?? _HeaderTypes.display,
 						alignment: _HeaderAlignment.start,
 						clickAction: config.clickAction,
@@ -337,7 +345,7 @@ export class InfoCardComponent implements AfterContentInit {
 					});
 				} else if (sub && !config.textPre) {
 					this.cardHeaders.push({
-						text: data[field][sub],
+						text: (data[field] as Record<string, unknown>)[sub] as string,
 						type: config.type ?? _HeaderTypes.display,
 						alignment: config.alignment ?? _HeaderAlignment.start,
 						icon: config.icon,
@@ -346,15 +354,15 @@ export class InfoCardComponent implements AfterContentInit {
 					});
 				} else if (sub && config.textPre) {
 					this.cardHeaders.push({
-						text: data[field][sub],
+						text: (data[field] as Record<string, unknown>)[sub] as string,
 						type: config.type ?? _HeaderTypes.display,
 						alignment: _HeaderAlignment.start,
-						textPre: data[config.textPre],
+						textPre: data[config.textPre] as string,
 						textColor: config.textColor,
 					});
 				} else if (!sub && config.textPre) {
 					this.cardHeaders.push({
-						text: data[field],
+						text: data[field] as string,
 						type: _HeaderTypes.display,
 						alignment: _HeaderAlignment.start,
 						textPre: config.textPre,
@@ -388,7 +396,7 @@ export class InfoCardComponent implements AfterContentInit {
 		this.menuClickEvent.emit(action);
 	}
 
-	public mouseOver(event: MouseEvent, details: _DisplayDetail[], top: number = 0): void {
+	public mouseOver(event: MouseEvent, details: _DisplayDetail[], top = 0): void {
 		this.showDetailCard = true;
 		if (this.displayDetails.length > 0) {
 			this.top = event.y - 130 - top;

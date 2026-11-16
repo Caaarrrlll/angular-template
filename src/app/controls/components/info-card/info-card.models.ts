@@ -4,5 +4,5 @@ export interface _DisplayDetail {
 
 export interface _InfoCardButtonClick {
 	action: string;
-	data: Record<string, any>;
+	data: Record<string, unknown>;
 }

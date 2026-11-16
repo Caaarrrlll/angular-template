@@ -7,9 +7,9 @@ import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZoomImageComponent {
-	@Input() public img: string = "";
+	@Input() public img = "";
 
-	public isZoomed: boolean = false;
+	public isZoomed = false;
 
 	@ViewChild("container") private container?: ElementRef<HTMLDivElement>;
 	@ViewChild("imgView") private imgView?: ElementRef<HTMLImageElement>;

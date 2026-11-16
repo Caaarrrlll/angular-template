@@ -29,7 +29,7 @@ export class GroupByDatePipe implements PipeTransform {
 			const entry = (current as Record<string, unknown>)["entryDate"];
 			const dt = this.datePipe.transform(entry as string | number | Date, "d MMMM yyyy") ?? "";
 
-			if (!previous[dt]) {
+			if (!Object.hasOwn(previous, dt)) {
 				previous[dt] = [];
 			}
 			previous[dt].push(current);

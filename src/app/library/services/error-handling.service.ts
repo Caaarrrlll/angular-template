@@ -21,9 +21,12 @@ export class ErrorHandlingService implements ErrorHandler {
 				return;
 			}
 
-			const errMessage = error.error?.title ? error.error.title : typeof error.error === "string" ? error.error : error.message;
+			const errorBody: unknown = error.error;
+			const errorTitle: unknown = typeof errorBody === "object" && errorBody !== null && "title" in errorBody ? (errorBody as { title?: unknown }).title : undefined;
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: an empty-string title must fall back to the body or message
+			const errMessage: unknown = errorTitle ? errorTitle : typeof errorBody === "string" ? errorBody : error.message;
 			// Http Error
-			this.snackbarService.open(`${error.status} - ${errMessage}`, "error");
+			this.snackbarService.open(`${String(error.status)} - ${String(errMessage)}`, "error");
 		} else {
 			// Client Error Happened
 			this.snackbarService.open(error.message, "error");

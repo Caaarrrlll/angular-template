@@ -1,4 +1,4 @@
-import { Component, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
 import { CustChipInput, CustChipReturn, CustInputReturn } from "@shared/models/cust-basic-controls";
@@ -8,6 +8,7 @@ import { CustChipInput, CustChipReturn, CustInputReturn } from "@shared/models/c
 	templateUrl: "./chips.component.html",
 	styleUrls: ["./chips.component.scss"],
 	imports: [MatChipsModule, MatIconModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsComponent {
 	public readonly input = input.required<CustChipInput[]>();
@@ -31,7 +32,7 @@ export class ChipsComponent {
 			this.chipClear = false;
 			return;
 		}
-		if (item.isToggle !== undefined && item.isToggle !== null) {
+		if (item.isToggle !== undefined) {
 			item.isToggle = !item.isToggle;
 		}
 		this.inputChanged.emit({

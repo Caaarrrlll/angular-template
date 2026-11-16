@@ -1,4 +1,4 @@
-<div class="dynamic-material-dialog">
+﻿<div class="dynamic-material-dialog">
 	<h2
 		mat-dialog-title
 		*ngIf="options && options.draggable"
@@ -48,7 +48,7 @@
 							[formControlName]="control.formName || ''"
 							[type]="control.inputType ?? 'text'"
 							matInput
-							(input)="controlChange(control)"
+							(input)="controlChange($any(control))"
 							[(ngModel)]="control.value" />
 						<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 						<mat-error *ngFor="let error of control.validators">
@@ -61,7 +61,7 @@
 					<div *ngIf="control.autoComplete && this.autoCompleteList.length > 0 && this.searchInputName == control.formName">
 						<div style="padding: 5px">Select a buylead below to verify</div>
 						<div class="auto-complete-container">
-							<div *ngFor="let item of this.autoCompleteList" (click)="autoCompleteSet(control, item)" class="auto-complete-line">
+							<div *ngFor="let item of this.autoCompleteList" (click)="autoCompleteSet($any(control), item)" class="auto-complete-line">
 								{{ item }}
 							</div>
 							<mat-spinner *ngIf="showSpinner && this.searchInputName == control.formName" style="margin: 0 auto" [diameter]="30"></mat-spinner>
@@ -121,14 +121,14 @@
 
 				<!--            Button Group-->
 				<div *ngSwitchCase="formType.ButtonGroup" class="button-group-wrapper">
-					<app-button-toggle style="width: 100%" [inputObj]="control" (inputChanged)="inputChange($event, control.formName || '')"></app-button-toggle>
+					<app-button-toggle style="width: 100%" [inputObj]="$any(control)" (inputChanged)="inputChange($event, control.formName || '')"></app-button-toggle>
 				</div>
 
 				<!--            CUST Button Group-->
 				<div *ngSwitchCase="formType.CUSTButtonGroup" class="button-group-wrapper">
 					<app-button-toggle
 						style="width: 100%"
-						[inputObj]="control"
+						[inputObj]="$any(control)"
 						[equalToSelected]="equalSelected"
 						(inputChanged)="inputChange($event, control.formName || '')"></app-button-toggle>
 				</div>
@@ -254,7 +254,7 @@
 						<input [formControl]="searchControl" matInput />
 					</mat-form-field>
 					<app-checkbox-group [formControlName]="control.formName || ''" [multi]="control.multi ?? false" class="checkbox-group">
-						<app-checkbox *ngFor="let option of filteredData | async" [value]="option.value" (click)="rangeClicked(option)">{{ option.display }}</app-checkbox>
+						<app-checkbox *ngFor="let option of filteredData | async" [value]="$any(option.value)" (click)="rangeClicked(option)">{{ option.display }}</app-checkbox>
 					</app-checkbox-group>
 				</div>
 
@@ -303,7 +303,7 @@
 						autocorrect="off"
 						spellcheck="off"
 						(keydown.enter)="allowManualInput ? null : $event.preventDefault()"
-						[value]="control.value"
+						[value]="$any(control.value)"
 						matInput />
 					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>
 					<mat-error *ngFor="let error of control.validators">
@@ -343,7 +343,7 @@
 						[formControlName]="control.formName || ''"
 						[type]="control.inputType ?? 'text'"
 						matInput
-						(input)="controlChange(control)"
+						(input)="controlChange($any(control))"
 						[(ngModel)]="control.value"
 						MinMax />
 					<mat-hint *ngIf="control.hintText">{{ control.hintText }}</mat-hint>

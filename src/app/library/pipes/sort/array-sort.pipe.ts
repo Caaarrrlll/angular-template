@@ -11,15 +11,15 @@ import { Pipe, PipeTransform } from "@angular/core";
 	standalone: true,
 })
 export class ArraySortPipe implements PipeTransform {
-	public transform(array: Array<Record<string, any>> | undefined | null, field: string): Array<Record<string, any>> {
+	public transform(array: Record<string, unknown>[] | undefined | null, field: string): Record<string, unknown>[] {
 		if (!Array.isArray(array)) {
 			return [];
 		}
 
 		array.sort((a, b) => {
-			if (a[field] < b[field]) {
+			if ((a[field] as string | number) < (b[field] as string | number)) {
 				return -1;
-			} else if (a[field] > b[field]) {
+			} else if ((a[field] as string | number) > (b[field] as string | number)) {
 				return 1;
 			} else {
 				return 0;

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, input, output } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { debounceTime } from "rxjs";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -10,6 +10,7 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	selector: "app-input-email",
 	templateUrl: "./input-email.component.html",
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputEmailComponent implements OnInit {
 	public readonly inputObj = input.required<CustInputGeneral>();

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, Component, EventEmitter, Input, Output } from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
@@ -45,6 +45,7 @@ export interface _CardTableParentButtonContext extends _ListCardParentButtonCont
 		MatIconModule,
 		ListCardComponent,
 	],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardTableComponent implements AfterContentInit {
 	@Input() public listObservable?: Observable<unknown>;
@@ -56,14 +57,14 @@ export class CardTableComponent implements AfterContentInit {
 	@Input() public claims: string[] = [];
 	@Input() public storageName?: string;
 	@Input() public spinner?: number;
-	@Input() public showAddButton: boolean = true;
-	@Input() public showSortButton: boolean = false;
-	@Input() public showCustomButton: boolean = false;
+	@Input() public showAddButton = true;
+	@Input() public showSortButton = false;
+	@Input() public showCustomButton = false;
 	@Input() public customButtonTooltip?: string;
 	@Input() public customButtonIcon?: string;
-	@Input() public showUpperToggle: boolean = false;
+	@Input() public showUpperToggle = false;
 	@Input() public upperToggle?: CustInputGeneral;
-	@Input() public defaultSort: string = "";
+	@Input() public defaultSort = "";
 
 	@Output() public buttonActionOut: EventEmitter<unknown> = new EventEmitter<unknown>();
 
@@ -73,9 +74,9 @@ export class CardTableComponent implements AfterContentInit {
 	public tableButtonConfig!: _CustCardButtonTableInterface[];
 
 	public displayedColumns: string[] = ["lead"];
-	public openInNewTab: boolean = false;
+	public openInNewTab = false;
 	public selectedVehicle: unknown;
-	public scrollToId: string = "";
+	public scrollToId = "";
 
 	public ngAfterContentInit(): void {
 		this.cardHeader = this.tableWrapper.cardHeaders;

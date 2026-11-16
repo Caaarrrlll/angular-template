@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, input, output } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { debounceTime } from "rxjs";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -10,6 +10,7 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	selector: "app-input-phone",
 	templateUrl: "./input-phone.component.html",
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputPhoneComponent implements OnInit {
 	public readonly inputObj = input.required<CustInputGeneral>();
@@ -20,7 +21,8 @@ export class InputPhoneComponent implements OnInit {
 	private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
 	public ngOnInit(): void {
-		const pattern: string = this.inputObj().minlength !== undefined ? `^[0-9]{${this.inputObj().minlength}}$` : "^[0-9]*$";
+		const minLength: number | undefined = this.inputObj().minlength;
+		const pattern: string = minLength !== undefined ? `^[0-9]{${String(minLength)}}$` : "^[0-9]*$";
 		this.inputControl.setValidators(Validators.pattern(pattern));
 
 		this.inputControl.setValue(this.inputObj().value ?? null);

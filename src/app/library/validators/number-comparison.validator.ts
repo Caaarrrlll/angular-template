@@ -6,7 +6,7 @@ export function numberComparisonValidator(shouldBeSmallerControlName: string, sh
 			return null;
 		}
 
-		const formGroup = control as FormGroup;
+		const formGroup = control;
 		const controlA = formGroup.get(shouldBeSmallerControlName);
 		const controlB = formGroup.get(shouldBeLargerControlName);
 
@@ -14,8 +14,8 @@ export function numberComparisonValidator(shouldBeSmallerControlName: string, sh
 			return null;
 		}
 
-		const controlAVal = controlA.value;
-		const controlBVal = controlB.value;
+		const controlAVal: unknown = controlA.value;
+		const controlBVal: unknown = controlB.value;
 
 		if (controlAVal === null || controlAVal === undefined || controlBVal === null || controlBVal === undefined) {
 			return null;

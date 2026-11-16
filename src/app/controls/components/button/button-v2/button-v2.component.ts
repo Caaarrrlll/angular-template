@@ -17,11 +17,11 @@ export class ButtonV2Component {
 	public readonly buttonClick = output<CustInputReturn>();
 
 	public get displayLength(): number {
-		return this.type().display?.length ?? 0;
+		return this.type().display.length;
 	}
 
 	public get buttonClass(): string {
-		switch (this.type().type) {
+		switch (this.type().type as CustButtonType) {
 			case CustButtonType.primary: {
 				return "mat-flat-button color-set-primary";
 			}

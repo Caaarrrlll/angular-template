@@ -18,10 +18,10 @@ export class TabNextButtonDirective {
 			tabs[selectedIndex].completed.set(true);
 		}
 
-		if (tabs[selectedIndex].stepControl()) {
-			const form = tabs[selectedIndex].stepControl();
-			Object.keys(form!.controls).forEach((field) => {
-				const control = form!.get(field);
+		const form = tabs[selectedIndex].stepControl();
+		if (form) {
+			Object.keys(form.controls).forEach((field) => {
+				const control = form.get(field);
 				control?.markAsTouched({ onlySelf: true });
 			});
 		}

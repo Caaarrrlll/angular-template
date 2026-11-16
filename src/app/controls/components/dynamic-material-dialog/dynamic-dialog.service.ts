@@ -8,9 +8,7 @@ export class DynamicDialogService {
 	inputChange = new BehaviorSubject<string>("");
 	responseNotification = new BehaviorSubject<string>("");
 	response: string[] = [];
-	selectedItem: string = "";
-
-	constructor() {}
+	selectedItem = "";
 
 	public setDialogInputSearch(input: string): void {
 		this.inputChange.next(input);

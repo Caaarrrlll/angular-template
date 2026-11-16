@@ -17,14 +17,14 @@ interface RangeSliderValues {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RangeSliderComponent {
-	@Input() public disabled: boolean = false;
+	@Input() public disabled = false;
 	@Input() public color: ThemePalette = "primary";
 	@Input() public unit?: string;
-	@Input() public min: number = 0;
-	@Input() public max: number = 100;
+	@Input() public min = 0;
+	@Input() public max = 100;
 	@Input() public minValue: number = this.min;
 	@Input() public maxValue: number = this.max;
-	@Input() public step: number = 10;
+	@Input() public step = 10;
 	@Input() public displayWith: (value: number) => string = (value: number): string => String(value);
 	@Input() public prefix?: boolean;
 	@Input() public suffix?: boolean;

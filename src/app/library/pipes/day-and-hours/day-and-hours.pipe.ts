@@ -13,6 +13,6 @@ export class DayAndHoursPipe implements PipeTransform {
 		const date = new Date(value);
 		const currentDate = new Date();
 		const diffInHours = (currentDate.getTime() - date.getTime()) / 1000 / 60 / 60;
-		return `${Math.floor(diffInHours / 24)} Days: ${Math.ceil(diffInHours % 24)} Hours`;
+		return `${String(Math.floor(diffInHours / 24))} Days: ${String(Math.ceil(diffInHours % 24))} Hours`;
 	}
 }

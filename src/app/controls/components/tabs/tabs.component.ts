@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ContentChildren, QueryList, input, output } from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, QueryList, input, output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { TabComponent } from "./tab/tab.component";
@@ -8,6 +8,7 @@ import { TabComponent } from "./tab/tab.component";
 	templateUrl: "./tabs.component.html",
 	styleUrls: ["./tabs.component.scss"],
 	imports: [CommonModule, MatIconModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsComponent implements AfterContentInit {
 	@ContentChildren(TabComponent, { descendants: true }) public tabs!: QueryList<TabComponent>;
@@ -27,7 +28,7 @@ export class TabsComponent implements AfterContentInit {
 		this.tabSelectedEvent.emit(selectedIndex);
 		if (this.linear()) {
 			if (selectedIndex > 0) {
-				if (tabs[selectedIndex - 1].completed() === false) {
+				if (!tabs[selectedIndex - 1].completed()) {
 					return;
 				}
 				for (const t of tabs) {
@@ -52,10 +53,10 @@ export class TabsComponent implements AfterContentInit {
 		const tabs = this.tabs.toArray();
 		const selectedIndex = tabs.map((t) => t.active()).indexOf(true);
 
-		if (tabs[selectedIndex].stepControl()) {
-			const form = tabs[selectedIndex].stepControl();
-			Object.keys(form!.controls).forEach((field) => {
-				const control = form!.get(field);
+		const form = tabs[selectedIndex].stepControl();
+		if (form) {
+			Object.keys(form.controls).forEach((field) => {
+				const control = form.get(field);
 				control?.markAsTouched({ onlySelf: true });
 			});
 		}

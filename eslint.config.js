@@ -8,7 +8,13 @@ const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommen
 module.exports = defineConfig([
 	{
 		files: ["**/*.ts"],
-		extends: [eslint.configs.recommended, tseslint.configs.recommended, tseslint.configs.stylistic, angular.configs.tsRecommended, eslintPluginPrettierRecommended],
+		extends: [eslint.configs.recommended, tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked, angular.configs.tsRecommended, eslintPluginPrettierRecommended],
+		languageOptions: {
+			parserOptions: {
+				projectService: true,
+				tsconfigRootDir: __dirname,
+			},
+		},
 		processor: angular.processInlineTemplates,
 		rules: {
 			"@angular-eslint/directive-selector": [

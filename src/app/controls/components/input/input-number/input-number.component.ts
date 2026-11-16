@@ -1,4 +1,4 @@
-import { Component, OnInit, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, input, output } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -11,6 +11,7 @@ import { CustButtonInputType, CustInputAdvance } from "@shared/models/cust-basic
 	templateUrl: "./input-number.component.html",
 	styleUrls: ["./input-number.component.scss"],
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputNumberComponent implements OnInit {
 	public readonly label = input.required<string>();

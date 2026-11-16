@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DestroyRef, ElementRef, NgZone, OnInit, ViewChild, inject } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, NgZone, OnInit, ViewChild, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -66,6 +66,7 @@ export interface _DialogOptions {
 		MinMaxDirective,
 		DateTransformDirective,
 	],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 	public readonly form: FormGroup = new FormGroup({});
@@ -75,17 +76,17 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 	public filteredData?: Observable<_FormData[]>;
 	public autoCompleteList: string[] = [];
 	public files: File[] = [];
-	public showSearch: boolean = false;
-	public searchInputName: string = "";
-	public autoCompleteActive: boolean = false;
-	public showSpinner: boolean = false;
-	public equalSelected: boolean = false;
+	public showSearch = false;
+	public searchInputName = "";
+	public autoCompleteActive = false;
+	public showSpinner = false;
+	public equalSelected = false;
 	public selectedDate: Date | null = null;
 	public curRange: unknown;
 	public allowManualInput = false;
 	public filesToAccept = "";
 	public searchControl = new FormControl<string>("");
-	@ViewChild("mapSearchField") searchField: ElementRef | undefined;
+	@ViewChild("mapSearchField") searchField: ElementRef<HTMLElement> | undefined;
 	private readonly inputChange$ = new Subject<_ControlInterface>();
 	private readonly dialogData = inject<_DynamicDialogOptions>(MAT_DIALOG_DATA);
 	private readonly dialogRef = inject<MatDialogRef<DynamicMaterialDialogComponent>>(MatDialogRef);
@@ -131,7 +132,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		if (!control) {
 			return;
 		}
-		const val = control.value;
+		const val = control.value as string;
 		if (Number.isNaN(Date.parse(val))) {
 			return;
 		}
@@ -149,48 +150,49 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 			}
 			const formName: string = element.formName;
 
-			if ((element["data"]?.length ?? 0) > 5) {
+			if ((element.data?.length ?? 0) > 5) {
 				this.showSearch = true;
 			}
 
 			switch (element.type) {
 				case FormType.RangeDate: {
+					const rangeValue = element.value as { start?: unknown; end?: unknown } | undefined;
 					this.form.addControl(
 						formName,
 						new FormGroup({
-							start: new FormControl(element.value && element.value.start ? element.value.start : null),
-							end: new FormControl(element.value && element.value.end ? element.value.end : null),
+							start: new FormControl(rangeValue?.start ?? null),
+							end: new FormControl(rangeValue?.end ?? null),
 						}),
 					);
 					break;
 				}
 				case FormType.DateTime: {
-					const value = new Date(element.value ? element.value : Date.now());
-					const hour = value.getHours();
-					const min = value.getMinutes();
+					const value = new Date((element.value as string | number | Date | undefined) ?? Date.now());
+					const hour: string = String(value.getHours()).padStart(2, "0");
+					const min: string = String(value.getMinutes()).padStart(2, "0");
 
 					this.form.addControl(
 						formName,
 						new FormGroup({
 							date: new FormControl(value),
-							time: new FormControl(`${hour < 10 ? "0" + hour : hour}:${min < 10 ? "0" + min : min}`),
+							time: new FormControl(`${hour}:${min}`),
 						}),
 					);
 					break;
 				}
 				case FormType.SingleDate: {
-					this.selectedDate = element.value ? new Date(element.value) : null;
+					this.selectedDate = element.value ? new Date(element.value as string | number | Date) : null;
 					this.form.addControl(formName, new FormControl(this.selectedDate));
 					this.form
 						.get(formName)
-						?.valueChanges.pipe(filter((val) => !Number.isNaN(Date.parse(val))))
+						?.valueChanges.pipe(filter((val): val is Date => !Number.isNaN(Date.parse(String(val)))))
 						.subscribe((val) => {
 							this.selectedDate = new Date(val);
 						});
 					break;
 				}
 				case FormType.CheckBox: {
-					this.form.addControl(formName, new FormControl(element.value ? element.value : []));
+					this.form.addControl(formName, new FormControl(element.value ?? []));
 					if (element instanceof CheckBox) {
 						this.data = element.data;
 						this.filteredData = this.searchControl.valueChanges.pipe(
@@ -201,7 +203,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 					break;
 				}
 				case FormType.CheckBoxRange: {
-					this.form.addControl(formName, new FormControl(element.value ? element.value : []));
+					this.form.addControl(formName, new FormControl(element.value ?? []));
 					if (element instanceof CheckBoxRange) {
 						this.data = element.data;
 						this.filteredData = this.searchControl.valueChanges.pipe(
@@ -227,18 +229,19 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 					break;
 				}
 				case FormType.ButtonGroup: {
-					this.form.addControl(formName, new FormControl(element.value ? element.value : false));
+					this.form.addControl(formName, new FormControl(element.value ?? false));
 					break;
 				}
 				case FormType.CUSTButtonGroup: {
-					this.form.addControl(formName, new FormControl(element.value ? element.value : false));
+					this.form.addControl(formName, new FormControl(element.value ?? false));
 					break;
 				}
 				case FormType.Address: {
-					this.form.addControl(formName, new FormControl(element.value ? element.value : null));
+					this.form.addControl(formName, new FormControl(element.value ?? null));
 					break;
 				}
 				default:
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: falsy non-nullish values (0, "") must fall back to null for numeric/text/slider controls
 					this.form.addControl(formName, new FormControl(element.value ? element.value : null));
 			}
 
@@ -247,36 +250,34 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 			if (!element.validationDep) {
 				if (element.validators) {
 					element.validators.map((error) => {
-						if (error.value == undefined) {
-							error.value = 0;
-						}
+						error.value ??= 0;
 						switch (error.validator) {
 							case ValidatorType.min:
-								this.form.controls[formName].addValidators(Validators.min(error.value));
+								this.form.controls[formName].addValidators(Validators.min(error.value as number));
 								break;
 							case ValidatorType.max:
-								this.form.controls[formName].addValidators(Validators.max(error.value));
+								this.form.controls[formName].addValidators(Validators.max(error.value as number));
 								break;
 							case ValidatorType.required:
-								this.form.controls[formName].addValidators(Validators.required);
+								this.form.controls[formName].addValidators(Validators.required.bind(Validators));
 								break;
 							case ValidatorType.requiredTrue:
-								this.form.controls[formName].addValidators(Validators.requiredTrue);
+								this.form.controls[formName].addValidators(Validators.requiredTrue.bind(Validators));
 								break;
 							case ValidatorType.email:
-								this.form.controls[formName].addValidators(Validators.email);
+								this.form.controls[formName].addValidators(Validators.email.bind(Validators));
 								break;
 							case ValidatorType.minlength:
-								this.form.controls[formName].addValidators(Validators.minLength(error.value));
+								this.form.controls[formName].addValidators(Validators.minLength(error.value as number));
 								break;
 							case ValidatorType.maxlength:
-								this.form.controls[formName].addValidators(Validators.maxLength(error.value));
+								this.form.controls[formName].addValidators(Validators.maxLength(error.value as number));
 								break;
 							case ValidatorType.pattern:
-								this.form.controls[formName].addValidators(Validators.pattern(error.value));
+								this.form.controls[formName].addValidators(Validators.pattern(error.value as string | RegExp));
 								break;
 							case ValidatorType.nullValidator:
-								this.form.controls[formName].addValidators(Validators.nullValidator);
+								this.form.controls[formName].addValidators(Validators.nullValidator.bind(Validators));
 								break;
 							case ValidatorType.noSpace:
 								error.validator = ValidatorType.pattern;
@@ -292,36 +293,40 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 			} else {
 				if (element.validators) {
 					element.validators.map((error) => {
-						if (error.value == undefined) {
-							error.value = 0;
-						}
+						error.value ??= 0;
 						switch (error.validator) {
 							case ValidatorType.min:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.min(error.value)));
+								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.min(error.value as number)));
 								break;
 							case ValidatorType.max:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.max(error.value)));
+								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.max(error.value as number)));
 								break;
 							case ValidatorType.required:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.required));
+								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.required.bind(Validators)));
 								break;
 							case ValidatorType.requiredTrue:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.requiredTrue));
+								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.requiredTrue.bind(Validators)));
 								break;
 							case ValidatorType.email:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.email));
+								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.email.bind(Validators)));
 								break;
 							case ValidatorType.minlength:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.minLength(error.value)));
+								this.form.controls[formName].addValidators(
+									conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.minLength(error.value as number)),
+								);
 								break;
 							case ValidatorType.maxlength:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.maxLength(error.value)));
+								this.form.controls[formName].addValidators(
+									conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.maxLength(error.value as number)),
+								);
 								break;
 							case ValidatorType.pattern:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern(error.value)));
+								this.form.controls[formName].addValidators(
+									conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern(error.value as string | RegExp)),
+								);
 								break;
 							case ValidatorType.nullValidator:
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.nullValidator));
+								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.nullValidator.bind(Validators)));
 								break;
 							case ValidatorType.noSpace:
 								error.validator = ValidatorType.pattern;
@@ -368,7 +373,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 	}
 
 	clear(): void {
-		this.form.controls[this.dialogSetup.title]?.setValue("");
+		(this.form.controls[this.dialogSetup.title] as AbstractControl | undefined)?.setValue("");
 	}
 
 	rangeClicked(value: _FormData): void {
@@ -376,14 +381,14 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		if (firstControl?.formName === "selectedColumns") {
 			if (value.value === "all") {
 				const act = value.activated ? false : true;
-				firstControl["data"]?.map((column) => {
+				firstControl.data?.map((column) => {
 					column.activated = act;
 					return column;
 				});
-				this.form.get("selectedColumns")?.setValue(firstControl["data"]?.filter((column) => column.activated).map((column) => column.value) ?? []);
+				this.form.get("selectedColumns")?.setValue(firstControl.data?.filter((column) => column.activated).map((column) => column.value) ?? []);
 			} else {
-				const selectedValues: string[] = (this.form.get("selectedColumns")?.value as string[]) ?? [];
-				const allSelected = firstControl["data"]?.slice(1).every((column) => selectedValues.includes(column.value)) ?? false;
+				const selectedValues: string[] = (this.form.get("selectedColumns")?.value as string[] | undefined) ?? [];
+				const allSelected = firstControl.data?.slice(1).every((column) => selectedValues.includes(column.value as string)) ?? false;
 				if (allSelected) {
 					selectedValues.push("all");
 				} else {
@@ -392,7 +397,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 						selectedValues.splice(ind, 1);
 					}
 				}
-				const firstData: _FormData[] = firstControl["data"] ?? [];
+				const firstData: _FormData[] = firstControl.data ?? [];
 				firstData[0].activated = allSelected;
 			}
 		}
@@ -444,7 +449,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 				for (const control of this.dialogSetup.controls ?? []) {
 					if (control.type == this.formType.Address) {
 						control.value = place.formatted_address;
-						if (!this.form.controls["lat"]?.value) {
+						if (!this.form.get("lat")?.value) {
 							this.form.addControl("lat", new FormControl(place.geometry.location.lat()));
 							this.form.addControl("lng", new FormControl(place.geometry.location.lng()));
 						}
@@ -468,21 +473,21 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		}
 
 		this.equalSelected = event.value === "eq";
-		controls[0].value = event.value;
-		this.form.controls[controls[0].formName ?? ""].setValue(event.value);
+		controls[0].value = event.value as string;
+		this.form.controls[controls[0].formName].setValue(event.value);
 
 		if (controls[2].value === "or") {
 			return;
 		}
 		if (this.equalSelected && controls[2].value !== "") {
 			controls[2].value = "or";
-			this.form.controls[controls[2].formName ?? ""].setValue("or");
+			this.form.controls[controls[2].formName].setValue("or");
 		}
 		const secondDropdown = controls[3];
-		secondDropdown["data"] = controls[2].value === "or" ? controls[0]["data"] : (controls[0]["data"]?.filter((op) => op.value !== event.value && op.value !== "eq") ?? []);
-		const secondData: _FormData[] = secondDropdown["data"] ?? [];
+		secondDropdown.data = controls[2].value === "or" ? controls[0].data : (controls[0].data?.filter((op) => op.value !== event.value && op.value !== "eq") ?? []);
+		const secondData: _FormData[] = secondDropdown.data ?? [];
 		secondDropdown.value = secondData[0].value;
-		this.form.controls[secondDropdown.formName ?? ""].setValue(secondDropdown.value);
+		this.form.controls[secondDropdown.formName].setValue(secondDropdown.value);
 	}
 
 	handleControlChange(control: _ControlInterface): void {
@@ -533,14 +538,14 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 			return;
 		}
 		if (!controls[2].value) {
-			this.form.controls[controls[3].formName ?? ""].enable();
-			this.form.controls[controls[4].formName ?? ""].enable();
+			this.form.controls[controls[3].formName].enable();
+			this.form.controls[controls[4].formName].enable();
 		}
 		const secondDropdown = controls[3];
-		secondDropdown["data"] = value === "or" ? controls[0]["data"] : (controls[0]["data"]?.filter((op) => op.value !== controls[0].value && op.value !== "eq") ?? []);
-		const secondData: _FormData[] = secondDropdown["data"] ?? [];
+		secondDropdown.data = value === "or" ? controls[0].data : (controls[0].data?.filter((op) => op.value !== controls[0].value && op.value !== "eq") ?? []);
+		const secondData: _FormData[] = secondDropdown.data ?? [];
 		secondDropdown.value = secondData[0].value;
-		this.form.controls[secondDropdown.formName ?? ""].setValue(secondDropdown.value);
+		this.form.controls[secondDropdown.formName].setValue(secondDropdown.value);
 		controls[2].value = value;
 	}
 }
@@ -566,7 +571,7 @@ export function openDynamicDialog(dialog: MatDialog, dialogSetup: DynamicDialogS
 
 	config.autoFocus = false;
 	dialogSetup.controls?.map((element) => {
-		if ((element["data"]?.length ?? 0) > 5) {
+		if ((element.data?.length ?? 0) > 5) {
 			config.autoFocus = true;
 		}
 	});

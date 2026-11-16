@@ -24,21 +24,21 @@ import { MatIconModule } from "@angular/material/icon";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZoomableImageComponent {
-	@Input() public src: string = "";
-	@Input() public allowZoom: boolean = true;
-	@Input() public count: string = "";
+	@Input() public src = "";
+	@Input() public allowZoom = true;
+	@Input() public count = "";
 
 	@Output() public next: EventEmitter<void> = new EventEmitter<void>();
 	@Output() public prev: EventEmitter<void> = new EventEmitter<void>();
 
 	public backgroundImage: SafeStyle | null = null;
-	public backgroundSize: string = "";
-	public backgroundPosition: string = "";
-	public lensLeft: string = "";
-	public lensTop: string = "";
-	public resultLeft: string = "";
-	public resultTop: string = "";
-	public magnification: number = 1;
+	public backgroundSize = "";
+	public backgroundPosition = "";
+	public lensLeft = "";
+	public lensTop = "";
+	public resultLeft = "";
+	public resultTop = "";
+	public magnification = 1;
 
 	public showZoomLens: WritableSignal<boolean> = signal(false);
 	public showLightbox: WritableSignal<boolean> = signal(false);
@@ -47,8 +47,8 @@ export class ZoomableImageComponent {
 	@ViewChild("lens") private lens?: ElementRef<HTMLDivElement>;
 	@ViewChild("result") private result?: ElementRef<HTMLDivElement>;
 
-	private cx: number = 0;
-	private cy: number = 0;
+	private cx = 0;
+	private cy = 0;
 
 	private readonly sanitizer: DomSanitizer = inject(DomSanitizer);
 
@@ -102,7 +102,7 @@ export class ZoomableImageComponent {
 		}
 		this.cx = (result.offsetWidth / lens.offsetWidth) * this.magnification;
 		this.cy = (result.offsetHeight / lens.offsetHeight) * this.magnification;
-		this.backgroundSize = `${image.width * this.cx}px ${image.height * this.cy}px`;
+		this.backgroundSize = `${String(image.width * this.cx)}px ${String(image.height * this.cy)}px`;
 		const safeSrc: string | null = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.src);
 		this.backgroundImage = this.sanitizer.bypassSecurityTrustStyle(`url('${safeSrc ?? ""}')`);
 	}
@@ -118,10 +118,10 @@ export class ZoomableImageComponent {
 		const cursorY: number = event.pageY - rect.top - window.scrollY;
 		const x: number = Math.max(Math.min(cursorX - lens.offsetWidth / 2, image.width - lens.offsetWidth), 0);
 		const y: number = Math.max(Math.min(cursorY - lens.offsetHeight / 2, image.height - lens.offsetHeight), 0);
-		this.lensLeft = `${x}px`;
-		this.lensTop = `${y}px`;
-		this.resultLeft = `${cursorX}px`;
-		this.resultTop = `${cursorY}px`;
-		this.backgroundPosition = `-${x * this.cx}px -${y * this.cy}px`;
+		this.lensLeft = `${String(x)}px`;
+		this.lensTop = `${String(y)}px`;
+		this.resultLeft = `${String(cursorX)}px`;
+		this.resultTop = `${String(cursorY)}px`;
+		this.backgroundPosition = `-${String(x * this.cx)}px -${String(y * this.cy)}px`;
 	}
 }

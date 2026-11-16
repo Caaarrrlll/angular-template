@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, input, output } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -9,6 +9,7 @@ import { ButtonToggleInput, ButtonToggleOption, ButtonToggleResponse } from "@sh
 	templateUrl: "./button-toggle.component.html",
 	styleUrls: ["./button-toggle.component.scss"],
 	imports: [MatButtonToggleModule, ReactiveFormsModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonToggleComponent implements OnInit {
 	public readonly inputObj = input.required<ButtonToggleInput>();
@@ -25,7 +26,7 @@ export class ButtonToggleComponent implements OnInit {
 
 	public ngOnInit(): void {
 		const value = this.inputObj().value;
-		if (value !== null && value !== undefined) {
+		if (value !== undefined) {
 			this.inputControl.setValue(value);
 		} else if (this.inputObj().multiSelect) {
 			this.inputControl.setValue(this.inputObj().valueList ?? []);

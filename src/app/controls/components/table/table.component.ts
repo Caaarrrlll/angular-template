@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, Component, ComponentRef, EventEmitter, Injector, Input, OnDestroy, Output, inject } from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, Component, ComponentRef, EventEmitter, Injector, Input, OnDestroy, Output, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule } from "@angular/material/paginator";
@@ -11,7 +11,7 @@ import { CurrencyComponent } from "@shared/components/currency/currency.componen
 import { LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
 import { _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
-import { LinQRequestState } from "@shared/models/lin-q-request-state";
+import { LinQRequestState, LinQSort } from "@shared/models/lin-q-request-state";
 import { _CUSTPage } from "@shared/models/cust-page";
 import { ApiResponsePipe } from "@shared/pipes/api-response/api-response.pipe";
 import { DayAndHoursPipe } from "@shared/pipes/day-and-hours/day-and-hours.pipe";
@@ -44,6 +44,7 @@ import { PASSED_INFO } from "./table-constants.const";
 		CurrencyComponent,
 		ButtonV2Component,
 	],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{ provide: PASSED_INFO, useValue: "" }],
 })
 export class TableComponent implements OnDestroy, AfterContentInit {
@@ -53,28 +54,28 @@ export class TableComponent implements OnDestroy, AfterContentInit {
 	@Input({ required: true }) public tableConfig!: _CustTableInterface[];
 	@Input({ required: true }) public requestState!: LinQRequestState;
 	@Input() public custPage?: _CUSTPage;
-	@Input() public defaultSort: string = "";
-	@Input() public showCustomButton: boolean = false;
-	@Input() public showAddButton: boolean = false;
+	@Input() public defaultSort = "";
+	@Input() public showCustomButton = false;
+	@Input() public showAddButton = false;
 	/**
 	 * When using the expandable input, this will only indicate if there are any entries in the table that are expandable.
 	 * If there is an expandable entry it needs to be in the interface and set in the map of the observable (listObservable)
 	 */
-	@Input() public expandable: boolean = false;
-	@Input() public selectableColumns: boolean = false;
+	@Input() public expandable = false;
+	@Input() public selectableColumns = false;
 	@Input() public template?: ComponentRef<unknown>;
 	@Output() public buttonActionOut: EventEmitter<unknown> = new EventEmitter<unknown>();
 
-	@Input() public exporting: boolean = false;
-	public openInNewTab: boolean = false;
+	@Input() public exporting = false;
+	public openInNewTab = false;
 	public selectedVehicle: unknown;
 	public displayedColumns: string[] = [];
-	public scrollToId: string = "";
+	public scrollToId = "";
 	public columnsToDisplayWithExpand: string[] = [];
 	public expandedElement: unknown = null;
 	public displayedColumnsFilter: { display: string; activated: boolean; value: string }[] = [];
-	public hasPagination: boolean = false;
-	public hasFilters: boolean = false;
+	public hasPagination = false;
+	public hasFilters = false;
 	public currentHover: _CustTableColumnHoverInterface = {
 		column: null,
 		index: null,
@@ -107,8 +108,10 @@ export class TableComponent implements OnDestroy, AfterContentInit {
 			this.scrollToPosition();
 		}
 
-		this.requestState.sorts = JSON.parse(localStorage.getItem(this.storageNameIn) ?? "null");
-		if (!this.requestState.sorts) {
+		const cachedSorts: unknown = JSON.parse(localStorage.getItem(this.storageNameIn) ?? "null");
+		if (cachedSorts) {
+			this.requestState.sorts = cachedSorts as LinQSort[];
+		} else {
 			this.requestState.sorts = [
 				{
 					field: this.defaultSort,
@@ -170,14 +173,15 @@ export class TableComponent implements OnDestroy, AfterContentInit {
 		const rows = Array.from(document.querySelectorAll<HTMLElement>(".mat-row"));
 		const selectedRowIdx = rows.findIndex((row: HTMLElement) => row.id === rowid);
 		if (selectedRowIdx > -1) {
-			const selectedRow = rows[selectedRowIdx - 1];
-			if (selectedRow) {
-				selectedRow.scrollIntoView();
+			if (selectedRowIdx > 0) {
+				rows[selectedRowIdx - 1].scrollIntoView();
 			}
 			return;
 		}
 		if (performance.now() < deadline) {
-			requestAnimationFrame(() => this.scrollToPosition(deadline));
+			requestAnimationFrame(() => {
+				this.scrollToPosition(deadline);
+			});
 		}
 	}
 
@@ -189,7 +193,7 @@ export class TableComponent implements OnDestroy, AfterContentInit {
 		// nothing long-lived: template-bound observables tear down with the view
 	}
 
-	public isDateInPast(dateIn: Date): boolean {
+	public isDateInPast(dateIn: Date | null | undefined): boolean {
 		if (!dateIn) return false;
 		return new Date(dateIn) < new Date();
 	}
@@ -208,8 +212,8 @@ export class TableComponent implements OnDestroy, AfterContentInit {
 		};
 	}
 
-	public tableButton(config: _CustTableInterface, icon: string = "", display: string = "", iconSide: string = "", type = "Primary"): CustButtonInput {
-		const resolvedIcon = icon || config.icon || "";
+	public tableButton(config: _CustTableInterface, icon = "", display = "", iconSide = "", type = "Primary"): CustButtonInput {
+		const resolvedIcon = icon || (config.icon ?? "");
 		return {
 			type: type,
 			icon: resolvedIcon,

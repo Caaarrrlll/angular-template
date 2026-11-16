@@ -37,16 +37,16 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 	private positionZoomBox = (e: MouseEvent) => {
 		if (this.cursorFollowZoom && this.zoomBox && this.image) {
 			this.renderer.addClass(this.zoomBox, "galleryZoomBoxVisible");
-			this.zoomBox.style.width = this.width + "px";
-			this.zoomBox.style.height = this.height + "px";
-			this.zoomBox.style.left = e.x - this.width / 2 + "px";
-			this.zoomBox.style.top = e.y - this.height / 2 + "px";
-			this.zoomBox.style.backgroundSize = this.image.width * this.zoom + "px " + this.image.height * this.zoom + "px";
+			this.zoomBox.style.width = `${String(this.width)}px`;
+			this.zoomBox.style.height = `${String(this.height)}px`;
+			this.zoomBox.style.left = `${String(e.x - this.width / 2)}px`;
+			this.zoomBox.style.top = `${String(e.y - this.height / 2)}px`;
+			this.zoomBox.style.backgroundSize = `${String(this.image.width * this.zoom)}px ${String(this.image.height * this.zoom)}px`;
 			const width = this.zoomBox.offsetWidth / 2;
 			const height = this.zoomBox.offsetHeight / 2;
-			const cursorPosition = this.getCursorPosition(e);
-			let x = cursorPosition.x;
-			let y = cursorPosition.y;
+			const imageRect: DOMRect = this.image.getBoundingClientRect();
+			let x: number = e.x - imageRect.left;
+			let y: number = e.y - imageRect.top;
 			if (x > this.image.width - width / this.zoom) {
 				x = this.image.width - width / this.zoom;
 			}
@@ -59,7 +59,7 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 			if (y < height / this.zoom) {
 				y = height / this.zoom;
 			}
-			this.zoomBox.style.backgroundPosition = "-" + (x * this.zoom - width) + "px -" + (y * this.zoom - height) + "px";
+			this.zoomBox.style.backgroundPosition = `-${String(x * this.zoom - width)}px -${String(y * this.zoom - height)}px`;
 		} else {
 			this.removeZoomBox();
 		}
@@ -73,12 +73,6 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 			this.cursorListner();
 			this.mouseWheelListner();
 		}
-	};
-
-	private getCursorPosition = (e: MouseEvent) => {
-		const x = e.x - this.image!.getBoundingClientRect().left;
-		const y = e.y - this.image!.getBoundingClientRect().top;
-		return { x, y };
 	};
 
 	private changeZoomLevel = (e: WheelEvent) => {

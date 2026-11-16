@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Inject, Input, OnInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Inject, Input, OnInit, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
@@ -16,11 +16,12 @@ import { ThousandSeparatorPipe } from "@shared/pipes/thousand-separator/thousand
 	templateUrl: "./cust-table-dialogue.component.html",
 	styleUrls: ["./cust-table-dialogue.component.scss"],
 	imports: [CommonModule, MatButtonModule, MatIconModule, MatTableModule, CurrencyComponent, ButtonV2Component, PostfixPipe, ThousandSeparatorPipe],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustTableDialogueComponent implements OnInit {
 	@Input() public dataSource!: MatTableDataSource<Record<string, unknown>>;
 	@Input() public tableConfig!: _CustTableInterface[];
-	@Input() public title: string = "";
+	@Input() public title = "";
 	public displayedColumns?: string[];
 
 	public readonly dialogRef = inject<MatDialogRef<CustTableDialogueComponent>>(MatDialogRef);
@@ -40,9 +41,9 @@ export class CustTableDialogueComponent implements OnInit {
 	public tableButton(column: _CustTableInterface): CustButtonInput {
 		return {
 			type: "Tertiary",
-			icon: column.icon ? column.icon : "",
+			icon: column.icon ?? "",
 			iconSide: column.icon ? "left" : "",
-			tooltip: column.tooltip ? column.tooltip : "",
+			tooltip: column.tooltip ?? "",
 			display: column.disableDisplay ? "" : column.display,
 			value: column.colName,
 			disabled: false,

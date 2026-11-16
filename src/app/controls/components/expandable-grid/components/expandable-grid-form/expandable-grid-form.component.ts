@@ -1,6 +1,6 @@
 import { KeyValuePipe, TitleCasePipe } from "@angular/common";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { AbstractControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { TextFieldModule } from "@angular/cdk/text-field";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -17,6 +17,7 @@ import { _ExpandableGridRow } from "@shared/components/expandable-grid/core/type
 	styleUrls: ["./expandable-grid-form.component.scss"],
 	standalone: true,
 	imports: [ReactiveFormsModule, TitleCasePipe, KeyValuePipe, TextFieldModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpandableGridFormComponent {
 	private _currentElement?: _ExpandableGridRow;
@@ -33,10 +34,6 @@ export class ExpandableGridFormComponent {
 
 		this._currentElement = value;
 
-		if (!this.form) {
-			return;
-		}
-
 		this.form.reset();
 
 		if (this.form.contains("cellIndex") && value["isNew"]) {
@@ -52,7 +49,7 @@ export class ExpandableGridFormComponent {
 	@Output() public saved = new EventEmitter<unknown>();
 
 	public hasError(key: string, error: string): boolean {
-		return this.form.controls[key]?.hasError(error) ?? false;
+		return (this.form.controls[key] as AbstractControl | undefined)?.hasError(error) ?? false;
 	}
 
 	public cancel(): void {
@@ -67,6 +64,7 @@ export class ExpandableGridFormComponent {
 	}
 
 	public compareFn(option1: unknown, option2: unknown): boolean {
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string -- mat-select compareWith intentionally compares arbitrary option values via their string form, exactly as before
 		return String(option1 ?? "") === String(option2 ?? "");
 	}
 }

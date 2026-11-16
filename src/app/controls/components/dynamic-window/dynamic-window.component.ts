@@ -1,6 +1,6 @@
 import { TextFieldModule } from "@angular/cdk/text-field";
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators, ValidatorFn } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatButtonModule } from "@angular/material/button";
@@ -44,6 +44,7 @@ import { DialogSetup, _DialogWindowControl } from "./dynamic-window.models";
 		MatSliderModule,
 		MatSnackBarModule,
 	],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicWindowComponent implements OnInit {
 	public readonly dialogSetup = inject<DialogSetup>(MAT_DIALOG_DATA);
@@ -61,12 +62,12 @@ export class DynamicWindowComponent implements OnInit {
 			const formName = element.formName || i.toString();
 			element.formName = formName;
 
+			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: falsy non-nullish values (0, "", false) must fall back to null for numeric/text/boolean dialog controls
 			this.form.addControl(formName, new FormControl(element.value ? element.value : null));
-
 			const requiredValidator = conditionalValidator(() => element.required);
 			const noSpaceValidator = conditionalValidator(() => true, Validators.pattern("[^s]+"));
 			const phoneValidator = conditionalValidator(() => true, Validators.pattern("0[0-9]{9}"));
-			const emailValidator = conditionalValidator(() => true, Validators.email);
+			const emailValidator = conditionalValidator(() => true, Validators.email.bind(Validators));
 
 			if (!element.validationDep) {
 				this.form.controls[formName].clearValidators();
@@ -90,7 +91,7 @@ export class DynamicWindowComponent implements OnInit {
 					default: {
 						this.form.controls[formName].clearValidators();
 						if (element.required) {
-							this.form.controls[formName].setValidators([Validators.required]);
+							this.form.controls[formName].setValidators([Validators.required.bind(Validators)]);
 						}
 						break;
 					}
@@ -99,9 +100,12 @@ export class DynamicWindowComponent implements OnInit {
 				const validationDep = element.validationDep;
 				const dependentPhoneValidator = conditionalValidator(
 					() => !this.form.controls[validationDep].value,
-					Validators.compose([Validators.required, Validators.pattern("0[0-9]{9}")]),
+					Validators.compose([Validators.required.bind(Validators), Validators.pattern("0[0-9]{9}")]),
 				);
-				const dependentEmailValidator = conditionalValidator(() => !this.form.controls[validationDep].value, Validators.compose([Validators.email, Validators.required]));
+				const dependentEmailValidator = conditionalValidator(
+					() => !this.form.controls[validationDep].value,
+					Validators.compose([Validators.email.bind(Validators), Validators.required.bind(Validators)]),
+				);
 
 				this.form.controls[formName].clearValidators();
 				if (element.required) {
@@ -124,7 +128,7 @@ export class DynamicWindowComponent implements OnInit {
 					default: {
 						this.form.controls[formName].clearValidators();
 						if (element.required) {
-							this.form.controls[formName].setValidators([Validators.required]);
+							this.form.controls[formName].setValidators([Validators.required.bind(Validators)]);
 						}
 						break;
 					}
@@ -154,7 +158,8 @@ export class DynamicWindowComponent implements OnInit {
 	}
 
 	public submitApproval(approval: string): void {
-		this.dialogRef.close({ approval: approval, comment: this.form.value.comment });
+		const formValue: Record<string, unknown> = this.form.value as Record<string, unknown>;
+		this.dialogRef.close({ approval: approval, comment: formValue["comment"] });
 	}
 
 	public close(): void {
@@ -178,7 +183,8 @@ export class DynamicWindowComponent implements OnInit {
  * window closes with (form value, `{ approval, comment }` or `false`).
  */
 export function openDynamicWindow(dialog: MatDialog, dialogSetup: DialogSetup, config: MatDialogConfig): Observable<unknown> {
-	const dialogRef = dialog.open(DynamicWindowComponent, { ...config, data: dialogSetup });
+	const dialogConfig: MatDialogConfig = Object.assign(new MatDialogConfig(), config, { data: dialogSetup });
+	const dialogRef = dialog.open(DynamicWindowComponent, dialogConfig);
 	return dialogRef.afterClosed();
 }
 

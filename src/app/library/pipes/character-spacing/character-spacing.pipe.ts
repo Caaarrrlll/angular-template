@@ -52,7 +52,7 @@ export class CharacterSpacingPipe implements PipeTransform {
 	private formatWithDivider(text: string, divider: number): string {
 		return text
 			.replace(/[^\dA-Z]/g, "")
-			.replace(new RegExp(`(.{${divider}})`, "g"), "$1 ")
+			.replace(new RegExp(`(.{${String(divider)}})`, "g"), "$1 ")
 			.trim();
 	}
 }

@@ -1,9 +1,10 @@
-import { Component, input, model } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, model } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 
 @Component({
 	selector: "app-tab",
 	templateUrl: "./tab.component.html",
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabComponent {
 	public readonly title = input.required<string>();

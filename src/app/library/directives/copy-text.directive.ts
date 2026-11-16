@@ -34,12 +34,12 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 	}
 
 	private updateText(): void {
-		this.text = this.copyText ? this.copyText : (this.element.textContent ?? "");
+		this.text = this.copyText ? this.copyText : this.element.textContent;
 		this.renderer.setAttribute(this.element, "title", 'Click to copy "' + this.text + '"');
 	}
 
 	createIconAndApplyCSSClasses() {
-		this.copyIcon = this.renderer.createElement("mat-icon");
+		this.copyIcon = this.renderer.createElement("mat-icon") as HTMLElement;
 		this.renderer.appendChild(this.copyIcon, this.renderer.createText("content_copy"));
 		this.renderer.addClass(this.copyIcon, "mat-icon");
 		this.renderer.addClass(this.copyIcon, "material-icons");
@@ -47,7 +47,7 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 		this.renderer.appendChild(this.element, this.copyIcon);
 	}
 
-	@HostListener("click", ["$event"]) onClick(event: MouseEvent): void {
+	@HostListener("click") onClick(): void {
 		if (this.text) {
 			this.clipboard.copy(this.text);
 			this.snackbar.open('Copied "' + this.text + '" to the clipboard', "success", 1500);

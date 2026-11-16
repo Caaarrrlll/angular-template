@@ -1,4 +1,4 @@
-import { Component, OnInit, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, input, output } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -9,6 +9,7 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	selector: "app-input-select",
 	templateUrl: "./input-select.component.html",
 	imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputSelectComponent implements OnInit {
 	public readonly inputObj = input.required<CustInputGeneral>();

@@ -11,31 +11,31 @@ export class LoggerService {
     */
 	log(message: unknown): void {
 		if (!this.isProduction) {
-			console.log(`[LOG] ${message}`);
+			console.log(`[LOG] ${String(message)}`);
 		}
 	}
 
 	warn(message: unknown): void {
 		if (!this.isProduction) {
-			console.warn(`[WARN] ${message}`);
+			console.warn(`[WARN] ${String(message)}`);
 		}
 	}
 
 	error(message: unknown): void {
 		if (!this.isProduction) {
-			console.error(`[ERROR] ${message}`);
+			console.error(`[ERROR] ${String(message)}`);
 		}
 	}
 
 	info(message: unknown): void {
 		if (!this.isProduction) {
-			console.info(`[INFO] ${message}`);
+			console.info(`[INFO] ${String(message)}`);
 		}
 	}
 
 	debug(message: unknown): void {
 		if (!this.isProduction) {
-			console.debug(`[DEBUG] ${message}`);
+			console.debug(`[DEBUG] ${String(message)}`);
 		}
 	}
 

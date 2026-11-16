@@ -6,4 +6,6 @@ import { routes } from "./app/app.routes";
 
 bootstrapApplication(AppComponent, {
 	providers: [provideZoneChangeDetection(), provideRouter(routes)],
-}).catch((err) => console.error(err));
+}).catch((err: unknown) => {
+	console.error(err);
+});

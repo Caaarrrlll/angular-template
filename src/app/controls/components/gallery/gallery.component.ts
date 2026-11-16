@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, ViewChild, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, ViewChild, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
 import { Subject, debounceTime } from "rxjs";
@@ -14,6 +14,7 @@ const imageNotFoundUrl = "assets/images/image_not_found.png";
 	templateUrl: "./gallery.component.html",
 	styleUrls: ["./gallery.component.scss"],
 	imports: [MatRippleModule, MatIconModule, ZoomDirective, GalleryPreviewComponent],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		"(window:keydown)": "onKeyDown($event)",
 		"(window:resize)": "onResize()",
@@ -43,8 +44,8 @@ export class GalleryComponent implements OnChanges, OnInit {
 	// Contain - fill the width as much as possible (not 100%) without cutting off any of the image
 	// Cover - set the width to 100% of the parent - can result in pieces of the image getting cut off
 
-	@ViewChild("galleryContainer") public galleryContainer?: ElementRef;
-	@ViewChild("pagerScrollContainer") public pagerScrollContainer?: ElementRef;
+	@ViewChild("galleryContainer") public galleryContainer?: ElementRef<HTMLElement>;
+	@ViewChild("pagerScrollContainer") public pagerScrollContainer?: ElementRef<HTMLElement>;
 
 	public currentIndex = 0;
 	public arrLength = 0;
@@ -152,9 +153,9 @@ export class GalleryComponent implements OnChanges, OnInit {
 
 	public toggleFullScreen(): void {
 		if (this.fullscreenOpen) {
-			document.exitFullscreen();
+			void document.exitFullscreen();
 		} else {
-			this.fullScreenElement?.requestFullscreen();
+			void this.fullScreenElement?.requestFullscreen();
 		}
 	}
 

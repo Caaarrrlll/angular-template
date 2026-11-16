@@ -6,13 +6,13 @@ export function atLeastNValid(controlsNr: number): ValidatorFn {
 			return null;
 		}
 
-		const formGroup = control as FormGroup;
+		const formGroup = control;
 		const controls = formGroup.controls;
 		let validCount = 0;
 
 		Object.keys(controls).forEach((key) => {
 			const ctrl = controls[key];
-			const value = ctrl.value;
+			const value: unknown = ctrl.value;
 			if (ctrl.valid && value !== null && value !== undefined && value !== "") {
 				if (Array.isArray(value)) {
 					if (value.length > 0) {
