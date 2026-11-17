@@ -1,0 +1,71 @@
+<app-sandbox-page title="Small controls" description="loader, currency, slide-toggle, numeric-up-down and count-down demos.">
+	<app-sandbox-demo title="Loader" description="Default size and the fontSize input (px). The loader inherits currentColor.">
+		<div class="sandbox-small__row">
+			@for (size of loaderSizes; track $index) {
+				<div class="sandbox-small__item">
+					<app-loader [fontSize]="size"></app-loader>
+					<span>{{ size === undefined ? "default" : size + "px" }}</span>
+				</div>
+			}
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Currency" description="amount, currencyCode and digitsInfo inputs; the raw amount is shown through the thousandSeparator pipe for comparison.">
+		<dl class="sandbox-small__list">
+			<dt>Defaults (ZAR, 1.0-0)</dt>
+			<dd>
+				<app-currency [amount]="defaultCurrencyAmount"></app-currency>
+				<small>raw: {{ defaultCurrencyAmount | thousandSeparator }}</small>
+			</dd>
+			@for (sample of currencySamples; track sample.label) {
+				<dt>{{ sample.label }}</dt>
+				<dd>
+					<app-currency [amount]="sample.amount" [currencyCode]="sample.currencyCode" [digitsInfo]="sample.digitsInfo"></app-currency>
+					<small>raw: {{ sample.amount }}</small>
+				</dd>
+			}
+		</dl>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Slide toggle" description="Unchecked (no value) and checked (value 'true'); inputChanged is logged." [log]="slideToggleLog.entries()">
+		<div class="sandbox-small__row">
+			<app-slide-toggle [inputObj]="slideToggleOff" (inputChanged)="onSlideToggleChanged('notifications', $event)"></app-slide-toggle>
+			<app-slide-toggle [inputObj]="slideToggleOn" (inputChanged)="onSlideToggleChanged('dark-mode', $event)"></app-slide-toggle>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Numeric up/down"
+		description="upValue/downValue are the values handed to upDownCallback; leaving one undefined disables that direction (here: at 0 and at the max)."
+		[log]="numericLog.entries()">
+		<div class="sandbox-small__row">
+			<app-numeric-up-down
+				[upDownCallback]="setQuantity"
+				[upValue]="quantity() < quantityMax ? quantity() + quantityStep : undefined"
+				[downValue]="quantity() > 0 ? quantity() - quantityStep : undefined"></app-numeric-up-down>
+			<strong>{{ quantity() }}</strong>
+			<span>({{ quantity() | percentage: quantityMax }} of {{ quantityMax }})</span>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Count down"
+		description="timeLeft in seconds, DD:HH:MM:SS vs textFormat. Pick a preset to restart both (re-selecting the same value does not restart). timeRemaining is logged every 5 s."
+		[log]="countDownLog.entries()">
+		<div class="sandbox-small__row">
+			@for (preset of countDownPresets; track preset.seconds) {
+				<button type="button" [disabled]="countDownSeconds() === preset.seconds" (click)="countDownSeconds.set(preset.seconds)">{{ preset.label }}</button>
+			}
+		</div>
+		<div class="sandbox-small__row">
+			<div class="sandbox-small__item">
+				<span>Default</span>
+				<app-count-down [timeLeft]="countDownSeconds()" (timeRemaining)="onTimeRemaining('default', $event)"></app-count-down>
+			</div>
+			<div class="sandbox-small__item">
+				<span>textFormat</span>
+				<app-count-down [timeLeft]="countDownSeconds()" [textFormat]="true" (timeRemaining)="onTimeRemaining('text', $event)"></app-count-down>
+			</div>
+		</div>
+	</app-sandbox-demo>
+</app-sandbox-page>

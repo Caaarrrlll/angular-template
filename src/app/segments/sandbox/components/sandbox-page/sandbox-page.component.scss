@@ -1,0 +1,38 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.sandbox-page {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	padding: 8px;
+}
+
+.sandbox-page__header {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+
+	h1 {
+		margin: 0;
+	}
+
+	p {
+		margin: 0;
+		color: rgba($color-black, 0.6);
+	}
+}
+
+.sandbox-page__back {
+	align-self: flex-start;
+	font-size: 0.85rem;
+	color: $color-orange;
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}

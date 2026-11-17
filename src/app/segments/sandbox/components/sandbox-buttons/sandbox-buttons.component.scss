@@ -1,0 +1,33 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.sandbox-buttons__controls,
+.sandbox-buttons__row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px;
+}
+
+.sandbox-buttons__controls {
+	margin-bottom: 16px;
+}
+
+.sandbox-buttons__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 24px;
+}
+
+// The FAB is position: fixed; a transform makes this stage its containing block so it stays inside the demo.
+.sandbox-buttons__fab-stage {
+	position: relative;
+	width: 180px;
+	height: 120px;
+	padding: 8px;
+	border: 1px dashed $color-gray-light;
+	transform: translateZ(0);
+}

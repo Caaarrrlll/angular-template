@@ -1,0 +1,36 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.sandbox-inputs__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 16px;
+	align-items: start;
+}
+
+.sandbox-inputs__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 12px;
+}
+
+.sandbox-inputs__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 12px 0;
+}
+
+.sandbox-inputs__value {
+	margin: 8px 0 4px;
+	color: $color-slate;
+}
+
+.sandbox-inputs__values {
+	margin: 0;
+	padding-left: 20px;
+}

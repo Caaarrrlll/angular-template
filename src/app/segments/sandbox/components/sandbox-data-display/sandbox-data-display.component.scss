@@ -1,0 +1,23 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.sandbox-data__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 12px 24px;
+}
+
+.sandbox-data__chip-rows {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.sandbox-data__chip-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}

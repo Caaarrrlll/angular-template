@@ -1,0 +1,50 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.sandbox-forms__layout {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 24px;
+}
+
+.sandbox-forms__form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.sandbox-forms__field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.sandbox-forms__checkbox {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.sandbox-forms__error {
+	color: $color-error;
+}
+
+.sandbox-forms__actions {
+	display: flex;
+	gap: 8px;
+}
+
+.sandbox-forms__state pre {
+	margin: 0;
+	padding: 8px;
+	background: $color-gray-lightest;
+	color: $color-black;
+	overflow: auto;
+}
+
+.sandbox-forms__muted {
+	color: $color-blue-gray;
+}

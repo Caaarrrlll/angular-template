@@ -1,0 +1,40 @@
+<app-sandbox-page title="Upload" description="drag-drop-file-upload and the appDragAndDropFiles directive. Files stay in memory only; nothing is uploaded.">
+	<app-sandbox-demo
+		title="Drag & drop file upload"
+		description="Drop files or use Browse. The parent owns the files input (fileAdded appends to it). isInDialog hides the close button; filesToAccept restricts the Browse picker (drops are not filtered). closed hides the control until reopened."
+		[log]="uploadLog.entries()">
+		<div class="upload-controls">
+			<label class="upload-toggle"><input type="checkbox" [checked]="uploadIsInDialog()" (change)="uploadIsInDialog.set(!uploadIsInDialog())" /> isInDialog</label>
+			<label class="upload-toggle"
+				><input type="checkbox" [checked]="uploadRestrictTypes()" (change)="uploadRestrictTypes.set(!uploadRestrictTypes())" /> filesToAccept "{{ acceptHint }}"</label
+			>
+			<button type="button" class="upload-button" [disabled]="uploadFiles().length === 0" (click)="clearUploadFiles()">Clear files</button>
+		</div>
+		@if (uploadVisible()) {
+			<app-drag-drop-file-upload
+				[files]="uploadFiles()"
+				[isInDialog]="uploadIsInDialog()"
+				[filesToAccept]="uploadRestrictTypes() ? acceptHint : undefined"
+				(fileAdded)="onFileAdded($event)"
+				(closed)="onUploadClosed($event)"></app-drag-drop-file-upload>
+		} @else {
+			<button type="button" class="upload-button" (click)="reopenUpload()">Reopen upload control</button>
+		}
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="appDragAndDropFiles directive"
+		description="A plain element with the directive: the fileover class is applied while dragging over it; fileDropped emits the dropped files (last drop shown below)."
+		[log]="dropLog.entries()">
+		<div class="drop-zone" appDragAndDropFiles (fileDropped)="onFileDropped($event)">Drop files here</div>
+		@if (droppedFiles().length > 0) {
+			<ul class="drop-list">
+				@for (file of droppedFiles(); track $index) {
+					<li>{{ file.name }} - {{ formatSize(file.size) }} - {{ file.type || "unknown type" }}</li>
+				}
+			</ul>
+		} @else {
+			<p class="drop-empty">No files dropped yet.</p>
+		}
+	</app-sandbox-demo>
+</app-sandbox-page>

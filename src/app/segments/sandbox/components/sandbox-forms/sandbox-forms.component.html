@@ -1,0 +1,94 @@
+<app-sandbox-page
+	title="Forms"
+	description="Signal Forms reference (@angular/forms/signals, stable in Angular 22). Policy: new form work uses Signal Forms; Reactive Forms remain in the existing 13 files (no bulk migration, see ROADMAP.md Standing policy).">
+	<app-sandbox-demo
+		title="Contact form (Signal Forms)"
+		description="form(model, schema, { submission }) over a signal model; [formField] on plain native inputs, a select and a checkbox; [formRoot] handles submit. Rules: required, minLength, email, min/max, pattern, a custom validate() on the checkbox and a cross-field rule (phone required only when contact method is phone). Errors show once a field is touched (submit touches all fields)."
+		[log]="submitLog.entries()">
+		<div class="sandbox-forms__layout">
+			<form class="sandbox-forms__form" [formRoot]="contactForm">
+				<label class="sandbox-forms__field">
+					<span>Name</span>
+					<input type="text" autocomplete="name" [formField]="contactForm.name" />
+					@if (contactForm.name().touched()) {
+						@for (error of contactForm.name().errors(); track $index) {
+							<small class="sandbox-forms__error">{{ error.message }}</small>
+						}
+					}
+				</label>
+
+				<label class="sandbox-forms__field">
+					<span>Email</span>
+					<input type="email" autocomplete="email" [formField]="contactForm.email" />
+					@if (contactForm.email().touched()) {
+						@for (error of contactForm.email().errors(); track $index) {
+							<small class="sandbox-forms__error">{{ error.message }}</small>
+						}
+					}
+				</label>
+
+				<label class="sandbox-forms__field">
+					<span>Age</span>
+					<input type="number" [formField]="contactForm.age" />
+					@if (contactForm.age().touched()) {
+						@for (error of contactForm.age().errors(); track $index) {
+							<small class="sandbox-forms__error">{{ error.message }}</small>
+						}
+					}
+				</label>
+
+				<label class="sandbox-forms__field">
+					<span>Preferred contact method</span>
+					<select [formField]="contactForm.contactMethod">
+						<option value="email">Email</option>
+						<option value="phone">Phone</option>
+					</select>
+				</label>
+
+				<label class="sandbox-forms__field">
+					<span>Phone {{ contactForm.contactMethod().value() === "phone" ? "(required)" : "(optional)" }}</span>
+					<input type="tel" autocomplete="tel" [formField]="contactForm.phone" />
+					@if (contactForm.phone().touched()) {
+						@for (error of contactForm.phone().errors(); track $index) {
+							<small class="sandbox-forms__error">{{ error.message }}</small>
+						}
+					}
+				</label>
+
+				<label class="sandbox-forms__checkbox">
+					<input type="checkbox" [formField]="contactForm.acceptTerms" />
+					<span>I accept the terms</span>
+				</label>
+				@if (contactForm.acceptTerms().touched()) {
+					@for (error of contactForm.acceptTerms().errors(); track $index) {
+						<small class="sandbox-forms__error">{{ error.message }}</small>
+					}
+				}
+
+				<div class="sandbox-forms__actions">
+					<button type="submit">Submit</button>
+					<button type="button" (click)="onReset()">Reset</button>
+				</div>
+			</form>
+
+			<div class="sandbox-forms__state">
+				<p>
+					valid: <strong>{{ contactForm().valid() }}</strong> · invalid: <strong>{{ contactForm().invalid() }}</strong> · touched: <strong>{{ contactForm().touched() }}</strong> ·
+					dirty: <strong>{{ contactForm().dirty() }}</strong>
+				</p>
+				<p>Value:</p>
+				<pre>{{ contactForm().value() | json }}</pre>
+				<p>errorSummary():</p>
+				@if (contactForm().errorSummary().length === 0) {
+					<p class="sandbox-forms__muted">No errors.</p>
+				} @else {
+					<ul>
+						@for (error of contactForm().errorSummary(); track $index) {
+							<li>{{ error.kind }}: {{ error.message }}</li>
+						}
+					</ul>
+				}
+			</div>
+		</div>
+	</app-sandbox-demo>
+</app-sandbox-page>

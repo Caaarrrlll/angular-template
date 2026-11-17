@@ -1,0 +1,133 @@
+<app-sandbox-page
+	title="Cards"
+	description="card, card-header, housing-card, info-card and list-card. info-card and list-card are config-driven: the configs live in SandboxCardsDataService and double as usage docs.">
+	<app-sandbox-demo
+		title="Card"
+		description="Plain card, sidebar colours (red / green / orange / white), selected, marginRight and fillHeight. Card has no outputs; selection is driven by the page.">
+		<div class="sandbox-cards__row">
+			<app-card>
+				<div class="sandbox-cards__body">Default card with projected content.</div>
+			</app-card>
+			@for (option of sidebarCards; track option.color; let index = $index) {
+				<app-card [showSidebar]="true" [color]="option.color" [selected]="selectedCard() === index" [marginRight]="true">
+					<div class="sandbox-cards__body">
+						<strong>{{ option.label }}</strong>
+						<button type="button" (click)="selectCard(index)">{{ selectedCard() === index ? `Selected` : `Select` }}</button>
+					</div>
+				</app-card>
+			}
+		</div>
+		<div class="sandbox-cards__fill-row">
+			<app-card [fillHeight]="true">
+				<div class="sandbox-cards__body">fillHeight stretches to the row height.</div>
+			</app-card>
+			<app-card>
+				<div class="sandbox-cards__body">A taller sibling card<br />forcing the row<br />to grow.</div>
+			</app-card>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Card header" description="app-card-header colours: primary-gradient, red, green, orange, gray, white.">
+		<div class="sandbox-cards__row">
+			@for (color of headerColors; track color) {
+				<app-card>
+					<app-card-header [color]="color">{{ color }}</app-card-header>
+					<div class="sandbox-cards__body">Body below a {{ color }} header.</div>
+				</app-card>
+			}
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Housing card"
+		description="Required title + height (content height = height - 50px, scrolls). Contacts use nameToInitials, emailToInitials, truncate, ordinal and timeElapsedFormat (fixed dates).">
+		<div class="sandbox-cards__row">
+			<app-housing-card title="Team contacts" height="300px">
+				<ul class="sandbox-cards__contacts">
+					@for (contact of contacts; track contact.email; let index = $index) {
+						<li>
+							<span class="sandbox-cards__avatar" [title]="contact.name">{{ contact.name | nameToInitials }}</span>
+							<span class="sandbox-cards__avatar sandbox-cards__avatar--alt" [title]="contact.email">{{ contact.email | emailToInitials }}</span>
+							<span>
+								<strong>{{ index + 1 | ordinal }}</strong> {{ contact.name }} &middot; <span [title]="contact.role">{{ contact.role | truncate: 24 }}</span
+								><br />
+								<small>Active {{ contact.lastActive | timeElapsedFormat }}</small>
+							</span>
+						</li>
+					}
+				</ul>
+			</app-housing-card>
+			<app-housing-card title="Short housing card" height="150px">
+				<p>Small height: content area is 100px.</p>
+			</app-housing-card>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Info card"
+		description="Decorator API, mapped once on init. Shows header types (boldText, clickable Display, textPre, sub-field with icon, Parent chip, status), column types (text, mailText, phoneText, date, money, boolean, textWithEdit, textClick, Parent chip / displayList / textCombined), claims, both header-menu modes, footer chips, paragraph and the no-data error state. Click the name, verified tick, edit icons, agent link, Send statement, header menu items and Retry."
+		[log]="infoCardLog.entries()">
+		<div class="sandbox-cards__stack">
+			<app-info-card
+				[data]="accountData"
+				[cardHeader]="accountHeader"
+				[tableConfig]="accountTable"
+				[tableProperties]="accountProperties"
+				[tableHeaderMenu]="accountMenu"
+				[parentDataProcess]="accountParentProcess"
+				[claims]="fullClaims"
+				[footerChips]="accountFooter"
+				(buttonClick)="onInfoCardButton($event)"
+				(menuClickEvent)="onInfoCardMenu($event)"></app-info-card>
+
+			<app-info-card
+				[data]="accountData"
+				[cardHeader]="accountHeader"
+				[tableConfig]="accountTable"
+				[tableProperties]="accountRestrictedProperties"
+				[tableHeaderMenu]="accountEditMenu"
+				[parentDataProcess]="accountParentProcess"
+				dateFormat="dd MMM yyyy"
+				(buttonClick)="onInfoCardButton($event)"></app-info-card>
+
+			<app-info-card [data]="accountData" [cardHeader]="accountNotesHeader" [tableConfig]="accountNotesTable" [tableProperties]="notesProperties"></app-info-card>
+
+			<app-info-card [cardHeader]="accountErrorHeader" [tableConfig]="[]" [tableProperties]="accountErrorProperties" (buttonClick)="onInfoCardButton($event)"></app-info-card>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="List card"
+		description="Decorator API, mapped once on init. Header: Display, textPre + sub-field, status chip with post date. Columns: text, store, money, dateTime, Parent iconWithDisplay / chipsStatus. Buttons from tableButtonConfig and/or parentButtonProcess; a clicked button shows loading until spinner changes."
+		[log]="listCardLog.entries()">
+		<div class="sandbox-cards__actions">
+			<button type="button" (click)="finishPendingActions()">Finish pending actions (bump spinner)</button>
+		</div>
+		<div class="sandbox-cards__stack">
+			<app-list-card
+				[data]="leadData"
+				[cardHeader]="leadHeader"
+				[tableConfig]="leadTable"
+				[tablePropertiesConfig]="leadProperties"
+				[tableButtonConfig]="leadButtons"
+				[parentDataProcess]="leadParentProcess"
+				[spinner]="spinner()"
+				(buttonClick)="onListCardButton($event)"></app-list-card>
+
+			<app-list-card
+				[data]="leadData"
+				[cardHeader]="leadHeader"
+				[tableConfig]="leadTable"
+				[tablePropertiesConfig]="leadProperties"
+				[tableButtonConfig]="leadViewButton"
+				[parentDataProcess]="leadParentProcess"
+				[parentButtonProcess]="leadButtonProcess"
+				dateFormat="dd MMM yyyy"
+				timeFormat="HH:mm"
+				[spinner]="spinner()"
+				(buttonClick)="onListCardButton($event)"></app-list-card>
+
+			<app-list-card [cardHeader]="leadHeader" [tableConfig]="leadTable" [tablePropertiesConfig]="leadProperties" [tableButtonConfig]="leadButtons"></app-list-card>
+		</div>
+	</app-sandbox-demo>
+</app-sandbox-page>

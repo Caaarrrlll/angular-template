@@ -1,0 +1,54 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.upload-controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 16px;
+	margin-bottom: 16px;
+}
+
+.upload-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+}
+
+.upload-button {
+	padding: 6px 12px;
+	border: 1px solid $color-gray;
+	border-radius: 4px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+
+	&:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+}
+
+.drop-zone {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 140px;
+	border: 2px dashed $color-gray;
+	border-radius: 8px;
+
+	&.fileover {
+		border-color: $color-orange;
+		background-color: rgba($color-orange, 0.08);
+	}
+}
+
+.drop-list,
+.drop-empty {
+	margin-top: 12px;
+}

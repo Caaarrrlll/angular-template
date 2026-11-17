@@ -1,0 +1,84 @@
+<app-sandbox-page
+	title="Data display"
+	description="key-value (v1, v2, v3), chips and chip-status, with formatNull, truncate, ordinal, nameToInitials, emailToInitials and timeElapsedFormat folded into the values.">
+	<app-sandbox-demo
+		title="Key value (v1)"
+		description="Stacked (default) vs row layout, showEdit with the edit output, removeValuePadding and sameFontSize."
+		[log]="keyValueLog.entries()">
+		<div class="sandbox-data__grid">
+			<app-key-value key="Full name" [value]="profile.fullName"></app-key-value>
+			<app-key-value key="Initials" [value]="profile.fullName | nameToInitials" [row]="true"></app-key-value>
+			<app-key-value key="Middle name" value="{{ profile.middleName | formatNull: `Not captured` }}" [showEdit]="true" (edit)="onKeyValueEdit(`middleName`)"></app-key-value>
+			<app-key-value key="Bio (truncated)" [value]="profile.bio | truncate: 40" [row]="true" [showEdit]="true" (edit)="onKeyValueEdit(`bio`)"></app-key-value>
+			<app-key-value key="Branch rank" [value]="profile.branchRank | ordinal" [removeValuePadding]="true"></app-key-value>
+			<app-key-value key="Same font size" value="Value matches the key size" [sameFontSize]="true"></app-key-value>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Key value (v2)"
+		description="valPercent (positive / negative / zero), key and value colours, boldValue, alignRight, title / keyTitle tooltips, showEdit / showView outputs."
+		[log]="keyValueV2Log.entries()">
+		<div class="sandbox-data__grid">
+			<app-key-value-v2 key="Revenue" value="R 182 400" [valPercent]="0.12"></app-key-value-v2>
+			<app-key-value-v2 key="Costs" value="R 96 150" [valPercent]="-0.05"></app-key-value-v2>
+			<app-key-value-v2 key="Margin" value="47%" [valPercent]="0"></app-key-value-v2>
+			<app-key-value-v2 key="Status" value="Overdue" keyColor="red" valueColor="red" [boldValue]="true"></app-key-value-v2>
+			<app-key-value-v2 key="Payment" value="Pending" valueColor="orange"></app-key-value-v2>
+			<app-key-value-v2 key="Verified" value="Yes" valueColor="green" [alignRight]="true"></app-key-value-v2>
+			<app-key-value-v2 key="Email" [value]="profile.email | emailToInitials" title="Initials from the email address" keyTitle="Hover tooltip on the key"></app-key-value-v2>
+			<app-key-value-v2
+				key="Last login"
+				[value]="profile.lastLogin | timeElapsedFormat"
+				[showEdit]="true"
+				[showView]="true"
+				(edit)="onKeyValueV2(`edit`, `lastLogin`)"
+				(view)="onKeyValueV2(`view`, `lastLogin`)"></app-key-value-v2>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Key value (v3)" description="colon on / off, bottomPadding, boldValue, alignRight, showEdit / showView outputs." [log]="keyValueV3Log.entries()">
+		<div class="sandbox-data__grid">
+			<app-key-value-v3 key="Account" value="ACC-10482"></app-key-value-v3>
+			<app-key-value-v3 key="No colon" value="colon = false" [colon]="false"></app-key-value-v3>
+			<app-key-value-v3 key="Bold value" value="Highlighted" [boldValue]="true" bottomPadding="24px"></app-key-value-v3>
+			<app-key-value-v3 key="Right aligned" value="alignRight" [alignRight]="true" bottomPadding="0px"></app-key-value-v3>
+			<app-key-value-v3
+				key="Branch"
+				value="Pretoria East"
+				title="Branch tooltip"
+				keyTitle="Key tooltip"
+				[showEdit]="true"
+				[showView]="true"
+				(edit)="onKeyValueV3(`edit`, `branch`)"
+				(view)="onKeyValueV3(`view`, `branch`)"></app-key-value-v3>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Chips"
+		description="Counts (under / over 99), refresh vs clear on the count bubble (hover then click it), showZero toggle, plain toggle, disabled and hidden chips. inputChanged logged."
+		[log]="chipsLog.entries()">
+		<app-chips [input]="filterChips" (inputChanged)="onChipChanged($event)"></app-chips>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Chip status" description="Every common type mapping, isSmall and showSolid variants; an unknown type falls back to Default.">
+		<div class="sandbox-data__chip-rows">
+			<div class="sandbox-data__chip-row">
+				@for (sample of statusSamples; track sample.type) {
+					<app-chip-status [text]="sample.text" [type]="sample.type"></app-chip-status>
+				}
+			</div>
+			<div class="sandbox-data__chip-row">
+				@for (sample of statusSamples; track sample.type) {
+					<app-chip-status [text]="sample.text" [type]="sample.type" [showSolid]="true"></app-chip-status>
+				}
+			</div>
+			<div class="sandbox-data__chip-row">
+				@for (sample of statusSamples; track sample.type) {
+					<app-chip-status [text]="sample.text" [type]="sample.type" [isSmall]="true"></app-chip-status>
+				}
+			</div>
+		</div>
+	</app-sandbox-demo>
+</app-sandbox-page>

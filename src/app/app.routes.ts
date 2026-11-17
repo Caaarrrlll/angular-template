@@ -5,7 +5,7 @@ const sandboxRoutes: Routes = environment.isLocal
 	? [
 			{
 				path: "sandbox",
-				loadComponent: () => import("./segments/sandbox/components/sandbox/sandbox.component").then((m) => m.SandboxComponent),
+				loadChildren: () => import("./segments/sandbox/sandbox.routes").then((m) => m.SANDBOX_ROUTES),
 			},
 		]
 	: [];

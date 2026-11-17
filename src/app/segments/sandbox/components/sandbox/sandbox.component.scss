@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 :host {
 	display: block;
 }
@@ -16,36 +18,39 @@
 
 	p {
 		margin: 0;
-		color: rgba(0, 0, 0, 0.6);
+		color: rgba($color-black, 0.6);
 	}
 }
 
-.sandbox__section {
+.sandbox__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 16px;
+}
+
+.sandbox__card {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 8px;
+	padding: 16px;
+	border: 1px solid rgba($color-black, 0.12);
+	border-radius: 8px;
+	color: inherit;
+	text-decoration: none;
 
 	h2 {
 		margin: 0;
-		font-size: 1.1rem;
+		font-size: 1.05rem;
+		color: $color-orange;
 	}
-}
 
-.sandbox-accordion__header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	width: 100%;
-	padding: 12px 16px;
-	border: 0;
-	background: transparent;
-	color: inherit;
-	font: inherit;
-	text-align: left;
-	cursor: pointer;
+	p {
+		margin: 0;
+		font-size: 0.85rem;
+		color: rgba($color-black, 0.6);
+	}
 
-	&:disabled {
-		cursor: not-allowed;
-		opacity: 0.5;
+	&:hover {
+		border-color: $color-orange;
 	}
 }

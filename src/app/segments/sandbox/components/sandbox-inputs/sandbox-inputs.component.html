@@ -1,0 +1,134 @@
+<app-sandbox-page
+	title="Inputs"
+	description="Reactive-forms input controls (text, number, currency, email, phone, select), the select option, the floating-label wrapper and the input directives.">
+	<app-sandbox-demo
+		title="Input text"
+		description="CustInputAdvance API: validators + error messages + clear button + maxlen, prefilled, read-only, disabled (FormControl.disable), action button, and calendar mode (action.value === 'calendar')."
+		[log]="textLog.entries()">
+		<div class="sandbox-inputs__grid">
+			<app-input-text label="Name (required, min 3, max 20)" placeholder="Type a name" [inputControl]="textRequired"></app-input-text>
+			<app-input-text label="Prefilled" [inputControl]="textPrefilled"></app-input-text>
+			<app-input-text label="Read-only" [isReadOnly]="true" [inputControl]="textReadOnly"></app-input-text>
+			<app-input-text label="With action" placeholder="Search..." [inputControl]="textWithAction" [action]="searchAction" (actionOut)="onTextAction($event)"></app-input-text>
+			<app-input-text label="Calendar mode" [inputControl]="textCalendar" [action]="calendarAction" (actionOut)="onTextAction($event)"></app-input-text>
+		</div>
+		<div class="sandbox-inputs__actions">
+			<button type="button" (click)="toggleTextDisabled()">{{ textDisabled() ? "Enable" : "Disable" }} prefilled</button>
+			<button type="button" (click)="revealErrors()">Mark required fields touched</button>
+		</div>
+		<p class="sandbox-inputs__value">
+			Required field value: <code>{{ textRequiredValue() ?? "(untouched)" }}</code>
+		</p>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Input number" description="min 1 / max 100 / required with errors; isTextNumber renders type=text and strips non-digits on keyup.">
+		<div class="sandbox-inputs__grid">
+			<app-input-number label="Quantity (1 - 100)" placeholder="0" [inputControl]="numberRanged"></app-input-number>
+			<app-input-number label="Text number (prefilled)" [isTextNumber]="true" [inputControl]="numberText"></app-input-number>
+		</div>
+		<p class="sandbox-inputs__value">
+			Quantity value: <code>{{ numberRangedValue() ?? "(untouched)" }}</code>
+		</p>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Input currency" description="Empty control is seeded with 0.00 by the control; pattern error; currencyCode ZAR (default) vs USD prefilled.">
+		<div class="sandbox-inputs__grid">
+			<app-input-currency label="Amount (ZAR)" [inputControl]="currencyEmpty"></app-input-currency>
+			<app-input-currency label="Amount (USD, prefilled)" currencyCode="USD" [inputControl]="currencyUsd"></app-input-currency>
+		</div>
+		<p class="sandbox-inputs__value">
+			ZAR value: <code>{{ currencyValue() ?? "(unchanged)" }}</code>
+		</p>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Email, phone and select"
+		description="CustInputGeneral API. Email/phone emit inputChanged (500ms debounce) only while valid; select emits on selectionChange."
+		[log]="generalLog.entries()">
+		<div class="sandbox-inputs__grid">
+			<app-input-email [inputObj]="emailEmpty" (inputChanged)="onGeneralChanged('email', $event)"></app-input-email>
+			<app-input-email [inputObj]="emailPrefilled" (inputChanged)="onGeneralChanged('email prefilled', $event)"></app-input-email>
+			<app-input-email [inputObj]="emailReadOnly" (inputChanged)="onGeneralChanged('email read-only', $event)"></app-input-email>
+			<app-input-phone [inputObj]="phoneTen" (inputChanged)="onGeneralChanged('phone 10', $event)"></app-input-phone>
+			<app-input-phone [inputObj]="phoneAny" (inputChanged)="onGeneralChanged('phone any', $event)"></app-input-phone>
+			<app-input-select [inputObj]="selectEmpty" (inputChanged)="onGeneralChanged('select', $event)"></app-input-select>
+			<app-input-select [inputObj]="selectPrefilled" (inputChanged)="onGeneralChanged('select prefilled', $event)"></app-input-select>
+			<app-input-select [inputObj]="selectReadOnly" (inputChanged)="onGeneralChanged('select read-only', $event)"></app-input-select>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Select option" description="app-select-option as radio (default type) and checkbox; selected output logged." [log]="optionLog.entries()">
+		<div class="sandbox-inputs__row">
+			@for (option of radioOptions; track option.value) {
+				<app-select-option [value]="option.value" (selected)="onOptionSelected('radio', $event)">{{ option.label }}</app-select-option>
+			}
+		</div>
+		<div class="sandbox-inputs__row">
+			@for (option of radioOptions; track option.value) {
+				<app-select-option type="checkbox" [value]="option.value" (selected)="onOptionSelected('checkbox', $event)">{{ option.label }}</app-select-option>
+			}
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Floating-label input + autoFocus"
+		description="app-input wraps a projected native input (its label targets id 'search'). The toggle renders an input with the autoFocus directive.">
+		<div class="sandbox-inputs__grid">
+			<app-input label="Search">
+				<input id="search" type="text" placeholder=" " />
+			</app-input>
+		</div>
+		<div class="sandbox-inputs__actions">
+			<button type="button" (click)="toggleAutoFocus()">{{ showAutoFocus() ? "Hide" : "Show" }} auto-focused input</button>
+		</div>
+		@if (showAutoFocus()) {
+			<mat-form-field appearance="fill">
+				<mat-label>autoFocus</mat-label>
+				<input matInput type="text" autoFocus />
+			</mat-form-field>
+		}
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Input directives"
+		description="NumericInput, MinMax, MinMaxDecimal, NDigitDecimalNumber, currencyInput, appCurrencyMask and dateTransform on plain matInput fields bound to one FormGroup.">
+		<form class="sandbox-inputs__grid" [formGroup]="directiveForm">
+			<mat-form-field appearance="fill">
+				<mat-label>NumericInput (digits only)</mat-label>
+				<input matInput type="text" formControlName="numeric" NumericInput />
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>MinMax (0 - 10)</mat-label>
+				<input matInput type="number" formControlName="minMax" MinMax [min]="0" [max]="10" />
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>MinMaxDecimal (0 - 10)</mat-label>
+				<input matInput type="text" formControlName="minMaxDecimal" MinMaxDecimal [min]="0" [max]="10" />
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>NDigitDecimalNumber (3 decimals)</mat-label>
+				<input matInput type="text" formControlName="nDigit" NDigitDecimalNumber numberOfDecimals="3" />
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>currencyInput (ZAR, 0 - 100000)</mat-label>
+				<input matInput type="text" formControlName="currencyInput" currencyInput currencyCode="ZAR" [min]="0" [max]="100000" />
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>appCurrencyMask</mat-label>
+				<input matInput type="text" formControlName="currencyMask" appCurrencyMask />
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>dateTransform (dd MMM yyyy)</mat-label>
+				<input matInput type="text" formControlName="dateTransform" dateTransform="dd MMM yyyy" />
+			</mat-form-field>
+		</form>
+		<p class="sandbox-inputs__value">Form model (note: the masking directives rewrite the view only, not the model):</p>
+		<ul class="sandbox-inputs__values">
+			@for (entry of directiveEntries(); track entry.key) {
+				<li>
+					<code>{{ entry.key }}: {{ entry.value ?? "null" }}</code>
+				</li>
+			}
+		</ul>
+	</app-sandbox-demo>
+</app-sandbox-page>

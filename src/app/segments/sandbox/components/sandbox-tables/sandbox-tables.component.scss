@@ -1,0 +1,93 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.sandbox-tables__toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.sandbox-tables__label {
+	font-size: 0.85rem;
+	color: rgba($color-black, 0.6);
+}
+
+.sandbox-tables__active {
+	background: rgba($color-orange, 0.12);
+}
+
+.sandbox-tables__conditions pre {
+	max-height: 200px;
+	margin: 4px 0 0;
+	padding: 8px;
+	overflow: auto;
+	background: $color-gray-lightest;
+	font-size: 0.8rem;
+}
+
+.sandbox-tables__search {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-width: 320px;
+	font-size: 0.85rem;
+
+	input {
+		padding: 6px 8px;
+		border: 1px solid $color-gray-light;
+		border-radius: 4px;
+		font: inherit;
+	}
+}
+
+.sandbox-tables__table-scroll {
+	overflow-x: auto;
+}
+
+.sandbox-tables__table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+
+	th,
+	td {
+		padding: 6px 8px;
+		border-bottom: 1px solid $color-gray-light;
+		text-align: left;
+	}
+
+	.sandbox-tables__number {
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+	}
+}
+
+.sandbox-tables__sort {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.sandbox-tables__makes {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin: 0;
+}
+
+.sandbox-tables__chip {
+	padding: 2px 8px;
+	border-radius: 12px;
+	background: $color-gray-lightest;
+	font-size: 0.8rem;
+	text-transform: capitalize;
+}

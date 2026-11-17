@@ -1,0 +1,62 @@
+<app-sandbox-page title="Buttons" description="button-v2 (every CustButtonType), button-toggle and fab-button demos.">
+	<app-sandbox-demo
+		title="Button v2 - variants"
+		description="One button per CustButtonType. The toggles drive the disabled, loading and isTableButton inputs on every button; buttonClick is logged."
+		[log]="buttonLog.entries()">
+		<div class="sandbox-buttons__controls">
+			<label><input type="checkbox" [checked]="disabled()" (change)="disabled.set(!disabled())" /> disabled</label>
+			<label><input type="checkbox" [checked]="loading()" (change)="loading.set(!loading())" /> loading</label>
+			<label><input type="checkbox" [checked]="tableSize()" (change)="tableSize.set(!tableSize())" /> isTableButton</label>
+		</div>
+		<div class="sandbox-buttons__row">
+			@for (button of variantButtons(); track button.value) {
+				<app-button-v2 [type]="button" (buttonClick)="onButtonClick($event)"></app-button-v2>
+			}
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Button v2 - icons and width"
+		description="Icon left/right, a fixed width, and an icon-only button (empty display). Shares the toggles above."
+		[log]="buttonLog.entries()">
+		<div class="sandbox-buttons__row">
+			@for (button of iconButtons(); track button.value) {
+				<app-button-v2 [type]="button" (buttonClick)="onButtonClick($event)"></app-button-v2>
+			}
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Button v2 - label too long" description="Labels of 29+ characters render a validation message instead of the button.">
+		<app-button-v2 [type]="tooLongButton"></app-button-v2>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Button toggle" description="Single select, multi select, read only and equalToSelected; inputChanged is logged." [log]="toggleLog.entries()">
+		<div class="sandbox-buttons__grid">
+			<app-button-toggle [inputObj]="singleToggle" (inputChanged)="onToggleChanged('single', $event)"></app-button-toggle>
+			<app-button-toggle [inputObj]="multiToggle" (inputChanged)="onToggleChanged('multi', $event)"></app-button-toggle>
+			<app-button-toggle [inputObj]="readOnlyToggle" (inputChanged)="onToggleChanged('read-only', $event)"></app-button-toggle>
+			<app-button-toggle [inputObj]="operatorToggle" [equalToSelected]="true" (inputChanged)="onToggleChanged('operator', $event)"></app-button-toggle>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="FAB button"
+		description="The FAB is position: fixed; each stage below contains it so several can be shown. Default (help) vs a custom icon/ariaLabel; emitClick is logged."
+		[log]="fabLog.entries()">
+		<div class="sandbox-buttons__controls">
+			@for (icon of fabIcons; track icon) {
+				<button type="button" [disabled]="fabIcon() === icon" (click)="fabIcon.set(icon)">icon: {{ icon }}</button>
+			}
+		</div>
+		<div class="sandbox-buttons__row">
+			<div class="sandbox-buttons__fab-stage">
+				<span>Defaults</span>
+				<app-fab-button (emitClick)="onFabClick('default')"></app-fab-button>
+			</div>
+			<div class="sandbox-buttons__fab-stage">
+				<span>icon: {{ fabIcon() }}</span>
+				<app-fab-button [icon]="fabIcon()" [ariaLabel]="fabIcon()" (emitClick)="onFabClick(fabIcon())"></app-fab-button>
+			</div>
+		</div>
+	</app-sandbox-demo>
+</app-sandbox-page>

@@ -1,0 +1,23 @@
+<section class="sandbox-demo">
+	<header class="sandbox-demo__header">
+		<h2>{{ title() }}</h2>
+		@if (description()) {
+			<p>{{ description() }}</p>
+		}
+	</header>
+
+	<div class="sandbox-demo__body">
+		<ng-content></ng-content>
+	</div>
+
+	@if (log(); as entries) {
+		<div class="sandbox-demo__log" aria-live="polite">
+			<span class="sandbox-demo__log-title">Output log</span>
+			@for (entry of entries; track $index) {
+				<code>{{ entry }}</code>
+			} @empty {
+				<span class="sandbox-demo__log-empty">Interact with the control to see its outputs.</span>
+			}
+		</div>
+	}
+</section>

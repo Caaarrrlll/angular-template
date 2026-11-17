@@ -1,0 +1,76 @@
+<app-sandbox-page
+	title="Dialogs"
+	description="confirmation-dialog, media-dialog, table-dialogue, dynamic-material-dialog and dynamic-window, each opened from a button with its afterClosed result logged.">
+	<app-sandbox-demo
+		title="Confirmation dialog"
+		description="Default text (no data) vs custom title/description. Closes with true (Yes), false (No) or undefined (backdrop / Esc)."
+		[log]="confirmationLog.entries()">
+		<div class="sandbox-dialogs__actions">
+			<button type="button" mat-stroked-button (click)="openConfirmation(false)">Open default</button>
+			<button type="button" mat-stroked-button (click)="openConfirmation(true)">Open custom</button>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Media dialog"
+		description="Images come from the MEDIA_LOADER token (mocked on this page). Loaded, slow (loading state), 404 (no data) and server error states."
+		[log]="mediaLog.entries()">
+		<div class="sandbox-dialogs__actions">
+			<button type="button" mat-stroked-button (click)="openMedia(mediaKeys.found)">Loaded</button>
+			<button type="button" mat-stroked-button (click)="openMedia(mediaKeys.slow)">Slow (1.5s)</button>
+			<button type="button" mat-stroked-button (click)="openMedia(mediaKeys.missing)">Not found (404)</button>
+			<button type="button" mat-stroked-button (click)="openMedia(mediaKeys.failing)">Server error</button>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Table dialogue"
+		description="Text, currency and odometer columns plus a 'view' button column that closes the dialog with the row. Empty variant shows the no-records state."
+		[log]="tableLog.entries()">
+		<div class="sandbox-dialogs__actions">
+			<button type="button" mat-stroked-button (click)="openTable(false)">Open with rows</button>
+			<button type="button" mat-stroked-button (click)="openTable(true)">Open empty</button>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Dynamic material dialog: button-type"
+		description="ButtonGroup controls (single + multi select) closing with the form value; Approval control closing with 'Approve' / 'Reject' (Approve disabled until the required comment is filled)."
+		[log]="dynamicButtonsLog.entries()">
+		<div class="sandbox-dialogs__actions">
+			<button type="button" mat-stroked-button (click)="openDynamicButtonGroup()">Button groups</button>
+			<button type="button" mat-stroked-button (click)="openDynamicApproval()">Approval</button>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Dynamic material dialog: menu-type"
+		description="Non-simple filter menu (simple: false): operator dropdown, value, And/Or toggle that enables the second condition. 'Clear' closes with { action: 'clear' }."
+		[log]="dynamicMenuLog.entries()">
+		<div class="sandbox-dialogs__actions">
+			<button type="button" mat-stroked-button (click)="openDynamicFilterMenu()">Open filter menu</button>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Dynamic material dialog: form-type"
+		description="Validators (required, minlength, maxlength, pattern, email, min, max), a dependent validator (validationDep), currency shorthand, textarea, autocomplete via DynamicDialogService, dropdowns, grouped dropdown, radio, date pickers and a filterable checkbox list. Submitting an invalid form shows a snackbar; Back closes with { action: 'close' }."
+		[log]="dynamicFormLog.entries()">
+		<div class="sandbox-dialogs__actions">
+			<button type="button" mat-stroked-button (click)="openDynamicTextForm()">Text + validators</button>
+			<button type="button" mat-stroked-button (click)="openDynamicAutoComplete()">Autocomplete</button>
+			<button type="button" mat-stroked-button (click)="openDynamicPickerForm()">Pickers + choices</button>
+			<button type="button" mat-stroked-button (click)="openDynamicCheckbox()">Checkbox list</button>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Dynamic window"
+		description="Form window (image, dropdown, phone input required only without a sales exec, button group, multi-select, currency shorthand, dates, radio, checkbox, textarea) closing with the form value or false; approval window closing with { approval, comment }."
+		[log]="windowLog.entries()">
+		<div class="sandbox-dialogs__actions">
+			<button type="button" mat-stroked-button (click)="openWindowForm()">Open form window</button>
+			<button type="button" mat-stroked-button (click)="openWindowApproval()">Open approval window</button>
+		</div>
+	</app-sandbox-demo>
+</app-sandbox-page>

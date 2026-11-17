@@ -1,0 +1,11 @@
+<section class="sandbox-page">
+	<header class="sandbox-page__header">
+		<a class="sandbox-page__back" routerLink="/sandbox">&larr; All families</a>
+		<h1>{{ title() }}</h1>
+		@if (description()) {
+			<p>{{ description() }}</p>
+		}
+	</header>
+
+	<ng-content></ng-content>
+</section>

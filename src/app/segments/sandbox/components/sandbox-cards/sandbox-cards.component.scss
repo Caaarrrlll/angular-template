@@ -1,0 +1,76 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.sandbox-cards__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	align-items: flex-start;
+
+	> * {
+		flex: 1 1 200px;
+		min-width: 0;
+	}
+}
+
+.sandbox-cards__fill-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-top: 16px;
+
+	> * {
+		flex: 1 1 200px;
+	}
+}
+
+.sandbox-cards__body {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 12px;
+}
+
+.sandbox-cards__stack {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.sandbox-cards__actions {
+	margin-bottom: 12px;
+}
+
+.sandbox-cards__contacts {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 0;
+		border-bottom: 1px solid $color-gray-light;
+	}
+}
+
+.sandbox-cards__avatar {
+	display: inline-flex;
+	flex: 0 0 32px;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: $color-navy-mid;
+	color: $color-white;
+	font-size: 12px;
+
+	&--alt {
+		background: $color-orange;
+	}
+}

@@ -1,0 +1,68 @@
+<app-sandbox-page title="Misc" description="accordion, search-address, copyText + appClickElsewhere directives and the safe pipe.">
+	<app-sandbox-demo title="Accordion" description="expandFirst, a disabled item, custom header/content templates; expandedItem output logged." [log]="accordionLog.entries()">
+		<app-accordion [expandFirst]="true" (expandedItem)="onAccordionExpanded($event)">
+			@for (item of accordionItems; track item.title) {
+				<div appAccordionItem [title]="item.title" [disabled]="item.disabled">
+					<ng-template appAccordionHeader let-accordionItem let-toggle="toggle" let-index="index">
+						<button type="button" class="sandbox-accordion__header" [disabled]="accordionItem.disabled" (click)="toggle(index)">
+							<span>{{ accordionItem.title }}</span>
+							<mat-icon>expand_more</mat-icon>
+						</button>
+					</ng-template>
+					<ng-template appAccordionContent>
+						<p>{{ item.body }}</p>
+					</ng-template>
+				</div>
+			}
+		</app-accordion>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Search address"
+		description="Requires the Google Maps JavaScript API (Places library) script with an API key loaded by the host app, plus network access; results are restricted to South Africa (country 'za'). No key ships with this template, so without the script the control is not rendered. Inputs shown: labelText, width, types, value, allowManualInput, disabled; updateAddress + manualUpdateAddress outputs logged."
+		[log]="searchAddressLog.entries()">
+		@if (mapsAvailable) {
+			<div class="sandbox-misc__stack">
+				<app-search-address (updateAddress)="onAddressUpdated($event)"></app-search-address>
+				<app-search-address
+					labelText="Search address (manual input allowed)"
+					width="50%"
+					types="geocode"
+					value="1 Example Street"
+					[allowManualInput]="true"
+					(updateAddress)="onAddressUpdated($event)"
+					(manualUpdateAddress)="onManualAddress($event)"></app-search-address>
+				<app-search-address labelText="Search address (disabled)" [disabled]="true"></app-search-address>
+			</div>
+		} @else {
+			<p class="sandbox-misc__note">
+				Google Maps Places script not detected (<code>google</code> is not defined). Add the Maps JavaScript API script tag with your own key and <code>libraries=places</code> to
+				<code>src/index.html</code> to enable this demo.
+			</p>
+		}
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="copyText directive"
+		description="Click to copy to the clipboard (CDK Clipboard) with a snackbar confirmation. Without a value it copies the element's textContent; binding [copyText] copies the bound value instead (recommended inside grids/OnPush views).">
+		<div class="sandbox-misc__stack">
+			<span copyText>Copies its own text: INV-2026-0042</span>
+			<span [copyText]="copyAccountNumber()">Account ending 5678 (copies the full bound number)</span>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="appClickElsewhere directive"
+		description="Emits clickElsewhere for any document click outside the host element; clicks inside the host do not emit (counted separately here)."
+		[log]="clickElsewhereLog.entries()">
+		<button type="button" class="sandbox-misc__target" appClickElsewhere (clickElsewhere)="onClickElsewhere($event)" (click)="onInsideClick()">
+			Click inside me ({{ insideClicks() }} inside clicks), then click anywhere else on the page
+		</button>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="safe pipe"
+		description="Trusted-content-only escape hatch: bypasses Angular's resource URL sanitization (bypassSecurityTrustResourceUrl). Here it marks a hard-coded data: URL as safe for an iframe src. Never pass user-supplied or API-supplied values through it.">
+		<iframe class="sandbox-misc__frame" title="Trusted static content" sandbox="" [src]="trustedFrameUrl | safe"></iframe>
+	</app-sandbox-demo>
+</app-sandbox-page>

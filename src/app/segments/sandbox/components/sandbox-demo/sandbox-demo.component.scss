@@ -1,0 +1,51 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+}
+
+.sandbox-demo {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+	border: 1px solid rgba($color-black, 0.12);
+	border-radius: 8px;
+}
+
+.sandbox-demo__header {
+	h2 {
+		margin: 0;
+		font-size: 1.1rem;
+	}
+
+	p {
+		margin: 4px 0 0;
+		font-size: 0.85rem;
+		color: rgba($color-black, 0.6);
+	}
+}
+
+.sandbox-demo__body {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.sandbox-demo__log {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 8px 12px;
+	border-radius: 4px;
+	background: rgba($color-black, 0.04);
+	font-size: 0.8rem;
+}
+
+.sandbox-demo__log-title {
+	font-weight: 600;
+}
+
+.sandbox-demo__log-empty {
+	color: rgba($color-black, 0.6);
+}

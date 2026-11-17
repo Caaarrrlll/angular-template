@@ -1,0 +1,104 @@
+<app-sandbox-page
+	title="Media"
+	description="carousel, gallery (with the cursorFollowZoom directive), gallery-preview, zoom-image and zoomable-image. All images are inline SVG mock data.">
+	<app-sandbox-demo
+		title="Carousel"
+		description="preview position toggled between left/bottom; navigateTo driven by buttons (an unknown name shows the warning snackbar). openDetails fires on prev/next (not when wrapping from last to first)."
+		[log]="carouselLog.entries()">
+		<div class="media-controls">
+			<button type="button" class="media-button" (click)="toggleCarouselPreview()">preview: {{ carouselPreview() }}</button>
+			@for (image of carouselShortcuts; track image.name) {
+				<button type="button" class="media-button" (click)="navigateCarousel(image.name)">navigateTo "{{ image.name }}"</button>
+			}
+			<button type="button" class="media-button" (click)="navigateCarousel('missing-image')">navigateTo "missing-image"</button>
+		</div>
+		<div class="media-stage media-stage--carousel">
+			<app-carousel [images]="images" [preview]="carouselPreview()" [navigateTo]="carouselNavigateTo()" (openDetails)="onCarouselOpenDetails($event)"></app-carousel>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Gallery + cursorFollowZoom"
+		description="All gallery inputs toggleable. The cursorFollowZoom directive is applied by the gallery to its main image and is only active when imageZoom is on AND the gallery is fullscreen: open fullscreen, then hover/scroll the image. Arrow keys and Space are global listeners. No outputs.">
+		<div class="media-controls">
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryEmpty()" (change)="galleryEmpty.set(!galleryEmpty())" /> empty images</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryAutoplay()" (change)="galleryAutoplay.set(!galleryAutoplay())" /> autoplay</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryShowAutoplay()" (change)="galleryShowAutoplay.set(!galleryShowAutoplay())" /> showAutoplay</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryBorder()" (change)="galleryBorder.set(!galleryBorder())" /> border</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryShowPreview()" (change)="galleryShowPreview.set(!galleryShowPreview())" /> showGalleryPreview</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryFillWidth()" (change)="galleryFillWidth.set(!galleryFillWidth())" /> galleryWidth fillWidth</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryLoopOver()" (change)="galleryLoopOver.set(!galleryLoopOver())" /> loopOver</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryImageZoom()" (change)="galleryImageZoom.set(!galleryImageZoom())" /> imageZoom</label>
+			<label class="media-toggle"
+				><input type="checkbox" [checked]="galleryOnlyShowPreview()" (change)="galleryOnlyShowPreview.set(!galleryOnlyShowPreview())" /> onlyShowPreview</label
+			>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryOrangeIcons()" (change)="galleryOrangeIcons.set(!galleryOrangeIcons())" /> orangeIcons</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="galleryCover()" (change)="galleryCover.set(!galleryCover())" /> imageSize cover</label>
+		</div>
+		<div class="media-stage media-stage--gallery">
+			<app-gallery
+				[images]="galleryImages()"
+				[autoplay]="galleryAutoplay()"
+				[autoplayDelay]="2500"
+				[showAutoplay]="galleryShowAutoplay()"
+				[border]="galleryBorder()"
+				[showGalleryPreview]="galleryShowPreview()"
+				[galleryWidth]="galleryFillWidth() ? 'fillWidth' : 'matchImageWidth'"
+				[loopOver]="galleryLoopOver()"
+				[imageZoom]="galleryImageZoom()"
+				[onlyShowPreview]="galleryOnlyShowPreview()"
+				[orangeIcons]="galleryOrangeIcons()"
+				[galleryPreviewImageMaxWidth]="120"
+				[imageSize]="galleryCover() ? 'cover' : 'contain'"></app-gallery>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Gallery preview"
+		description="Standalone thumbnail strip. Left: defaults with totalWidth 640. Right: smaller thumbnails (imageWidth 100 / imageHeight 56), orangeIcons, narrower strip. Both share the active index; imageSelected logged."
+		[log]="previewLog.entries()">
+		<div class="media-grid">
+			<app-gallery-preview [images]="images" [totalWidth]="640" [activeImageIndex]="previewActiveIndex()" (imageSelected)="onPreviewImageSelected($event)"></app-gallery-preview>
+			<app-gallery-preview
+				[images]="images"
+				[totalWidth]="440"
+				[imageWidth]="100"
+				[imageHeight]="56"
+				[orangeIcons]="true"
+				[activeImageIndex]="previewActiveIndex()"
+				(imageSelected)="onPreviewImageSelected($event)"></app-gallery-preview>
+		</div>
+		<p class="media-caption">Active: {{ images[previewActiveIndex()].title }}</p>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Zoom image"
+		description="Click the image to toggle a 200% zoom (scroll inside the frame); leaving resets the cursor. Two instances with different images. No outputs.">
+		<div class="media-grid">
+			<div class="media-stage media-stage--zoom">
+				<app-zoom-image [img]="images[0].url"></app-zoom-image>
+			</div>
+			<div class="media-stage media-stage--zoom">
+				<app-zoom-image [img]="images[3].url"></app-zoom-image>
+			</div>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Zoomable image"
+		description="Lightbox (fullscreen icon / click image), zoom lens (zoom icon), mouse-wheel magnification when allowZoom. prev/next outputs (also global arrow keys) drive the parent index. Empty src state hides the image."
+		[log]="zoomableLog.entries()">
+		<div class="media-controls">
+			<label class="media-toggle"><input type="checkbox" [checked]="zoomableAllowZoom()" (change)="zoomableAllowZoom.set(!zoomableAllowZoom())" /> allowZoom</label>
+			<label class="media-toggle"><input type="checkbox" [checked]="zoomableEmpty()" (change)="zoomableEmpty.set(!zoomableEmpty())" /> empty src</label>
+		</div>
+		<div class="media-stage media-stage--zoomable">
+			<app-zoomable-image
+				[src]="zoomableSrc()"
+				[count]="zoomableCount()"
+				[allowZoom]="zoomableAllowZoom()"
+				(prev)="onZoomablePrev()"
+				(next)="onZoomableNext()"></app-zoomable-image>
+		</div>
+	</app-sandbox-demo>
+</app-sandbox-page>

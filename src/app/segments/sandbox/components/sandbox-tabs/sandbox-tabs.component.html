@@ -1,0 +1,90 @@
+<app-sandbox-page title="Tabs" description="tab-group (Material tabs wrapper) and tabs + tab (step wizard with back/next directives).">
+	<app-sandbox-demo
+		title="Tab group - horizontal"
+		description="Icons on the first two tabs. Content is only rendered for the activeTab input, so the page feeds tabClick back into activeTab."
+		[log]="horizontalLog.entries()">
+		<app-tab-group [tabList]="horizontalTabs" [activeTab]="horizontalActive()" (tabClick)="onHorizontalTabClick($event)">
+			<div class="sandbox-tabs__panel">
+				@switch (horizontalActive()) {
+					@case (0) {
+						<p>Overview content.</p>
+					}
+					@case (1) {
+						<p>Details content.</p>
+					}
+					@default {
+						<p>History content.</p>
+					}
+				}
+			</div>
+		</app-tab-group>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Tab group - vertical process"
+		description="tabType 'vertical' with isProcess steps: a step stays disabled until canProgress is true. A divider separates process tabs from the plain Notes tab."
+		[log]="verticalLog.entries()">
+		<div class="sandbox-tabs__actions">
+			<button type="button" [disabled]="completedSteps() >= 2" (click)="completeStep()">Complete next process step</button>
+			<button type="button" (click)="resetSteps()">Reset</button>
+		</div>
+		<div class="sandbox-tabs__vertical">
+			<app-tab-group [tabList]="verticalTabs()" [activeTab]="verticalActive()" (tabClick)="onVerticalTabClick($event)">
+				<div class="sandbox-tabs__panel">
+					@switch (verticalActive()) {
+						@case (0) {
+							<p>Applicant details.</p>
+						}
+						@case (1) {
+							<p>Upload documents.</p>
+						}
+						@case (2) {
+							<p>Review and submit.</p>
+						}
+						@default {
+							<p>Free-form notes (not part of the process).</p>
+						}
+					}
+				</div>
+			</app-tab-group>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Tabs wizard"
+		description="app-tabs + app-tab with appBackTabButton / appNextTabButton. Step 2 uses [required]=true on Next, so it only advances once 'completed' is set. In linear mode a step can only be selected after the previous one is completed."
+		[log]="wizardLog.entries()">
+		<div class="sandbox-tabs__actions">
+			<label><input type="checkbox" [checked]="linear()" (change)="linear.set(!linear())" /> linear</label>
+		</div>
+		<app-tabs [linear]="linear()" (tabSelectedEvent)="onWizardTabSelected($event)">
+			<app-tab title="Account">
+				<div class="sandbox-tabs__panel">
+					<p>Step 1: account details.</p>
+					<div class="sandbox-tabs__actions">
+						<button type="button" appNextTabButton>Next</button>
+					</div>
+				</div>
+			</app-tab>
+			<app-tab title="Terms" [completed]="agreed()">
+				<div class="sandbox-tabs__panel">
+					<p>Step 2: accept the terms to continue.</p>
+					<label><input type="checkbox" [checked]="agreed()" (change)="agreed.set(!agreed())" /> I agree</label>
+					<div class="sandbox-tabs__actions">
+						<button type="button" appBackTabButton>Back</button>
+						<button type="button" appNextTabButton [required]="true">Next</button>
+					</div>
+				</div>
+			</app-tab>
+			<app-tab title="Confirm">
+				<div class="sandbox-tabs__panel">
+					<p>Step 3: all done.</p>
+					<div class="sandbox-tabs__actions">
+						<button type="button" appBackTabButton>Back</button>
+						<button type="button" (click)="finishWizard()">Finish</button>
+					</div>
+				</div>
+			</app-tab>
+		</app-tabs>
+	</app-sandbox-demo>
+</app-sandbox-page>

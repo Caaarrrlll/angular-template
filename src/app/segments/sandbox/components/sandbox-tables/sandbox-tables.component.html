@@ -1,0 +1,170 @@
+<app-sandbox-page
+	title="Tables"
+	description="table, card-table, expandable-grid, linq-grid-filters, plus a search table using the searchMatch, orderBy, sort and thousandSeparator pipes.">
+	<app-sandbox-demo
+		title="Table"
+		description="Config-driven mat-table: one column per renderer type (textLink, titleText, spaceUpperCase, date, currency, odometer, boolean, yesNo, percentage, dictionary, listPopupHover, favouriteButton, buttonPrimary). Sorting, paging and the filter bar only emit; the page filters, sorts and slices the data and hands the table a new observable. Every buttonActionOut action is logged."
+		[log]="tableLog.entries()">
+		<div class="sandbox-tables__toolbar" role="group" aria-label="Table data state">
+			<span class="sandbox-tables__label">listObservable:</span>
+			@for (mode of dataModes; track mode) {
+				<button mat-stroked-button type="button" [class.sandbox-tables__active]="tableMode() === mode" [attr.aria-pressed]="tableMode() === mode" (click)="tableMode.set(mode)">
+					{{ mode }}
+				</button>
+			}
+			<button mat-stroked-button type="button" [attr.aria-pressed]="tableExporting()" (click)="toggle(tableExporting)">exporting: {{ tableExporting() }}</button>
+		</div>
+		<app-table
+			[tableConfig]="tableColumns"
+			[requestState]="tableRequestState"
+			[storageNameIn]="tableStorageName"
+			defaultSort="listedDate"
+			[listObservable]="tableList()"
+			[custPage]="tableCustPage()"
+			[filters]="tableFilter"
+			[showAddButton]="true"
+			[showCustomButton]="true"
+			[selectableColumns]="true"
+			[exporting]="tableExporting()"
+			(buttonActionOut)="onTableAction($event)">
+		</app-table>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Card table"
+		description="Each row is an app-list-card built from tableWrapper (headers, field columns, buttons). A Parent field (Days open) is computed by parentDataProcess. Card buttons show a loading state until the spinner input changes. Filter bar: text + select filters, sort toggle, add, custom (download) button and an upper toggle."
+		[log]="cardLog.entries()">
+		<div class="sandbox-tables__toolbar" role="group" aria-label="Card table data state">
+			<span class="sandbox-tables__label">listObservable:</span>
+			@for (mode of dataModes; track mode) {
+				<button mat-stroked-button type="button" [class.sandbox-tables__active]="cardMode() === mode" [attr.aria-pressed]="cardMode() === mode" (click)="cardMode.set(mode)">
+					{{ mode }}
+				</button>
+			}
+			<button mat-stroked-button type="button" (click)="finishCardActions()">Finish pending actions (spinner: {{ cardSpinner() }})</button>
+			<button mat-stroked-button type="button" (click)="resetCardRows()">Restore archived leads</button>
+		</div>
+		<app-card-table
+			[tableWrapper]="cardWrapper"
+			[listObservable]="cardList()"
+			[custPage]="cardCustPage()"
+			[filters]="cardFilters"
+			[parentDataProcess]="cardDataProcess"
+			[spinner]="cardSpinner()"
+			[showAddButton]="true"
+			[showSortButton]="true"
+			[showCustomButton]="true"
+			customButtonTooltip="Download leads"
+			customButtonIcon="download"
+			[showUpperToggle]="true"
+			[upperToggle]="cardUpperToggle()"
+			defaultSort="createdDate"
+			(buttonActionOut)="onCardAction($event)">
+		</app-card-table>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="LinQ grid filters"
+		description="The filter bar on its own with one item of every config.type (text, number, boolean, date, dateRange, select; Region starts pre-selected). Toggle the optional buttons below; every output is logged and the resulting filter conditions are shown."
+		[log]="filtersLog.entries()">
+		<div class="sandbox-tables__toolbar" role="group" aria-label="Filter bar options">
+			<button mat-stroked-button type="button" [attr.aria-pressed]="showSortButton()" (click)="toggle(showSortButton)">showSortButton: {{ showSortButton() }}</button>
+			<button mat-stroked-button type="button" [attr.aria-pressed]="showAddButton()" (click)="toggle(showAddButton)">showAddButton: {{ showAddButton() }}</button>
+			<button mat-stroked-button type="button" [attr.aria-pressed]="showCustomButton()" (click)="toggle(showCustomButton)">showCustomButton: {{ showCustomButton() }}</button>
+			<button mat-stroked-button type="button" [attr.aria-pressed]="showUpperToggle()" (click)="toggle(showUpperToggle)">showUpperToggle: {{ showUpperToggle() }}</button>
+			<button mat-stroked-button type="button" [attr.aria-pressed]="selectableColumns()" (click)="toggle(selectableColumns)">selectableColumns: {{ selectableColumns() }}</button>
+			<button mat-stroked-button type="button" [attr.aria-pressed]="filtersExporting()" (click)="toggle(filtersExporting)">exporting: {{ filtersExporting() }}</button>
+		</div>
+		<app-linq-grid-filters
+			[gridFilters]="showcaseFilters"
+			[showSortButton]="showSortButton()"
+			[showAddButton]="showAddButton()"
+			[showCustomButton]="showCustomButton()"
+			customButtonTooltip="Export to Excel"
+			customButtonIcon="table_view"
+			[showUpperToggle]="showUpperToggle()"
+			[upperToggle]="filtersUpperToggle"
+			[selectableColumns]="selectableColumns()"
+			[displayedColumns]="showcaseColumns"
+			[exporting]="filtersExporting()"
+			(refreshClicked)="logFilters('refreshClicked')"
+			(clearButtonClicked)="onFiltersCleared()"
+			(filterChanged)="onFilterChanged($event)"
+			(sortChanged)="onSortChanged($event)"
+			(addButtonClicked)="logFilters('addButtonClicked')"
+			(filterRefresh)="onFilterRefresh($event)"
+			(customButtonClicked)="logFilters('customButtonClicked')"
+			(upperToggleChanged)="onUpperToggleChanged($event)"
+			(displayedColumnsChanged)="onDisplayedColumnsChanged($event)">
+		</app-linq-grid-filters>
+		<div class="sandbox-tables__conditions">
+			<span class="sandbox-tables__label">Active conditions (what a backend query would receive):</span>
+			<pre>{{ activeConditions() | json }}</pre>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Expandable grid"
+		description="Editable rows (input + dropdown columns), view/edit/delete rules; delete and save outputs logged."
+		[log]="gridLog.entries()">
+		<app-expandable-grid
+			[form]="gridForm"
+			[editableColumns]="editableColumns"
+			[displayedColumns]="gridColumns"
+			[gridData]="gridRows()"
+			[gridRules]="gridRules"
+			(delete)="onGridDelete($event)"
+			(save)="onGridSave($event)">
+		</app-expandable-grid>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Search table (pipes)"
+		description="Plain HTML table over fixed, trusted mock data: searchMatch highlights the term (escaped before it reaches the pipe's RegExp), orderBy sorts with a comparator (click a header), thousandSeparator groups price and mileage, and sort lists the matching makes A-Z.">
+		<label class="sandbox-tables__search">
+			<span>Search reference, make or model</span>
+			<input type="search" [value]="searchTerm()" (input)="onSearchInput($event)" placeholder="e.g. toyota, VH-100, cross" />
+		</label>
+
+		<div class="sandbox-tables__table-scroll">
+			<table class="sandbox-tables__table">
+				<thead>
+					<tr>
+						@for (column of searchFields; track column.field) {
+							<th scope="col" [attr.aria-sort]="searchSortField() === column.field ? (searchSortDirection() === 'asc' ? 'ascending' : 'descending') : null">
+								<button type="button" class="sandbox-tables__sort" (click)="sortSearchBy(column.field)">
+									{{ column.display }}
+									@if (searchSortField() === column.field) {
+										<span aria-hidden="true">{{ searchSortDirection() === "asc" ? "▲" : "▼" }}</span>
+									}
+								</button>
+							</th>
+						}
+					</tr>
+				</thead>
+				<tbody>
+					@for (row of searchRows() | orderBy: searchComparator(); track row.reference) {
+						<tr>
+							<td [innerHTML]="row.reference | searchMatch: searchPattern()"></td>
+							<td [innerHTML]="row.make | searchMatch: searchPattern()"></td>
+							<td [innerHTML]="row.model | searchMatch: searchPattern()"></td>
+							<td class="sandbox-tables__number">{{ row.price | thousandSeparator }}</td>
+							<td class="sandbox-tables__number">{{ row.mileage | thousandSeparator }}</td>
+						</tr>
+					} @empty {
+						<tr>
+							<td [attr.colspan]="searchFields.length">No vehicles match "{{ searchTerm() }}".</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+
+		<p class="sandbox-tables__makes">
+			<span class="sandbox-tables__label">Matching makes (sort: 'make'):</span>
+			@for (vehicle of searchMakes() | sort: "make"; track vehicle["reference"]) {
+				<span class="sandbox-tables__chip">{{ vehicle["make"] }}</span>
+			}
+		</p>
+	</app-sandbox-demo>
+</app-sandbox-page>

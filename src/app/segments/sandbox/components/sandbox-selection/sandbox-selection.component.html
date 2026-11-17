@@ -1,0 +1,135 @@
+<app-sandbox-page title="Selection" description="checkbox-group, range-checkbox-group, range-date-picker, time-span-picker and range-slider.">
+	<app-sandbox-demo
+		title="Checkbox group"
+		description="ControlValueAccessor bound with [formControl]: single (default) vs multi. 'Set programmatically' calls setValue/patchValue to check whether writeValue re-renders the OnPush checkboxes."
+		[log]="checkboxLog.entries()">
+		<div class="sandbox-selection__columns">
+			<div>
+				<h3>Single</h3>
+				<app-checkbox-group [formControl]="singleControl">
+					@for (option of fruitOptions; track option.value) {
+						<app-checkbox [value]="option.value">{{ option.label }}</app-checkbox>
+					}
+				</app-checkbox-group>
+				<p class="sandbox-selection__value">
+					Value: <code>{{ singleValue() | json }}</code>
+				</p>
+			</div>
+			<div>
+				<h3>Multi</h3>
+				<app-checkbox-group [multi]="true" [formControl]="multiControl">
+					@for (option of fruitOptions; track option.value) {
+						<app-checkbox [value]="option.value">{{ option.label }}</app-checkbox>
+					}
+				</app-checkbox-group>
+				<p class="sandbox-selection__value">
+					Value: <code>{{ multiValue() | json }}</code>
+				</p>
+			</div>
+		</div>
+		<div class="sandbox-selection__actions">
+			<button type="button" (click)="setCheckboxesProgrammatically()">Set programmatically (single: cherry, multi: banana)</button>
+			<button type="button" (click)="resetCheckboxes()">Clear both</button>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Range checkbox group"
+		description="ControlValueAccessor over {min, max} ranges (matched by min). Single mode toggles off when the selected range is clicked again."
+		[log]="rangeCheckboxLog.entries()">
+		<div class="sandbox-selection__columns">
+			<div>
+				<h3>Single</h3>
+				<app-range-checkbox-group [formControl]="rangeSingleControl">
+					@for (option of priceOptions; track option.value.min) {
+						<app-range-checkbox [value]="option.value">{{ option.label }}</app-range-checkbox>
+					}
+				</app-range-checkbox-group>
+				<p class="sandbox-selection__value">
+					Value: <code>{{ rangeSingleValue() | json }}</code>
+				</p>
+			</div>
+			<div>
+				<h3>Multi</h3>
+				<app-range-checkbox-group [multi]="true" [formControl]="rangeMultiControl">
+					@for (option of priceOptions; track option.value.min) {
+						<app-range-checkbox [value]="option.value">{{ option.label }}</app-range-checkbox>
+					}
+				</app-range-checkbox-group>
+				<p class="sandbox-selection__value">
+					Value: <code>{{ rangeMultiValue() | json }}</code>
+				</p>
+			</div>
+		</div>
+		<div class="sandbox-selection__actions">
+			<button type="button" (click)="setRangesProgrammatically()">Set programmatically</button>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Range date picker"
+		description="Default (empty) vs. initial selectedRangeValue 10 - 15 Jan 2026. Click two dates; selectedRangeValueChange is logged after each click."
+		[log]="dateRangeLog.entries()">
+		<div class="sandbox-selection__columns">
+			<div>
+				<h3>Default</h3>
+				<app-range-date-picker placeholder="dd/mm/yyyy" (selectedRangeValueChange)="onDateRangeChange($event)"></app-range-date-picker>
+			</div>
+			<div>
+				<h3>Initial range</h3>
+				<app-range-date-picker [selectedRangeValue]="initialRange" (selectedRangeValueChange)="onDateRangeChange($event)"></app-range-date-picker>
+			</div>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="Time-span picker"
+		description="ControlValueAccessor (dd.hh:mm:ss) bound via [formControl] with a programmatic setValue and disable toggle, plus a standalone instance using the [value] input and (valueChange)."
+		[log]="timeSpanLog.entries()">
+		<div class="sandbox-selection__columns">
+			<div>
+				<app-time-span-picker label="Reactive (formControl)" [formControl]="timeSpanControl" (valueChange)="onTimeSpanChange('reactive', $event)"></app-time-span-picker>
+				<p class="sandbox-selection__value">
+					Control value: <code>{{ timeSpanValue() ?? "null" }}</code>
+				</p>
+				<div class="sandbox-selection__actions">
+					<button type="button" (click)="setTimeSpanProgrammatically()">Set programmatically (02.12:45:00)</button>
+					<button type="button" (click)="toggleTimeSpanDisabled()">{{ timeSpanDisabled() ? "Enable" : "Disable" }}</button>
+				</div>
+			</div>
+			<div>
+				<app-time-span-picker label="Input-only ([value])" value="00.08:15:00" (valueChange)="onTimeSpanChange('input-only', $event)"></app-time-span-picker>
+			</div>
+		</div>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo title="Range slider" description="Default 0 - 100 step 10; currency range with prefix unit and displayWith; suffix unit; disabled." [log]="sliderLog.entries()">
+		<div class="sandbox-selection__columns">
+			<div>
+				<h3>Default</h3>
+				<app-range-slider (valueChange)="onSliderChange('default', $event)"></app-range-slider>
+			</div>
+			<div>
+				<h3>Price (prefix R, displayWith)</h3>
+				<app-range-slider
+					unit="R"
+					[prefix]="true"
+					[min]="0"
+					[max]="5000"
+					[step]="100"
+					[minValue]="500"
+					[maxValue]="3000"
+					[displayWith]="formatRand"
+					(valueChange)="onSliderChange('price', $event)"></app-range-slider>
+			</div>
+			<div>
+				<h3>Size (suffix m², accent)</h3>
+				<app-range-slider unit="m²" [color]="'accent'" [suffix]="true" [min]="20" [max]="500" [step]="5" (valueChange)="onSliderChange('size', $event)"></app-range-slider>
+			</div>
+			<div>
+				<h3>Disabled</h3>
+				<app-range-slider [disabled]="true"></app-range-slider>
+			</div>
+		</div>
+	</app-sandbox-demo>
+</app-sandbox-page>

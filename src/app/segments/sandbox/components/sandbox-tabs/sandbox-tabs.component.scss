@@ -1,0 +1,28 @@
+@use "tokens" as *;
+
+:host {
+	display: block;
+	// consumed by the vertical tab-group config (tabLabelBackgroundColor) in sandbox-tabs.component.ts
+	--sandbox-tab-label-background: #{$color-navy-dark};
+}
+
+.sandbox-tabs__panel {
+	padding: 16px;
+}
+
+.sandbox-tabs__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 16px;
+
+	.sandbox-tabs__panel & {
+		margin: 16px 0 0;
+	}
+}
+
+// tab-group positions its process divider absolutely; keep it inside the demo
+.sandbox-tabs__vertical {
+	position: relative;
+}
