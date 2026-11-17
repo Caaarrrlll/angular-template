@@ -348,7 +348,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	actions(action: string) {
+	actions(action: string): void {
 		switch (action) {
 			case "Clear": {
 				this.curRange = "";

@@ -74,7 +74,8 @@ error per component).
 
 ## Project docs
 
-- `MIGRATION_TRACKER.md` — record of the legacy `controls-to-port`
-  migration (complete).
-- `ROADMAP.md` — planned work (signals migration, navigation service).
-- `INSTRUCTIONS.md` — working instructions for development sessions.
+- `AGENTS.md` — standards, contracts rules and session process for
+  agents and developers.
+- `RATE_LIMIT_TRACKER.md` — live checklist for the task in progress.
+- `ROADMAP.md` — standing policy, open work and the best-practices audit.
+- `*_HISTORY.md`, `MIGRATION_TRACKER.md` — archives of completed work.

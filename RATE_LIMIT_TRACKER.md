@@ -6,6 +6,6 @@ Live checklist only. Completed sessions/tasks are moved to `RATE_LIMIT_TRACKER_H
 
 ## Active task
 
-None. Last completed: 2026-11-17 history files + sandbox flesh-out (see RATE_LIMIT_TRACKER_HISTORY.md).
+None. Last completed (2026-11-17): history files + sandbox flesh-out; agent/tracking setup overhaul (see RATE_LIMIT_TRACKER_HISTORY.md).
 
-Next steps (developer to choose): visually walk through `/sandbox` (`ng serve`, local env) to confirm the demos and the flagged OnPush/CVA issues; then pick from the ROADMAP.md audit — the new "Control bugs surfaced by sandbox demos" list is the highest-value candidate.
+Next steps (developer to choose): visually walk through `/sandbox` (`ng serve`, local env) to confirm the demos and the flagged OnPush/CVA issues; then pick from the ROADMAP.md audit — start with the High items AUD-04…AUD-08 (likely runtime bugs).

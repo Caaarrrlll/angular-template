@@ -38,7 +38,7 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 		this.renderer.setAttribute(this.element, "title", 'Click to copy "' + this.text + '"');
 	}
 
-	createIconAndApplyCSSClasses() {
+	createIconAndApplyCSSClasses(): void {
 		this.copyIcon = this.renderer.createElement("mat-icon") as HTMLElement;
 		this.renderer.appendChild(this.copyIcon, this.renderer.createText("content_copy"));
 		this.renderer.addClass(this.copyIcon, "mat-icon");
@@ -56,11 +56,11 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 		}
 	}
 
-	@HostListener("mouseenter") onMouseEnter() {
+	@HostListener("mouseenter") onMouseEnter(): void {
 		if (this.copyIcon) this.renderer.addClass(this.copyIcon, "copyAndPasteIconActive");
 	}
 
-	@HostListener("mouseleave") onMouseLeave() {
+	@HostListener("mouseleave") onMouseLeave(): void {
 		if (this.copyIcon) this.renderer.removeClass(this.copyIcon, "copyAndPasteIconActive");
 	}
 }

@@ -1,13 +1,11 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { _ExpandableGridDisplayOptionsInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-display-options.interface";
 import { _ExpandableGridOptionsInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-options.interface";
 import { _ExpandableGridRulesInterface } from "@shared/components/expandable-grid/core/interfaces/expandable-grid-rules.interface";
 import { _ExpandableGridRow } from "@shared/components/expandable-grid/core/types/expandable-grid-row.type";
 
-@Injectable({
-	providedIn: "root",
-})
+@Service()
 export class SandboxExpandableGridDataService {
 	private readonly formBuilder = new FormBuilder();
 

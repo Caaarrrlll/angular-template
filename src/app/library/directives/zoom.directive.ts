@@ -34,7 +34,7 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 		}
 	}
 
-	private positionZoomBox = (e: MouseEvent) => {
+	private positionZoomBox = (e: MouseEvent): void => {
 		if (this.cursorFollowZoom && this.zoomBox && this.image) {
 			this.renderer.addClass(this.zoomBox, "galleryZoomBoxVisible");
 			this.zoomBox.style.width = `${String(this.width)}px`;
@@ -65,7 +65,7 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 		}
 	};
 
-	private removeZoomBox = () => {
+	private removeZoomBox = (): void => {
 		if (this.zoomBox) {
 			this.renderer.removeClass(this.zoomBox, "galleryZoomBoxVisible");
 		}
@@ -75,7 +75,7 @@ export class ZoomDirective implements AfterViewInit, OnChanges {
 		}
 	};
 
-	private changeZoomLevel = (e: WheelEvent) => {
+	private changeZoomLevel = (e: WheelEvent): void => {
 		if (e.deltaY > 0) {
 			if (this.zoom > 1.25) {
 				this.zoom = this.zoom - 0.25;

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 
 export interface _SandboxAccordionItem {
 	title: string;
@@ -6,9 +6,7 @@ export interface _SandboxAccordionItem {
 	disabled: boolean;
 }
 
-@Injectable({
-	providedIn: "root",
-})
+@Service()
 export class SandboxAccordionDataService {
 	public readonly items: _SandboxAccordionItem[] = [
 		{

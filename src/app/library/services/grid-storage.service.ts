@@ -1,10 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { _LinQGridFilterCondition, _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
 import { LinQRequestState } from "@shared/models/lin-q-request-state";
 
-@Injectable({
-	providedIn: "root",
-})
+@Service()
 export class GridStorageService {
 	public state: LinQRequestState = {
 		skip: 0,
