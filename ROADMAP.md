@@ -211,6 +211,24 @@ Status of the API: Signal Forms (`form()` from `@angular/forms/signals`, `[formF
 
 No bulk migration. Reactive forms remain stable and the template's purpose is a fork base — mixing is officially supported. Suggested policy: use Signal Forms for new form work (sandbox demos, future fork features), convert existing controls only opportunistically when a file is already touched for other reasons, and keep `dynamic-material-dialog` + the CVA trio on reactive forms.
 
+### Template control-flow migration — legacy structural directives to `@if`/`@for`/`@switch` (planned 2026-11-16 — not started)
+
+Convert remaining legacy structural directives (`*ngIf`, `*ngFor`, `*ngSwitch`/`*ngSwitchCase`/`*ngSwitchDefault`) to the built-in control-flow blocks (`@if`, `@for`, `@switch`), per the project's template syntax standard.
+
+#### Survey (2026-11-16)
+
+Legacy directives survive in exactly **one file** — every other template in src already uses the new syntax:
+
+- `dynamic-material-dialog.component.html` — **~92 usages**: 37 `*ngIf`, 22 `*ngFor`, 20 `*ngSwitchCase`, 1 `[ngSwitch]`, plus 13 `<ng-template [ngIf]>` wrappers (the `mat-error` validation blocks) that become plain `@if` blocks.
+- Its TS imports `CommonModule` solely for these; after migration only the single `ngStyle` usage remains, replaceable with a `[style]` binding so `CommonModule` can be dropped from imports entirely.
+
+#### Notes / risks
+
+- Highest-value single-file refactor: the dialog is otherwise frozen on legacy syntax because it was marked "do not migrate" for the signals effort (see audit Medium list); this task deliberately scopes only template syntax, not the reactive-forms or signals design of the control.
+- The `*ngSwitch` chains are deeply nested per-`FormType` branches — convert `@switch` blocks one `FormType` branch at a time and keep template `$any()` casts intact (they satisfy strictTemplate typing on `unknown` values).
+- `[formControlName]`/`[(ngModel)]` interplay with `form.controls[...]` lookups inside the mat-error blocks must be preserved verbatim during the `ng-template [ngIf]` → `@if` rewrite.
+- Mechanical, template-only; verify with `ng build` (strictTemplates is the safety net) + prettier + a11y lint after conversion.
+
 ## Navigation service (TBD)
 
 Status: TBD — no real need for it right now; revisit only when a forked app actually needs claim/country-filtered menus. Lower priority than the follow-up projects below. (Legacy source `src/app/controls-to-port/services/navigation.service.ts` was deleted without migration on 2026-11-13; the mechanics below were recorded before deletion.)

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
@@ -9,6 +9,9 @@ import { MatIconModule } from "@angular/material/icon";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FabButtonComponent {
+	public readonly icon = input<string>("help");
+	public readonly ariaLabel = input<string>("Help");
+
 	public readonly emitClick = output();
 
 	public onClick(): void {

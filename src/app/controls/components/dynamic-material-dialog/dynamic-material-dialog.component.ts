@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, NgZone, OnInit, ViewChild, inject } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { AsyncPipe, CurrencyPipe } from "@angular/common";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MatButtonModule } from "@angular/material/button";
@@ -43,7 +43,8 @@ export interface _DialogOptions {
 	styleUrls: ["./dynamic-material-dialog.component.scss"],
 	standalone: true,
 	imports: [
-		CommonModule,
+		AsyncPipe,
+		CurrencyPipe,
 		FormsModule,
 		ReactiveFormsModule,
 		MatDialogModule,
