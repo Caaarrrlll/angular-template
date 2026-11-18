@@ -1,49 +1,22 @@
 import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 
+/**
+ * In-memory pagination state shared by the table and card-table paginators.
+ * It has no storage side effects: a page that should survive a reload persists it itself.
+ */
 export class _CUSTPage {
 	page = 0;
 	pageSize = 25;
 	pageTotal = 0;
 	pageSizeOptions: number[] = [25, 50, 100, 200];
 	filters: _LinQGridFilterItem[] = [];
-	lastScrollPosition = "";
 
-	constructor(pageStorageName: string) {
-		const cacheString: string | null = sessionStorage.getItem(pageStorageName);
-
-		if (typeof cacheString === "string") {
-			const cache: unknown = JSON.parse(cacheString);
-			if (cache) {
-				const parsedCache = cache as _CUSTPage;
-				this.page = parsedCache.page;
-				this.pageSize = parsedCache.pageSize;
-				this.pageTotal = parsedCache.pageTotal;
-				this.pageSizeOptions = parsedCache.pageSizeOptions;
-				this.filters = parsedCache.filters;
-				this.lastScrollPosition = parsedCache.lastScrollPosition;
-			}
-		}
-	}
-
-	setPageCache(pageStorageName: string): void {
-		sessionStorage.setItem(pageStorageName, JSON.stringify(this));
-	}
-
-	setAttributes(
-		pageStorageName: string,
-		page?: number | null,
-		pageSize?: number | null,
-		pageTotal?: number | null,
-		filters?: _LinQGridFilterItem[],
-		pageSizeOptions?: number[],
-		lastScrollPosition?: string,
-	): void {
+	/** Updates the given fields; `null`/`undefined` keeps the current value. */
+	setAttributes(page?: number | null, pageSize?: number | null, pageTotal?: number | null, filters?: _LinQGridFilterItem[], pageSizeOptions?: number[]): void {
 		this.page = page ?? this.page;
 		this.pageSize = pageSize ?? this.pageSize;
 		this.pageTotal = pageTotal ?? this.pageTotal;
 		this.pageSizeOptions = pageSizeOptions ?? this.pageSizeOptions;
 		this.filters = filters ?? this.filters;
-		this.lastScrollPosition = lastScrollPosition ?? this.lastScrollPosition;
-		this.setPageCache(pageStorageName);
 	}
 }

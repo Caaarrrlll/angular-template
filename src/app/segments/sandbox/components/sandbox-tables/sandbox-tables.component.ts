@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, Signal, signal, WritableSignal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal, WritableSignal } from "@angular/core";
 import { JsonPipe } from "@angular/common";
 import { FormGroup } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -8,7 +8,7 @@ import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
 import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { SandboxExpandableGridDataService } from "@segments/sandbox/services/sandbox-expandable-grid-data.service";
-import { _SandboxLeadRow, _SandboxVehicleRow, SandboxTablesDataService } from "@segments/sandbox/services/sandbox-tables-data.service";
+import { _SandboxLeadRow, _SandboxSort, _SandboxVehicleRow, SandboxTablesDataService } from "@segments/sandbox/services/sandbox-tables-data.service";
 import { CardTableComponent } from "@shared/components/card-table/card-table.component";
 import { ExpandableGridComponent } from "@shared/components/expandable-grid/expandable-grid.component";
 import { _ExpandableGridRow } from "@shared/components/expandable-grid/core/types/expandable-grid-row.type";
@@ -17,7 +17,6 @@ import { _LinQGridFilterCondition, _LinQGridFilterItem } from "@shared/models/li
 import { TableComponent } from "@shared/components/table/table.component";
 import { CustInputGeneral } from "@shared/models/cust-basic-controls";
 import { _CUSTPage } from "@shared/models/cust-page";
-import { LinQRequestState, LinQSort } from "@shared/models/lin-q-request-state";
 import { HighlightSearchMatchPipe } from "@shared/pipes/highlight-search-match/highlight-search-match.pipe";
 import { OrderByPipe } from "@shared/pipes/order-by/order-by.pipe";
 import { ArraySortPipe } from "@shared/pipes/sort/array-sort.pipe";
@@ -70,19 +69,15 @@ export class SandboxTablesComponent {
 	public readonly gridLog = new SandboxEventLog();
 
 	// ------------------------------------------------------------------ app-table
-	/** localStorage key the table uses to persist its sort (control-owned behaviour). */
-	public readonly tableStorageName = `sandbox-tables-vehicle-sort`;
 	public readonly tableColumns = this.tablesData.vehicleColumns;
 	public readonly tableFilter: _LinQGridFilterItem = this.tablesData.createVehicleFilter();
-	/** Mutated by the table (it writes `sorts`), so it stays a plain object rather than a signal. */
-	public readonly tableRequestState: LinQRequestState = { skip: 0, take: 5, sorts: [] };
 	public readonly tableMode: WritableSignal<_SandboxDataMode> = signal<_SandboxDataMode>(`data`);
 	public readonly tableExporting: WritableSignal<boolean> = signal<boolean>(false);
 	public readonly tableLog = new SandboxEventLog(10);
 
 	private readonly tableRows: WritableSignal<_SandboxVehicleRow[]> = signal<_SandboxVehicleRow[]>([...this.tablesData.vehicles]);
 	private readonly tableSearch: WritableSignal<string> = signal<string>(``);
-	private readonly tableSort: WritableSignal<LinQSort> = signal<LinQSort>({ field: `listedDate`, direction: `desc` });
+	private readonly tableSort: WritableSignal<_SandboxSort> = signal<_SandboxSort>({ field: `listedDate`, direction: `desc` });
 	private readonly tablePage: WritableSignal<{ page: number; pageSize: number }> = signal({ page: 0, pageSize: 5 });
 
 	private readonly tableMatches: Signal<_SandboxVehicleRow[]> = computed(() =>
@@ -95,9 +90,7 @@ export class SandboxTablesComponent {
 		return this.toModeObservable(this.tableMode(), this.tableMatches().slice(page * pageSize, (page + 1) * pageSize));
 	});
 
-	public readonly tableCustPage: Signal<_CUSTPage> = computed(() =>
-		this.buildPage(`sandbox-tables-vehicle-page`, this.tablePage(), this.tableMode() === `data` ? this.tableMatches().length : 0, [5, 10, 25]),
-	);
+	public readonly tableCustPage: Signal<_CUSTPage> = computed(() => this.buildPage(this.tablePage(), this.tableMode() === `data` ? this.tableMatches().length : 0, [5, 10, 25]));
 
 	// ------------------------------------------------------------- app-card-table
 	public readonly cardWrapper = this.tablesData.leadCardWrapper;
@@ -133,9 +126,7 @@ export class SandboxTablesComponent {
 		return this.toModeObservable(this.cardMode(), this.cardMatches().slice(page * pageSize, (page + 1) * pageSize));
 	});
 
-	public readonly cardCustPage: Signal<_CUSTPage> = computed(() =>
-		this.buildPage(`sandbox-tables-lead-page`, this.cardPage(), this.cardMode() === `data` ? this.cardMatches().length : 0, [3, 6, 12]),
-	);
+	public readonly cardCustPage: Signal<_CUSTPage> = computed(() => this.buildPage(this.cardPage(), this.cardMode() === `data` ? this.cardMatches().length : 0, [3, 6, 12]));
 
 	// ------------------------------------------------------ app-linq-grid-filters
 	public readonly showcaseFilters: _LinQGridFilterItem[] = this.tablesData.createFilterShowcase();
@@ -185,16 +176,6 @@ export class SandboxTablesComponent {
 			return (typeof left === `string` && typeof right === `string` ? left.localeCompare(right) : Number(left) - Number(right)) * factor;
 		};
 	});
-
-	public constructor() {
-		// The table restores a cached sort from localStorage in ngAfterContentInit; mirror it once rendered.
-		afterNextRender(() => {
-			const sort = this.tableRequestState.sorts.at(0);
-			if (sort?.field) {
-				this.tableSort.set(sort);
-			}
-		});
-	}
 
 	// ------------------------------------------------------------ expandable grid
 	public onGridDelete(row: _ExpandableGridRow): void {
@@ -395,9 +376,9 @@ export class SandboxTablesComponent {
 		}
 	}
 
-	/** `_CUSTPage` reads sessionStorage by name in its constructor; these names are never written, so it stays in-memory. */
-	private buildPage(storageName: string, state: { page: number; pageSize: number }, total: number, sizes: number[]): _CUSTPage {
-		const page = new _CUSTPage(storageName);
+	/** A fresh in-memory `_CUSTPage` for the paginator. */
+	private buildPage(state: { page: number; pageSize: number }, total: number, sizes: number[]): _CUSTPage {
+		const page = new _CUSTPage();
 		page.page = state.page;
 		page.pageSize = state.pageSize;
 		page.pageTotal = total;

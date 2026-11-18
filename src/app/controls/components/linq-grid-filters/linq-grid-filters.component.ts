@@ -180,7 +180,7 @@ export class LinqGridFiltersComponent implements OnChanges {
 	}
 
 	private rehydrateFilterDates(item: _LinQGridFilterItem): void {
-		// cached filters come back from sessionStorage as ISO strings
+		// filters restored from JSON (e.g. a fork's own cache) carry dates as ISO strings
 		if (item.active && item.config.type === "date" && item.config.options.date) {
 			item.config.options.date = this.dateAdapter.parse(item.config.options.date, "yyyy/MM/dd") ?? item.config.options.date;
 		}

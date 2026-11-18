@@ -24,7 +24,7 @@
 				matSort
 				multiTemplateDataRows
 				[matSortActive]="defaultSort"
-				[matSortDirection]="'desc'"
+				[matSortDirection]="defaultSortDirection"
 				(matSortChange)="announceSortChange($event)">
 				@for (col of displayedColumns; track col; let i = $index) {
 					<ng-container matColumnDef="{{ col }}" [sticky]="tableConfig[i].sticky">
@@ -288,12 +288,7 @@
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand; sticky: true"></tr>
-				<tr
-					id="{{ row.stockNumber }}"
-					mat-row
-					*matRowDef="let row; columns: columnsToDisplayWithExpand"
-					class="element-row"
-					[class.selected]="row === selectedVehicle || row.stockNumber === scrollToId"></tr>
+				<tr mat-row *matRowDef="let row; columns: columnsToDisplayWithExpand" class="element-row"></tr>
 				<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
 				<tr class="mat-row" *matNoDataRow>
 					<td class="mat-cell">No records available</td>

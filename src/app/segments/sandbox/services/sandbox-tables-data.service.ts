@@ -5,7 +5,6 @@ import { _CardTableParentDataContext } from "@shared/components/card-table/card-
 import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 import { _TableTypes } from "@shared/components/table/cust-table.enum";
 import { _CustTableInterface } from "@shared/components/table/cust-table.interface";
-import { LinQSort } from "@shared/models/lin-q-request-state";
 
 /** Vehicle row used by the `app-table` and search/pipes demos (type alias so it is assignable to `Record<string, unknown>`). */
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- type alias needed: interfaces are not assignable to Record<string, unknown> (table row APIs)
@@ -257,7 +256,7 @@ export class SandboxTablesDataService {
 		return term ? rows.filter((row) => `${row.make} ${row.model} ${row.reference}`.toLowerCase().includes(term)) : [...rows];
 	}
 
-	public sortVehicles(rows: _SandboxVehicleRow[], sort: LinQSort): _SandboxVehicleRow[] {
+	public sortVehicles(rows: _SandboxVehicleRow[], sort: _SandboxSort): _SandboxVehicleRow[] {
 		const field = sort.field as keyof _SandboxVehicleRow;
 		const factor = sort.direction === `asc` ? 1 : -1;
 		return [...rows].sort((a, b) => this.compare(a[field], b[field]) * factor);
@@ -433,4 +432,10 @@ export class SandboxTablesDataService {
 		}
 		return Number(left) - Number(right);
 	}
+}
+
+/** Sort state the sandbox applies client-side (from the table's `announceSortChange` action). */
+export interface _SandboxSort {
+	field: string;
+	direction: `asc` | `desc`;
 }

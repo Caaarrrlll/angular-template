@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatSortModule, Sort } from "@angular/material/sort";
+import { MatSortModule, Sort, SortDirection } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
 import {
@@ -55,7 +55,6 @@ export class CardTableComponent implements OnChanges {
 	@Input() public parentDataProcess: ((context: _CardTableParentDataContext) => ReturnType<NonNullable<ListCardComponent["parentDataProcess"]>>) | undefined;
 	@Input() public parentButtonProcess: ((context: _CardTableParentButtonContext) => ReturnType<NonNullable<ListCardComponent["parentButtonProcess"]>>) | undefined;
 	@Input() public claims: string[] = [];
-	@Input() public storageName?: string;
 	@Input() public spinner?: number;
 	@Input() public showAddButton = true;
 	@Input() public showSortButton = false;
@@ -65,6 +64,8 @@ export class CardTableComponent implements OnChanges {
 	@Input() public showUpperToggle = false;
 	@Input() public upperToggle?: CustInputGeneral;
 	@Input() public defaultSort = "";
+	/** Initial sort arrow for `defaultSort`; later changes are reported through the `announceSortChange` action. */
+	@Input() public defaultSortDirection: SortDirection = "desc";
 	/** Hide the linq-grid-filters bar (refresh/add/sort/custom buttons included) for a plain card list. */
 	@Input() public showFilterBar = true;
 	/** Hide the paginator, e.g. when the list is not paged; `custPage` is then not read. */
@@ -78,9 +79,6 @@ export class CardTableComponent implements OnChanges {
 	public tableButtonConfig!: _CustCardButtonTableInterface[];
 
 	public displayedColumns: string[] = ["lead"];
-	public openInNewTab = false;
-	public selectedVehicle: unknown;
-	public scrollToId = "";
 
 	/** Re-reads `tableWrapper` whenever it gets a new reference (it used to be read once on init). */
 	public ngOnChanges(): void {
@@ -90,21 +88,13 @@ export class CardTableComponent implements OnChanges {
 		this.tableButtonConfig = this.tableWrapper.cardButtonTable;
 	}
 
-	public buttonEmit(vehicle: unknown, action: string): void {
+	public buttonEmit(data: unknown, action: string): void {
 		const retObj = {
 			action: action,
-			data: vehicle,
+			data: data,
 		};
 
 		this.buttonActionOut.emit(retObj);
-		if (action === "View") {
-			this.selectedVehicle = vehicle;
-			if ((vehicle as Record<string, unknown>)["stockNumber"] && !this.openInNewTab) {
-				localStorage.setItem("lastScrollPosition", (vehicle as Record<string, unknown>)["stockNumber"] as string);
-			} else {
-				this.scrollToId = "";
-			}
-		}
 	}
 
 	public announceSortChange($event: Sort): void {

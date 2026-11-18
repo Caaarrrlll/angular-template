@@ -3,7 +3,7 @@
 	description="table, card-table, expandable-grid, linq-grid-filters, plus a search table using the searchMatch, orderBy, sort and thousandSeparator pipes.">
 	<app-sandbox-demo
 		title="Table"
-		description="Config-driven mat-table: one column per renderer type (textLink, titleText, spaceUpperCase, date, currency, odometer, boolean, yesNo, percentage, dictionary, listPopupHover, favouriteButton, buttonPrimary). Sorting, paging and the filter bar only emit; the page filters, sorts and slices the data and hands the table a new observable. Every buttonActionOut action is logged."
+		description="Config-driven mat-table: one column per renderer type (textLink, titleText, spaceUpperCase, date, currency, odometer, boolean, yesNo, percentage, dictionary, listPopupHover, favouriteButton, buttonPrimary). Sorting, paging and the filter bar only emit; the page filters, sorts and slices the data and hands the table a new observable. Nothing is persisted: defaultSort + defaultSortDirection set the initial arrow. Every buttonActionOut action is logged."
 		[log]="tableLog.entries()">
 		<div class="sandbox-tables__toolbar" role="group" aria-label="Table data state">
 			<span class="sandbox-tables__label">listObservable:</span>
@@ -16,8 +16,6 @@
 		</div>
 		<app-table
 			[tableConfig]="tableColumns"
-			[requestState]="tableRequestState"
-			[storageNameIn]="tableStorageName"
 			defaultSort="listedDate"
 			[listObservable]="tableList()"
 			[custPage]="tableCustPage()"

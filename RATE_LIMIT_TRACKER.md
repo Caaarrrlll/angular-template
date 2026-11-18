@@ -6,6 +6,6 @@ Live checklist only. Completed sessions/tasks are moved to `RATE_LIMIT_TRACKER_H
 
 ## Active task
 
-None. Last completed (2026-11-18): small-controls batch AUD-18 / AUD-21 / AUD-29 (builds/lint clean; sandbox pages not browser-checked); see RATE_LIMIT_TRACKER_HISTORY.md.
+None. Last completed (2026-11-18): AUD-25 table storage + LinQ request-state removal (builds/lint clean; /sandbox/tables not browser-checked); see RATE_LIMIT_TRACKER_HISTORY.md.
 
-Next steps: developer commits, then AUD-25 (table storage side effects). Also open: AUD-15 (input directives), AUD-26 (chips / key-value), AUD-27 (pipes/directives); AUD-02 stays parked until HTTP wiring; AUD-48 versioning as a separate task.
+Next steps (developer to choose): open audit items AUD-15 (input directives), AUD-26 (chips / key-value), AUD-27 (pipes/directives), AUD-50 (OpenPageService storage key — needs a decision); AUD-02 stays parked until HTTP wiring; AUD-48 versioning as a separate task.

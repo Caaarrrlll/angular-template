@@ -1,17 +1,16 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, ChangeDetectionStrategy, Component, ComponentRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ComponentRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatSortModule, Sort } from "@angular/material/sort";
+import { MatSortModule, Sort, SortDirection } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
 import { LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
 import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
-import { LinQRequestState, LinQSort } from "@shared/models/lin-q-request-state";
 import { _CUSTPage } from "@shared/models/cust-page";
 import { ApiResponsePipe } from "@shared/pipes/api-response/api-response.pipe";
 import { DayAndHoursPipe } from "@shared/pipes/day-and-hours/day-and-hours.pipe";
@@ -47,14 +46,14 @@ import { PASSED_INFO } from "./table-constants.const";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{ provide: PASSED_INFO, useValue: "" }],
 })
-export class TableComponent implements AfterContentInit, OnChanges {
+export class TableComponent implements OnChanges {
 	@Input() public filters?: _LinQGridFilterItem;
 	@Input() public listObservable?: Observable<unknown>;
-	@Input() public storageNameIn!: string;
 	@Input({ required: true }) public tableConfig!: _CustTableInterface[];
-	@Input({ required: true }) public requestState!: LinQRequestState;
 	@Input() public custPage?: _CUSTPage;
 	@Input() public defaultSort = "";
+	/** Initial sort arrow for `defaultSort`; later changes are reported through the `announceSortChange` action. */
+	@Input() public defaultSortDirection: SortDirection = "desc";
 	@Input() public showCustomButton = false;
 	@Input() public showAddButton = false;
 	/**
@@ -67,10 +66,7 @@ export class TableComponent implements AfterContentInit, OnChanges {
 	@Output() public buttonActionOut: EventEmitter<unknown> = new EventEmitter<unknown>();
 
 	@Input() public exporting = false;
-	public openInNewTab = false;
-	public selectedVehicle: unknown;
 	public displayedColumns: string[] = [];
-	public scrollToId = "";
 	public columnsToDisplayWithExpand: string[] = [];
 	public expandedElement: unknown = null;
 	public displayedColumnsFilter: { display: string; activated: boolean; value: string }[] = [];
@@ -94,11 +90,6 @@ export class TableComponent implements AfterContentInit, OnChanges {
 		this.hasFilters = this.filters != null;
 	}
 
-	/** One-time restore of the stored sort and scroll position (storage side effects: see AUD-25). */
-	public ngAfterContentInit(): void {
-		this.loadConfig();
-	}
-
 	private mapColumns(): void {
 		this.displayedColumnsFilter = this.tableConfig.map((data: _CustTableInterface) => ({ display: data.display, activated: true, value: data.colName }));
 		this.displayedColumns = this.tableConfig.map((item: _CustTableInterface): string => item.colName);
@@ -108,30 +99,6 @@ export class TableComponent implements AfterContentInit, OnChanges {
 		if (this.expandable) {
 			this.columnsToDisplayWithExpand = ["expand", ...this.displayedColumns];
 		}
-	}
-
-	private loadConfig(): void {
-		this.openInNewTab = localStorage.getItem("operations_open_in_new_tab") === "true";
-
-		if (!this.openInNewTab) {
-			this.scrollToId = localStorage.getItem("lastScrollPosition") ?? "";
-			this.scrollToPosition();
-		}
-
-		const cachedSorts: unknown = JSON.parse(localStorage.getItem(this.storageNameIn) ?? "null");
-		if (cachedSorts) {
-			this.requestState.sorts = cachedSorts as LinQSort[];
-		} else {
-			this.requestState.sorts = [
-				{
-					field: this.defaultSort,
-					direction: "desc",
-				},
-			];
-			localStorage.setItem(this.storageNameIn, JSON.stringify(this.requestState.sorts));
-		}
-
-		this.defaultSort = this.requestState.sorts[0].field;
 	}
 
 	public buttonEmit(object: unknown, action: string, colName?: string): void {
@@ -147,52 +114,16 @@ export class TableComponent implements AfterContentInit, OnChanges {
 		};
 
 		this.buttonActionOut.emit(retObj);
-		if (action === "View") {
-			this.selectedVehicle = object;
-			if ((object as Record<string, unknown>)["stockNumber"] && !this.openInNewTab) {
-				localStorage.setItem("lastScrollPosition", (object as Record<string, unknown>)["stockNumber"] as string);
-			} else {
-				this.scrollToId = "";
-			}
-		}
 	}
 
+	/** Reports the new sort (Angular Material's `Sort`) to the parent, which fetches/orders the data; button columns are ignored. */
 	public announceSortChange($event: Sort): void {
 		const matchingItem = this.tableConfig.find((item: _CustTableInterface) => item.colName === $event.active);
 		if (matchingItem?.type?.includes("button")) {
 			return;
 		}
 
-		this.requestState.sorts = [
-			{
-				field: $event.active,
-				direction: $event.direction === "asc" ? "asc" : "desc",
-			},
-		];
-		localStorage.setItem(this.storageNameIn, JSON.stringify(this.requestState.sorts));
-
 		this.buttonEmit($event, "announceSortChange");
-	}
-
-	/**
-	 * Replaces the legacy `setTimeout` recursion: retries with
-	 * `requestAnimationFrame` until the target row exists (or ~6s pass).
-	 */
-	private scrollToPosition(deadline: number = performance.now() + 6000): void {
-		const rowid = localStorage.getItem("lastScrollPosition");
-		const rows = Array.from(document.querySelectorAll<HTMLElement>(".mat-row"));
-		const selectedRowIdx = rows.findIndex((row: HTMLElement) => row.id === rowid);
-		if (selectedRowIdx > -1) {
-			if (selectedRowIdx > 0) {
-				rows[selectedRowIdx - 1].scrollIntoView();
-			}
-			return;
-		}
-		if (performance.now() < deadline) {
-			requestAnimationFrame(() => {
-				this.scrollToPosition(deadline);
-			});
-		}
 	}
 
 	public setInjector(row: unknown): void {

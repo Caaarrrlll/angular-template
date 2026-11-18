@@ -553,3 +553,19 @@ Developer will commit afterwards; AUD-25 is next.
   - sandbox-buttons.component.html (fab floating=false), sandbox-small-controls.component.html/.ts (slide-toggle "false" + read-only, count-down Restart), sandbox-upload.component.html (description), sandbox-misc.component.html/.ts (search-address always rendered + country demo)
 - [✓] Step 5 — verify + ROADMAP ticks + clean boundary
   - dev + prod build pass (prod: pre-existing initial-bundle warning only); eslint 0 and prettier clean on the 15 touched files (one prettier line-wrap fixed in sandbox-small-controls.component.html); /sandbox/buttons, /sandbox/small-controls, /sandbox/upload, /sandbox/misc **not browser-checked**; section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): AUD-25 remove table storage + LinQ request-state (developer request)
+
+Developer decisions (2026-11-18): remove all niche persistence from the table/grid code (no localStorage/sessionStorage, no `lastScrollPosition` / `stockNumber` / "View" special case); keep `_CUSTPage` as a plain in-memory pagination model; the custom LinQ backend will not be available, so drop the table's `requestState` input and delete `GridStorageService` + the `LinQRequestState`/`LinQSort` model. The linq-grid-filters bar and `_LinQGridFilterItem` stay.
+
+- [✓] Step 1 — controls (table .selected style removed with the selection)
+  - [✓] 1a table: remove `requestState`, `storageNameIn`, storage reads/writes, scroll restore, `openInNewTab`, `selectedVehicle`/`scrollToId`/`stockNumber`; new `defaultSortDirection` input drives the arrow — table.component.ts/.html
+  - [✓] 1b card-table: remove `storageName`, storage write, `openInNewTab`/`selectedVehicle`/`scrollToId`, row `stockNumber` id; `defaultSortDirection` input — card-table.component.ts/.html
+- [✓] Step 2 — library
+  - [✓] 2a `_CUSTPage`: in-memory only (no constructor storage, no `setPageCache`, no `lastScrollPosition`; `setAttributes` without the storage name) — cust-page.ts
+  - [✓] 2b delete grid-storage.service.ts and lin-q-request-state.ts; SERVICES_CONTRACTS.md entry removed; linq-grid-filter-item.ts comment updated
+- [✓] Step 3 — sandbox (local `_SandboxSort` type; afterNextRender sort mirror removed; table description notes nothing is persisted): sandbox-tables.component.ts/.html, sandbox-tables-data.service.ts (local sort type), `buildPage` without storage names
+- [✓] Step 4 — verify + ROADMAP tick + clean boundary
+  - dev + prod build pass (prod: pre-existing initial-bundle warning only); eslint 0 and prettier clean on the 10 touched source files + table SCSS + SERVICES_CONTRACTS.md (2 prettier line-wraps fixed); no README/AGENTS/CLAUDE mentions; /sandbox/tables **not browser-checked**
+  - remaining storage: LoginService token (AUD-39 policy) and OpenPageService `operations_open_in_new_tab` → logged as AUD-50
+  - section moved to RATE_LIMIT_TRACKER_HISTORY.md

@@ -2,6 +2,8 @@
 
 This file documents the shared services in `src/app/library/services`. Review it before creating a new service, and update it whenever a service is added, changed, or removed.
 
+> `GridStorageService` (sessionStorage cache for grid filters and the LinQ request state) and the `LinQRequestState`/`LinQSort` model were removed on 2026-11-18 (AUD-25): the custom LinQ backend they served is not part of the template, and the grid controls no longer persist anything. A fork that wants filters or paging to survive a reload stores the filter-bar outputs / `_CUSTPage` itself.
+
 ## Service Index
 
 | Service                           | File                                    | Provided by  | Summary                                                                                                            |
@@ -16,7 +18,6 @@ This file documents the shared services in `src/app/library/services`. Review it
 | `LoginService`                    | `login.service.ts`                      | `@Service()` | Current-user state and JWT decoding/claims helpers (no authentication flows).                                      |
 | `OpenPageService`                 | `open-page.service.ts`                  | `@Service()` | Routes to a URL in-app or in a new tab based on a persisted user preference.                                       |
 | `SearchRetainService`             | `search-retain.service.ts`              | `@Service()` | Global search-term state retained across grids.                                                                    |
-| `GridStorageService`              | `grid-storage.service.ts`               | `@Service()` | Session-storage cache for grid filters and request state.                                                          |
 
 ## AppShellService
 
@@ -110,22 +111,6 @@ This file documents the shared services in `src/app/library/services`. Review it
   - `getSearchData` — `Observable<string>`, current search term (defaults to `""`).
   - `changeValue(searchValue: string): void` — pushes a new search term.
   - `clearValue(): void` — resets to `""`.
-
-## GridStorageService
-
-- **Purpose:** Caches grid filter setups and LinQ request state in `sessionStorage`.
-- **Related models:** `_LinQGridFilterItem` (`src/app/library/models/linq-grid-filter-item`) and `LinQRequestState` (`src/app/library/models/lin-q-request-state`).
-- **Public API:**
-
-| Method                 | Signature                                                            | Notes                                                                                       |
-| ---------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `getCachedFilters`     | `getCachedFilters(name: string): _LinQGridFilterItem[]`              | Parses the cached setup and rehydrates `Date` values for active `date`/`dateRange` filters. |
-| `setCachedFilters`     | `setCachedFilters(name: string, setup: _LinQGridFilterItem[]): void` | Serializes the filter setup.                                                                |
-| `setLinQCachedFilters` | `setLinQCachedFilters(name: string, setup: LinQRequestState): void`  | Serializes the request state.                                                               |
-| `getLinQCachedFilters` | `getLinQCachedFilters(name: string): LinQRequestState`               | Parses the cached request state.                                                            |
-| `state`                | `LinQRequestState` (property)                                        | Default request state (`skip`/`take`/`sorts`).                                              |
-
-- **Porting note:** the legacy service used the Kendo `DataSourceRequestState`/`GridFilter` types; the port replaces them with the rebuilt minimal models (best-effort rebuild per decision, 2026-11-12).
 
 ## LoggerService
 

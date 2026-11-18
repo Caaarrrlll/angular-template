@@ -17,8 +17,7 @@ export interface _LinQGridFilterConfig {
 
 /**
  * Minimal rebuild of the legacy linq grid filter item (legacy source was not
- * present in the repo; shape inferred from the cached-filter usage in
- * `GridStorageService` and the filter-bar consumers).
+ * present in the repo; shape inferred from the filter-bar consumers).
  */
 export interface _LinQGridFilterItem {
 	name: string;
