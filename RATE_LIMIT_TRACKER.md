@@ -37,9 +37,14 @@ Next steps (developer to choose): visually walk through `/sandbox` (`ng serve`, 
         - headless Edge: AUD-04 no NG05201 + lens background set; AUD-05 no-buttons card renders; AUD-07 ticks follow programmatic set for both groups, single mode correct, inner mat-checkbox pointer-events none; AUD-06 dialog slider value 10 + file attached + submit returns {deposit, attachments}, window slider shows R20,000; AUD-08 noSpace/phone errors correct, identical on a second open
         - caveat: the second open uses a fresh setup from the sandbox factory, so "reopen the same setup object" is covered by code (mutation removed), not by the probe
         - remaining console warning on the new dialog: ngModel + formControlName (existing AUD-10)
-[•] STOP — developer review of Step 2
-[ ] Step 3: AUD-28 + AUD-27 highlight-search-match (escape text + regex) — same file
-[ ] STOP — developer review of Step 3
+[✓] STOP — developer review of Step 2 (approved 2026-11-18: "proceed with the next step")
+[✓] Step 3: AUD-28 + AUD-27 highlight-search-match (escape text + regex) — same file
+    - touching: highlight-search-match.pipe.ts, PIPES_CONTRACTS.md, sandbox-tables.component.{ts,html}
+    - pipe now matches the term literally (indexOf, case-insensitive) and HTML-escapes all text on every path (match, no match, no term); edge spaces → &nbsp; without the extra spans
+    - sandbox no longer pre-escapes the term; added an untrusted-sample line as a regression case
+    - verified: dev build, eslint, prettier; headless Edge with terms toyota, (cross), ., <b>, &, onerror, zzz → no injected elements, literal text, correct <mark>, no console warnings
+    - found + fixed during verify: the first version returned unescaped text on the no-match path (Angular's sanitizer stripped onerror but <img>/<b> still rendered)
+[•] STOP — developer review of Step 3
 [ ] Step 4: AUD-01 (library→controls model move) + AUD-30 (single dev-gating flag)
 [ ] STOP — developer review of Step 4
 [ ] Step 5: AUD-03 — clear the 47 pre-existing @angular-eslint errors

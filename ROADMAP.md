@@ -50,13 +50,13 @@ The demos work around these; no control was changed.
 - [ ] **AUD-24 config mapped once:** info-card, list-card, table and linq-grid-filters read their config inputs only on init (later changes ignored); linq-grid-filters mutates the passed items.
 - [ ] **AUD-25 table storage side effects:** writes/reads localStorage (`lastScrollPosition`, sort, `operations_open_in_new_tab`); hard-coded `desc` arrow; `_CUSTPage` reads sessionStorage in its constructor.
 - [ ] **AUD-26 chips / key-value:** chips mutates input objects + inline hex; key-value v2 inline colours; key-value/info-card clickable `mat-icon`/`div`/`a` (a11y; overlaps AUD-03).
-- [ ] **AUD-27 library pipes/directives:** `highlight-search-match.pipe.ts:25` builds `new RegExp` from raw input (throws on `(`; fix with AUD-28); `orderBy`/`sort` sort in place; `thousandSeparator` blanks `0`; `copyText` classes have no styles; `safe` pipe (resource-URL only) used on `<img [src]>` in `dynamic-window.component.html:28`.
+- [ ] **AUD-27 library pipes/directives:** ~~`highlight-search-match` builds `new RegExp` from raw input~~ (fixed 2026-11-18 with AUD-28: literal matching); `orderBy`/`sort` sort in place; `thousandSeparator` blanks `0`; `copyText` classes have no styles; `safe` pipe (resource-URL only) used on `<img [src]>` in `dynamic-window.component.html:28`.
 - [ ] **AUD-29 search-address:** no guard for a missing `google` global; country hard-coded to `za`.
 - [ ] **AUD-42 dynamic-window drops `required`** _(code reading, found 2026-11-18)_: `setValidators([phoneValidator | emailValidator | noSpaceValidator])` replaces the `required` validator set just before it (`dynamic-window.component.ts` ~L74-90 and ~L111-126), so a required phone/email/nospace field is not required.
 
 #### Medium
 
-- [ ] **AUD-28 XSS surface in `highlight-search-match.pipe`** (`bypassSecurityTrustHtml`): the injected `<mark>` markup is fixed, but surrounding text is inserted unescaped — injection vector if highlighted data is ever user-supplied. (`safe.pipe` is a documented trusted-content-only escape hatch; `zoomable-image` pre-sanitizes properly.)
+- [✓] **AUD-28 XSS surface in `highlight-search-match.pipe`** — fixed 2026-11-18: all text HTML-escaped on every path before the `<mark>` is added; browser-verified with hostile text and terms.
 - [ ] **AUD-30 Two dev-gating flags disagree:** `environment.isLocal` gates sandbox routes, but `environmentName !== "production"` gates nav `showSandbox`, logger, error-handling. Unify on one flag.
 - [ ] **AUD-31 No `DIRECTIVES_CONTRACTS.md`** for the 12 `library/directives` files — breaks the Contracts rule in AGENTS.md.
 - [✓] **AUD-32 Mixed service decorators** — resolved 2026-11-17: the remaining 4 `@Injectable({ providedIn: "root" })` services moved to `@Service()`; now lint-enforced.

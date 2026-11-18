@@ -120,11 +120,12 @@
 
 	<app-sandbox-demo
 		title="Search table (pipes)"
-		description="Plain HTML table over fixed, trusted mock data: searchMatch highlights the term (escaped before it reaches the pipe's RegExp), orderBy sorts with a comparator (click a header), thousandSeparator groups price and mileage, and sort lists the matching makes A-Z.">
+		description="Plain HTML table over fixed, trusted mock data: searchMatch highlights the term (matched literally, text HTML-escaped - see the untrusted sample line), orderBy sorts with a comparator (click a header), thousandSeparator groups price and mileage, and sort lists the matching makes A-Z.">
 		<label class="sandbox-tables__search">
 			<span>Search reference, make or model</span>
 			<input type="search" [value]="searchTerm()" (input)="onSearchInput($event)" placeholder="e.g. toyota, VH-100, cross" />
 		</label>
+		<p class="sandbox-tables__untrusted">Untrusted sample (AUD-28 regression): <span [innerHTML]="searchUnsafeSample | searchMatch: searchPattern()"></span></p>
 
 		<div class="sandbox-tables__table-scroll">
 			<table class="sandbox-tables__table">

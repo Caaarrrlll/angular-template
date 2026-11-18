@@ -19,7 +19,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 | `FilterPipe`                | `arrayFilter`           | `array-filter/array-filter.pipe.ts`                       | Yes          | Filters an array with an object of property values or a predicate function.                      |
 | `FormatNullTextPipe`        | `formatNull`            | `format-null/format-null.pipe.ts`                         | Yes          | Replaces null or undefined with a fallback string.                                               |
 | `GroupByDatePipe`           | `groupByDate`           | `group-by-date/group-by-date.pipe.ts`                     | Yes          | Groups a collection by its `entryDate` property into date/leadHistory pairs.                     |
-| `HighlightSearchMatchPipe`  | `searchMatch`           | `highlight-search-match/highlight-search-match.pipe.ts`   | Yes          | Wraps the first case-insensitive match of a search term in a `<mark>` tag.                       |
+| `HighlightSearchMatchPipe`  | `searchMatch`           | `highlight-search-match/highlight-search-match.pipe.ts`   | Yes          | Wraps the first case-insensitive literal match of a search term in `<mark>`; HTML-escapes text.  |
 | `KebabToTitlePipe`          | `kebabToTitle`          | `kebab-to-title/kebab-to-title.pipe.ts`                   | Yes          | Replaces the first hyphen in kebab-case text with a space.                                       |
 | `NameToInitialsPipe`        | `nameToInitials`        | `name-to-initials/name-to-initials.pipe.ts`               | Yes          | Takes the first two initials of a name and uppercases them.                                      |
 | `NearestPipe`               | `nearest`               | `nearest/nearest.pipe.ts`                                 | Yes          | Rounds a value to the nearest multiple of a unit.                                                |
@@ -105,16 +105,16 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 
 ## HighlightSearchMatchPipe (template name `searchMatch`)
 
-- **Purpose:** Wraps the first case-insensitive match of the search argument in a `<mark>` tag and preserves leading/trailing spaces with `&nbsp;`.
+- **Purpose:** Wraps the first case-insensitive match of the search argument in a `<mark>` tag. Every part of the text is HTML-escaped first, and a space touching the match is rendered as `&nbsp;`.
 - **Inputs:**
   - `value`: text to search in.
-  - `args`: search string (used as a case-insensitive regex). Without an argument the text is returned unchanged.
-- **Output:** Original typed `SafeValue` from `bypassSecurityTrustHtml`; bind it with the `innerHTML` property and the `safe` approach. Only use with trusted content displayed to end users.
+  - `args`: search string, matched literally and case-insensitively (regex characters such as `(` or `.` have no special meaning). Without an argument, or without a match, the text is returned HTML-escaped as a plain string (still meant for `[innerHTML]`).
+- **Output:** `SafeValue` from `bypassSecurityTrustHtml` when there is a match; bind it with `[innerHTML]`. Safe for user-supplied text and terms because all text is escaped before the `<mark>` markup is added.
 - **Example:**
   ```html
   <span [innerHTML]="paragraph | searchMatch: searchTerm"></span>
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/highlight-search-match.pipe.ts`; injects `DomSanitizer`; now standalone.
+- **Notes:** Migrated from `src/app/controls-to-port/pipes/highlight-search-match.pipe.ts`; injects `DomSanitizer`; now standalone. 2026-11-18 (AUD-27/AUD-28): switched from regex to literal matching and added HTML escaping; no longer wraps the edge spaces in extra `<span>`s.
 
 ## KebabToTitlePipe
 

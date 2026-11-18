@@ -163,12 +163,11 @@ export class SandboxTablesComponent {
 		{ field: `mileage`, display: `Mileage (km)` },
 	];
 
-	/** Regex-escaped term: `searchMatch` builds a RegExp from its argument. */
-	public readonly searchPattern: Signal<string> = computed(() =>
-		this.searchTerm()
-			.trim()
-			.replace(/[.*+?^${}()|[\]\\]/g, `\\$&`),
-	);
+	/** Hostile-looking text: must render as literal text, with only the matched part wrapped in <mark>. */
+	public readonly searchUnsafeSample = `<img src=x onerror="alert(1)"> Toyota (Cross) & <b>not bold</b>`;
+
+	/** Trimmed term for `searchMatch` (the pipe matches literally and escapes HTML itself). */
+	public readonly searchPattern: Signal<string> = computed(() => this.searchTerm().trim());
 
 	/** Fresh array per change: `orderBy` and `sort` both sort their input in place. */
 	public readonly searchRows: Signal<_SandboxVehicleRow[]> = computed(() => this.tablesData.filterVehicles(this.tablesData.vehicles, this.searchTerm()));

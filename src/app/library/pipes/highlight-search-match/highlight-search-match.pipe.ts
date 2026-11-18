@@ -1,13 +1,25 @@
 import { inject, Pipe, PipeTransform } from "@angular/core";
 import { DomSanitizer, SafeValue } from "@angular/platform-browser";
 
+const HTML_ESCAPES: Record<string, string> = {
+	"&": `&amp;`,
+	"<": `&lt;`,
+	">": `&gt;`,
+	'"': `&quot;`,
+	"'": `&#39;`,
+};
+
 /**
  * If a piece of text on the page matches the string value of the search input,
  * the text that matches is wrapped in a `<mark>` tag so it can be highlighted
  * with css.
  *
+ * The search term is matched literally (case-insensitive, first match only) and every
+ * part of the text is HTML-escaped before the `<mark>` is added, so the result is safe
+ * to bind with `[innerHTML]` even when the text or the term is user-supplied.
+ *
  * @example
- *      {{ paragraph | searchMatch: searchTerm }}
+ *      <span [innerHTML]="paragraph | searchMatch: searchTerm"></span>
  */
 @Pipe({
 	name: "searchMatch",
@@ -17,29 +29,27 @@ export class HighlightSearchMatchPipe implements PipeTransform {
 	private readonly sanitizer = inject(DomSanitizer);
 
 	public transform(value: string | undefined, args?: string): string | SafeValue {
+		// The output is meant for [innerHTML], so text is escaped on every path, not only when there is a match.
 		if (!args || !value) {
-			return value ?? "";
+			return escapeHtml(value ?? ``);
 		}
 
-		const regex = new RegExp(args, "i");
-		const match = value.match(regex);
-
-		if (!match) {
-			return value;
+		const index = value.toLowerCase().indexOf(args.toLowerCase());
+		if (index === -1) {
+			return escapeHtml(value);
 		}
 
-		const indexOfMatch = value.indexOf(match[0]);
-		const endIndexOfMatch = value.indexOf(match[0][match[0].length - 1], indexOfMatch);
+		const before = escapeHtml(value.slice(0, index));
+		const match = escapeHtml(value.slice(index, index + args.length));
+		const after = escapeHtml(value.slice(index + args.length));
 
-		// If there is a space before or after the original matched text it adds that space back
-		const addSpaceBefore = value[indexOfMatch] === " " || value[indexOfMatch - 1] === " ";
-		const addSpaceAfter = value[endIndexOfMatch] === " " || value[endIndexOfMatch + 1] === " ";
+		// Keep a space that touches the match visible (e.g. inside flex layouts that collapse edge whitespace).
+		const html = `${before.replace(/ $/, `&nbsp;`)}<mark>${match}</mark>${after.replace(/^ /, `&nbsp;`)}`;
 
-		const beforeHtml = addSpaceBefore ? "&nbsp;" : "";
-		const afterHtml = addSpaceAfter ? "&nbsp;" : "";
-
-		const replacedValue = value.replace(regex, `<span>${beforeHtml}</span><mark>${match[0]}</mark><span>${afterHtml}</span>`);
-
-		return this.sanitizer.bypassSecurityTrustHtml(replacedValue);
+		return this.sanitizer.bypassSecurityTrustHtml(html);
 	}
+}
+
+function escapeHtml(text: string): string {
+	return text.replace(/[&<>"']/g, (char: string): string => HTML_ESCAPES[char] ?? char);
 }
