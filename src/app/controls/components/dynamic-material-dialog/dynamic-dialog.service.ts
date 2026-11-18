@@ -36,10 +36,11 @@ export class DynamicDialogService {
 		return this.selectedItem;
 	}
 
+	/** Resets the shared autocomplete state. The service is app-wide, so the subjects stay open (AUD-10: they used to be unsubscribed, breaking every later dialog). */
 	public clear(): void {
 		this.response = [];
 		this.selectedItem = "";
-		this.inputChange.unsubscribe();
-		this.responseNotification.unsubscribe();
+		this.inputChange.next("");
+		this.responseNotification.next("");
 	}
 }

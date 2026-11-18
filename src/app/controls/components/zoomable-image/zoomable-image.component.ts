@@ -5,9 +5,7 @@ import { MatIconModule } from "@angular/material/icon";
 @Component({
 	selector: "app-zoomable-image",
 	host: {
-		"(document:keydown.escape)": "onEscapeKeydown()",
-		"(document:keydown.ArrowRight)": "onRightKeydown()",
-		"(document:keydown.ArrowLeft)": "onLeftKeydown()",
+		"(document:keydown)": "onDocumentKeydown($event)",
 	},
 	templateUrl: "./zoomable-image.component.html",
 	styleUrls: ["./zoomable-image.component.scss"],
@@ -42,6 +40,7 @@ export class ZoomableImageComponent {
 	private cy = 0;
 
 	private readonly sanitizer: DomSanitizer = inject(DomSanitizer);
+	private readonly host: HTMLElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
 	constructor() {
 		effect(() => {
@@ -51,16 +50,24 @@ export class ZoomableImageComponent {
 		});
 	}
 
-	public onEscapeKeydown(): void {
-		this.showLightbox.set(false);
-	}
-
-	public onRightKeydown(): void {
-		this.next.emit();
-	}
-
-	public onLeftKeydown(): void {
-		this.prev.emit();
+	/**
+	 * Keyboard shortcuts. Listened for on the document so they keep working in the lightbox, but they only act
+	 * when this instance is the active one (focus inside it or its lightbox open), never for other page content.
+	 */
+	public onDocumentKeydown(event: KeyboardEvent): void {
+		const lightboxOpen: boolean = this.showLightbox();
+		if (!lightboxOpen && !this.host.contains(document.activeElement)) {
+			return;
+		}
+		if (event.key === `Escape` && lightboxOpen) {
+			this.showLightbox.set(false);
+		} else if (event.key === `ArrowRight`) {
+			event.preventDefault();
+			this.next.emit();
+		} else if (event.key === `ArrowLeft`) {
+			event.preventDefault();
+			this.prev.emit();
+		}
 	}
 
 	public initZoom(): void {

@@ -46,20 +46,22 @@ export class CarouselComponent {
 		const scrollTarget: Element | null = nativeElement.querySelector(".selectedNext") ?? nativeElement.querySelector(".selected");
 		scrollTarget?.scrollIntoView({ behavior: "smooth" });
 
-		if (this.selectedImg() < this.images().length - 1) {
-			this.selectedImg.set(this.selectedImg() + 1);
-			this.openDetails.emit(this.images()[this.selectedImg()].name);
-			return;
-		}
-		this.selectedImg.set(0);
+		const last: number = this.images().length - 1;
+		this.select(this.selectedImg() < last ? this.selectedImg() + 1 : 0);
 	}
 
 	public prev(): void {
-		if (this.selectedImg() > 0) {
-			this.selectedImg.set(this.selectedImg() - 1);
-			this.openDetails.emit(this.images()[this.selectedImg()].name);
+		const last: number = this.images().length - 1;
+		this.select(this.selectedImg() > 0 ? this.selectedImg() - 1 : last);
+	}
+
+	/** Moves to `index` and reports it — wrap-around included, so `openDetails` fires on every next/prev step. */
+	private select(index: number): void {
+		const image: CarouselImage | undefined = this.images().at(index);
+		if (image === undefined) {
 			return;
 		}
-		this.selectedImg.set(this.images().length - 1);
+		this.selectedImg.set(index);
+		this.openDetails.emit(image.name);
 	}
 }

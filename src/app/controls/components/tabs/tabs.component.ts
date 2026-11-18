@@ -1,5 +1,4 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, QueryList, input, output } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { TabComponent } from "./tab/tab.component";
 
@@ -7,7 +6,7 @@ import { TabComponent } from "./tab/tab.component";
 	selector: "app-tabs",
 	templateUrl: "./tabs.component.html",
 	styleUrls: ["./tabs.component.scss"],
-	imports: [CommonModule, MatIconModule],
+	imports: [MatIconModule],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsComponent implements AfterContentInit {
@@ -51,9 +50,13 @@ export class TabsComponent implements AfterContentInit {
 
 	public nextTab(): void {
 		const tabs = this.tabs.toArray();
-		const selectedIndex = tabs.map((t) => t.active()).indexOf(true);
+		const selectedIndex = this.activeIndex();
+		if (selectedIndex < 0) {
+			return;
+		}
+		const current: TabComponent = tabs[selectedIndex];
 
-		const form = tabs[selectedIndex].stepControl();
+		const form = current.stepControl();
 		if (form) {
 			Object.keys(form.controls).forEach((field) => {
 				const control = form.get(field);
@@ -61,21 +64,38 @@ export class TabsComponent implements AfterContentInit {
 			});
 		}
 
-		if (tabs[selectedIndex].completed()) {
-			tabs[selectedIndex].active.set(false);
-			if (!tabs[selectedIndex + 1]) {
-				return;
-			} else {
-				tabs[selectedIndex + 1].active.set(true);
-			}
+		if (current.completed()) {
+			this.goTo(selectedIndex + 1);
 		}
 	}
 
-	public resetTabs(): void {
+	/** Index of the active step, or -1 when none is active. */
+	public activeIndex(): number {
+		return this.tabs.toArray().findIndex((tab: TabComponent): boolean => tab.active());
+	}
+
+	/**
+	 * Activates the step at `index`. Out-of-range targets are ignored, so Back on the first step and Next on the
+	 * last step keep the current step (AUD-17: the current step used to be deactivated first, blanking the wizard).
+	 */
+	public goTo(index: number): boolean {
 		const tabs = this.tabs.toArray();
+		// Explicit range check (not `.at()`, which would wrap -1 to the last step).
+		if (index < 0 || index >= tabs.length) {
+			return false;
+		}
 		for (const t of tabs) {
 			t.active.set(false);
 		}
-		tabs[0].active.set(true);
+		tabs[index].active.set(true);
+		return true;
+	}
+
+	/** Back to the first step and clear every step's `completed` flag (AUD-17: completion used to survive a reset). */
+	public resetTabs(): void {
+		for (const t of this.tabs.toArray()) {
+			t.completed.set(false);
+		}
+		this.goTo(0);
 	}
 }

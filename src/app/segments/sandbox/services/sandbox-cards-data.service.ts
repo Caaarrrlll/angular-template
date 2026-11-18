@@ -45,6 +45,7 @@ export class SandboxCardsDataService {
 		createdOn: `2026-01-15T09:30:00`,
 		balance: `12500.50`,
 		verified: true,
+		debitOrder: false,
 		branch: `Pretoria East`,
 		agentName: `Sipho Dlamini`,
 		notes: `Customer requested a call back after 14:00. Proof of address still outstanding; follow up before month end.`,
@@ -57,7 +58,7 @@ export class SandboxCardsDataService {
 		{ display: ``, field: `accountNumber`, textPre: `No.`, textColor: `` },
 		{ display: ``, field: `contact`, fieldSub: `email`, icon: `mail`, textColor: `` },
 		{ display: ``, field: `priority`, type: `Parent`, textColor: `` },
-		{ display: ``, field: `status`, type: _HeaderTypes.status, textColor: `` },
+		{ display: ``, field: `status`, type: _HeaderTypes.status, postText: `createdOn`, postLabel: `Created`, textColor: `` },
 	];
 
 	/** Column layout: `column` groups rows into columns; `editAction` becomes the buttonClick action. */
@@ -68,6 +69,7 @@ export class SandboxCardsDataService {
 		{ display: `Created`, field: `createdOn`, type: _TableTypes.Date, column: 1 },
 		{ display: `Balance`, field: `balance`, type: _TableTypes.money, column: 2 },
 		{ display: `Verified`, field: `verified`, type: _TableTypes.Boolean, column: 2, editAction: `toggleVerified` },
+		{ display: `Debit order`, field: `debitOrder`, type: _TableTypes.Boolean, column: 2 },
 		{ display: `Branch`, field: `branch`, type: _TableTypes.TextWithEdit, column: 2, editAction: `editBranch` },
 		{ display: `Agent`, field: `agentName`, type: _TableTypes.TextClick, column: 2, editAction: `openAgent` },
 		{ display: `Stage`, field: `stage`, type: _TableTypes.Parent, column: 3 },
@@ -108,7 +110,7 @@ export class SandboxCardsDataService {
 	public readonly accountErrorHeader: _CustCardHeaderTableInterface[] = [{ display: `Account could not be loaded`, field: ``, textColor: `#d32f2f`, errorActionButton: `Retry` }];
 
 	public accountProperties(): _CustTablePropertiesExtConfig {
-		// Returned fresh per instance: info-card mutates `height` when `heightAuto` is set.
+		// Returned fresh per call so each demo card owns its config object.
 		return { width: [`34%`, `36%`, `30%`], height: `130px` };
 	}
 

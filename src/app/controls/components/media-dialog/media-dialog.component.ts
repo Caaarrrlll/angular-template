@@ -40,10 +40,9 @@ export class MediaDialogComponent implements OnInit {
 			})
 		).pipe(
 			takeUntilDestroyed(this.destroyRef),
-			map((media: MediaFile | null) => {
-				// strip `type` so the `apiResponse` pipe passes the raw file through as payload
-				return { ...media, type: undefined };
-			}),
+			// strip `type` so the `apiResponse` pipe passes the raw file through as payload; keep `null` as null
+			// (spreading it would give `{}`, a truthy payload that rendered an empty, broken <img>)
+			map((media: MediaFile | null): MediaFile | null => (media === null ? null : { ...media, type: undefined })),
 		);
 	}
 

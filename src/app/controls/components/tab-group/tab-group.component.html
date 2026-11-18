@@ -1,35 +1,32 @@
 <mat-tab-group
-	class="s-h-100-background-color-fff"
+	class="tab-group__tabs"
 	dynamicHeight
 	[(selectedIndex)]="tabToUse"
 	[class]="tabList().tabType"
 	[style]="matTabGroupConfig()"
 	(selectedTabChange)="tabButtonClick($event)">
-	@for (item of tabList().tab; track item.index) {
+	@for (item of tabList().tab; track item.index; let i = $index) {
 		<mat-tab [label]="item.tabName" [disabled]="!item.isProcess ? false : item.canProgress ? false : true">
 			<ng-template mat-tab-label>
 				@if (item.icon) {
-					<mat-icon class="s-pr-4-c-b45108">{{ item.icon }}</mat-icon>
+					<mat-icon class="tab-group__icon">{{ item.icon }}</mat-icon>
 				}
 				<div [style]="{ 'font-size': tabList().fontSize }">{{ item.tabName }}</div>
 			</ng-template>
 
-			@if (tabList().tabType === "vertical" && !hideContent()) {
-				<div class="header-container tab-header" [style]="{ 'background-color': tabList().tabLabelBackgroundColor, 'font-size': tabList().fontSize }">
-					<div class="center">
+			@if (tabList().tabType === "vertical") {
+				<div class="tab-group__vertical-header" [style]="{ 'background-color': tabList().tabLabelBackgroundColor, 'font-size': tabList().fontSize }">
+					<div class="tab-group__center">
 						<b>{{ item.tabName }}</b>
 					</div>
 				</div>
 			}
-			@if (activeTab() === item.index && !hideContent()) {
-				<ng-content [select]="item.classSelect"></ng-content>
+			@if (templatesByKey().get(item.classSelect); as content) {
+				<ng-container [ngTemplateOutlet]="content"></ng-container>
+			} @else if (i === tabToUse()) {
+				<!-- Fallback for consumers that project plain content (no appTabGroupContent templates): shown for the selected tab. -->
+				<ng-content></ng-content>
 			}
 		</mat-tab>
 	}
 </mat-tab-group>
-
-@for (item of tabList().tab; track item.index; let i = $index) {
-	@if (i > 0 && tabList().tab[i - 1].isProcess && !item.isProcess) {
-		<div class="divider-line" [style]="{ '--div-top': (i + 1) * buttonSpace + offset[i] + 'px', '--tabwidth': tabList().matTabMinWidth ?? '200px' }"></div>
-	}
-}

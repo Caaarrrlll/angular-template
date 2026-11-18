@@ -3,6 +3,7 @@ import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
 import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { TabGroupComponent } from "@shared/components/tab-group/tab-group.component";
+import { TabGroupContentDirective } from "@shared/components/tab-group/tab-group-content.directive";
 import { CustTabConfig } from "@shared/components/tab-group/tab-group.interface";
 import { TabComponent } from "@shared/components/tabs/tab/tab.component";
 import { TabBackButtonDirective } from "@shared/components/tabs/tab-back-button.directive";
@@ -13,7 +14,7 @@ import { TabsComponent } from "@shared/components/tabs/tabs.component";
 	selector: "app-sandbox-tabs",
 	templateUrl: "./sandbox-tabs.component.html",
 	styleUrls: ["./sandbox-tabs.component.scss"],
-	imports: [SandboxPageComponent, SandboxDemoComponent, TabGroupComponent, TabsComponent, TabComponent, TabBackButtonDirective, TabNextButtonDirective],
+	imports: [SandboxPageComponent, SandboxDemoComponent, TabGroupComponent, TabGroupContentDirective, TabsComponent, TabComponent, TabBackButtonDirective, TabNextButtonDirective],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SandboxTabsComponent {
@@ -24,13 +25,11 @@ export class SandboxTabsComponent {
 	public readonly horizontalTabs: CustTabConfig = {
 		tabType: `horizontal`,
 		tab: [
-			{ tabName: `Overview`, index: 0, classSelect: `.overview`, icon: `dashboard` },
-			{ tabName: `Details`, index: 1, classSelect: `.details`, icon: `info` },
-			{ tabName: `History`, index: 2, classSelect: `.history` },
+			{ tabName: `Overview`, index: 0, classSelect: `overview`, icon: `dashboard` },
+			{ tabName: `Details`, index: 1, classSelect: `details`, icon: `info` },
+			{ tabName: `History`, index: 2, classSelect: `history` },
 		],
 	};
-
-	public readonly horizontalActive: WritableSignal<number> = signal<number>(0);
 
 	/** Process steps stay disabled until the previous step is completed (isProcess + canProgress). */
 	public readonly completedSteps: WritableSignal<number> = signal<number>(0);
@@ -38,13 +37,11 @@ export class SandboxTabsComponent {
 
 	public readonly verticalTabs: Signal<CustTabConfig> = computed((): CustTabConfig => ({
 		tabType: `vertical`,
-		// token-backed custom property defined in sandbox-tabs.component.scss
-		tabLabelBackgroundColor: `var(--sandbox-tab-label-background)`,
 		tab: [
-			{ tabName: `Applicant`, index: 0, classSelect: `.applicant`, isProcess: true, canProgress: true },
-			{ tabName: `Documents`, index: 1, classSelect: `.documents`, isProcess: true, canProgress: this.completedSteps() >= 1 },
-			{ tabName: `Review`, index: 2, classSelect: `.review`, isProcess: true, canProgress: this.completedSteps() >= 2 },
-			{ tabName: `Notes`, index: 3, classSelect: `.notes`, icon: `notes` },
+			{ tabName: `Applicant`, index: 0, classSelect: `applicant`, isProcess: true, canProgress: true },
+			{ tabName: `Documents`, index: 1, classSelect: `documents`, isProcess: true, canProgress: this.completedSteps() >= 1 },
+			{ tabName: `Review`, index: 2, classSelect: `review`, isProcess: true, canProgress: this.completedSteps() >= 2 },
+			{ tabName: `Notes`, index: 3, classSelect: `notes`, icon: `notes` },
 		],
 	}));
 
@@ -54,7 +51,6 @@ export class SandboxTabsComponent {
 	private readonly wizard: Signal<TabsComponent> = viewChild.required(TabsComponent);
 
 	public onHorizontalTabClick(index: unknown): void {
-		this.horizontalActive.set(Number(index));
 		this.horizontalLog.add(`tabClick: ${String(index)}`);
 	}
 

@@ -1,67 +1,68 @@
-import { ChangeDetectionStrategy, Component, WritableSignal, computed, effect, input, output, signal } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Signal, TemplateRef, ViewEncapsulation, WritableSignal, computed, contentChildren, input, linkedSignal, output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTabChangeEvent, MatTabsModule } from "@angular/material/tabs";
+import { TabGroupContentDirective } from "./tab-group-content.directive";
 import { CustTab, CustTabConfig } from "./tab-group.interface";
 
 @Component({
 	selector: "app-tab-group",
 	templateUrl: "./tab-group.component.html",
 	styleUrls: ["./tab-group.component.scss"],
-	imports: [MatTabsModule, MatIconModule],
+	imports: [MatTabsModule, MatIconModule, NgTemplateOutlet],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	// The stylesheet has to reach Material's tab internals (vertical layout, label shape). Instead of ::ng-deep
+	// (capped by the standing policy) every rule is scoped under `app-tab-group` and own classes use a `tab-group__` prefix.
+	encapsulation: ViewEncapsulation.None,
 })
 export class TabGroupComponent {
 	public readonly activeTab = input<number | undefined>();
 	public readonly tabList = input.required<CustTabConfig>();
 	public readonly tabClick = output<unknown>();
 
-	public hideContent: WritableSignal<boolean> = signal(false);
-	public tabToUse = signal(0);
+	/** Selected tab: reset from `activeTab`, then follows clicks (AUD-16: content used to follow the input only). */
+	public readonly tabToUse: WritableSignal<number> = linkedSignal((): number => this.activeTab() ?? 0);
 
-	public readonly buttonSpace: number = 50;
-	public readonly offset: number[] = [1, 1, 12, 18, 24, 32, 42, 48, 54, 68, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 162];
+	/** Per-tab content templates, keyed by `CustTab.classSelect`. */
+	private readonly contentTemplates = contentChildren(TabGroupContentDirective);
+	public readonly templatesByKey: Signal<Map<string, TemplateRef<unknown>>> = computed(
+		(): Map<string, TemplateRef<unknown>> =>
+			new Map(this.contentTemplates().map((content: TabGroupContentDirective): [string, TemplateRef<unknown>] => [content.key(), content.templateRef])),
+	);
 
+	/** CSS variables for the values the consumer supplied; defaults live in the stylesheet (token-backed fallbacks). */
 	public readonly matTabGroupConfig = computed((): Record<string, string> => {
 		const tabList: CustTabConfig = this.tabList();
-		const config: Record<string, string> = {
-			"--mat-tab-radius": tabList.tabRadius ?? (tabList.tabType === "horizontal" ? "8px 8px 0px 0px" : "8px 0px 0px 8px"),
-			"--tabwidth": tabList.tabwidth ?? "200px",
-			"--mat-tab-min-width": tabList.matTabMinWidth ?? "200px",
-			"--underline-color": tabList.tabType === "horizontal" ? "#EF6C00" : "#fff",
-			"--mat-tab-header-background-color": tabList.matTabHeaderBackgroundColor ?? "#fff",
-			"--mat-tab-header-right-background-color": tabList.matTabHeaderRightBackgroundColor ?? (tabList.tabType === "horizontal" ? "#fff" : "#293640"),
-			"--mat-tab-header-right-width": "2px",
-			"--tab-label-background-color": tabList.tabLabelBackgroundColor ?? "#fff",
-			"--tab-label-color": tabList.tabLabelColor ?? "#000",
-			"--tab-label-hover-color": tabList.tabLabelHoverColor ?? "#F2F2F2",
-			"--mat-tab-label-text-align": tabList.matTabLabelTextAlign ?? "center",
-			"--mat-tab-label-bottom-padding": tabList.matTabLabelBottomPadding ?? "0px",
-			"--mat-tab-lable-default-background-color": tabList.matTabLableDefaultBackgroundColor ?? "#fff",
+		const config: Record<string, string> = {};
+		const set = (name: string, value: string | undefined): void => {
+			if (value) {
+				config[name] = value;
+			}
 		};
 
+		set(`--tab-radius`, tabList.tabRadius);
+		set(`--tab-width`, tabList.tabwidth);
+		set(`--tab-min-width`, tabList.matTabMinWidth);
+		set(`--tab-label-color`, tabList.tabLabelColor);
+		set(`--tab-label-background-color`, tabList.tabLabelBackgroundColor);
+		set(`--tab-label-default-background-color`, tabList.matTabLableDefaultBackgroundColor);
+		set(`--tab-label-hover-color`, tabList.tabLabelHoverColor);
+		set(`--tab-label-text-align`, tabList.matTabLabelTextAlign);
+		set(`--tab-label-bottom-padding`, tabList.matTabLabelBottomPadding);
+		set(`--tab-header-background-color`, tabList.matTabHeaderBackgroundColor);
+		set(`--tab-header-right-background-color`, tabList.matTabHeaderRightBackgroundColor);
+		set(`--mat-tab-label-text-size`, tabList.fontSize);
+
 		tabList.tab.forEach((tab: CustTab, count: number): void => {
-			config[`--margin${String(count + 1)}`] = "10px";
-			if (tabList.tabType === "vertical" && count > 0 && tabList.tab[count - 1].isProcess !== tab.isProcess) {
-				config[`--margin${String(count)}`] = "30px";
+			if (tabList.tabType === `vertical` && count > 0 && tabList.tab[count - 1].isProcess !== tab.isProcess) {
+				// Wider gap after the last process step, with a divider line drawn in it (nth-child is 1-based).
+				config[`--tab-margin${String(count)}`] = `30px`;
+				config[`--tab-divider${String(count + 1)}`] = `block`;
 			}
 		});
 
 		return config;
 	});
-
-	constructor() {
-		effect(() => {
-			if (this.hideContent()) {
-				this.hideContent.set(false);
-			}
-		});
-
-		effect(() => {
-			const activeTab: number | undefined = this.activeTab();
-			this.tabToUse.set(activeTab ?? 0);
-			this.hideContent.set(true);
-		});
-	}
 
 	public tabButtonClick(event: MatTabChangeEvent): void {
 		this.tabClick.emit(event.index);

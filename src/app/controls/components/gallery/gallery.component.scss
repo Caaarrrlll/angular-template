@@ -5,6 +5,16 @@
 	display: flex;
 	justify-content: center;
 	height: calc(100% - 100px);
+
+	// Focusable so the arrow/space shortcuts only drive this gallery; show the ring for keyboard focus only.
+	&:focus {
+		outline: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid $color-orange;
+		outline-offset: 2px;
+	}
 }
 
 .galleryContainerBorder {
@@ -76,7 +86,7 @@
 	right: 10px;
 }
 
-#mainGalleryImage {
+.mainGalleryImage {
 	max-width: 100%;
 	height: 100%;
 	margin: auto;

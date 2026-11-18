@@ -1,4 +1,4 @@
-<div id="fullScreen" class="outerGalleryContainer">
+<div #fullScreen class="outerGalleryContainer" tabindex="0" aria-label="Image gallery" (keydown)="onKeyDown($event)">
 	@if (arrLength > 1 && !onlyShowPreview) {
 		<div
 			class="generalGalleryBtn galleryNavButtonContainer galleryNavButtonContainerPrev"
@@ -29,16 +29,17 @@
 			</div>
 		}
 
-		<span id="galleryZoomBox" class="galleryZoomBox" [style.background-image]="'url(' + currentImageUrl + ')'"></span>
+		<span #zoomBox class="galleryZoomBox" [style.background-image]="'url(' + currentImageUrl + ')'"></span>
 
 		<img
-			id="mainGalleryImage"
+			class="mainGalleryImage"
 			(load)="onImageLoad()"
 			[src]="currentImageUrl"
 			[alt]="currentImage?.title"
 			[style.object-fit]="imageSize"
 			[title]="currentImage?.description"
-			[appCursorFollowZoom]="imageZoom && fullscreenOpen" />
+			[appCursorFollowZoom]="imageZoom && fullscreenOpen"
+			[zoomBox]="zoomBox" />
 
 		@if (!onlyShowPreview) {
 			<div class="galleryPagerScollContainer" #pagerScrollContainer (wheel)="pagerHorizontalScroll($event)">

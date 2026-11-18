@@ -14,26 +14,26 @@ export class TabNextButtonDirective {
 
 	onNextClick(): void {
 		const tabs = this.tabsComponent.tabs.toArray();
-		const selectedIndex = tabs.map((tab) => tab.active()).indexOf(true);
+		const selectedIndex = this.tabsComponent.activeIndex();
+		if (selectedIndex < 0) {
+			return;
+		}
+		const current = tabs[selectedIndex];
 
 		if (!this.required()) {
-			tabs[selectedIndex].completed.set(true);
+			current.completed.set(true);
 		}
 
-		const form = tabs[selectedIndex].stepControl();
+		const form = current.stepControl();
 		if (form) {
 			Object.keys(form.controls).forEach((field) => {
 				const control = form.get(field);
 				control?.markAsTouched({ onlySelf: true });
 			});
 		}
-		if (tabs[selectedIndex].completed() || tabs[selectedIndex].isConfig()) {
-			tabs[selectedIndex].active.set(false);
-			if (!tabs[selectedIndex + 1]) {
-				return;
-			} else {
-				tabs[selectedIndex + 1].active.set(true);
-			}
+		if (current.completed() || current.isConfig()) {
+			// goTo() ignores out-of-range targets, so Next on the last step stays put (step is still marked completed).
+			this.tabsComponent.goTo(selectedIndex + 1);
 		}
 	}
 }

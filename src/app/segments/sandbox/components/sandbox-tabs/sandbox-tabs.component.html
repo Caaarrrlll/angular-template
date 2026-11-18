@@ -1,28 +1,18 @@
 <app-sandbox-page title="Tabs" description="tab-group (Material tabs wrapper) and tabs + tab (step wizard with back/next directives).">
 	<app-sandbox-demo
 		title="Tab group - horizontal"
-		description="Icons on the first two tabs. Content is only rendered for the activeTab input, so the page feeds tabClick back into activeTab."
+		description='Uncontrolled: no activeTab input; clicking a tab switches its content. Each tab&apos;s content is an <ng-template appTabGroupContent="key"> matched to CustTab.classSelect.'
 		[log]="horizontalLog.entries()">
-		<app-tab-group [tabList]="horizontalTabs" [activeTab]="horizontalActive()" (tabClick)="onHorizontalTabClick($event)">
-			<div class="sandbox-tabs__panel">
-				@switch (horizontalActive()) {
-					@case (0) {
-						<p>Overview content.</p>
-					}
-					@case (1) {
-						<p>Details content.</p>
-					}
-					@default {
-						<p>History content.</p>
-					}
-				}
-			</div>
+		<app-tab-group [tabList]="horizontalTabs" (tabClick)="onHorizontalTabClick($event)">
+			<ng-template appTabGroupContent="overview"><p class="sandbox-tabs__panel">Overview content.</p></ng-template>
+			<ng-template appTabGroupContent="details"><p class="sandbox-tabs__panel">Details content.</p></ng-template>
+			<ng-template appTabGroupContent="history"><p class="sandbox-tabs__panel">History content.</p></ng-template>
 		</app-tab-group>
 	</app-sandbox-demo>
 
 	<app-sandbox-demo
 		title="Tab group - vertical process"
-		description="tabType 'vertical' with isProcess steps: a step stays disabled until canProgress is true. A divider separates process tabs from the plain Notes tab."
+		description="tabType 'vertical' with isProcess steps: a step stays disabled until canProgress is true. A divider separates process tabs from the plain Notes tab. [activeTab] lets the page drive the selection (Reset returns to the first step)."
 		[log]="verticalLog.entries()">
 		<div class="sandbox-tabs__actions">
 			<button type="button" [disabled]="completedSteps() >= 2" (click)="completeStep()">Complete next process step</button>
@@ -30,29 +20,17 @@
 		</div>
 		<div class="sandbox-tabs__vertical">
 			<app-tab-group [tabList]="verticalTabs()" [activeTab]="verticalActive()" (tabClick)="onVerticalTabClick($event)">
-				<div class="sandbox-tabs__panel">
-					@switch (verticalActive()) {
-						@case (0) {
-							<p>Applicant details.</p>
-						}
-						@case (1) {
-							<p>Upload documents.</p>
-						}
-						@case (2) {
-							<p>Review and submit.</p>
-						}
-						@default {
-							<p>Free-form notes (not part of the process).</p>
-						}
-					}
-				</div>
+				<ng-template appTabGroupContent="applicant"><p class="sandbox-tabs__panel">Applicant details.</p></ng-template>
+				<ng-template appTabGroupContent="documents"><p class="sandbox-tabs__panel">Upload documents.</p></ng-template>
+				<ng-template appTabGroupContent="review"><p class="sandbox-tabs__panel">Review and submit.</p></ng-template>
+				<ng-template appTabGroupContent="notes"><p class="sandbox-tabs__panel">Free-form notes (not part of the process).</p></ng-template>
 			</app-tab-group>
 		</div>
 	</app-sandbox-demo>
 
 	<app-sandbox-demo
 		title="Tabs wizard"
-		description="app-tabs + app-tab with appBackTabButton / appNextTabButton. Step 2 uses [required]=true on Next, so it only advances once 'completed' is set. In linear mode a step can only be selected after the previous one is completed."
+		description="app-tabs + app-tab with appBackTabButton / appNextTabButton. Step 2 uses [required]=true on Next, so it only advances once 'completed' is set. In linear mode a step can only be selected after the previous one is completed. Back on step 1 and Next on step 3 stay put; Finish calls resetTabs(), which also clears completion."
 		[log]="wizardLog.entries()">
 		<div class="sandbox-tabs__actions">
 			<label><input type="checkbox" [checked]="linear()" (change)="linear.set(!linear())" /> linear</label>
@@ -62,6 +40,7 @@
 				<div class="sandbox-tabs__panel">
 					<p>Step 1: account details.</p>
 					<div class="sandbox-tabs__actions">
+						<button type="button" appBackTabButton>Back</button>
 						<button type="button" appNextTabButton>Next</button>
 					</div>
 				</div>
@@ -81,6 +60,7 @@
 					<p>Step 3: all done.</p>
 					<div class="sandbox-tabs__actions">
 						<button type="button" appBackTabButton>Back</button>
+						<button type="button" appNextTabButton>Next</button>
 						<button type="button" (click)="finishWizard()">Finish</button>
 					</div>
 				</div>

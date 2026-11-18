@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, ViewChild, inject } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, ViewChild, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
 import { Subject, debounceTime } from "rxjs";
@@ -7,7 +7,10 @@ import { GalleryPreviewComponent } from "@shared/components/gallery-preview/gall
 import { ZoomDirective } from "@shared/directives/zoom.directive";
 import { Image } from "./gallery.models";
 
-const imageNotFoundUrl = "assets/images/image_not_found.png";
+// Inline placeholder so the control does not depend on a file in src/assets (empty by design in the template).
+// The SVG avoids quotes and parentheses so the URL is also safe inside the zoom box's CSS `url(...)`.
+const imageNotFoundSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200"><rect width="320" height="200" fill="#eeeeee"/><text x="160" y="105" font-family="sans-serif" font-size="16" fill="#888888" text-anchor="middle">Image not found</text></svg>`;
+const imageNotFoundUrl = `data:image/svg+xml,${encodeURIComponent(imageNotFoundSvg)}`;
 
 @Component({
 	selector: "app-gallery",
@@ -16,10 +19,8 @@ const imageNotFoundUrl = "assets/images/image_not_found.png";
 	imports: [MatRippleModule, MatIconModule, ZoomDirective, GalleryPreviewComponent],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
-		"(window:keydown)": "onKeyDown($event)",
 		"(window:resize)": "onResize()",
 		"(document:fullscreenchange)": "onFullscreenChange()",
-		"(document:keyup.Space)": "toggleAutoplay()",
 	},
 })
 export class GalleryComponent implements OnChanges, OnInit {
@@ -44,6 +45,7 @@ export class GalleryComponent implements OnChanges, OnInit {
 	// Contain - fill the width as much as possible (not 100%) without cutting off any of the image
 	// Cover - set the width to 100% of the parent - can result in pieces of the image getting cut off
 
+	@ViewChild("fullScreen") public fullScreenContainer?: ElementRef<HTMLElement>;
 	@ViewChild("galleryContainer") public galleryContainer?: ElementRef<HTMLElement>;
 	@ViewChild("pagerScrollContainer") public pagerScrollContainer?: ElementRef<HTMLElement>;
 
@@ -67,6 +69,7 @@ export class GalleryComponent implements OnChanges, OnInit {
 	private pagerScrollContainerLeftScroll = 0;
 	private readonly autoplayEvent = new Subject<void>();
 	private readonly destroyRef = inject(DestroyRef);
+	private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
 	public ngOnChanges(): void {
 		this.reset();
@@ -76,6 +79,8 @@ export class GalleryComponent implements OnChanges, OnInit {
 		this.autoplayEvent.pipe(debounceTime(this.autoplayDelay), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
 			if (this.autoplayGo) {
 				this.next();
+				// The debounced tick runs outside any template event, so OnPush needs an explicit mark.
+				this.changeDetectorRef.markForCheck();
 			}
 		});
 	}
@@ -155,7 +160,7 @@ export class GalleryComponent implements OnChanges, OnInit {
 		if (this.fullscreenOpen) {
 			void document.exitFullscreen();
 		} else {
-			void this.fullScreenElement?.requestFullscreen();
+			void this.fullScreenContainer?.nativeElement.requestFullscreen();
 		}
 	}
 
@@ -190,19 +195,24 @@ export class GalleryComponent implements OnChanges, OnInit {
 	}
 
 	public onFullscreenChange(): void {
-		this.fullscreenOpen = Boolean(document.fullscreenElement);
+		// Only this gallery's own container counts; another gallery (or element) going fullscreen must not affect it.
+		const container: HTMLElement | undefined = this.fullScreenContainer?.nativeElement;
+		this.fullscreenOpen = container !== undefined && document.fullscreenElement === container;
 	}
 
+	/** Keyboard shortcuts, bound on the gallery container so they only act while focus is inside this gallery. */
 	public onKeyDown(event: KeyboardEvent): void {
-		if (event.key === "ArrowRight") {
+		if (event.key === `ArrowRight`) {
+			event.preventDefault();
 			this.next();
-		} else if (event.key === "ArrowLeft") {
+		} else if (event.key === `ArrowLeft`) {
+			event.preventDefault();
 			this.prev();
+		} else if (event.key === ` ` && event.target === event.currentTarget && this.showAutoplay && this.arrLength > 1) {
+			// Space only when the container itself is focused: on an inner button it must keep its native "click" meaning.
+			event.preventDefault();
+			this.toggleAutoplay();
 		}
-	}
-
-	private get fullScreenElement(): HTMLElement | null {
-		return document.querySelector("#fullScreen");
 	}
 
 	private clamp(value: number, min: number, max: number): number {

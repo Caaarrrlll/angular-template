@@ -415,3 +415,93 @@ Item 5 — housekeeping:
     - ROADMAP: AUD-12, 33, 36, 37, 38 ticked (39/40 earlier); AUD-16 absorbs the tab-group TS colour defaults; CSS cleanup section rewritten
 [✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md
     - next: remaining open audit items (AUD-09/10 dynamic dialog behaviour, AUD-14/15/16/17/18/19/20/21/22/23/24/25/26/27/29/49, AUD-48 majors) — developer to pick
+
+## Task (2026-11-18): dynamic-material-dialog behaviour fixes — roadmap item 2 (AUD-09, AUD-10; developer-approved)
+
+Minimal fixes in the file's existing style (control is on the "do not migrate" list); each verified in headless Edge with a sandbox case.
+[✓] 2a read + map each issue to code (component ts/html, setup model, DynamicDialogService, dynamic-window snackbar)
+    - extra findings while reading: autocomplete spinner sits inside `@if (list.length > 0)` so it never shows on the first search; hard-coded "Select a buylead below to verify" (app-specific) text; `[(ngModel)]="control.value"` also mutates the caller's setup
+[✓] 2b AUD-10 title/close: non-draggable header now renders on `!options.draggable` (was dead `!options`)
+    - touching: dynamic-material-dialog.component.html
+[✓] 2c AUD-10 snackbars: dialog save() "payroll" special case removed (field errors show their own messages; generic "Please complete the form fully" stays); dynamic-window submit() → generic message + markAllAsTouched so field errors appear
+    - touching: dynamic-material-dialog.component.ts, dynamic-window.component.ts
+[✓] 2d AUD-10 choice controls: per-control `searchControls` / `filteredOptions` keyed by formName (registerOptions); search box shown per control when it has >5 options (was one dialog-wide flag); removed shared data/filteredData/searchControl/_filter/showSearch
+[✓] 2e AUD-10 autocomplete: controlChange returns early unless `control.autoComplete` (added `autoComplete?` to _ControlInterface); autoCompleteList/showSpinner → signals; spinner set before the search is sent and visible while the list is empty; `skip(1)` on the app-wide BehaviorSubject so a new dialog doesn't show the previous dialog's suggestions; app-specific "buylead" text → "Select a suggestion below"
+[✓] 2f AUD-10 ngModel removed from Input + Numeric (search term read from / suggestion written to the reactive control; stops mutating the caller's setup); FormsModule import dropped
+[✓] 2g AUD-10 DynamicDialogService.clear() resets state and emits "" instead of unsubscribing the app-wide subjects
+    - touching: dynamic-dialog.service.ts
+[✓] 2h AUD-09 builder classes `formName?` vs `_DialogControl.formName` required (drop the sandbox namedControls() workaround if fixed) + `Numeric` builder sets type Input
+    - `_DialogControl.formName` made optional (the dialog already falls back to the index); 6 filter-menu index sites use `?? ""`; missing/empty check made explicit (lint)
+    - Numeric builder now sets `FormType.Numeric` (its template branch with appMinMax was dead)
+    - sandbox: namedControls() helper + wrappers removed; new regression dialogs (two choice lists + numeric, approval without options) + plain input in the autocomplete dialog
+    - side cleanup: 3 now-unused `no-extraneous-class` disable comments removed (contact/landing/not-found) — eslint src 0
+[✓] 2i verify (tsc, eslint, prettier, both builds, browser: every dialog demo + new regression cases)
+    - tsc 0; eslint src 0; prettier clean; dev + prod build (722 kB, budget warning only)
+    - headless Edge: no-options dialog shows plain title + close (draggable one: exactly 1 title); two choice lists show 7 colours / 3 sizes, 1 search box (7-option list only), search filters only its own list; Numeric renders with appMinMax and clamps 50 → 10; autocomplete: no stale list on open or reopen, plain input triggers nothing, spinner while searching then cleared, suggestions appear without another keystroke, pick fills the input, submitted value includes it; invalid dialog submit → "Please complete the form fully"; no console errors (ngModel warning gone)
+    - extra fix found in verify: Numeric's min/max were never passed to appMinMax → added `min?`/`max?` to _DialogControl and bound them
+    - not reachable in the UI: dynamic-window's invalid-submit snackbar (submit is disabled while invalid); code changed anyway
+    - regression probes (validators, slider/window, keyboard/dialog close, info-card popup) unchanged; all 14 pages render
+[✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): AUD-16 tab-group fixes (developer request)
+
+[✓] 1 read tab-group + sandbox demo: `<ng-content [select]>` in @for is not supported by Angular (static selectors only); content compared against the input; none of the CSS variables were read and no global styles exist (Material rendered its default header in vertical mode)
+[✓] 2 new `TabGroupContentDirective` (`<ng-template appTabGroupContent="<classSelect>">`) collected with contentChildren and rendered per mat-tab via ngTemplateOutlet; plain projected content still works as a fallback (selected tab only); `tabToUse` → linkedSignal (reset from activeTab, follows clicks); hideContent effect pair removed
+    - touching: tab-group-content.directive.ts (new), tab-group.component.{ts,html}, tab-group.interface.ts (docs)
+[✓] 3 config only emits consumer-provided values; defaults are token-backed `var(--x, fallback)` in SCSS; colours via Material tab tokens (--mat-tab-*-label-text-color, --mat-tab-active-indicator-color, --mat-tab-label-text-size); vertical layout/radius/width/spacing on Material internals under ViewEncapsulation.None scoped to `app-tab-group` (own classes `tab-group__*`; no ::ng-deep); old absolute divider (pixel-offset tables) replaced by a ::before in the process gap; vertical active tab navy/white by default
+    - nth-child loop capped at 12 tabs: 30 pushed the component stylesheet over the 10 kB prod budget (10.6 kB)
+[✓] 4 sandbox: horizontal demo uncontrolled (no activeTab feedback); both demos use appTabGroupContent templates; navy label override + its SCSS variable removed; vertical keeps [activeTab] for Reset; classSelect keys without leading dots
+[✓] 5 verify
+    - tsc 0; eslint src 0; prettier clean; dev + prod build (prod: pre-existing initial-bundle warning only)
+    - headless Edge: horizontal clicks switch Overview/Details/History content, orange indicator (rgb 239,108,0), black labels, 8px radius; vertical: row layout + label column, 200px tabs, 10px gaps / 30px after the process, divider at 14px into the gap, header + active tab navy with white text, process locking + Reset back to Applicant; screenshot reviewed; no console errors; all 14 pages render
+    - not browser-verified: the plain-content fallback path (no consumer in the repo uses it any more)
+[✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): AUD-17 tabs wizard fixes (developer request)
+
+[✓] 1 read: back/next directives AND TabsComponent.nextTab() deactivate before checking the neighbour; duplicate class attr drops `hide-gt-sm`; latent breakpoint gap (hide-lt-md <960 vs hide-gt-sm ≥600 → nothing shown at 600–959 once the class applies)
+[✓] 2 TabsComponent.goTo(index) (ignores out-of-range) + activeIndex(); back/next directives and nextTab() use it; missing active step guarded
+[✓] 3 resetTabs() clears completed on every step, then goTo(0)
+[✓] 4 classes merged (`small-tabs-container hide-gt-sm`); `.hide-gt-sm` media query 600px → 960px (Material gt-sm) so one list shows at every width; [ngClass] → [class.active]; CommonModule removed
+    - touching: tabs.component.{ts,html,scss}, tab-back-button.directive.ts, tab-next-button.directive.ts
+[✓] 5 sandbox: Back on step 1 and Next on step 3 added as boundary cases; description updated; Finish kept (demonstrates resetTabs)
+[✓] 6 verify (tsc, eslint, prettier, builds, browser)
+    - tsc 0; eslint src 0 (explicit index range checks — `.at()` would wrap -1 to the last step); prettier clean; dev + prod build (prod: pre-existing initial-bundle warning only)
+    - headless Edge: Back on step 1 stays; Next → step 2; required Next blocked until "I agree"; Next → step 3; Next on step 3 stays (marks it completed); Finish → step 1 with 0 completion icons; linear jump to step 3 blocked; step lists: 1300px big only, 800px small only (previous gap width), 400px small only; no console errors; all 14 pages render
+[✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): AUD-19 gallery fixes (developer request)
+
+Scope: `controls/components/gallery` only (decorator API kept, "do not migrate" list). The zoom directive's document-wide ids stay for AUD-20.
+
+[✓] 1 gallery fixes (gallery.component.ts, .html, .scss)
+    - fullscreen: `#fullScreen` template ref + `@ViewChild` instead of `document.querySelector`; `fullscreenOpen` only true for this gallery's own container
+    - autoplay: `markForCheck()` after the debounced tick
+    - placeholder: inline SVG data URI replaces the missing `assets/images/image_not_found.png`
+    - keyboard: global `window:keydown` / `document:keyup.Space` removed; container is focusable (`tabindex="0"`, focus-visible ring) and handles arrows, and Space only when the container itself is focused
+[✓] 2 verify
+    - first attempt blocked: a failed `npm i` (EBUSY, dart-sass locked by two running `ng serve` processes) had removed the devDependencies; developer stopped the servers and reinstalled
+    - dev + prod build pass (prod: pre-existing initial-bundle warning only); eslint 0 on gallery .ts/.html; prettier clean on the 3 gallery files
+    - /sandbox/media NOT browser-checked (no browser tool in the session)
+[✓] Clean boundary: ROADMAP AUD-19 ticked; section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): AUD-20 media misc, then AUD-22 + AUD-49 info-card (developer request)
+
+- [✓] Step 1 — AUD-20 media fixes
+  - [✓] 1a zoom directive: host image via ElementRef, zoom box passed as an input (no document-wide ids); `wheel` instead of non-standard `mousewheel` — zoom.directive.ts, gallery.component.html/.scss, DIRECTIVES_CONTRACTS.md
+  - [✓] 1b zoomable-image: arrow keys only when focus is inside it or its lightbox is open — zoomable-image.component.ts
+  - [✓] 1c carousel: wrap-around emits `openDetails` — carousel.component.ts
+  - [✓] 1d media-dialog: null loader result shows "No images available" (no broken img); close is a real `<button>` — media-dialog.component.ts/.html/.scss
+  - [✓] 1e sandbox descriptions updated (media keyboard text) — sandbox-media.component.html
+- [✓] Step 2 — verify AUD-20 + ROADMAP tick
+  - dev build clean (no NG warnings); eslint 0; prettier clean on the 9 touched files + DIRECTIVES_CONTRACTS.md; /sandbox/media and /sandbox/dialogs **not browser-checked**
+- [✓] Step 3 — AUD-22 + AUD-49 info-card fixes
+  - [✓] 3a values: render present falsy values (`false`, `0`); `fieldSub` booleans stay real booleans (`"No"` was truthy → green check) — info-card.component.ts
+  - [✓] 3b heightAuto: computed `cardHeight` field instead of writing into the `tableProperties` input — info-card.component.ts/.html, sandbox-cards-data.service.ts (comment)
+  - [✓] 3c header menu: per-instance `menuOpen` state + `[class.show]` instead of `document.getElementById` — info-card.component.ts/.html
+  - [✓] 3d AUD-49: render the status `postLabel: postText` (date) like list-card — info-card.component.html; `.header-date-display` moved to _card-shared.scss (removed from list-card.component.scss)
+  - [✓] 3e sandbox: info-card demo gains a status Created date and a `false` boolean row; stale heightAuto comment fixed — sandbox-cards-data.service.ts, sandbox-cards.component.html
+  - note: widening `_CardCol.value` to `string | boolean` was tried and reverted (≈10 template errors across info-card + list-card); fieldSub booleans use `"Yes"` / `""` instead
+- [✓] Step 4 — verify AUD-22/49 + ROADMAP ticks
+  - dev build clean; eslint 0; prettier clean on the 6 touched files; /sandbox/cards **not browser-checked**
+- [✓] Step 5 — end of task: production build (pre-existing initial-bundle warning only); eslint + prettier on all 15 touched source files + DIRECTIVES_CONTRACTS.md, ROADMAP.md, tracker; section moved to RATE_LIMIT_TRACKER_HISTORY.md

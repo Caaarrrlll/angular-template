@@ -63,6 +63,12 @@
 						<div>
 							@if (headCol.text.length) {
 								<span class="column-header-status" [style.--alignment]="headCol.alignment">
+									@if (headCol.postText?.length) {
+										<span class="header-date-display">
+											<b>{{ headCol.postLabel }}: </b> {{ headCol.postText | date: dateFormat }}
+											<b class="header-pre-text-devider">|</b>
+										</span>
+									}
 									<app-chip-status [text]="headCol.text" [type]="headCol.statusType ?? ''"></app-chip-status>
 								</span>
 							}
@@ -89,10 +95,10 @@
 
 					@if (!tableHeaderMenu.action) {
 						<div class="dropdown">
-							<button class="dropbtn" (click)="getMenu(tableHeaderMenu.id)">
+							<button type="button" class="dropbtn" [attr.aria-expanded]="menuOpen" (click)="toggleMenu()">
 								<mat-icon>{{ tableHeaderMenu.icon }}</mat-icon>
 							</button>
-							<div class="dropdown-content s-pt-16-pb-26" [id]="tableHeaderMenu.id">
+							<div class="dropdown-content s-pt-16-pb-26" [class.show]="menuOpen">
 								@for (menu of tableHeaderMenu.items; track $index) {
 									<div class="s-pl-12-pr-12">
 										<a class="menu-link" role="button" tabindex="0" (click)="menuClick(menu.action)" (keydown.enter)="menuClick(menu.action)">{{ menu.display }}</a>
@@ -106,7 +112,7 @@
 		</div>
 	</mat-card-header>
 	<mat-card-content>
-		<div class="card-height" [style.--height]="tableProperties.height">
+		<div class="card-height" [style.--height]="cardHeight">
 			@if (!data) {
 				<div class="s-pl-8">
 					<app-button
@@ -532,7 +538,7 @@
 									</div>
 								}
 								@case ("paragraph") {
-									<div class="display-paragraph" [style.--height]="tableProperties.height">
+									<div class="display-paragraph" [style.--height]="cardHeight">
 										{{ detail.value }}
 									</div>
 								}

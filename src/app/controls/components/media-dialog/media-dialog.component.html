@@ -1,16 +1,15 @@
-<span class="closeButton" role="button" tabindex="0" aria-label="Close" (click)="close()" (keydown.enter)="close()">
+<button type="button" class="closeButton" aria-label="Close" (click)="close()">
 	<mat-icon>close</mat-icon>
-</span>
+</button>
 @if (imageData$ | apiResponse | async; as imageData) {
-	@if (imageData.noData || imageData.error) {
-		<span class="no-data">No images available</span>
-	}
-	@if (imageData.payload) {
-		<div class="image-container">
-			<img [src]="mediaSrc(imageData)" class="image" alt="Media item" />
-		</div>
-	}
+	@let src = mediaSrc(imageData);
 	@if (imageData.loading) {
 		<app-loader [fontSize]="60"></app-loader>
+	} @else if (src) {
+		<div class="image-container">
+			<img [src]="src" class="image" alt="Media item" />
+		</div>
+	} @else {
+		<span class="no-data">No images available</span>
 	}
 }

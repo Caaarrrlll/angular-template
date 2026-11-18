@@ -9,5 +9,4 @@ import { RouterLink } from "@angular/router";
 	imports: [MatButtonModule, RouterLink],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- template-only page component: intentionally empty
 export class NotFoundComponent {}

@@ -8,11 +8,16 @@ export interface _ControlInterface {
 	disabled?: boolean;
 	hintText?: string;
 	validationDep?: string;
+	autoComplete?: boolean;
 }
 
 export interface _DialogControl {
 	type: FormType;
-	formName: string;
+	/** Optional: the dialog falls back to the control's index (AUD-09: required here but optional on every builder class). */
+	formName?: string;
+	/** Numeric bounds (Numeric builder), passed to appMinMax. */
+	min?: number;
+	max?: number;
 	value?: unknown;
 	label?: string;
 	placeholder?: string;
@@ -945,7 +950,7 @@ export class Numeric extends GenericControl {
 		decimals?: number;
 	}) {
 		super({
-			type: FormType.Input,
+			type: FormType.Numeric,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,

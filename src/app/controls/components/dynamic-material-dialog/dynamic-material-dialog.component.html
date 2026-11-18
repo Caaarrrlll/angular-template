@@ -1,11 +1,11 @@
 ﻿<div class="dynamic-material-dialog">
-	@if (options && options.draggable) {
+	@if (options.draggable) {
 		<h2 class="s-float-right-cursor-grab" mat-dialog-title cdkDrag cdkDragHandle cdkDragBoundary=".cdk-overlay-container" cdkDragRootElement=".cdk-overlay-pane">
 			{{ dialogSetup.title
 			}}<span class="s-float-right-cursor-pointer"><mat-icon role="button" tabindex="0" (keydown.enter)="close('close')" (click)="close('close')">close</mat-icon></span>
 		</h2>
 	}
-	@if (!options) {
+	@if (!options.draggable) {
 		<h2 mat-dialog-title>
 			{{ dialogSetup.title
 			}}<span class="s-float-right-cursor-pointer"><mat-icon role="button" tabindex="0" (keydown.enter)="close('close')" (click)="close('close')">close</mat-icon></span>
@@ -58,13 +58,7 @@
 									@if (control.label) {
 										<mat-label>{{ control.label }}</mat-label>
 									}
-									<input
-										autocomplete="off"
-										[formControlName]="control.formName || ''"
-										[type]="control.inputType ?? 'text'"
-										matInput
-										(input)="controlChange($any(control))"
-										[(ngModel)]="control.value" />
+									<input autocomplete="off" [formControlName]="control.formName || ''" [type]="control.inputType ?? 'text'" matInput (input)="controlChange($any(control))" />
 									@if (control.hintText) {
 										<mat-hint>{{ control.hintText }}</mat-hint>
 									}
@@ -77,11 +71,11 @@
 									}
 								</mat-form-field>
 
-								@if (control.autoComplete && this.autoCompleteList.length > 0 && this.searchInputName === control.formName) {
+								@if (control.autoComplete && (autoCompleteList().length > 0 || showSpinner()) && this.searchInputName === control.formName) {
 									<div>
-										<div class="s-p-5">Select a buylead below to verify</div>
+										<div class="s-p-5">Select a suggestion below</div>
 										<div class="auto-complete-container">
-											@for (item of this.autoCompleteList; track $index) {
+											@for (item of autoCompleteList(); track $index) {
 												<div
 													role="button"
 													tabindex="0"
@@ -91,7 +85,7 @@
 													{{ item }}
 												</div>
 											}
-											@if (showSpinner && this.searchInputName === control.formName) {
+											@if (showSpinner()) {
 												<mat-spinner class="s-m-0-auto" [diameter]="30"></mat-spinner>
 											}
 										</div>
@@ -341,14 +335,14 @@
 						<!--                Check box-->
 						@case (formType.CheckBox) {
 							<div class="checkbox-wrapper">
-								@if (control.filterable && this.showSearch) {
+								@if (control.filterable && (control.data?.length ?? 0) > 5) {
 									<mat-form-field>
 										<mat-label>Search</mat-label>
-										<input [formControl]="searchControl" matInput />
+										<input [formControl]="searchControls[control.formName || '']" matInput />
 									</mat-form-field>
 								}
 								<app-checkbox-group [formControlName]="control.formName || ''" [multi]="control.multi ?? false" class="checkbox-group">
-									@for (option of filteredData | async; track option.value) {
+									@for (option of filteredOptions[control.formName || ""] | async; track option.value) {
 										<app-checkbox [value]="$any(option.value)" (click)="rangeClicked(option)">{{ option.display }}</app-checkbox>
 									}
 								</app-checkbox-group>
@@ -357,14 +351,14 @@
 						<!--                Check box Range-->
 						@case (formType.CheckBoxRange) {
 							<div class="checkbox-wrapper">
-								@if (control.filterable && this.showSearch) {
+								@if (control.filterable && (control.data?.length ?? 0) > 5) {
 									<mat-form-field>
 										<mat-label>Search</mat-label>
-										<input [formControl]="searchControl" matInput />
+										<input [formControl]="searchControls[control.formName || '']" matInput />
 									</mat-form-field>
 								}
 								<app-range-checkbox-group [formControlName]="control.formName || ''" [multi]="control.multi ?? false" class="checkbox-group">
-									@for (option of filteredData | async; track option.value) {
+									@for (option of filteredOptions[control.formName || ""] | async; track option.value) {
 										<app-range-checkbox [value]="$any(option.range)" (click)="rangeClicked(option)">{{ option.display }}</app-range-checkbox>
 									}
 								</app-range-checkbox-group>
@@ -373,14 +367,14 @@
 						<!--                Radio Button-->
 						@case (formType.Radio) {
 							<div class="checkbox-wrapper">
-								@if (this.showSearch) {
+								@if ((control.data?.length ?? 0) > 5) {
 									<mat-form-field>
 										<mat-label>Search</mat-label>
-										<input [formControl]="searchControl" matInput />
+										<input [formControl]="searchControls[control.formName || '']" matInput />
 									</mat-form-field>
 								}
 								<mat-radio-group class="dynamic-radio-group" [formControlName]="control.formName || ''">
-									@for (option of filteredData | async; track option.value) {
+									@for (option of filteredOptions[control.formName || ""] | async; track option.value) {
 										<mat-radio-button class="dynamic-radio-button" [value]="option.value">{{ option.display }}</mat-radio-button>
 									}
 								</mat-radio-group>
@@ -463,8 +457,9 @@
 									[type]="control.inputType ?? 'text'"
 									matInput
 									(input)="controlChange($any(control))"
-									[(ngModel)]="control.value"
-									appMinMax />
+									appMinMax
+									[min]="control.min"
+									[max]="control.max" />
 								@if (control.hintText) {
 									<mat-hint>{{ control.hintText }}</mat-hint>
 								}

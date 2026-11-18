@@ -136,7 +136,8 @@ export class DynamicWindowComponent implements OnInit {
 		if (this.form.valid) {
 			this.dialogRef.close(this.form.value);
 		} else {
-			this.snackbarService.open("Please select a sales executive or type in a mobile number", "error");
+			this.form.markAllAsTouched();
+			this.snackbarService.open("Please complete the form fully", "error");
 		}
 	}
 

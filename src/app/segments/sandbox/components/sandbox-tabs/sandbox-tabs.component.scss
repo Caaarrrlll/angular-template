@@ -2,8 +2,6 @@
 
 :host {
 	display: block;
-	// consumed by the vertical tab-group config (tabLabelBackgroundColor) in sandbox-tabs.component.ts
-	--sandbox-tab-label-background: #{$color-navy-dark};
 }
 
 .sandbox-tabs__panel {

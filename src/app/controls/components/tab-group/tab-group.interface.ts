@@ -15,9 +15,11 @@ export interface CustTabConfig {
 	fontSize?: string;
 }
 
+/** One tab. For `tabType: "vertical"` the process-gap/divider styling covers the first 12 tabs. */
 export interface CustTab {
 	tabName: string;
 	index: number;
+	/** Key of this tab's content: `<ng-template appTabGroupContent="<classSelect>">` (AUD-16). */
 	classSelect: string;
 	icon?: string;
 	isProcess?: boolean;

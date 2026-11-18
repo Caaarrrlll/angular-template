@@ -19,7 +19,7 @@ This file documents the shared directives in `src/app/library/directives`. Revie
 | `MinMaxDecimalDirective`       | `[appMinMaxDecimal]`                 | `min-max-decimal.directive.ts`        | Yes        | Digits/`.`/`,` typing, clamped to `min`/`max` on input.                |
 | `NDigitDecimalNumberDirective` | `[appNDigitDecimalNumber]`           | `n-digit-decimal-number.directive.ts` | Yes        | Blocks keys that would exceed N decimal places.                        |
 | `NumericInputDirective`        | `[appNumericInput]`                  | `numeric-input.directive.ts`          | Yes        | Allows only the digits 0-9 to be typed.                                |
-| `ZoomDirective`                | `[appCursorFollowZoom]`              | `zoom.directive.ts`                   | Yes        | Cursor-following magnifier for the gallery's main image.               |
+| `ZoomDirective`                | `img[appCursorFollowZoom]`           | `zoom.directive.ts`                   | Yes        | Cursor-following magnifier for the gallery's main image.               |
 
 Live demos of every directive: `/sandbox/inputs` (input directives), `/sandbox/misc` (`appCopyText`, `appClickElsewhere`), `/sandbox/media` (`appCursorFollowZoom` via the gallery), `/sandbox/upload` (`appDragAndDropFiles`).
 
@@ -103,7 +103,7 @@ Live demos of every directive: `/sandbox/inputs` (input directives), `/sandbox/m
 ## ZoomDirective
 
 - **Purpose:** Shows a magnifier box that follows the cursor over an image and changes zoom on the mouse wheel. Built for the gallery's fullscreen view.
-- **Inputs:** `appCursorFollowZoom: boolean` (enable), `imageID = "mainGalleryImage"`, `height = 300`, `width = 400`, `zoom = 2`.
-- **Requirements:** the page must contain an element with id `galleryZoomBox` and an image with id `imageID`.
-- **Example:** `<img id="mainGalleryImage" [appCursorFollowZoom]="imageZoom && fullscreenOpen" />`
-- **Known issues:** looks both elements up document-wide, so two instances on one page interfere (AUD-20).
+- **Inputs:** `appCursorFollowZoom: boolean` (enable), `zoomBox: HTMLElement | undefined` (the magnifier element, usually a template reference), `height = 300`, `width = 400`, `zoom = 2`.
+- **Requirements:** the host must be an `<img>` (it is the zoomed image). The `zoomBox` element needs the image as its `background-image` and a `galleryZoomBoxVisible` class that shows it (see the gallery SCSS). No ids are used, so any number of instances can share a page.
+- **Example:** `<span #zoomBox class="galleryZoomBox" [style.background-image]="'url(' + src + ')'"></span> <img [src]="src" [appCursorFollowZoom]="imageZoom && fullscreenOpen" [zoomBox]="zoomBox" />`
+- **Changed 2026-11-18 (AUD-20):** the `imageID` input and the `#galleryZoomBox` / `#mainGalleryImage` ids were removed (breaking for forks that used them); the wheel listener uses the standard `wheel` event.

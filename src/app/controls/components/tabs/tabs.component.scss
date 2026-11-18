@@ -99,7 +99,8 @@
 		display: none !important;
 	}
 }
-@media (min-width: 600px) {
+// gt-sm = 960px and up (Material breakpoint naming), so exactly one of the two step lists shows at every width.
+@media (min-width: 960px) {
 	.hide-gt-sm {
 		display: none !important;
 	}

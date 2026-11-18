@@ -144,6 +144,15 @@ export class SandboxDialogsComponent {
 		this.openDynamic(this.dialogsData.dmdCheckboxSetup(), this.dynamicFormLog, `checkbox`);
 	}
 
+	public openDynamicChoiceLists(): void {
+		this.openDynamic(this.dialogsData.dmdChoiceListsSetup(), this.dynamicFormLog, `choice lists`);
+	}
+
+	/** AUD-10 regression: no options → the plain (non-draggable) title bar must render. */
+	public openDynamicPlainTitle(): void {
+		this.openDynamic(this.dialogsData.dmdApprovalSetup(), this.dynamicButtonsLog, `approval, no options`, {});
+	}
+
 	public openDynamicSliderUpload(): void {
 		this.openDynamic(this.dialogsData.dmdSliderUploadSetup(), this.dynamicFormLog, `slider + upload`);
 	}
@@ -160,9 +169,7 @@ export class SandboxDialogsComponent {
 
 	// ---- helpers ------------------------------------------------------------------------------
 
-	private openDynamic(setup: DynamicDialogSetup, log: SandboxEventLog, label: string): void {
-		// The dialog only renders its title bar when `draggable` is set (see report).
-		const options: _DialogOptions = { draggable: true };
+	private openDynamic(setup: DynamicDialogSetup, log: SandboxEventLog, label: string, options: _DialogOptions = { draggable: true }): void {
 		openDynamicDialog(this.dialog, setup, this.config({ width: `520px` }), options)
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe((result: unknown): void => {

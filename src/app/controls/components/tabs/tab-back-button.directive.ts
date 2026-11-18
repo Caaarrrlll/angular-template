@@ -11,13 +11,7 @@ export class TabBackButtonDirective {
 	private readonly tabsComponent = inject(TabsComponent);
 
 	onBackClick(): void {
-		const tabs = this.tabsComponent.tabs.toArray();
-		const selectedIndex = tabs.map((tab) => tab.active()).indexOf(true);
-		tabs[selectedIndex].active.set(false);
-		if (!tabs[selectedIndex - 1]) {
-			return;
-		} else {
-			tabs[selectedIndex - 1].active.set(true);
-		}
+		// goTo() ignores out-of-range targets, so Back on the first step stays put.
+		this.tabsComponent.goTo(this.tabsComponent.activeIndex() - 1);
 	}
 }

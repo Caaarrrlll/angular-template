@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, NgZone, OnInit, ViewChild, inject } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, NgZone, OnInit, ViewChild, inject, WritableSignal, signal } from "@angular/core";
 import { AsyncPipe, CurrencyPipe } from "@angular/common";
-import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
@@ -14,7 +14,7 @@ import { MatSelectChange, MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Observable, Subject } from "rxjs";
-import { debounceTime, filter, map, startWith, takeUntil } from "rxjs/operators";
+import { debounceTime, filter, map, skip, startWith, takeUntil } from "rxjs/operators";
 import { ButtonToggleComponent } from "@shared/components/button-toggle/button-toggle.component";
 import { ButtonToggleResponse } from "@shared/components/button-toggle/button-toggle.interface";
 import { CheckboxComponent } from "@shared/components/checkbox-group/checkbox/checkbox.component";
@@ -44,7 +44,6 @@ export interface _DialogOptions {
 	imports: [
 		AsyncPipe,
 		CurrencyPipe,
-		FormsModule,
 		ReactiveFormsModule,
 		MatDialogModule,
 		MatButtonModule,
@@ -72,20 +71,20 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 	public readonly form: FormGroup = new FormGroup({});
 	public readonly dialogSetup: DynamicDialogSetup;
 	public readonly options: _DialogOptions = {};
-	public data: _FormData[] = [];
-	public filteredData?: Observable<_FormData[]>;
-	public autoCompleteList: string[] = [];
+	/** Per-control search box and filtered options for CheckBox / CheckBoxRange / Radio, keyed by formName (AUD-10: they used to share one list). */
+	public readonly searchControls: Record<string, FormControl<string | null>> = {};
+	public readonly filteredOptions: Record<string, Observable<_FormData[]>> = {};
+	// Signals so async autocomplete responses render under OnPush without waiting for the next keystroke (AUD-10).
+	public readonly autoCompleteList: WritableSignal<string[]> = signal<string[]>([]);
 	public files: File[] = [];
-	public showSearch = false;
 	public searchInputName = "";
 	public autoCompleteActive = false;
-	public showSpinner = false;
+	public readonly showSpinner: WritableSignal<boolean> = signal(false);
 	public equalSelected = false;
 	public selectedDate: Date | null = null;
 	public curRange: unknown;
 	public allowManualInput = false;
 	public filesToAccept = "";
-	public searchControl = new FormControl<string>("");
 	@ViewChild("mapSearchField") searchField: ElementRef<HTMLElement> | undefined;
 	private readonly inputChange$ = new Subject<_ControlInterface>();
 	private readonly dialogData = inject<_DynamicDialogOptions>(MAT_DIALOG_DATA);
@@ -107,22 +106,17 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		return FormType;
 	}
 
-	_filter(value: string): _FormData[] {
-		const filterValue = value.toLowerCase();
-
-		return this.data.filter((option) => option.display.toLowerCase().includes(filterValue));
-	}
-
 	getEnumName(type: ValidatorType): string {
 		// noSpace/phone are implemented with Validators.pattern, so their errors live under the `pattern` key.
 		return type === ValidatorType.noSpace || type === ValidatorType.phone ? ValidatorType[ValidatorType.pattern] : ValidatorType[type];
 	}
 
 	ngAfterViewInit(): void {
-		this.dynamicDialogService.responseNotification.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((res) => {
-			this.showSpinner = false;
+		// skip(1): the service is app-wide and its BehaviorSubject would replay the previous dialog's notification.
+		this.dynamicDialogService.responseNotification.pipe(skip(1), takeUntilDestroyed(this.destroyRef)).subscribe((res) => {
+			this.showSpinner.set(false);
 			if (res.length > 0 && !this.autoCompleteActive) {
-				this.autoCompleteList = this.dynamicDialogService.getResponse();
+				this.autoCompleteList.set([...this.dynamicDialogService.getResponse()]);
 			}
 		});
 		this.loadMaps();
@@ -146,14 +140,11 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		});
 
 		this.dialogSetup.controls?.map((element, i) => {
-			if (!element.formName) {
+			// Missing or empty names fall back to the control's index ("" counts as missing, so not `??=`).
+			if (element.formName === undefined || element.formName === "") {
 				element.formName = i.toString();
 			}
 			const formName: string = element.formName;
-
-			if ((element.data?.length ?? 0) > 5) {
-				this.showSearch = true;
-			}
 
 			switch (element.type) {
 				case FormType.RangeDate: {
@@ -198,33 +189,21 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 				case FormType.CheckBox: {
 					this.form.addControl(formName, new FormControl(element.value ?? []));
 					if (element instanceof CheckBox) {
-						this.data = element.data;
-						this.filteredData = this.searchControl.valueChanges.pipe(
-							startWith(""),
-							map((value) => this._filter(value ?? "")),
-						);
+						this.registerOptions(formName, element.data);
 					}
 					break;
 				}
 				case FormType.CheckBoxRange: {
 					this.form.addControl(formName, new FormControl(element.value ?? []));
 					if (element instanceof CheckBoxRange) {
-						this.data = element.data;
-						this.filteredData = this.searchControl.valueChanges.pipe(
-							startWith(""),
-							map((value) => this._filter(value ?? "")),
-						);
+						this.registerOptions(formName, element.data);
 					}
 					break;
 				}
 				case FormType.Radio: {
 					this.form.addControl(formName, new FormControl(element.value || typeof element.value === "boolean" ? element.value : []));
 					if (element instanceof RadioButton) {
-						this.data = element.data;
-						this.filteredData = this.searchControl.valueChanges.pipe(
-							startWith(""),
-							map((value) => this._filter(value ?? "")),
-						);
+						this.registerOptions(formName, element.data);
 					}
 					break;
 				}
@@ -410,10 +389,6 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 
 	save(): void {
 		this.form.markAllAsTouched();
-		if (this.form.get("email")?.errors?.["pattern"]) {
-			this.snackbarService.open("An email address containing 'payroll' cannot be used. Please provide a different email address.", "warning");
-			return;
-		}
 		if (this.form.valid) {
 			this.dialogRef.close(this.form.value);
 		} else {
@@ -459,7 +434,23 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		});
 	}
 
+	private registerOptions(formName: string, data: _FormData[]): void {
+		const search = new FormControl<string | null>("");
+		this.searchControls[formName] = search;
+		this.filteredOptions[formName] = search.valueChanges.pipe(
+			startWith(""),
+			map((value: string | null): _FormData[] => {
+				const term = (value ?? "").toLowerCase();
+				return data.filter((option) => option.display.toLowerCase().includes(term));
+			}),
+		);
+	}
+
 	controlChange(control: _ControlInterface): void {
+		// Only autocomplete inputs search (AUD-10: every Input used to trigger the search and claim the suggestion list).
+		if (!control.autoComplete) {
+			return;
+		}
 		this.inputChange$.next(control);
 	}
 
@@ -474,20 +465,20 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 
 		this.equalSelected = event.value === "eq";
 		controls[0].value = event.value as string;
-		this.form.controls[controls[0].formName].setValue(event.value);
+		this.form.controls[controls[0].formName ?? ""].setValue(event.value);
 
 		if (controls[2].value === "or") {
 			return;
 		}
 		if (this.equalSelected && controls[2].value !== "") {
 			controls[2].value = "or";
-			this.form.controls[controls[2].formName].setValue("or");
+			this.form.controls[controls[2].formName ?? ""].setValue("or");
 		}
 		const secondDropdown = controls[3];
 		secondDropdown.data = controls[2].value === "or" ? controls[0].data : (controls[0].data?.filter((op) => op.value !== event.value && op.value !== "eq") ?? []);
 		const secondData: _FormData[] = secondDropdown.data ?? [];
 		secondDropdown.value = secondData[0].value;
-		this.form.controls[secondDropdown.formName].setValue(secondDropdown.value);
+		this.form.controls[secondDropdown.formName ?? ""].setValue(secondDropdown.value);
 	}
 
 	handleControlChange(control: _ControlInterface): void {
@@ -502,8 +493,8 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 			return;
 		}
 
-		this.dynamicDialogService.setDialogInputSearch(control.value ?? "");
-		this.showSpinner = true;
+		this.showSpinner.set(true);
+		this.dynamicDialogService.setDialogInputSearch(String(this.form.get(control.formName ?? "")?.value ?? ""));
 		if (this.searchInputName.length == 0) {
 			this.searchInputName = control.formName ?? "";
 		}
@@ -515,9 +506,9 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		this.dynamicDialogService.setDialogInputSearch("");
 		this.dynamicDialogService.clearResponse();
 
-		control.value = value;
+		this.form.get(control.formName ?? "")?.setValue(value);
 		this.dynamicDialogService.setSelected(value);
-		this.autoCompleteList = [];
+		this.autoCompleteList.set([]);
 	}
 
 	handleFilesDropped(files: File[] | FileList, formName?: string): void {
@@ -542,14 +533,14 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 			return;
 		}
 		if (!controls[2].value) {
-			this.form.controls[controls[3].formName].enable();
-			this.form.controls[controls[4].formName].enable();
+			this.form.controls[controls[3].formName ?? ""].enable();
+			this.form.controls[controls[4].formName ?? ""].enable();
 		}
 		const secondDropdown = controls[3];
 		secondDropdown.data = value === "or" ? controls[0].data : (controls[0].data?.filter((op) => op.value !== controls[0].value && op.value !== "eq") ?? []);
 		const secondData: _FormData[] = secondDropdown.data ?? [];
 		secondDropdown.value = secondData[0].value;
-		this.form.controls[secondDropdown.formName].setValue(secondDropdown.value);
+		this.form.controls[secondDropdown.formName ?? ""].setValue(secondDropdown.value);
 		controls[2].value = value;
 	}
 }

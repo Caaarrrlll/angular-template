@@ -59,13 +59,14 @@ export class InfoCardComponent implements AfterContentInit {
 	public left = 0;
 	public displayDetails: _DisplayDetail[] = [];
 	public errorActionButton = "";
+	/** Card body height: `tableProperties.height`, or derived from the row count when `heightAuto` is set (the input is never written to). */
+	public cardHeight = "";
+	public menuOpen = false;
 
 	public ngAfterContentInit(): void {
 		this.mapData();
 
-		if (this.tableProperties.heightAuto) {
-			this.tableProperties.height = `${String(this.tableConfig.length * 22)}px`;
-		}
+		this.cardHeight = this.tableProperties.heightAuto ? `${String(this.tableConfig.length * 22)}px` : this.tableProperties.height;
 	}
 
 	public buttonAction(action: string): void {
@@ -223,7 +224,8 @@ export class InfoCardComponent implements AfterContentInit {
 				const field: string = config.field,
 					sub: string | undefined = config.fieldSub;
 
-				if (!sub && data[field]) {
+				// `false` and `0` are real values: only missing/empty ones are skipped.
+				if (!sub && hasValue(data[field])) {
 					this.cardCols.push({
 						label: config.display,
 						value: data[field] as string,
@@ -237,15 +239,7 @@ export class InfoCardComponent implements AfterContentInit {
 					if (fieldValue) {
 						this.cardCols.push({
 							label: config.display,
-							value: subValue
-								? (subValue as string)
-								: config.type === _TableTypes.Text
-									? "N/A"
-									: config.type === _TableTypes.Boolean
-										? subValue
-											? "Yes"
-											: "No"
-										: (subValue as string),
+							value: this.subFieldValue(subValue, config.type),
 							type: config.type,
 							buttonClick: config.editAction,
 						});
@@ -268,6 +262,20 @@ export class InfoCardComponent implements AfterContentInit {
 			width: this.tableProperties.width[currentCol - 1],
 		});
 		this.cardCols.splice(0, this.cardCols.length);
+	}
+
+	/**
+	 * Display value for a `fieldSub` cell. The template's boolean case tests truthiness (check vs cross), so false must
+	 * be a falsy string: the old `"No"` was truthy and showed a check mark. Missing text falls back to "N/A".
+	 */
+	private subFieldValue(subValue: unknown, type: string | undefined): string {
+		if (type === _TableTypes.Boolean) {
+			return subValue ? `Yes` : ``;
+		}
+		if (!hasValue(subValue) && type === _TableTypes.Text) {
+			return `N/A`;
+		}
+		return subValue as string;
 	}
 
 	private mapHeaderParent(data: Record<string, unknown>, config: _CustCardHeaderTableInterface): void {
@@ -388,8 +396,9 @@ export class InfoCardComponent implements AfterContentInit {
 		return colour;
 	}
 
-	public getMenu(id: string): void {
-		document.getElementById(id)?.classList.toggle("show");
+	/** Per-instance menu state, so cards that share a menu `id` no longer toggle each other's menus. */
+	public toggleMenu(): void {
+		this.menuOpen = !this.menuOpen;
 	}
 
 	public menuClick(action: string): void {
@@ -419,4 +428,9 @@ export class InfoCardComponent implements AfterContentInit {
 		const rect: DOMRect | undefined = target instanceof Element ? target.getBoundingClientRect() : undefined;
 		return rect ? { x: rect.right, y: rect.top + rect.height / 2 } : { x: 0, y: 0 };
 	}
+}
+
+/** A cell value worth rendering: anything except `null`, `undefined` and the empty string (so `false` and `0` count). */
+function hasValue(value: unknown): boolean {
+	return value !== null && value !== undefined && value !== ``;
 }
