@@ -9,7 +9,7 @@ Read in this order when relevant to the task:
 1. This file (`AGENTS.md`) - persona, standards, architecture, process.
 2. `RATE_LIMIT_TRACKER.md` - the active session checklist; read it before starting any work and resume from its first unchecked item (see the Rate Limit Tracker section).
 3. `ROADMAP.md` - standing policy (including the "do not migrate" control list) and open work; read the Standing policy block before changing a control.
-4. The contracts files (see Contracts) - only when creating or changing a pipe, service or validator.
+4. The contracts files (see Contracts) - only when creating or changing a directive, pipe, service or validator.
 
 Do **not** read `RATE_LIMIT_TRACKER_HISTORY.md`, `ROADMAP_HISTORY.md` or `MIGRATION_TRACKER.md` unless the task needs past context (for example "why was X decided"); they are archives, not instructions.
 
@@ -35,16 +35,17 @@ When multiple solutions exist:
 
 Each library area keeps a contracts file. Review it before creating something new in that area (to avoid duplicates), and update it in the same change whenever an item is added, changed or removed:
 
+- Directives - `src/app/library/directives/DIRECTIVES_CONTRACTS.md`: name, selector, location, purpose, inputs/outputs, requirements.
 - Pipes - `src/app/library/pipes/PIPES_CONTRACTS.md`: name, location, purpose, inputs, outputs.
 - Services - `src/app/library/services/SERVICES_CONTRACTS.md`: name, location, purpose, public API.
 - Validators - `src/app/library/validators/VALIDATORS_CONTRACTS.md`: name, location, purpose, usage.
 
 ## Coding Standards
 
-Enforced by tooling (lint/prettier are the source of truth; keep this paragraph in sync when a rule changes): `eslint.config.js` enforces explicit return types, no `console` (log through the project `LoggerService`), no `setTimeout` / `detectChanges()` / `Promise.resolve().then(...)` (use `effect()`, `computed()` or `afterNextRender`), `@Service()` instead of `@Injectable({ providedIn })`, `inject()` over constructor injection, `@if`/`@for`/`@switch` control flow, plus the strict `typescript-eslint` and Angular template rules (template `===` required except the `== null` / `!= null` idiom; directive and component selectors use the `app` prefix); `.prettierrc.json` enforces semicolons, double quotes as the non-template default, and tabs. The list below is judgement - follow it by hand.
+Enforced by tooling (lint/prettier are the source of truth; keep this paragraph in sync when a rule changes): `eslint.config.js` enforces explicit return types, no `console` (log through the project `LoggerService`), no `setTimeout` / `detectChanges()` / `Promise.resolve().then(...)` (use `effect()`, `computed()` or `afterNextRender`), `@Service()` instead of `@Injectable({ providedIn })`, `inject()` over constructor injection, `@if`/`@for`/`@switch` control flow, plus the strict `typescript-eslint` and Angular template rules (template `===` required except the `== null` / `!= null` idiom; directive and component selectors use the `app` prefix); `.prettierrc.json` enforces semicolons, double quotes as the non-template default, and tabs. Angular extended diagnostics are not suppressed: a build must stay free of `NG81xx` warnings (e.g. NG8102 dead `??`) - remove the dead operator, or widen the type when untyped runtime data really can be null. The list below is judgement - follow it by hand.
 
 - Default to backticks (`) for string literals in new TypeScript code so interpolation is easy. Exceptions: module specifiers (`import ... from "x"`, `import("x")`), which cannot be template literals, and decorator metadata, which keep double quotes. Do not convert quotes in existing code you are not otherwise changing.
-- Use path aliases (`@shared/*`, `@segments/*`, see `tsconfig.json`) instead of relative or absolute paths. Known gap: `src/environments` has no alias yet, so its few relative imports are accepted. When a new path is introduced, offer to create an alias instead.
+- Use path aliases (`@shared/*`, `@segments/*`, `@environments/*`, see `tsconfig.json`) instead of relative or absolute paths. When a new path is introduced, offer to create an alias instead.
 - Use `Array.map` only when you need the mapped array. For side effects use `for...of` (or `forEach` with a block body); never `map` with a callback that returns `void`.
 - Strongly type variables and parameters.
 - Tear down long-lived RxJS subscriptions with `takeUntilDestroyed()` (from `@angular/core/rxjs-interop`); if outside of an injectable context, inject `DestroyRef` and pass it `takeUntilDestroyed(this.destroyRef)`.
@@ -82,7 +83,7 @@ Do not:
 - `src/app/controls`: Contains reusable shared controls (for example the Navigation component). Control-specific animations live in an `animations` folder inside the owning control (for example `src/app/controls/components/accordion/animations/`).
 - `src/app/segments`: Contains logical components that fulfil whole ideas; each segment can be seen as a whole feature. `src/app/segments/sandbox` is the dev-only demo area for every control (`/sandbox`, gated by `environment.showComponentSandbox`).
 - `src/app/library`: Contains shared code and, in the future, interceptors, directives, validators, guards and utils.
-- `src/app/library/directives`: Contains reusable directives.
+- `src/app/library/directives`: Contains reusable directives and `DIRECTIVES_CONTRACTS.md`.
 - `src/app/library/pipes`: Contains reusable pipes and `PIPES_CONTRACTS.md`.
 - `src/app/library/services`: Contains shared services (for example the logger service) and `SERVICES_CONTRACTS.md`.
 - `src/app/library/validators`: Contains reusable validators and `VALIDATORS_CONTRACTS.md`.

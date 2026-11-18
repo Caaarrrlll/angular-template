@@ -426,6 +426,8 @@ export class SandboxDialogsDataService {
 					],
 				},
 				{ type: `Input`, formName: `mobile`, placeholder: `Mobile number`, validators: `phone`, validationDep: `salesExec` },
+				// AUD-42 regression: required + email on the same control (required used to be dropped).
+				{ type: `Input`, formName: `contactEmail`, placeholder: `Contact email (required)`, validators: `email`, required: true },
 				{
 					type: `BtnGroup`,
 					formName: `priority`,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -16,46 +16,53 @@ interface RangeSliderValues {
 	imports: [MatSliderModule, MatFormFieldModule, MatInputModule],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RangeSliderComponent {
+export class RangeSliderComponent implements OnInit {
 	@Input() public disabled = false;
 	@Input() public color: ThemePalette = "primary";
 	@Input() public unit?: string;
 	@Input() public min = 0;
 	@Input() public max = 100;
-	@Input() public minValue: number = this.min;
-	@Input() public maxValue: number = this.max;
+	/** Initial lower value; defaults to `min`. */
+	@Input() public minValue?: number;
+	/** Initial upper value; defaults to `max`. */
+	@Input() public maxValue?: number;
 	@Input() public step = 10;
 	@Input() public displayWith: (value: number) => string = (value: number): string => String(value);
 	@Input() public prefix?: boolean;
 	@Input() public suffix?: boolean;
 	@Output() public valueChange: EventEmitter<RangeSliderValues> = new EventEmitter<RangeSliderValues>();
 
-	public values: RangeSliderValues = { minValue: this.minValue, maxValue: this.maxValue };
+	public values: RangeSliderValues = { minValue: 0, maxValue: 100 };
+
+	// Built here, not in a field initialiser: inputs are not set yet when the class is constructed (AUD-11).
+	public ngOnInit(): void {
+		this.reset();
+	}
 
 	public minUpdated(value: number): void {
 		this.applyMin(value);
-		this.valueChange.emit(this.values);
+		this.valueChange.emit({ ...this.values });
 	}
 
 	public maxUpdated(value: number): void {
 		this.applyMax(value);
-		this.valueChange.emit(this.values);
+		this.valueChange.emit({ ...this.values });
 	}
 
 	public minInputUpdated(input: HTMLInputElement): void {
 		this.applyMin(Number(input.value));
-		this.valueChange.emit(this.values);
+		this.valueChange.emit({ ...this.values });
 	}
 
 	public maxInputUpdated(input: HTMLInputElement): void {
 		this.applyMax(Number(input.value));
-		this.valueChange.emit(this.values);
+		this.valueChange.emit({ ...this.values });
 	}
 
 	public reset(): void {
 		this.values = {
-			minValue: this.minValue,
-			maxValue: this.maxValue,
+			minValue: this.minValue ?? this.min,
+			maxValue: this.maxValue ?? this.max,
 		};
 	}
 

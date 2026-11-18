@@ -10,7 +10,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "nameToInitials",
-	standalone: true,
 })
 export class NameToInitialsPipe implements PipeTransform {
 	public transform(value: string | undefined): string {

@@ -15,7 +15,6 @@ export interface _GroupedDate {
  */
 @Pipe({
 	name: "groupByDate",
-	standalone: true,
 })
 export class GroupByDatePipe implements PipeTransform {
 	private readonly datePipe = inject(DatePipe);

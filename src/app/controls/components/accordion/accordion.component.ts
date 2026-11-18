@@ -7,7 +7,6 @@ import { AccordionItemDirective } from "@shared/components/accordion/directives/
 	selector: "app-accordion",
 	templateUrl: "./accordion.component.html",
 	styleUrls: ["./accordion.component.scss"],
-	standalone: true,
 	imports: [NgTemplateOutlet],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

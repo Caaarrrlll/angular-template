@@ -255,3 +255,16 @@ Task: critical signals-readiness check of the project and a concrete migration p
     - AGENTS.md read-through: lint-enforced rules removed from the hand-followed list (one source of truth)
 [✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md
     - next: developer review of the new AGENTS.md rules; nothing committed
+
+## Task (2026-11-18): fix NG8102/NG8107 nullish-coalescing / optional-chain template warnings (developer request)
+
+[✓] Step 1: un-suppress nullishCoalescingNotNullable + optionalChainNotNullable in tsconfig.app.json/tsconfig.spec.json; collect the full list from a build
+    - suppressions removed (default severity: warning); build listed 7 × NG8102, 0 × NG8107 (currency one fixed earlier)
+[✓] Step 2: fix each — remove the operator where the value is truly non-null, or widen the type where untyped/runtime data can be null (keep the runtime guard)
+    - removed dead `?? ''` inside narrowing @if blocks: list-card.html:147,176,248,262 (`detail.label`), info-card.html:211,281 (`detail.buttonClick`)
+    - carousel: new `selectedImage` computed via `.at()` (typed `| undefined`, empty/out-of-range list is real) → template guard is now correctly typed
+[✓] Step 3: verify (build with zero NG8102/NG8107, eslint, prettier, browser spot-check of touched controls)
+    - dev + prod build: 0 NG81xx (prod: pre-existing budget warning only); eslint + prettier clean on touched files
+    - headless Edge: carousel renders + next → 2 of 7; list-card label widths computed (80px/50px); info-card edit icon click logs buttonClick; no console errors
+    - AGENTS.md tooling paragraph: extended diagnostics stay unsuppressed
+[✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md

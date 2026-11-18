@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
 	name: "dayAndHours",
-	standalone: true,
 })
 export class DayAndHoursPipe implements PipeTransform {
 	public transform(value: Date | string | null | undefined): string {

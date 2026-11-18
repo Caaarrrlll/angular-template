@@ -3,7 +3,6 @@ import { DateTimeOpsService } from "@shared/services/date-time-ops.service";
 
 @Pipe({
 	name: "timeElapsedFormat",
-	standalone: true,
 	pure: false,
 })
 export class TimeElapsedFormatPipe implements PipeTransform {

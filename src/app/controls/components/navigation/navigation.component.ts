@@ -9,13 +9,12 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { RouterLink } from "@angular/router";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
-import { environment } from "../../../../environments/environment";
+import { environment } from "@environments/environment";
 
 @Component({
 	selector: "app-navigation",
 	templateUrl: "./navigation.component.html",
 	styleUrls: ["./navigation.component.scss"],
-	standalone: true,
 	imports: [AsyncPipe, MatButtonModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule, RouterLink],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

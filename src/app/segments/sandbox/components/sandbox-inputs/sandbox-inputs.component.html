@@ -57,10 +57,13 @@
 		</div>
 	</app-sandbox-demo>
 
-	<app-sandbox-demo title="Select option" description="app-select-option as radio (default type) and checkbox; selected output logged." [log]="optionLog.entries()">
+	<app-sandbox-demo
+		title="Select option"
+		description="app-select-option as radio (default type, grouped with a shared name) and checkbox; selected output logged."
+		[log]="optionLog.entries()">
 		<div class="sandbox-inputs__row">
 			@for (option of radioOptions; track option.value) {
-				<app-select-option [value]="option.value" (selected)="onOptionSelected('radio', $event)">{{ option.label }}</app-select-option>
+				<app-select-option name="sandbox-option-radio" [value]="option.value" (selected)="onOptionSelected('radio', $event)">{{ option.label }}</app-select-option>
 			}
 		</div>
 		<div class="sandbox-inputs__row">

@@ -41,7 +41,6 @@ export interface _DialogOptions {
 	selector: "app-dynamic-material-dialog",
 	templateUrl: "./dynamic-material-dialog.component.html",
 	styleUrls: ["./dynamic-material-dialog.component.scss"],
-	standalone: true,
 	imports: [
 		AsyncPipe,
 		CurrencyPipe,

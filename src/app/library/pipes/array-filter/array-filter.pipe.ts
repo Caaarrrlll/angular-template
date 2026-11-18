@@ -9,7 +9,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "arrayFilter",
-	standalone: true,
 })
 export class FilterPipe implements PipeTransform {
 	public transform<T extends object>(items: T[] | undefined | null, filter: Partial<T> | ((item: T) => boolean) | undefined | null): T[] {

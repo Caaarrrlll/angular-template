@@ -1,5 +1,5 @@
 import { Routes } from "@angular/router";
-import { environment } from "../environments/environment";
+import { environment } from "@environments/environment";
 
 const sandboxRoutes: Routes = environment.showComponentSandbox
 	? [

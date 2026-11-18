@@ -2,11 +2,7 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
-import { ChipStatusComponent } from "@shared/components/chip-status/chip-status.component";
-import { CountDownComponent } from "@shared/components/count-down/count-down.component";
 import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
-import { CurrencyComponent } from "@shared/components/currency/currency.component";
-import { CustButtonInput } from "@shared/models/cust-basic-controls";
 import {
 	_CustCardButtonTableInterface,
 	_CustCardHeaderTableInterface,
@@ -15,9 +11,13 @@ import {
 	_DataProcessResponse,
 } from "@shared/components/card-table/cust-card-table.interface";
 import { _TableTypes } from "@shared/components/card-table/cust-table.enum";
+import { ChipStatusComponent } from "@shared/components/chip-status/chip-status.component";
+import { CountDownComponent } from "@shared/components/count-down/count-down.component";
+import { CurrencyComponent } from "@shared/components/currency/currency.component";
+import { CustButtonInput } from "@shared/models/cust-basic-controls";
+import { _CustCardHeaderDataInterface } from "./list-card-data-header.interface";
 import { _HeaderAlignment, _HeaderTypes, _StatusChip } from "./list-card.enum";
 import { _CardCol, _CardListButtons, _CardRow, _ListCardButtonClick } from "./list-card.interface";
-import { _CustCardHeaderDataInterface } from "./list-card-data-header.interface";
 
 export interface _ListCardParentDataContext {
 	data: Record<string, unknown>;
@@ -301,7 +301,7 @@ export class ListCardComponent implements OnChanges, OnInit {
 					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
 					textColor: config.textColor,
 					postText: resp.postText,
-					postLable: resp.postLable,
+					postLabel: resp.postLabel,
 					statusType: resp.action,
 				});
 			} else {
@@ -330,7 +330,7 @@ export class ListCardComponent implements OnChanges, OnInit {
 						alignment: _HeaderAlignment.end,
 						statusType: this.setStatusChip(data[config.field] as string),
 						postText: config.postText !== undefined ? (data[config.postText] as string) : undefined,
-						postLable: config.postLable,
+						postLabel: config.postLabel,
 					});
 				} else if (sub && !config.textPre) {
 					this.cardHeaders.push({

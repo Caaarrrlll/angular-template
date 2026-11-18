@@ -9,7 +9,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "nearest",
-	standalone: true,
 })
 export class NearestPipe implements PipeTransform {
 	public transform(value: number, unit: number): number {

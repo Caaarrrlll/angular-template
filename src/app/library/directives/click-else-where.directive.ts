@@ -2,7 +2,6 @@ import { Directive, ElementRef, EventEmitter, HostListener, Output, inject } fro
 
 @Directive({
 	selector: "[appClickElsewhere]",
-	standalone: true,
 })
 export class ClickElseWhereDirective {
 	@Output() public clickElsewhere: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();

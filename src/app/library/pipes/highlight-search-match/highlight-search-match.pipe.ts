@@ -23,7 +23,6 @@ const HTML_ESCAPES: Record<string, string> = {
  */
 @Pipe({
 	name: "searchMatch",
-	standalone: true,
 })
 export class HighlightSearchMatchPipe implements PipeTransform {
 	private readonly sanitizer = inject(DomSanitizer);

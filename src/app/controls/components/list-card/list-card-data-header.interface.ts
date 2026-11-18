@@ -12,5 +12,5 @@ export interface _CustCardHeaderDataInterface {
 	icon?: string;
 	statusType?: string;
 	postText?: string;
-	postLable?: string;
+	postLabel?: string;
 }

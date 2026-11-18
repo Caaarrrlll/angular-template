@@ -4,7 +4,7 @@ import { Directive, ElementRef, HostListener, Input, inject } from "@angular/cor
  * Set min max values on mat inputs.
  *
  * @example
- *      <input matInput type="number" MinMax [min]="min" [max]="max" />
+ *      <input matInput type="number" appMinMax [min]="min" [max]="max" />
  *
  * @param min
  * @param max
@@ -12,7 +12,6 @@ import { Directive, ElementRef, HostListener, Input, inject } from "@angular/cor
 
 @Directive({
 	selector: "[appMinMax]",
-	standalone: true,
 })
 export class MinMaxDirective {
 	@Input()

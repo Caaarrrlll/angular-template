@@ -12,7 +12,6 @@ const ordinals: (string | undefined)[] = ["th", "st", "nd", "rd"];
  */
 @Pipe({
 	name: "ordinal",
-	standalone: true,
 })
 export class OrdinalPipe implements PipeTransform {
 	public transform(n: number, keepNumber = true): string {

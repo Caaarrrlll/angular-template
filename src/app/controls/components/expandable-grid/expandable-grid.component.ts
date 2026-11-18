@@ -24,7 +24,6 @@ export type _ExpandableGridData<T> = _ExpandableGridPaginatedDataInterface<T> | 
 	selector: "app-expandable-grid",
 	templateUrl: "./expandable-grid.component.html",
 	styleUrls: ["./expandable-grid.component.scss"],
-	standalone: true,
 	imports: [MatButtonModule, MatDialogModule, MatIconModule, MatPaginatorModule, MatProgressSpinnerModule, MatTableModule, ExpandableGridFormComponent, TruncatePipe],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

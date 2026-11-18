@@ -6,7 +6,6 @@ import { RouterLink } from "@angular/router";
 	selector: "app-not-found",
 	templateUrl: "./not-found.component.html",
 	styleUrls: ["./not-found.component.scss"],
-	standalone: true,
 	imports: [MatButtonModule, RouterLink],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -9,7 +9,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "contains",
-	standalone: true,
 })
 export class ContainsPipe implements PipeTransform {
 	public transform<T>(items: T[] | undefined, someCondition: T | ((item: T) => boolean)): boolean {

@@ -8,7 +8,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "kebabToTitle",
-	standalone: true,
 })
 export class KebabToTitlePipe implements PipeTransform {
 	public transform(value: string | undefined): string {

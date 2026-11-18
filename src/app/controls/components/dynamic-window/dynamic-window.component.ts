@@ -64,38 +64,28 @@ export class DynamicWindowComponent implements OnInit {
 
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: falsy non-nullish values (0, "", false) must fall back to null for numeric/text/boolean dialog controls
 			this.form.addControl(formName, new FormControl(element.value ? element.value : null));
-			const requiredValidator = conditionalValidator(() => element.required);
 			const noSpaceValidator = conditionalValidator(() => true, Validators.pattern(/^\S+$/));
 			const phoneValidator = conditionalValidator(() => true, Validators.pattern("0[0-9]{9}"));
 			const emailValidator = conditionalValidator(() => true, Validators.email.bind(Validators));
+			// `required` is combined with the type validator (AUD-42: setValidators([type]) used to replace it).
+			const validators: ValidatorFn[] = element.required ? [Validators.required.bind(Validators)] : [];
 
 			if (!element.validationDep) {
-				this.form.controls[formName].clearValidators();
-				if (element.required) {
-					this.form.controls[formName].setValidators([requiredValidator]);
-				}
-
 				switch (element.validators) {
 					case "phone": {
-						this.form.controls[formName].setValidators([phoneValidator]);
+						validators.push(phoneValidator);
 						break;
 					}
 					case "email": {
-						this.form.controls[formName].setValidators([emailValidator]);
+						validators.push(emailValidator);
 						break;
 					}
 					case "nospace": {
-						this.form.controls[formName].setValidators([noSpaceValidator]);
-						break;
-					}
-					default: {
-						this.form.controls[formName].clearValidators();
-						if (element.required) {
-							this.form.controls[formName].setValidators([Validators.required.bind(Validators)]);
-						}
+						validators.push(noSpaceValidator);
 						break;
 					}
 				}
+				this.form.controls[formName].setValidators(validators);
 			} else {
 				const validationDep = element.validationDep;
 				const dependentPhoneValidator = conditionalValidator(
@@ -107,12 +97,8 @@ export class DynamicWindowComponent implements OnInit {
 					Validators.compose([Validators.email.bind(Validators), Validators.required.bind(Validators)]),
 				);
 
-				this.form.controls[formName].clearValidators();
-				if (element.required) {
-					this.form.controls[formName].setValidators([requiredValidator]);
-				}
-
 				switch (element.validators) {
+					// Dependent phone/email already mean "required unless the dependency has a value".
 					case "phone": {
 						this.form.controls[formName].setValidators([dependentPhoneValidator]);
 						break;
@@ -122,14 +108,11 @@ export class DynamicWindowComponent implements OnInit {
 						break;
 					}
 					case "nospace": {
-						this.form.controls[formName].setValidators([noSpaceValidator]);
+						this.form.controls[formName].setValidators([...validators, noSpaceValidator]);
 						break;
 					}
 					default: {
-						this.form.controls[formName].clearValidators();
-						if (element.required) {
-							this.form.controls[formName].setValidators([Validators.required.bind(Validators)]);
-						}
+						this.form.controls[formName].setValidators(validators);
 						break;
 					}
 				}

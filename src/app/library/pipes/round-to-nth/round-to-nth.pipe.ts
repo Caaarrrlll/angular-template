@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
 	name: "roundToNth",
-	standalone: true,
 })
 export class RoundToNthPipe implements PipeTransform {
 	/**

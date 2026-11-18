@@ -133,7 +133,7 @@ export class SandboxCardsDataService {
 	public readonly leadHeader: _CustCardHeaderTableInterface[] = [
 		{ display: ``, field: `reference`, type: _HeaderTypes.display, textColor: `` },
 		{ display: ``, field: `vehicle`, fieldSub: `make`, textPre: `customerName`, textColor: `` },
-		{ display: ``, field: `status`, type: _HeaderTypes.status, postText: `createdOn`, postLable: `Created`, alignment: _HeaderAlignment.end, textColor: `` },
+		{ display: ``, field: `status`, type: _HeaderTypes.status, postText: `createdOn`, postLabel: `Created`, alignment: _HeaderAlignment.end, textColor: `` },
 	];
 
 	public readonly leadTable: _CustCardTableInterface[] = [

@@ -1,16 +1,15 @@
 import { Directive, HostListener } from "@angular/core";
 
 /**
- * Set min max values on mat inputs.
+ * Allow only the digits 0-9 to be typed (keypress filter).
  *
  * @example
- *      <input matInput type="number" NumericInput/>
+ *      <input matInput type="text" appNumericInput />
  *
  */
 
 @Directive({
 	selector: "[appNumericInput]",
-	standalone: true,
 })
 export class NumericInputDirective {
 	@HostListener("keypress", ["$event"])

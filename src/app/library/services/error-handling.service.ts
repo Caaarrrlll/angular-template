@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { ErrorHandler, Service, inject } from "@angular/core";
-import { environment } from "../../../environments/environment";
+import { environment } from "@environments/environment";
 import { LoggerService } from "@shared/services/logger.service";
 import { SnackbarService } from "@shared/services/snackbar.service";
 

@@ -348,7 +348,7 @@ export class SandboxTablesDataService {
 	public readonly leadCardWrapper: _CustTableWrapperInterface = {
 		cardHeaders: [
 			{ display: `Customer`, field: `customer`, type: `Display`, textColor: `` },
-			{ display: `Status`, field: `status`, type: `status`, textColor: ``, postText: `createdDate`, postLable: `Created` },
+			{ display: `Status`, field: `status`, type: `status`, textColor: ``, postText: `createdDate`, postLabel: `Created` },
 		],
 		cardTable: [
 			{ display: `Lead`, field: `leadId`, type: _CardTableTypes.Text, column: 1 },

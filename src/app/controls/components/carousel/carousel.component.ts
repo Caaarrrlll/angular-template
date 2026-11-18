@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, effect, inject, input, output, signal, untracked } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, inject, input, output, signal, untracked, Signal } from "@angular/core";
 import { ZoomableImageComponent } from "@shared/components/zoomable-image/zoomable-image.component";
 import { SnackbarService } from "@shared/services/snackbar.service";
 import { CarouselImage } from "./carousel.interface";
@@ -17,6 +17,8 @@ export class CarouselComponent {
 	public readonly openDetails = output<string>();
 
 	public readonly selectedImg = signal(0);
+	/** `.at()` is typed `| undefined`, unlike `images()[i]`: an empty list or out-of-range index really is undefined at runtime. */
+	public readonly selectedImage: Signal<CarouselImage | undefined> = computed((): CarouselImage | undefined => this.images().at(this.selectedImg()));
 
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly imageElement: ElementRef<HTMLElement> = inject<ElementRef<HTMLElement>>(ElementRef);

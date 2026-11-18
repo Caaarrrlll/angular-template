@@ -12,7 +12,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "characterSpacing",
-	standalone: true,
 })
 export class CharacterSpacingPipe implements PipeTransform {
 	public transform(text: string, startFromFront = false): string | undefined {

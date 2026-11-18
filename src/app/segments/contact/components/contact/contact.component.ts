@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 @Component({
 	selector: "app-contact",
 	templateUrl: "./contact.component.html",
-	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- template-only page component: intentionally empty

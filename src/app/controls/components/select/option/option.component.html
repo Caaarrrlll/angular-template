@@ -1,5 +1,5 @@
 <label class="option">
 	<!-- (change) on the input, not (click) on the label: a label click also clicks the input, which emitted twice (AUD-13). -->
-	<input [type]="type()" name="test" class="checkbox checkbox-oranage" (change)="selectedOption()" />
+	<input [type]="type()" [attr.name]="name() ?? null" class="checkbox checkbox-oranage" (change)="selectedOption()" />
 	<ng-content></ng-content>
 </label>

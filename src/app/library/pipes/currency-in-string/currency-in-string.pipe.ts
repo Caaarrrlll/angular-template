@@ -3,7 +3,6 @@ import { inject, LOCALE_ID, Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
 	name: "currencyInString",
-	standalone: true,
 })
 export class CurrencyInStringPipe implements PipeTransform {
 	private readonly locale = inject(LOCALE_ID);

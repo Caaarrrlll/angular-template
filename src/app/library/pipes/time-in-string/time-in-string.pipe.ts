@@ -10,7 +10,6 @@ import { inject, Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "timeInString",
-	standalone: true,
 })
 export class TimeInStringPipe implements PipeTransform {
 	private readonly datePipe = inject(DatePipe);

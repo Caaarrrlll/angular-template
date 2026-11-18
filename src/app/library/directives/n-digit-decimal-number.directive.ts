@@ -5,13 +5,12 @@ import { Directive, ElementRef, HostListener, Input, inject } from "@angular/cor
  * A default value of 2 decimal places is set, if you wish to change this simply pass the numberOfDecimals input in.
  *
  * @example
- *      <input NDigitDecimalNumber numberOfDecimals="3" type="textbox" .... />
+ *      <input appNDigitDecimalNumber numberOfDecimals="3" type="textbox" .... />
  *
  * @param numberOfDecimals
  */
 @Directive({
 	selector: "[appNDigitDecimalNumber]",
-	standalone: true,
 })
 export class NDigitDecimalNumberDirective {
 	@Input() numberOfDecimals = "2";

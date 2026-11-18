@@ -10,7 +10,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "timeMask",
-	standalone: true,
 })
 export class TimeMaskPipe implements PipeTransform {
 	public transform(value: string): string {

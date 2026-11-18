@@ -4,14 +4,14 @@ import { Directive, ElementRef, HostListener, Input, OnInit, inject } from "@ang
 /**
  * Apply currency pipe to input field. No Decimals.
  * @example
- *      <input matInput type="text" currencyInput [currencyCode]="currencyCode" [min]="min" [max]="max" />
+ *      <input matInput type="text" appCurrencyInput [currencyCode]="currencyCode" [min]="min" [max]="max" />
  *
  * When the value needs to be submitted use the following:
  *
  *      if (Number.isNaN(Number(value))) value = value.replace(/[^0-9.]+/g, "");
  */
 
-@Directive({ selector: "[appCurrencyInput]", standalone: true })
+@Directive({ selector: "[appCurrencyInput]" })
 export class CurrencyInputDirective implements OnInit {
 	@Input()
 	public currencyCode = "ZAR";

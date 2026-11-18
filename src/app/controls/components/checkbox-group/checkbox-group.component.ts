@@ -5,7 +5,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 	selector: "app-checkbox-group",
 	templateUrl: "./checkbox-group.component.html",
 	styleUrls: ["./checkbox-group.component.scss"],
-	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{

@@ -4,7 +4,6 @@ import { AccordionHeaderDirective } from "@shared/components/accordion/directive
 
 @Directive({
 	selector: "[appAccordionItem]",
-	standalone: true,
 })
 export class AccordionItemDirective {
 	@Input() public title = "";

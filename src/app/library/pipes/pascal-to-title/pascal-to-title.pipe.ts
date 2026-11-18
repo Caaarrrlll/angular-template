@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
 	name: "pascalToTitle",
-	standalone: true,
 })
 export class PascalToTitlePipe implements PipeTransform {
 	public transform(text: string | null | undefined): string {

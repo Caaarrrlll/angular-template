@@ -41,6 +41,8 @@ module.exports = defineConfig([
 					message: "AGENTS.md: root services use @Service() from @angular/core instead of @Injectable({ providedIn }).",
 				},
 			],
+			// Angular components/directives are decorated classes and may legitimately have no members (e.g. a root shell).
+			"@typescript-eslint/no-extraneous-class": ["error", { allowWithDecorator: true }],
 			"@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true, allowTypedFunctionExpressions: true, allowHigherOrderFunctions: true }],
 			"@angular-eslint/directive-selector": [
 				"error",

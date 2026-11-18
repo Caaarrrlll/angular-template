@@ -10,7 +10,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "removeChars",
-	standalone: true,
 })
 export class RemoveCharsPipe implements PipeTransform {
 	public transform(text: string | null | undefined, chars = "_"): string {

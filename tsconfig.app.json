@@ -6,14 +6,5 @@
 		"types": []
 	},
 	"files": ["src/main.ts"],
-	"include": ["src/**/*.ts"],
-	"exclude": ["src/app/controls-to-port/**/*.ts"],
-	"angularCompilerOptions": {
-		"extendedDiagnostics": {
-			"checks": {
-				"nullishCoalescingNotNullable": "suppress",
-				"optionalChainNotNullable": "suppress"
-			}
-		}
-	}
+	"include": ["src/**/*.ts"]
 }

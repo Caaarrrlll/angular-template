@@ -9,7 +9,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "orderBy",
-	standalone: true,
 })
 export class OrderByPipe implements PipeTransform {
 	public transform<T>(value: T[] | undefined, sort: (a: T, b: T) => number): T[] | undefined {

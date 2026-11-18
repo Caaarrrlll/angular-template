@@ -332,7 +332,7 @@ export class InfoCardComponent implements AfterContentInit {
 						alignment: _HeaderAlignment.end,
 						statusType: this.setStatusChip(data[config.field] as string),
 						postText: config.postText !== undefined ? (data[config.postText] as string) : undefined,
-						postLable: config.postLable,
+						postLabel: config.postLabel,
 						textColor: config.textColor,
 					});
 				} else if (!sub && !config.textPre) {

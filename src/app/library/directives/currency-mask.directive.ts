@@ -3,7 +3,6 @@ import { NgControl } from "@angular/forms";
 
 @Directive({
 	selector: "[formControlName][appCurrencyMask]",
-	standalone: true,
 })
 export class CurrencyMaskDirective {
 	public readonly ngControl = inject(NgControl);

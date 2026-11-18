@@ -7,7 +7,6 @@ import { _ConfirmationDialogData } from "@shared/components/confirmation-dialog/
 	selector: "app-confirmation-dialog",
 	templateUrl: "./confirmation-dialog.component.html",
 	styleUrls: ["./confirmation-dialog.component.scss"],
-	standalone: true,
 	imports: [MatButtonModule, MatDialogModule],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

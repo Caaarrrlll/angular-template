@@ -208,7 +208,7 @@
 												}">
 												<div class="no-wrap-text" [title]="detail.value">
 													@if (detail.buttonClick != null) {
-														<mat-icon class="icons-infront" (click)="buttonAction(detail.buttonClick ?? '')">edit</mat-icon>
+														<mat-icon class="icons-infront" (click)="buttonAction(detail.buttonClick)">edit</mat-icon>
 													}
 													{{ detail.value }}
 												</div>
@@ -278,7 +278,7 @@
 										}
 										@if (detail.buttonClick) {
 											<div>
-												<app-button-v2 [type]="tableButton(detail, '150px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button-v2>
+												<app-button-v2 [type]="tableButton(detail, '150px')" (buttonClick)="buttonAction(detail.buttonClick)"></app-button-v2>
 											</div>
 										}
 									</div>

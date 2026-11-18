@@ -2,7 +2,6 @@ import { AfterViewInit, Directive, Input, OnChanges, Renderer2, inject } from "@
 
 @Directive({
 	selector: "[appCursorFollowZoom]",
-	standalone: true,
 })
 export class ZoomDirective implements AfterViewInit, OnChanges {
 	@Input() appCursorFollowZoom = false;

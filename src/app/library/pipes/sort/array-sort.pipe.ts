@@ -8,7 +8,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "sort",
-	standalone: true,
 })
 export class ArraySortPipe implements PipeTransform {
 	public transform(array: Record<string, unknown>[] | undefined | null, field: string): Record<string, unknown>[] {

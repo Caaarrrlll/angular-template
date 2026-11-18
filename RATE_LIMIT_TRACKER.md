@@ -76,7 +76,34 @@ Next steps (developer to choose): visually walk through `/sandbox` (`ng serve`, 
         - `npx eslint src` exit 0 — ZERO errors project-wide (was 47); prettier clean on src + eslint.config.js + ROADMAP.md; dev + prod build pass (prod: pre-existing budget warning only)
         - headless Edge: 6 renamed input directives present + appNumericInput blocks letters / allows digits + appDateTransform formats 2026-03-04 → 04 Mar 2026; appCopyText decorates; select option emits once per click; zoomable-image Enter on next 1→2 of 7; table-dialogue opens with rows (inject change); media-dialog Enter on close closes it, img alt present; info-card eye icon focus shows popup anchored to the element, blur hides it; no console errors
         - AGENTS.md lint paragraph synced (eqeqeq null idiom, app selector prefix)
-[•] STOP — developer review of Step 5 (also: agree Step 6 scope)
-[ ] Step 6: remaining Medium/Low items, CSS cleanup, button rename (scope to be agreed at the Step 5 stop)
-[ ] STOP — developer review of Step 6
+[✓] STOP — developer review of Step 5 (approved 2026-11-18; Step 6 = proposed scope; plus a new request below)
+[✓] Step 5b: dependency + versioning audit (developer request: `npm i` reported 75 vulnerabilities — 2 low, 33 moderate, 37 high, 3 critical)
+    - findings recorded in ROADMAP.md → "Dependencies & versioning (audit 2026-11-18)" as AUD-43…AUD-48 (+ re-run commands)
+    - measured: 75 total (2/33/37/3) over 886 pkgs; runtime-only (`--omit=dev`) 9 (7 moderate, 2 high) = Angular 22.0.5 advisories; criticals are dev-only (piscina via @angular/build; proxy-addr via @angular/cli → MCP SDK → express; karma stack)
+    - unused/deprecated: @angular/animations, @angular/platform-browser-dynamic (deprecated, 0 imports), prettier-eslint, istanbul-lib-instrument; 0 spec files despite the karma stack
+    - nothing installed/changed (needs approval); note: package.json already had an uncommitted `baseline-browser-mapping` addition before this step
+    - read-only: npm audit (json), npm outdated, npm ls; record findings as ID'd ROADMAP audit items; NO npm audit fix / installs (dependency changes need explicit approval)
+[✓] Step 6 (agreed scope): AUD-31 DIRECTIVES_CONTRACTS.md, AUD-42 dynamic-window required, AUD-11 range-slider initial values, AUD-13 rest (shared name="test"), AUD-34/35/41 mechanical cleanups
+    [✓] 6a AUD-31 DIRECTIVES_CONTRACTS.md (12 directives: index + per-directive purpose/inputs/outputs/requirements/known issues) + AGENTS.md Contracts, reading order and folder entries; stale @example selectors in 5 directive files fixed
+    [✓] 6b AUD-42 dynamic-window: validators built as a list (required + type); old `requiredValidator` was a no-op (conditionalValidator without a validator returns null), so required only worked on plain fields; dependent phone/email unchanged; sandbox window form gained a required email field (browser check in 6f)
+        - touching: dynamic-window.component.ts, sandbox-dialogs-data.service.ts
+    [✓] 6c AUD-11 range-slider: values built in ngOnInit (minValue/maxValue now optional, default to min/max); valueChange emits a copy
+        - touching: range-slider.component.ts
+    [✓] 6d AUD-13 rest: option gets an optional `name` input (rendered only when set) instead of the page-wide `name="test"`; sandbox radio row passes a shared name
+        - touching: option.component.{ts,html}, sandbox-inputs.component.html
+        - behaviour change: radios without a name are no longer accidentally grouped page-wide
+    [✓] 6e AUD-34/35/41
+        - removed `standalone: true` from 62 files (audit said 63; 62 found); removed the stale controls-to-port exclude (tsconfig.app.json) and the unused `@animations` alias (tsconfig.json)
+        - added `@environments/*` alias; the 4 deep relative environment imports now use `@environments/environment`; app.component.ts navigation import aliased; AGENTS.md path-alias line updated (known gap removed)
+        - removed unused AppComponent `title`
+        - left as-is (out of scope): sibling-file relative imports inside single control folders; relative lazy imports in app.routes.ts
+    [✓] 6f verification
+        - tsc; `npx eslint src` exit 0 (added `no-extraneous-class` allowWithDecorator: the now-empty AppComponent is a normal decorated Angular class); prettier clean; prod build (pre-existing budget warning only; `showComponentSandbox:false`, 0 sandbox chunks — env file replacement works through the new alias); dev build (46 sandbox chunks)
+        - headless Edge: sliders start at 500–3000 / 20–500 (were 0–100); radio row shares one name and is exclusive, checkboxes have no name; window required email invalid when empty/malformed, valid for a@b.co; only console output = existing AUD-14 warnings
+        - not browser-verified: valueChange now emitting a copy (code-only)
+    - deferred to later tasks: AUD-09/10 dynamic dialog behaviour, tabs/gallery bugs, CSS cleanup, button-v2 rename, AUD-33 host listeners
+[•] STOP — developer review of Step 6
+    - during review: completed the developer's `postLable` → `postLabel` rename (IDE rename had only updated list-card-data-header.interface.ts + 2 object keys): cust-card-table.interface.ts ×4, list-card.html:42 + list-card.ts reads, info-card.ts, 2 sandbox data services; dev build + eslint + prettier pass; headless Edge shows "Created: <date>" on list-cards (/sandbox/cards, /sandbox/tables). Breaking for forks' card configs using `postLable`.
+    - new finding AUD-49: info-card maps postText/postLabel into its header but its template never renders them
+    - during review: fixed NG8102 in currency.component.ts by widening `amount` to `string | number | null | undefined` (the `?? 0` guards untyped table/card data); eslint + prettier + dev build pass
 [ ] Clean boundary: move this section to history

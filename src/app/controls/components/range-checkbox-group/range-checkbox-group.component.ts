@@ -6,7 +6,6 @@ import { RangeCheckboxValue } from "@shared/components/range-checkbox-group/rang
 	selector: "app-range-checkbox-group",
 	templateUrl: "./range-checkbox-group.component.html",
 	styleUrls: ["./range-checkbox-group.component.scss"],
-	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{

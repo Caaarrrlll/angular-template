@@ -10,7 +10,6 @@ import { Pipe, PipeTransform } from "@angular/core";
  */
 @Pipe({
 	name: "removeDomain",
-	standalone: true,
 })
 export class RemoveEmailDomainPipe implements PipeTransform {
 	public transform(value: string | undefined): string {

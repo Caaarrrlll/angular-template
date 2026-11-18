@@ -4,7 +4,6 @@ import { AfterViewInit, Directive, ElementRef, HostListener, Input, inject } fro
 @Directive({
 	selector: "[appDateTransform]",
 	providers: [DatePipe],
-	standalone: true,
 })
 export class DateTransformDirective implements AfterViewInit {
 	@Input() appDateTransform = "";

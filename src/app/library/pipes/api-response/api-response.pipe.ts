@@ -17,7 +17,7 @@ interface ApiResponseEnvelope {
 	value?: unknown;
 }
 
-@Pipe({ name: "apiResponse", standalone: true })
+@Pipe({ name: "apiResponse" })
 export class ApiResponsePipe implements PipeTransform {
 	private readonly logger = inject(LoggerService);
 

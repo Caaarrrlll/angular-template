@@ -15,7 +15,6 @@ import { _ExpandableGridRow } from "@shared/components/expandable-grid/core/type
 	selector: "app-expandable-grid-form",
 	templateUrl: "./expandable-grid-form.component.html",
 	styleUrls: ["./expandable-grid-form.component.scss"],
-	standalone: true,
 	imports: [ReactiveFormsModule, TitleCasePipe, KeyValuePipe, TextFieldModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatSelectModule],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

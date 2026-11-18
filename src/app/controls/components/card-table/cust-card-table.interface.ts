@@ -40,7 +40,7 @@ export interface _CustCardHeaderTableInterface {
 	textColor: string;
 	textPre?: string;
 	type?: string;
-	postLable?: string;
+	postLabel?: string;
 	postText?: string;
 	icon?: string;
 	errorActionButton?: string;
@@ -55,7 +55,7 @@ export interface _CustInfoCardHeaderTableInterface {
 	textColor: string;
 	textPre?: string;
 	type?: string;
-	postLable?: string;
+	postLabel?: string;
 	postText?: string;
 	icon?: string;
 	errorActionButton?: string;
@@ -70,7 +70,7 @@ export interface _CustCardHeaderDataInterface {
 	statusType?: string;
 	textColor?: string;
 	postText?: string;
-	postLable?: string;
+	postLabel?: string;
 	clickAction?: string;
 	length?: number;
 	icon?: string;
@@ -112,7 +112,7 @@ export interface _DataProcessResponse {
 	label?: string;
 	textPre?: string;
 	postText?: string;
-	postLable?: string;
+	postLabel?: string;
 	length?: number;
 	action?: string;
 	errorAction?: string;

@@ -19,7 +19,7 @@
 		<div class="selected-image">
 			@if (images()) {
 				<app-zoomable-image
-					[src]="images()[selectedImg()]?.url ?? ''"
+					[src]="selectedImage()?.url ?? ''"
 					style="height: 100%; width: 100%"
 					[count]="selectedImg() + 1 + ' of ' + images().length"
 					(prev)="prev()"

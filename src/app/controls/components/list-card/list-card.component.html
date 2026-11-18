@@ -39,7 +39,7 @@
 								<span class="column-header-status" [style.--alignment]="headCol.alignment">
 									@if (headCol.postText?.length) {
 										<span class="header-date-display">
-											<b>{{ headCol.postLable }}: </b> {{ headCol.postText | date: dateFormat }}
+											<b>{{ headCol.postLabel }}: </b> {{ headCol.postText | date: dateFormat }}
 											<b class="header-pre-text-devider">|</b>
 										</span>
 									}
@@ -144,7 +144,7 @@
 								@case ("boolean") {
 									<div class="float-container left-text-border content-font content-height">
 										@if (detail.label) {
-											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 8 + 'px'">
+											<div class="float-child-left" [style.width]="detail.label.length * 8 + 'px'">
 												<b>{{ detail.label }}:</b>
 											</div>
 										}
@@ -173,7 +173,7 @@
 								@case ("text") {
 									<div class="float-container left-text-border content-font content-height">
 										@if (detail.label) {
-											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 10 + 'px'">
+											<div class="float-child-left" [style.width]="detail.label.length * 10 + 'px'">
 												<b>{{ detail.label }}:</b>
 											</div>
 										}
@@ -245,7 +245,7 @@
 								@case ("date") {
 									<div class="float-container left-text-border content-font content-height">
 										@if (detail.label) {
-											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 8 + 'px'">
+											<div class="float-child-left" [style.width]="detail.label.length * 8 + 'px'">
 												<b>{{ detail.label }}:</b>
 											</div>
 										}
@@ -259,7 +259,7 @@
 								@case ("dateTime") {
 									<div class="float-container left-text-border content-font content-height">
 										@if (detail.label) {
-											<div class="float-child-left" [style.width]="(detail.label ?? '').length * 8 + 'px'">
+											<div class="float-child-left" [style.width]="detail.label.length * 8 + 'px'">
 												<b>{{ detail.label }}:</b>
 											</div>
 										}

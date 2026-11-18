@@ -4,7 +4,6 @@ import { SnackbarService } from "@shared/services/snackbar.service";
 
 @Directive({
 	selector: "[appCopyText]",
-	standalone: true,
 })
 export class CopyTextDirective implements AfterViewInit, OnChanges {
 	// IF USING IN A GRID OR COMPONENT WHERE CHANGE DETECTION MIGHT BE
