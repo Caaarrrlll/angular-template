@@ -1,5 +1,5 @@
 <div class="flex row">
-	<div class="flex col field-width" style="--width: 100px">
+	<div class="flex col field-width s-var-width-100">
 		<mat-form-field>
 			<mat-label>Start Date</mat-label>
 			<input [formControl]="inputFrom" matInput placeholder="Start Date" />
@@ -9,7 +9,7 @@
 			}
 		</mat-form-field>
 	</div>
-	<div class="flex col field-width flex-item-right" style="--width: 100px">
+	<div class="flex col field-width flex-item-right s-var-width-100">
 		<mat-form-field>
 			<mat-label>End Date</mat-label>
 			<input [formControl]="inputTo" matInput placeholder="End Date" />
@@ -21,4 +21,4 @@
 	</div>
 </div>
 
-<mat-calendar [selected]="selectedRangeValue" (selectedChange)="selectedChange($event)"></mat-calendar>
+<mat-calendar [selected]="selectedRangeValue()" [startAt]="selectedRangeValue()?.start ?? null" (selectedChange)="selectedChange($event)"></mat-calendar>

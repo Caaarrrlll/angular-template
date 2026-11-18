@@ -10,3 +10,8 @@
 .flex.col {
 	flex: 1;
 }
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-var-width-100 {
+	--width: 100px;
+}

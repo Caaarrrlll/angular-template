@@ -108,3 +108,22 @@
 	width: var(--button-width) !important;
 	min-width: unset !important;
 }
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-w-20-h-20-pr-3 {
+	width: 20px;
+	height: 20px;
+	padding-right: 3px;
+}
+
+.font-poppins {
+	font-family: Poppins, sans-serif;
+}
+
+.s-pl-4 {
+	padding-left: 4px;
+}
+
+.s-pr-4 {
+	padding-right: 4px;
+}

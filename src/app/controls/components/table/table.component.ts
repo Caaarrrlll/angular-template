@@ -6,7 +6,7 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSortModule, Sort } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
-import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
+import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
 import { LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
 import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
@@ -42,7 +42,7 @@ import { PASSED_INFO } from "./table-constants.const";
 		MatButtonModule,
 		MatIconModule,
 		CurrencyComponent,
-		ButtonV2Component,
+		ButtonComponent,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{ provide: PASSED_INFO, useValue: "" }],

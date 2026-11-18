@@ -49,8 +49,7 @@
 							<span class="sandbox-cards__avatar" [title]="contact.name">{{ contact.name | nameToInitials }}</span>
 							<span class="sandbox-cards__avatar sandbox-cards__avatar--alt" [title]="contact.email">{{ contact.email | emailToInitials }}</span>
 							<span>
-								<strong>{{ index + 1 | ordinal }}</strong> {{ contact.name }} &middot; <span [title]="contact.role">{{ contact.role | truncate: 24 }}</span
-								><br />
+								<strong>{{ index + 1 | ordinal }}</strong> {{ contact.name }} &middot; <span [title]="contact.role">{{ contact.role | truncate: 24 }}</span><br />
 								<small>Active {{ contact.lastActive | timeElapsedFormat }}</small>
 							</span>
 						</li>

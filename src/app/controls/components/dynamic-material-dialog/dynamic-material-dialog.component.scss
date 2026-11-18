@@ -150,3 +150,35 @@ mat-radio-group {
 .instruction-text {
 	margin-bottom: 15px;
 }
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-float-right-cursor-grab {
+	float: right;
+	cursor: grab;
+}
+
+.s-float-right-cursor-pointer {
+	float: right;
+	cursor: pointer;
+}
+
+.s-p-5 {
+	padding: 5px;
+}
+
+.s-m-0-auto {
+	margin: 0 auto;
+}
+
+.s-w-100 {
+	width: 100%;
+}
+
+.s-c-orange-mb-10 {
+	color: $color-orange;
+	margin-bottom: 10px;
+}
+
+.s-d-flex {
+	display: flex;
+}

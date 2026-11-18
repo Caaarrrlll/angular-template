@@ -1,23 +1,14 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	ElementRef,
-	EventEmitter,
-	HostListener,
-	Input,
-	Output,
-	SecurityContext,
-	ViewChild,
-	WritableSignal,
-	effect,
-	inject,
-	signal,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, SecurityContext, ViewChild, WritableSignal, effect, inject, signal } from "@angular/core";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
 	selector: "app-zoomable-image",
+	host: {
+		"(document:keydown.escape)": "onEscapeKeydown()",
+		"(document:keydown.ArrowRight)": "onRightKeydown()",
+		"(document:keydown.ArrowLeft)": "onLeftKeydown()",
+	},
 	templateUrl: "./zoomable-image.component.html",
 	styleUrls: ["./zoomable-image.component.scss"],
 	imports: [MatIconModule],
@@ -60,17 +51,14 @@ export class ZoomableImageComponent {
 		});
 	}
 
-	@HostListener("document:keydown.escape")
 	public onEscapeKeydown(): void {
 		this.showLightbox.set(false);
 	}
 
-	@HostListener("document:keydown.ArrowRight")
 	public onRightKeydown(): void {
 		this.next.emit();
 	}
 
-	@HostListener("document:keydown.ArrowLeft")
 	public onLeftKeydown(): void {
 		this.prev.emit();
 	}

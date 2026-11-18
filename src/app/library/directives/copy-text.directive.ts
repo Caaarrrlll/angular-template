@@ -1,9 +1,14 @@
 import { Clipboard } from "@angular/cdk/clipboard";
-import { AfterViewInit, Directive, ElementRef, HostListener, Input, OnChanges, Renderer2, inject } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2, inject } from "@angular/core";
 import { SnackbarService } from "@shared/services/snackbar.service";
 
 @Directive({
 	selector: "[appCopyText]",
+	host: {
+		"(click)": "onClick()",
+		"(mouseenter)": "onMouseEnter()",
+		"(mouseleave)": "onMouseLeave()",
+	},
 })
 export class CopyTextDirective implements AfterViewInit, OnChanges {
 	// IF USING IN A GRID OR COMPONENT WHERE CHANGE DETECTION MIGHT BE
@@ -46,7 +51,7 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 		this.renderer.appendChild(this.element, this.copyIcon);
 	}
 
-	@HostListener("click") onClick(): void {
+	onClick(): void {
 		if (this.text) {
 			this.clipboard.copy(this.text);
 			this.snackbar.open('Copied "' + this.text + '" to the clipboard', "success", 1500);
@@ -55,11 +60,11 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 		}
 	}
 
-	@HostListener("mouseenter") onMouseEnter(): void {
+	onMouseEnter(): void {
 		if (this.copyIcon) this.renderer.addClass(this.copyIcon, "copyAndPasteIconActive");
 	}
 
-	@HostListener("mouseleave") onMouseLeave(): void {
+	onMouseLeave(): void {
 		if (this.copyIcon) this.renderer.removeClass(this.copyIcon, "copyAndPasteIconActive");
 	}
 }

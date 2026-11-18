@@ -1,6 +1,6 @@
-<div class="img-zoom-container flex" style="height: 100%" (mouseleave)="showZoomLens.set(false)" [class.fullscreen]="showLightbox()">
-	<div class="flex" style="justify-content: center; height: 100%; width: 100%">
-		<div #zoomContainer style="align-self: center; text-align: center; height: 100%; display: flex; justify-content: center; align-items: center" (wheel)="onMouseWheel($event)">
+<div class="img-zoom-container flex s-h-100" (mouseleave)="showZoomLens.set(false)" [class.fullscreen]="showLightbox()">
+	<div class="flex s-jc-center-h-100-w-100">
+		<div class="zoom-container" #zoomContainer (wheel)="onMouseWheel($event)">
 			@if (src) {
 				<img
 					#image

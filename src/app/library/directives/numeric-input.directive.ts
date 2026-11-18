@@ -1,4 +1,4 @@
-import { Directive, HostListener } from "@angular/core";
+import { Directive } from "@angular/core";
 
 /**
  * Allow only the digits 0-9 to be typed (keypress filter).
@@ -10,9 +10,11 @@ import { Directive, HostListener } from "@angular/core";
 
 @Directive({
 	selector: "[appNumericInput]",
+	host: {
+		"(keypress)": "restrictToNumeric($event)",
+	},
 })
 export class NumericInputDirective {
-	@HostListener("keypress", ["$event"])
 	public restrictToNumeric(event: KeyboardEvent): boolean {
 		return /^([0-9])$/.test(event.key);
 	}

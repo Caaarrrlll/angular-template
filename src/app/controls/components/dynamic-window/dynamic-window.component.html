@@ -6,34 +6,34 @@
 
 <form [formGroup]="form" class="content">
 	@if (dialogSetup.instructionText) {
-		<div style="padding-bottom: 20px">{{ dialogSetup.instructionText }}</div>
+		<div class="s-pb-20">{{ dialogSetup.instructionText }}</div>
 	}
 	@if (dialogSetup.optionSelected) {
-		<div style="padding-bottom: 20px">
+		<div class="s-pb-20">
 			<b>{{ dialogSetup.optionSelected }}</b>
 		</div>
 	}
 	@if (dialogSetup.additionalText) {
-		<div style="padding-bottom: 20px">{{ dialogSetup.additionalText }}</div>
+		<div class="s-pb-20">{{ dialogSetup.additionalText }}</div>
 	}
 
 	@for (control of dialogSetup.controls; track control.formName) {
-		<div style="display: flex; justify-content: center; width: 500px; padding-bottom: 30px">
+		<div class="s-d-flex-jc-center-w-500-pb-30">
 			@if (control.instructionText) {
 				<div>{{ control.instructionText }}</div>
 			}
 
 			@if (control.type === "Image") {
-				<div style="width: 100%; padding-bottom: 20px; text-align: center">
+				<div class="s-w-100-pb-20-ta-center">
 					<img [src]="control.imgUrl ?? '' | safe" alt="Image unavailable" />
 				</div>
 			}
 
 			@if (control.type === "Slider") {
-				<span style="margin-bottom: 15px"
+				<span class="s-mb-15"
 					><strong>{{ form.controls[control.formName].value | currency: "ZAR" : "symbol-narrow" : "1.0-0" }}</strong></span
 				>
-				<mat-slider [min]="control.minValue" [max]="control.maxValue" [step]="control.increment" [discrete]="true" style="width: 500px; padding-bottom: 30px">
+				<mat-slider class="s-w-500-pb-30" [min]="control.minValue" [max]="control.maxValue" [step]="control.increment" [discrete]="true">
 					<input matSliderThumb [formControlName]="control.formName" />
 				</mat-slider>
 			}
@@ -47,7 +47,7 @@
 			}
 
 			@if (control.type === "DropDown") {
-				<mat-form-field style="width: 100%; padding-bottom: 10px; min-width: 450px" subscriptSizing="dynamic">
+				<mat-form-field class="s-w-100-pb-10-minw-450" subscriptSizing="dynamic">
 					<mat-label>{{ control.placeholder }}</mat-label>
 					<mat-select [formControlName]="control.formName">
 						@for (option of control.data; track option.value) {
@@ -55,29 +55,29 @@
 						}
 					</mat-select>
 					@if (form.controls[control.formName].hasError("required")) {
-						<mat-error style="color: red">This field is required</mat-error>
+						<mat-error class="s-c-red">This field is required</mat-error>
 					}
 				</mat-form-field>
 			}
 
 			@if (control.type === "TextArea") {
-				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
+				<mat-form-field class="s-w-100-pb-20" subscriptSizing="dynamic">
 					<mat-label>{{ control.placeholder }}</mat-label>
 					<textarea matInput cdkTextareaAutosize [formControlName]="control.formName"></textarea>
 					@if (form.controls[control.formName].validator != null) {
-						<mat-hint style="color: red">This field is required</mat-hint>
+						<mat-hint class="s-c-red">This field is required</mat-hint>
 					}
 					@if (form.controls[control.formName].validator == null) {
 						<mat-hint>This field is optional</mat-hint>
 					}
 					@if (form.controls[control.formName].hasError("required")) {
-						<mat-error style="color: red">This field is required</mat-error>
+						<mat-error class="s-c-red">This field is required</mat-error>
 					}
 				</mat-form-field>
 			}
 
 			@if (control.type === "Input") {
-				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
+				<mat-form-field class="s-w-100-pb-20" subscriptSizing="dynamic">
 					<mat-label>{{ control.placeholder }}</mat-label>
 					<input matInput [formControlName]="control.formName" [type]="control.valueType ? control.valueType : 'text'" />
 					@if (form.controls[control.formName].hasError("required")) {
@@ -90,7 +90,7 @@
 			}
 
 			@if (control.type === "CurrencyShortHand") {
-				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
+				<mat-form-field class="s-w-100-pb-20" subscriptSizing="dynamic">
 					<mat-label>
 						{{
 							!form.controls[control.formName].value
@@ -106,7 +106,7 @@
 			}
 
 			@if (control.type === "MultiSelect") {
-				<mat-form-field style="width: 100%; padding-bottom: 20px" subscriptSizing="dynamic">
+				<mat-form-field class="s-w-100-pb-20" subscriptSizing="dynamic">
 					<mat-label>{{ control.placeholder }}</mat-label>
 					<mat-select [formControlName]="control.formName" multiple>
 						@for (option of control.data; track option.value) {
@@ -117,9 +117,9 @@
 			}
 
 			@if (control.type === "SingleDate") {
-				<div style="width: 500px; padding-bottom: 30px; text-align: center">
-					<span style="font-weight: bold">{{ control.placeholder }}</span>
-					<mat-form-field style="width: 100%" subscriptSizing="dynamic">
+				<div class="s-w-500-pb-30-ta-center">
+					<span class="s-fw-bold">{{ control.placeholder }}</span>
+					<mat-form-field class="s-w-100" subscriptSizing="dynamic">
 						<input matInput [matDatepicker]="picker" [min]="control.disabledBefore" [formControlName]="control.formName" />
 						<mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
 						<mat-datepicker #picker></mat-datepicker>
@@ -131,8 +131,8 @@
 			}
 
 			@if (control.type === "DateTime") {
-				<div style="display: flex; gap: 10px">
-					<span style="font-weight: bold">{{ control.placeholder }}</span>
+				<div class="s-d-flex-gap-10">
+					<span class="s-fw-bold">{{ control.placeholder }}</span>
 					<mat-form-field subscriptSizing="dynamic">
 						<input matInput type="datetime-local" [formControlName]="control.formName" />
 						@if (form.controls[control.formName].hasError("required")) {
@@ -160,8 +160,8 @@
 
 			@if (control.type === "approval") {
 				<div class="space-between-row">
-					<app-button-v2 [type]="buttonInput('Reject', 'Reject', !form.valid, 'Secondary')" (buttonClick)="submitApproval('Reject')"></app-button-v2>
-					<app-button-v2 [type]="buttonInput('Approve', 'Approve', !form.valid)" (buttonClick)="submitApproval('Approve')"></app-button-v2>
+					<app-button [type]="buttonInput('Reject', 'Reject', !form.valid, 'Secondary')" (buttonClick)="submitApproval('Reject')"></app-button>
+					<app-button [type]="buttonInput('Approve', 'Approve', !form.valid)" (buttonClick)="submitApproval('Approve')"></app-button>
 				</div>
 			}
 		</div>
@@ -170,9 +170,9 @@
 
 <div class="row flex" [style.justify-content]="dialogSetup.hideBackButton || dialogSetup.hideSubmitButton ? 'flex-end' : 'space-between'">
 	@if (!dialogSetup.hideBackButton) {
-		<app-button-v2 [type]="buttonInput(dialogSetup.backButtonText, 'back', false, 'Secondary')" (buttonClick)="close()"></app-button-v2>
+		<app-button [type]="buttonInput(dialogSetup.backButtonText, 'back', false, 'Secondary')" (buttonClick)="close()"></app-button>
 	}
 	@if (!dialogSetup.hideSubmitButton) {
-		<app-button-v2 [type]="buttonInput(dialogSetup.submitButtonText, 'submit', !form.valid)" (buttonClick)="submit()"></app-button-v2>
+		<app-button [type]="buttonInput(dialogSetup.submitButtonText, 'submit', !form.valid)" (buttonClick)="submit()"></app-button>
 	}
 </div>

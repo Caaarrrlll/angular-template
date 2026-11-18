@@ -29,14 +29,12 @@ const SLIDES: _SandboxMediaSlide[] = [
 /** Mock media for the sandbox media page: inline SVG images generated deterministically. */
 @Service()
 export class SandboxMediaDataService {
-	public readonly images: _SandboxMediaImage[] = SLIDES.map(
-		(slide: _SandboxMediaSlide, index: number): _SandboxMediaImage => ({
-			name: slide.name,
-			url: this.buildSvgDataUri(slide, index),
-			title: slide.title,
-			description: `Mock image ${String(index + 1)} of ${String(SLIDES.length)}: ${slide.title}`,
-		}),
-	);
+	public readonly images: _SandboxMediaImage[] = SLIDES.map((slide: _SandboxMediaSlide, index: number): _SandboxMediaImage => ({
+		name: slide.name,
+		url: this.buildSvgDataUri(slide, index),
+		title: slide.title,
+		description: `Mock image ${String(index + 1)} of ${String(SLIDES.length)}: ${slide.title}`,
+	}));
 
 	/**
 	 * Builds an 800x500 SVG with a gradient-free scene so the zoom controls have detail to magnify.

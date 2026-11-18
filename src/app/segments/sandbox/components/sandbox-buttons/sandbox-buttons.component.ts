@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, Signal, signal, WritableS
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
 import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
-import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
+import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { FabButtonComponent } from "@shared/components/button/fab-button/fab-button.component";
 import { ButtonToggleComponent } from "@shared/components/button-toggle/button-toggle.component";
 import { ButtonToggleInput, ButtonToggleResponse } from "@shared/components/button-toggle/button-toggle.interface";
@@ -12,7 +12,7 @@ import { CustButtonIconSide, CustButtonInput, CustButtonType, CustInputReturn } 
 	selector: "app-sandbox-buttons",
 	templateUrl: "./sandbox-buttons.component.html",
 	styleUrls: ["./sandbox-buttons.component.scss"],
-	imports: [SandboxPageComponent, SandboxDemoComponent, ButtonV2Component, ButtonToggleComponent, FabButtonComponent],
+	imports: [SandboxPageComponent, SandboxDemoComponent, ButtonComponent, ButtonToggleComponent, FabButtonComponent],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SandboxButtonsComponent {
@@ -28,17 +28,15 @@ export class SandboxButtonsComponent {
 	public readonly variantButtons: Signal<CustButtonInput[]> = computed((): CustButtonInput[] =>
 		Object.values(CustButtonType)
 			.filter((type: CustButtonType): boolean => type !== CustButtonType.icon)
-			.map(
-				(type: CustButtonType): CustButtonInput => ({
-					type: type,
-					display: type,
-					value: type,
-					tooltip: `${type} button`,
-					disabled: this.disabled() || type === CustButtonType.disabled,
-					loading: this.loading(),
-					isTableButton: this.tableSize(),
-				}),
-			),
+			.map((type: CustButtonType): CustButtonInput => ({
+				type: type,
+				display: type,
+				value: type,
+				tooltip: `${type} button`,
+				disabled: this.disabled() || type === CustButtonType.disabled,
+				loading: this.loading(),
+				isTableButton: this.tableSize(),
+			})),
 	);
 
 	public readonly iconButtons: Signal<CustButtonInput[]> = computed((): CustButtonInput[] => [

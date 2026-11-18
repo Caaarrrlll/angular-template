@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, inject } from "@angular/core";
+import { Directive, ElementRef, Input, inject } from "@angular/core";
 
 /**
  * Set min max values on mat inputs.
@@ -12,6 +12,10 @@ import { Directive, ElementRef, HostListener, Input, inject } from "@angular/cor
 
 @Directive({
 	selector: "[appMinMax]",
+	host: {
+		"(input)": "onInput()",
+		"(keypress)": "restrictToNumeric($event)",
+	},
 })
 export class MinMaxDirective {
 	@Input()
@@ -22,7 +26,6 @@ export class MinMaxDirective {
 
 	private readonly ref = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
 
-	@HostListener("input")
 	public onInput(): void {
 		const val = parseInt(this.ref.value, 10);
 		if (this.max != null && !Number.isNaN(val) && val >= this.max) {
@@ -32,7 +35,6 @@ export class MinMaxDirective {
 		}
 	}
 
-	@HostListener("keypress", ["$event"])
 	public restrictToNumeric(event: KeyboardEvent): boolean {
 		return /^([0-9])$/.test(event.key);
 	}

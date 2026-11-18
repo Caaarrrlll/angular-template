@@ -14,7 +14,7 @@ import { MatSelectChange, MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Observable, Subject } from "rxjs";
-import { debounceTime, filter, map, startWith } from "rxjs/operators";
+import { debounceTime, filter, map, startWith, takeUntil } from "rxjs/operators";
 import { ButtonToggleComponent } from "@shared/components/button-toggle/button-toggle.component";
 import { ButtonToggleResponse } from "@shared/components/button-toggle/button-toggle.interface";
 import { CheckboxComponent } from "@shared/components/checkbox-group/checkbox/checkbox.component";
@@ -186,7 +186,10 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 					this.form.addControl(formName, new FormControl(this.selectedDate));
 					this.form
 						.get(formName)
-						?.valueChanges.pipe(filter((val): val is Date => !Number.isNaN(Date.parse(String(val)))))
+						?.valueChanges.pipe(
+							filter((val): val is Date => !Number.isNaN(Date.parse(String(val)))),
+							takeUntilDestroyed(this.destroyRef),
+						)
 						.subscribe((val) => {
 							this.selectedDate = new Date(val);
 						});
@@ -579,9 +582,12 @@ export function openDynamicDialog(dialog: MatDialog, dialogSetup: DynamicDialogS
 
 	const dialogRef = dialog.open(DynamicMaterialDialogComponent, config);
 
-	dialogRef.backdropClick().subscribe(() => {
-		dialogRef.close("close");
-	});
+	dialogRef
+		.backdropClick()
+		.pipe(takeUntil(dialogRef.afterClosed()))
+		.subscribe(() => {
+			dialogRef.close("close");
+		});
 
 	return dialogRef.afterClosed();
 }

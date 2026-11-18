@@ -1,14 +1,16 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Output, inject } from "@angular/core";
+import { Directive, ElementRef, EventEmitter, Output, inject } from "@angular/core";
 
 @Directive({
 	selector: "[appClickElsewhere]",
+	host: {
+		"(document:click)": "onDocumentClick($event)",
+	},
 })
 export class ClickElseWhereDirective {
 	@Output() public clickElsewhere: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
 	private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-	@HostListener("document:click", ["$event"])
 	public onDocumentClick(event: MouseEvent): void {
 		const targetElement: HTMLElement | null = event.target as HTMLElement | null;
 		if (targetElement !== null && !this.elementRef.nativeElement.contains(targetElement)) {

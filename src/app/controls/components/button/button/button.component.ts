@@ -6,13 +6,13 @@ import { LoaderComponent } from "@shared/components/loader/loader.component";
 import { CustButtonInput, CustButtonType, CustInputReturn } from "@shared/models/cust-basic-controls";
 
 @Component({
-	selector: "app-button-v2",
-	templateUrl: "./button-v2.component.html",
-	styleUrls: ["./button-v2.component.scss"],
+	selector: "app-button",
+	templateUrl: "./button.component.html",
+	styleUrls: ["./button.component.scss"],
 	imports: [MatButtonModule, MatIconModule, MatTooltipModule, LoaderComponent],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ButtonV2Component {
+export class ButtonComponent {
 	public readonly type = input.required<CustButtonInput>();
 	public readonly buttonClick = output<CustInputReturn>();
 
@@ -21,7 +21,9 @@ export class ButtonV2Component {
 	}
 
 	public get buttonClass(): string {
-		switch (this.type().type as CustButtonType) {
+		const type: string = this.type().type;
+		// Narrow with a runtime check instead of an `as` cast: unknown strings fall through to the default class.
+		switch (isCustButtonType(type) ? type : undefined) {
 			case CustButtonType.primary: {
 				return "mat-flat-button color-set-primary";
 			}
@@ -69,4 +71,8 @@ export class ButtonV2Component {
 			event: event,
 		});
 	}
+}
+
+function isCustButtonType(value: string): value is CustButtonType {
+	return (Object.values(CustButtonType) as string[]).includes(value);
 }

@@ -14,7 +14,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { Observable } from "rxjs";
-import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
+import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { LoaderComponent } from "@shared/components/loader/loader.component";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
 import { SafePipe } from "@shared/pipes/safe/safe.pipe";
@@ -31,7 +31,7 @@ import { DialogSetup, _DialogWindowControl } from "./dynamic-window.models";
 		TextFieldModule,
 		SafePipe,
 		LoaderComponent,
-		ButtonV2Component,
+		ButtonComponent,
 		MatButtonModule,
 		MatButtonToggleModule,
 		MatCheckboxModule,

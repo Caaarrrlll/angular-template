@@ -80,10 +80,10 @@
 				</div>
 			}
 			@if (tableHeaderMenu) {
-				<div style="padding-top: 5px">
+				<div class="s-pt-5">
 					@if (tableHeaderMenu.action) {
 						<div class="header-button">
-							<app-button-v2 [type]="headerButton(tableHeaderMenu)" (buttonClick)="buttonAction(tableHeaderMenu.action)"></app-button-v2>
+							<app-button [type]="headerButton(tableHeaderMenu)" (buttonClick)="buttonAction(tableHeaderMenu.action)"></app-button>
 						</div>
 					}
 
@@ -92,17 +92,10 @@
 							<button class="dropbtn" (click)="getMenu(tableHeaderMenu.id)">
 								<mat-icon>{{ tableHeaderMenu.icon }}</mat-icon>
 							</button>
-							<div class="dropdown-content" [id]="tableHeaderMenu.id" style="padding-top: 16px; padding-bottom: 26px">
+							<div class="dropdown-content s-pt-16-pb-26" [id]="tableHeaderMenu.id">
 								@for (menu of tableHeaderMenu.items; track $index) {
-									<div style="padding-left: 12px; padding-right: 12px">
-										<a
-											style="border-bottom: 1px #e8ece9 solid; padding: 8px; cursor: pointer; height: 20px"
-											role="button"
-											tabindex="0"
-											(click)="menuClick(menu.action)"
-											(keydown.enter)="menuClick(menu.action)"
-											>{{ menu.display }}</a
-										>
+									<div class="s-pl-12-pr-12">
+										<a class="menu-link" role="button" tabindex="0" (click)="menuClick(menu.action)" (keydown.enter)="menuClick(menu.action)">{{ menu.display }}</a>
 									</div>
 								}
 							</div>
@@ -115,8 +108,8 @@
 	<mat-card-content>
 		<div class="card-height" [style.--height]="tableProperties.height">
 			@if (!data) {
-				<div style="padding-left: 8px">
-					<app-button-v2
+				<div class="s-pl-8">
+					<app-button
 						[type]="{
 							type: 'Primary',
 							icon: '',
@@ -127,7 +120,7 @@
 							isTableButton: false,
 							width: '160px',
 						}"
-						(buttonClick)="buttonAction(errorActionButton)"></app-button-v2>
+						(buttonClick)="buttonAction(errorActionButton)"></app-button>
 				</div>
 			}
 			@for (row of cardRows; track $index) {
@@ -160,7 +153,7 @@
 										@if (!detail.label) {
 											<div>
 												@if (detail.extendedText) {
-													<div class="content-font content-height" style="float: left">
+													<div class="content-font content-height s-float-left">
 														{{ detail.value }}
 													</div>
 												}
@@ -175,10 +168,10 @@
 													'font-weight': detail.valueColor ? '700' : '400',
 												}">
 												@if (detail.value) {
-													<mat-icon class="icons-infront" style="color: green" (click)="buttonAction(detail.buttonClick ?? '')">check</mat-icon>
+													<mat-icon class="icons-infront s-c-green" (click)="buttonAction(detail.buttonClick ?? '')">check</mat-icon>
 												}
 												@if (!detail.value) {
-													<mat-icon class="icons-infront" style="color: red" (click)="buttonAction(detail.buttonClick ?? '')">close</mat-icon>
+													<mat-icon class="icons-infront s-c-red" (click)="buttonAction(detail.buttonClick ?? '')">close</mat-icon>
 												}
 											</div>
 										}
@@ -194,7 +187,7 @@
 										@if (!detail.label) {
 											<div>
 												@if (detail.extendedText) {
-													<div class="content-font content-height" style="float: left">{{ detail.value }}</div>
+													<div class="content-font content-height s-float-left">{{ detail.value }}</div>
 												}
 											</div>
 										}
@@ -224,7 +217,7 @@
 											</div>
 										}
 										<div
-											style="float: left"
+											class="s-float-left"
 											tabindex="0"
 											(mouseover)="mouseOver($event, displayList(detail))"
 											(focus)="mouseOver($event, displayList(detail))"
@@ -244,7 +237,7 @@
 										@if (!detail.label) {
 											<div>
 												@if (detail.extendedText) {
-													<div class="content-font content-height" style="float: left">{{ detail.value }}</div>
+													<div class="content-font content-height s-float-left">{{ detail.value }}</div>
 												}
 											</div>
 										}
@@ -278,7 +271,7 @@
 										}
 										@if (detail.buttonClick) {
 											<div>
-												<app-button-v2 [type]="tableButton(detail, '150px')" (buttonClick)="buttonAction(detail.buttonClick)"></app-button-v2>
+												<app-button [type]="tableButton(detail, '150px')" (buttonClick)="buttonAction(detail.buttonClick)"></app-button>
 											</div>
 										}
 									</div>
@@ -294,7 +287,7 @@
 											@if (!detail.label) {
 												<div>
 													@if (detail.extendedText) {
-														<div class="content-font content-height" style="float: left">
+														<div class="content-font content-height s-float-left">
 															{{ detail.value }}
 														</div>
 													}
@@ -316,7 +309,7 @@
 								}
 								@case ("chipsStatus") {
 									@if (detail.value && detail.value.length > 0) {
-										<div class="float-container-chip content-font content-height" style="padding-left: 5px; height: 20px">
+										<div class="float-container-chip content-font content-height s-pl-5-h-20">
 											<div class="float-child content-font content-height">
 												<b>{{ detail.label }}</b>
 											</div>
@@ -398,7 +391,7 @@
 														'font-weight': detail.valueColor ? '700' : '400',
 													}">
 													<div class="no-wrap-text" [title]="detail.value">
-														<mat-icon class="inline-icons-before-value" style="color: #f57c00">phone</mat-icon>
+														<mat-icon class="inline-icons-before-value s-c-f57c00">phone</mat-icon>
 														{{ detail.value }}
 													</div>
 												</div>
@@ -415,7 +408,7 @@
 										}
 										@if (detail.label) {
 											<div class="content-font content-height right-text-border-ext">
-												<a style="color: #000" [href]="'tel:' + detail.value" target="_top">
+												<a class="s-c-black" [href]="'tel:' + detail.value" target="_top">
 													{{ detail.value }}
 												</a>
 											</div>
@@ -438,7 +431,7 @@
 													'font-weight': detail.valueColor ? '700' : '400',
 												}">
 												<div class="no-wrap-text" [title]="detail.value">
-													<mat-icon class="inline-icons-before-value" style="color: #f57c00">mail</mat-icon>
+													<mat-icon class="inline-icons-before-value s-c-f57c00">mail</mat-icon>
 													{{ detail.value }}
 												</div>
 											</div>
@@ -454,7 +447,7 @@
 										}
 										@if (detail.label) {
 											<div class="content-font content-height right-text-border-ext">
-												<a style="color: #000" [href]="'mailto:' + detail.value + '?Subject=Information for ' + detail.value" target="_top">
+												<a class="s-c-black" [href]="'mailto:' + detail.value + '?Subject=Information for ' + detail.value" target="_top">
 													{{ detail.value }}
 												</a>
 											</div>
@@ -470,7 +463,7 @@
 										}
 										@if (detail.label) {
 											<div class="content-font content-height right-text-border-ext">
-												<a style="color: #000" [href]="detail.url" target="_top">
+												<a class="s-c-black" [href]="detail.url" target="_top">
 													{{ detail.value }}
 												</a>
 											</div>
@@ -524,13 +517,13 @@
 												<div class="no-wrap-text" [title]="detail.value">{{ detail.value }}</div>
 											</div>
 											<div [style.width]="detail.label.length * 10 + 'px'">
-												<app-button-v2 [type]="tableButton(detail, '110px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button-v2>
+												<app-button [type]="tableButton(detail, '110px')" (buttonClick)="buttonAction(detail.buttonClick ?? '')"></app-button>
 											</div>
 										}
 										@if (!detail.label) {
 											<div>
 												@if (detail.extendedText) {
-													<div class="content-font content-height" style="float: left">
+													<div class="content-font content-height s-float-left">
 														{{ detail.value }}
 													</div>
 												}
@@ -570,7 +563,7 @@
 @if (showDetailCard) {
 	<div class="baseball-card-popup" [style.top]="top + 'px'" [style.left]="left + 'px'">
 		<span><b>Uploaded Documents:</b></span>
-		<mat-divider style="margin-top: 5px; margin-bottom: 5px"></mat-divider>
+		<mat-divider class="s-mt-5-mb-5"></mat-divider>
 
 		@if (displayDetails.length <= 1) {
 			<span><li>No Documents</li></span>

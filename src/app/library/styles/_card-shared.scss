@@ -1,0 +1,115 @@
+@use "tokens" as *;
+
+// Rules shared verbatim by info-card.component.scss and list-card.component.scss (CSS cleanup clone family).
+// Emitted into each component's encapsulated stylesheet via `@use "card-shared";`.
+
+.mat-card-content {
+	padding: 5px !important;
+}
+
+.column {
+	width: var(--col-width);
+	justify-content: var(--alignment);
+}
+
+.col-left {
+	float: left;
+}
+
+.header-text {
+	padding-top: 2px;
+}
+
+.header-pre-text {
+	color: $color-black;
+	font-weight: 400;
+}
+
+.header-pre-text-devider {
+	color: $color-white;
+	padding: 0 5px;
+}
+
+.text-link-underlined {
+	text-decoration: underline;
+	font-weight: bold;
+	width: fit-content;
+	padding-left: 5px;
+	font-size: 12px;
+}
+
+.paragraph-heading {
+	font-size: 18px;
+}
+
+.card-height {
+	height: var(--height);
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.content-height {
+	line-height: 1.5;
+}
+
+.left-text-border {
+	padding-left: 5px;
+}
+
+.right-text-border {
+	padding-right: 10px;
+}
+
+.right-text-border-ext {
+	padding-right: 10px;
+	text-align: right;
+}
+
+.currency-text {
+	text-align: right;
+	padding-right: 10px;
+}
+
+.float-container {
+	width: 100%;
+	padding-bottom: 4px;
+}
+
+.float-child-left {
+	width: 49%;
+	float: left;
+}
+
+.float-container-chip {
+	display: flex;
+	padding-bottom: 4px;
+	width: 100%;
+}
+
+.float-child {
+	width: 50%;
+	float: left;
+}
+
+.float-child-2 {
+	display: flex;
+	width: 50%;
+	float: left;
+	position: relative;
+	justify-content: flex-end;
+}
+
+.colored-block {
+	width: 20px;
+	height: 20px;
+	float: right;
+}
+
+.s-float-left {
+	float: left;
+}
+
+.s-pl-5-h-20 {
+	padding-left: 5px;
+	height: 20px;
+}

@@ -76,3 +76,28 @@ tr.detail-row {
 		margin-bottom: 0.3em;
 	}
 }
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-c-green-light {
+	color: $color-green-light;
+}
+
+.s-c-red-bright {
+	color: $color-red-bright;
+}
+
+.s-c-red {
+	color: red;
+}
+
+.s-cursor-pointer {
+	cursor: pointer;
+}
+
+.s-w-2em {
+	width: 2em;
+}
+
+.s-p-5 {
+	padding: 5px;
+}

@@ -125,8 +125,8 @@ export class SandboxSelectionComponent {
 		]);
 	}
 
-	public onDateRangeChange(range: DateRange<Date>): void {
-		this.dateRangeLog.add(`selectedRangeValueChange: ${range.start?.toDateString() ?? `null`} -> ${range.end?.toDateString() ?? `null`}`);
+	public onDateRangeChange(range: DateRange<Date> | undefined): void {
+		this.dateRangeLog.add(`selectedRangeValueChange: ${range?.start?.toDateString() ?? `null`} -> ${range?.end?.toDateString() ?? `null`}`);
 	}
 
 	public setTimeSpanProgrammatically(): void {

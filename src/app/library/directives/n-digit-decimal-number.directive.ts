@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, inject } from "@angular/core";
+import { Directive, ElementRef, Input, inject } from "@angular/core";
 
 /**
  * Important to note, the input must be of type textbox for this directive to work.
@@ -11,6 +11,9 @@ import { Directive, ElementRef, HostListener, Input, inject } from "@angular/cor
  */
 @Directive({
 	selector: "[appNDigitDecimalNumber]",
+	host: {
+		"(keydown)": "onKeyDown($event)",
+	},
 })
 export class NDigitDecimalNumberDirective {
 	@Input() numberOfDecimals = "2";
@@ -19,7 +22,6 @@ export class NDigitDecimalNumberDirective {
 
 	private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
-	@HostListener("keydown", ["$event"])
 	onKeyDown(event: KeyboardEvent): void {
 		if (this.specialKeys.includes(event.key)) {
 			return;

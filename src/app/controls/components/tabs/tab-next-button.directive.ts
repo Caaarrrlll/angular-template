@@ -1,15 +1,17 @@
-import { Directive, HostListener, input, inject } from "@angular/core";
+import { Directive, input, inject } from "@angular/core";
 import { TabsComponent } from "./tabs.component";
 
 @Directive({
 	selector: "button[appNextTabButton]",
+	host: {
+		"(click)": "onNextClick()",
+	},
 })
 export class TabNextButtonDirective {
 	private readonly tabsComponent = inject(TabsComponent);
 
 	public readonly required = input<boolean>(false);
 
-	@HostListener("click")
 	onNextClick(): void {
 		const tabs = this.tabsComponent.tabs.toArray();
 		const selectedIndex = tabs.map((tab) => tab.active()).indexOf(true);

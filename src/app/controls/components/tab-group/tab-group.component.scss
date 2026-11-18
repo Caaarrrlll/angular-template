@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .center {
 	display: flex;
 	width: 100%;
@@ -19,4 +21,21 @@
 	height: 2px;
 	background-color: #293640;
 	z-index: 999;
+}
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-h-100-background-color-fff {
+	height: 100%;
+	background-color: $color-white;
+}
+
+.s-pr-4-c-b45108 {
+	padding-right: 4px;
+	color: #b45108;
+}
+
+.tab-header {
+	height: 48px;
+	color: $color-white;
+	vertical-align: middle;
 }

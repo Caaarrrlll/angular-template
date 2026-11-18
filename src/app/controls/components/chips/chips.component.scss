@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .circle {
 	display: flex;
 	justify-content: center;
@@ -49,4 +51,33 @@
 	font-size: 16px;
 	padding-left: 2px;
 	padding-top: 2px;
+}
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-pr-5 {
+	padding-right: 5px;
+}
+
+.s-pl-10 {
+	padding-left: 10px;
+}
+
+.circle--count {
+	--background: #517ca0;
+	--color: #{$color-white};
+	--width: 18px;
+	--radius: 9999px;
+	border: 1px solid #517ca0;
+}
+
+.circle--clear {
+	--background: #e7e7e7;
+	--color: #{$color-black};
+	--width: 18px;
+	--radius: 50%;
+	border: 1px solid $color-black;
+}
+
+.s-pl-1 {
+	padding-left: 1px;
 }

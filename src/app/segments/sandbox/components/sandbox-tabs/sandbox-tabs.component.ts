@@ -36,19 +36,17 @@ export class SandboxTabsComponent {
 	public readonly completedSteps: WritableSignal<number> = signal<number>(0);
 	public readonly verticalActive: WritableSignal<number> = signal<number>(0);
 
-	public readonly verticalTabs: Signal<CustTabConfig> = computed(
-		(): CustTabConfig => ({
-			tabType: `vertical`,
-			// token-backed custom property defined in sandbox-tabs.component.scss
-			tabLabelBackgroundColor: `var(--sandbox-tab-label-background)`,
-			tab: [
-				{ tabName: `Applicant`, index: 0, classSelect: `.applicant`, isProcess: true, canProgress: true },
-				{ tabName: `Documents`, index: 1, classSelect: `.documents`, isProcess: true, canProgress: this.completedSteps() >= 1 },
-				{ tabName: `Review`, index: 2, classSelect: `.review`, isProcess: true, canProgress: this.completedSteps() >= 2 },
-				{ tabName: `Notes`, index: 3, classSelect: `.notes`, icon: `notes` },
-			],
-		}),
-	);
+	public readonly verticalTabs: Signal<CustTabConfig> = computed((): CustTabConfig => ({
+		tabType: `vertical`,
+		// token-backed custom property defined in sandbox-tabs.component.scss
+		tabLabelBackgroundColor: `var(--sandbox-tab-label-background)`,
+		tab: [
+			{ tabName: `Applicant`, index: 0, classSelect: `.applicant`, isProcess: true, canProgress: true },
+			{ tabName: `Documents`, index: 1, classSelect: `.documents`, isProcess: true, canProgress: this.completedSteps() >= 1 },
+			{ tabName: `Review`, index: 2, classSelect: `.review`, isProcess: true, canProgress: this.completedSteps() >= 2 },
+			{ tabName: `Notes`, index: 3, classSelect: `.notes`, icon: `notes` },
+		],
+	}));
 
 	public readonly linear: WritableSignal<boolean> = signal<boolean>(true);
 	public readonly agreed: WritableSignal<boolean> = signal<boolean>(false);

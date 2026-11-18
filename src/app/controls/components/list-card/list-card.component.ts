@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
-import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
+import { ButtonComponent } from "@shared/components/button/button/button.component";
 import {
 	_CustCardButtonTableInterface,
 	_CustCardHeaderTableInterface,
@@ -34,7 +34,7 @@ export interface _ListCardParentButtonContext {
 	selector: "app-list-card",
 	templateUrl: "./list-card.component.html",
 	styleUrls: ["./list-card.component.scss"],
-	imports: [CommonModule, MatCardModule, MatIconModule, ChipStatusComponent, CountDownComponent, ButtonV2Component, CurrencyComponent],
+	imports: [CommonModule, MatCardModule, MatIconModule, ChipStatusComponent, CountDownComponent, ButtonComponent, CurrencyComponent],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListCardComponent implements OnChanges, OnInit {
@@ -281,14 +281,14 @@ export class ListCardComponent implements OnChanges, OnInit {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.chipsStatus,
-					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
+					alignment: toHeaderAlignment(resp.alignment),
 					statusType: resp.action,
 				});
 			} else if (resp.textPre) {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.display,
-					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
+					alignment: toHeaderAlignment(resp.alignment),
 					textColor: config.textColor,
 					textPre: resp.textPre,
 					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: 0 must fall back
@@ -298,7 +298,7 @@ export class ListCardComponent implements OnChanges, OnInit {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.status,
-					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
+					alignment: toHeaderAlignment(resp.alignment),
 					textColor: config.textColor,
 					postText: resp.postText,
 					postLabel: resp.postLabel,
@@ -308,7 +308,7 @@ export class ListCardComponent implements OnChanges, OnInit {
 				this.cardHeaders.push({
 					text: resp.response,
 					type: _HeaderTypes.display,
-					alignment: (resp.alignment as _HeaderAlignment | undefined) ?? _HeaderAlignment.center,
+					alignment: toHeaderAlignment(resp.alignment),
 					textColor: config.textColor,
 				});
 			}
@@ -372,4 +372,9 @@ export class ListCardComponent implements OnChanges, OnInit {
 
 		return _StatusChip.Default;
 	}
+}
+
+/** Config alignment arrives as a plain string: accept only real `_HeaderAlignment` values, otherwise centre. */
+function toHeaderAlignment(value: string | undefined): _HeaderAlignment {
+	return Object.values(_HeaderAlignment).find((alignment: _HeaderAlignment): boolean => alignment.toString() === value) ?? _HeaderAlignment.center;
 }

@@ -67,3 +67,9 @@
 		color: $color-charcoal;
 	}
 }
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-c-orange-mb-10 {
+	color: $color-orange;
+	margin-bottom: 10px;
+}

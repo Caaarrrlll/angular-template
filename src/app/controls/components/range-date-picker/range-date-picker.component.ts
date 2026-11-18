@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, ModelSignal, effect, inject, model } from "@angular/core";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DateRange, MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -15,37 +15,43 @@ import { DateTimeOpsService } from "@shared/services/date-time-ops.service";
 	providers: [provideNativeDateAdapter()],
 })
 export class RangeDatePickerComponent {
-	@Input() public selectedRangeValue?: DateRange<Date>;
+	/** Two-way bindable range: `[(selectedRangeValue)]` (replaces the old @Input + selectedRangeValueChange @Output pair; same public names). */
+	public readonly selectedRangeValue: ModelSignal<DateRange<Date> | undefined> = model<DateRange<Date> | undefined>();
 	@Input() public placeholder = "";
-	@Output() public selectedRangeValueChange: EventEmitter<DateRange<Date>> = new EventEmitter<DateRange<Date>>();
 
 	public inputFrom: FormControl<string | null> = new FormControl<string | null>("", Validators.required.bind(Validators));
 	public inputTo: FormControl<string | null> = new FormControl<string | null>("", Validators.required.bind(Validators));
 
 	private readonly dateTimeOpsService = inject(DateTimeOpsService);
 
+	public constructor() {
+		// Keep the text fields in sync with the range, including an initial range from the parent (AUD-12).
+		effect((): void => {
+			const range: DateRange<Date> | undefined = this.selectedRangeValue();
+			this.inputFrom.setValue(range?.start ? this.dateTimeOpsService.dateFormat(range.start) : ``);
+			this.inputTo.setValue(range?.end ? this.dateTimeOpsService.dateFormat(range.end) : ``);
+		});
+	}
+
 	public selectedChange(dateSelected: Date): void {
-		if (!this.selectedRangeValue?.start || this.selectedRangeValue.end) {
-			this.selectedRangeValue = new DateRange<Date>(dateSelected, null);
+		const current: DateRange<Date> | undefined = this.selectedRangeValue();
+		let next: DateRange<Date>;
+		if (!current?.start || current.end) {
+			next = new DateRange<Date>(dateSelected, null);
+		} else if (dateSelected < current.start) {
+			next = new DateRange<Date>(dateSelected, current.start);
 		} else {
-			const start = this.selectedRangeValue.start;
-			const end = dateSelected;
-			if (end < start) {
-				this.selectedRangeValue = new DateRange<Date>(end, start);
-			} else {
-				this.selectedRangeValue = new DateRange<Date>(start, end);
-			}
+			next = new DateRange<Date>(current.start, dateSelected);
 		}
 
-		this.inputFrom.setValue(this.dateTimeOpsService.dateFormat(this.selectedRangeValue.start ?? dateSelected));
-		if (this.selectedRangeValue.end) {
-			this.inputTo.setValue(this.dateTimeOpsService.dateFormat(this.selectedRangeValue.end));
+		if (next.end) {
 			this.inputTo.setErrors(null);
 		} else {
 			this.inputTo.setErrors({ toMissing: true });
 			this.inputTo.markAllAsTouched();
 		}
 
-		this.selectedRangeValueChange.emit(this.selectedRangeValue);
+		// model.set() also emits selectedRangeValueChange to the parent.
+		this.selectedRangeValue.set(next);
 	}
 }

@@ -19,7 +19,7 @@ export class SandboxComponent {
 		{
 			path: "buttons",
 			title: "Buttons",
-			description: "button-v2 (all CustButtonType variants), button-toggle, fab-button.",
+			description: "button (all CustButtonType variants), button-toggle, fab-button.",
 		},
 		{
 			path: "inputs",

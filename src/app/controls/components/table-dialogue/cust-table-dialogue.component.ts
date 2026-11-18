@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
+import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { _CustTableInterface } from "@shared/components/table/cust-table.interface";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
@@ -15,7 +15,7 @@ import { ThousandSeparatorPipe } from "@shared/pipes/thousand-separator/thousand
 	selector: "app-cust-table-dialogue",
 	templateUrl: "./cust-table-dialogue.component.html",
 	styleUrls: ["./cust-table-dialogue.component.scss"],
-	imports: [CommonModule, MatButtonModule, MatIconModule, MatTableModule, CurrencyComponent, ButtonV2Component, PostfixPipe, ThousandSeparatorPipe],
+	imports: [CommonModule, MatButtonModule, MatIconModule, MatTableModule, CurrencyComponent, ButtonComponent, PostfixPipe, ThousandSeparatorPipe],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustTableDialogueComponent implements OnInit {

@@ -1,24 +1,21 @@
 <mat-tab-group
+	class="s-h-100-background-color-fff"
 	dynamicHeight
 	[(selectedIndex)]="tabToUse"
 	[class]="tabList().tabType"
 	[style]="matTabGroupConfig()"
-	style="height: 100%; background-color: #fff"
 	(selectedTabChange)="tabButtonClick($event)">
 	@for (item of tabList().tab; track item.index) {
 		<mat-tab [label]="item.tabName" [disabled]="!item.isProcess ? false : item.canProgress ? false : true">
 			<ng-template mat-tab-label>
 				@if (item.icon) {
-					<mat-icon style="padding-right: 4px; color: #b45108">{{ item.icon }}</mat-icon>
+					<mat-icon class="s-pr-4-c-b45108">{{ item.icon }}</mat-icon>
 				}
 				<div [style]="{ 'font-size': tabList().fontSize }">{{ item.tabName }}</div>
 			</ng-template>
 
 			@if (tabList().tabType === "vertical" && !hideContent()) {
-				<div
-					class="header-container"
-					style="height: 48px; color: #fff; vertical-align: middle"
-					[style]="{ 'background-color': tabList().tabLabelBackgroundColor, 'font-size': tabList().fontSize }">
+				<div class="header-container tab-header" [style]="{ 'background-color': tabList().tabLabelBackgroundColor, 'font-size': tabList().fontSize }">
 					<div class="center">
 						<b>{{ item.tabName }}</b>
 					</div>

@@ -1,4 +1,5 @@
 @use "tokens" as *;
+@use "card-shared";
 
 .mat-card-header {
 	padding: 1px !important;
@@ -13,10 +14,6 @@
 	border-radius: 8px;
 }
 
-.mat-card-content {
-	padding: 5px !important;
-}
-
 .row {
 	display: flex;
 	width: 100% !important;
@@ -25,15 +22,6 @@
 	height: 36px;
 	margin-left: -30px;
 	margin-top: -2px;
-}
-
-.column {
-	width: var(--col-width);
-	justify-content: var(--alignment);
-}
-
-.col-left {
-	float: left;
 }
 
 .col-with-border-left,
@@ -77,20 +65,6 @@
 	padding: 5px 5px 0;
 }
 
-.header-text {
-	padding-top: 2px;
-}
-
-.header-pre-text {
-	color: $color-black;
-	font-weight: 400;
-}
-
-.header-pre-text-devider {
-	color: $color-white;
-	padding: 0 5px;
-}
-
 .header-icons {
 	float: right;
 	padding-left: 6px;
@@ -106,77 +80,8 @@
 	}
 }
 
-.text-link-underlined {
-	text-decoration: underline;
-	font-weight: bold;
-	width: fit-content;
-	padding-left: 5px;
-	font-size: 12px;
-}
-
-.paragraph-heading {
-	font-size: 18px;
-}
-
-.card-height {
-	height: var(--height);
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
 .content-font {
 	font-size: 15px;
-}
-
-.content-height {
-	line-height: 1.5;
-}
-
-.left-text-border {
-	padding-left: 5px;
-}
-
-.right-text-border {
-	padding-right: 10px;
-}
-
-.right-text-border-ext {
-	padding-right: 10px;
-	text-align: right;
-}
-
-.currency-text {
-	text-align: right;
-	padding-right: 10px;
-}
-
-.float-container {
-	width: 100%;
-	padding-bottom: 4px;
-}
-
-.float-child-left {
-	width: 49%;
-	float: left;
-}
-
-.float-container-chip {
-	display: flex;
-	padding-bottom: 4px;
-	width: 100%;
-}
-
-.float-child {
-	width: 50%;
-	float: left;
-}
-
-.float-child-2 {
-	display: flex;
-	width: 50%;
-	float: left;
-	position: relative;
-	justify-content: flex-end;
 }
 
 .icons-infront,
@@ -197,12 +102,6 @@
 .inline-icons,
 .inline-icons-before-value {
 	color: $color-black;
-}
-
-.colored-block {
-	width: 20px;
-	height: 20px;
-	float: right;
 }
 
 .dropdown {
@@ -291,4 +190,52 @@
 	overflow: auto;
 	border: 1px solid $color-gray-light-alt;
 	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-pt-5 {
+	padding-top: 5px;
+}
+
+.s-pt-16-pb-26 {
+	padding-top: 16px;
+	padding-bottom: 26px;
+}
+
+.s-pl-12-pr-12 {
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+// Scoped to beat `.dropdown-content a` (the inline style this replaces always won).
+.dropdown-content a.menu-link {
+	border-bottom: 1px #e8ece9 solid;
+	padding: 8px;
+	cursor: pointer;
+	height: 20px;
+}
+
+.s-pl-8 {
+	padding-left: 8px;
+}
+
+.s-c-green {
+	color: green;
+}
+
+.s-c-red {
+	color: red;
+}
+
+.s-c-f57c00 {
+	color: #f57c00;
+}
+
+.s-c-black {
+	color: $color-black;
+}
+
+.s-mt-5-mb-5 {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }

@@ -1,4 +1,4 @@
-<app-sandbox-page title="Buttons" description="button-v2 (every CustButtonType), button-toggle and fab-button demos.">
+<app-sandbox-page title="Buttons" description="button (every CustButtonType), button-toggle and fab-button demos.">
 	<app-sandbox-demo
 		title="Button v2 - variants"
 		description="One button per CustButtonType. The toggles drive the disabled, loading and isTableButton inputs on every button; buttonClick is logged."
@@ -10,7 +10,7 @@
 		</div>
 		<div class="sandbox-buttons__row">
 			@for (button of variantButtons(); track button.value) {
-				<app-button-v2 [type]="button" (buttonClick)="onButtonClick($event)"></app-button-v2>
+				<app-button [type]="button" (buttonClick)="onButtonClick($event)"></app-button>
 			}
 		</div>
 	</app-sandbox-demo>
@@ -21,13 +21,13 @@
 		[log]="buttonLog.entries()">
 		<div class="sandbox-buttons__row">
 			@for (button of iconButtons(); track button.value) {
-				<app-button-v2 [type]="button" (buttonClick)="onButtonClick($event)"></app-button-v2>
+				<app-button [type]="button" (buttonClick)="onButtonClick($event)"></app-button>
 			}
 		</div>
 	</app-sandbox-demo>
 
 	<app-sandbox-demo title="Button v2 - label too long" description="Labels of 29+ characters render a validation message instead of the button.">
-		<app-button-v2 [type]="tooLongButton"></app-button-v2>
+		<app-button [type]="tooLongButton"></app-button>
 	</app-sandbox-demo>
 
 	<app-sandbox-demo title="Button toggle" description="Single select, multi select, read only and equalToSelected; inputChanged is logged." [log]="toggleLog.entries()">

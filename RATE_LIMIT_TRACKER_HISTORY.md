@@ -268,3 +268,150 @@ Task: critical signals-readiness check of the project and a concrete migration p
     - headless Edge: carousel renders + next → 2 of 7; list-card label widths computed (80px/50px); info-card edit icon click logs buttonClick; no console errors
     - AGENTS.md tooling paragraph: extended diagnostics stay unsuppressed
 [✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): roadmap "next up" list, in recommended order — developer review stop after EACH step
+
+[✓] Step 1: browser check of /sandbox — confirm demos render, capture console errors, confirm/refute code-reading items (esp. AUD-04, AUD-05, AUD-07)
+    - method: `ng serve` (port 4300) + headless Edge driven over the DevTools protocol by a scratchpad script (no new dependency)
+    - all 13 family pages + index render; no uncaught exceptions on load
+    - CONFIRMED in browser: AUD-04 (wheel on zoom lens → NG05201 from `imageZoom`); AUD-07 (checkbox-group AND range-checkbox-group: programmatic set changes the value but no tick moves; single mode leaves the old tick showing); AUD-11 (sliders start at 0–100 regardless of minValue/maxValue); AUD-14 part (3× Angular "disabled attribute with reactive form directive" warnings on /inputs)
+    - REFUTED-AS-PREDICTED: time-span-picker programmatic set renders correctly (02/12/45)
+    - NOT reachable from current demos (demos avoid them; still code reading): AUD-05, AUD-06, AUD-08 — to be covered by demo cases when fixed in Step 2
+    - not done: full visual layout review (screenshots only at a narrow viewport)
+[✓] STOP — developer review of Step 1 (approved 2026-11-18: "perform step 2")
+[✓] Step 2: fix AUD-04…AUD-08 (minimal fixes, existing file style; each verified in headless Edge)
+    [✓] AUD-04 zoomable-image sanitize — code changed (SecurityContext.URL + quote/paren encoding); browser-verified
+        - touching: zoomable-image.component.ts
+    [✓] AUD-05 list-card no-buttons crash — empty button row skipped; demo case added; browser-verified
+        - touching: list-card.component.ts, sandbox-cards.component.html
+    [✓] AUD-06 dialog Slider/Upload — templates fixed (formControlName on matSliderThumb; native file input, files written to the control); demo cases added (dialog "Slider, upload + validators", window form Slider); browser-verified
+        - touching: dynamic-material-dialog.component.{html,ts}, dynamic-window.component.html
+    [✓] AUD-07 group value → signal; inner mat-checkbox pointer-events none + tabindex -1; browser-verified
+        - touching: (range-)checkbox-group.component.ts, (range-)checkbox.component.{html,scss}
+    [✓] AUD-08 noSpace → /^\S+$/, phone → 0[0-9]{9} (dialog both branches + window noSpace); setup no longer mutated (getEnumName maps both to `pattern`); demo case added; browser-verified
+        - touching: dynamic-material-dialog.component.ts, dynamic-window.component.ts, sandbox-dialogs{.component.ts,.component.html,-data.service.ts}
+        - new finding: dynamic-window setValidators([phone|email|nospace]) drops `required` → record as AUD-42
+    [✓] Step 2 verification
+        - dev ng build passes; prettier clean; eslint clean on touched files except 2 pre-existing template eqeqeq in dynamic-window.component.html:67,70 (AUD-03, Step 5)
+        - headless Edge: AUD-04 no NG05201 + lens background set; AUD-05 no-buttons card renders; AUD-07 ticks follow programmatic set for both groups, single mode correct, inner mat-checkbox pointer-events none; AUD-06 dialog slider value 10 + file attached + submit returns {deposit, attachments}, window slider shows R20,000; AUD-08 noSpace/phone errors correct, identical on a second open
+        - caveat: the second open uses a fresh setup from the sandbox factory, so "reopen the same setup object" is covered by code (mutation removed), not by the probe
+        - remaining console warning on the new dialog: ngModel + formControlName (existing AUD-10)
+[✓] STOP — developer review of Step 2 (approved 2026-11-18: "proceed with the next step")
+[✓] Step 3: AUD-28 + AUD-27 highlight-search-match (escape text + regex) — same file
+    - touching: highlight-search-match.pipe.ts, PIPES_CONTRACTS.md, sandbox-tables.component.{ts,html}
+    - pipe now matches the term literally (indexOf, case-insensitive) and HTML-escapes all text on every path (match, no match, no term); edge spaces → &nbsp; without the extra spans
+    - sandbox no longer pre-escapes the term; added an untrusted-sample line as a regression case
+    - verified: dev build, eslint, prettier; headless Edge with terms toyota, (cross), ., <b>, &, onerror, zzz → no injected elements, literal text, correct <mark>, no console warnings
+    - found + fixed during verify: the first version returned unescaped text on the no-match path (Angular's sanitizer stripped onerror but <img>/<b> still rendered)
+[✓] STOP — developer review of Step 3 (approved 2026-11-18: "proceed" — taken as go-ahead for Step 4, Step 3 was already complete)
+[✓] Step 4: AUD-01 (library→controls model move) + AUD-30 (single dev-gating flag)
+    - verified: tsc; dev + production ng build (prod: pre-existing budget warning only); prettier clean; eslint clean on touched files except table.component.ts:192 no-empty-lifecycle-method (pre-existing, AUD-03)
+    - headless Edge (dev): nav shows /sandbox link; /sandbox/tables renders table, 3 linq-grid-filters, card-table cards; no console errors
+    - prod: nav links are behind @if (showSandbox) = isLocal (false in prod); sandbox routes absent; not browser-tested in a prod serve
+    [✓] AUD-01 model moved (git mv) to src/app/library/models/linq-grid-filter-item.ts; 8 importers + SERVICES_CONTRACTS.md path updated; zero @shared/components imports left in library; tsc passes
+    - touching: library/models/linq-grid-filter-item.ts, cust-page.ts, grid-storage.service.ts, card-table/table/linq-grid-filters components, 2 sandbox files
+    [✓] AUD-30 dev-gating flags — nav `showSandbox` now uses `isLocal` (same as the sandbox routes); flags documented in both environment files
+    - decision: NOT collapsed into one flag — `environmentName` (diagnostics: logger + error handler, on in any non-production env) and `isLocal` (local tooling: sandbox) are different concerns; the real bug was only the nav link vs route mismatch
+    - touching: navigation.component.ts, environment.ts, environment.development.ts
+[✓] STOP — developer review of Step 4 (approved 2026-11-18 with a change request: rename `isLocal` → `showComponentSandbox`)
+[✓] Step 4b: rename sandbox flag `isLocal` → `showComponentSandbox` (env files, routes, nav, docs)
+    - touching: environment.ts, environment.development.ts, app.routes.ts, navigation.component.ts, AGENTS.md, README.md, ROADMAP.md (AUD-30 note)
+    - verified: prettier + eslint clean; dev + prod build; headless Edge nav link + /sandbox/tables OK, no console errors
+[✓] Step 5: AUD-03 — clear the 47 pre-existing @angular-eslint errors (developer chose: rename directive selectors to app*)
+    [✓] 5a directive-selector ×9 → appAutoFocus, appCopyText, appCurrencyInput, appDateTransform, appMinMaxDecimal, appMinMax, appNDigitDecimalNumber, appNumericInput, appCursorFollowZoom (dev build passes)
+        - same-named inputs renamed too (appCopyText, appDateTransform, appCursorFollowZoom); formControlName values in sandbox-inputs deliberately untouched
+        - touching: 9 directive files; dynamic-material-dialog.html, gallery.html, sandbox-inputs/media/misc (.html + 2 TS comments); ROADMAP AUD-15/20 names
+        - BREAKING for forks using the old attribute names (developer-approved)
+    [✓] 5b template eqeqeq ×7 — all were `== null`/`!= null` idiom checks; enabled `allowNullOrUndefined` on @angular-eslint/template/eqeqeq in eslint.config.js (other loose comparisons still error) instead of rewriting; 0 left
+    [✓] 5c template a11y ×27 + alt-text ×3 — 0 left
+        - clickables → role="button" tabindex="0" (keydown.enter) (info-card ×3, media-dialog close + aria-label, zoom-image, zoomable-image img + prev/next)
+        - hover → tabindex + (focus)/(blur) (info-card eye icon: mouseOver now accepts FocusEvent and anchors to the element; table listPopupHover cell)
+        - select option: (click) on <label> → (change) on the input (also fixes the AUD-13 double emit)
+        - alt: info-card image "Image", media-dialog "Media item", list-card icon alt="" (decorative)
+    [✓] 5d prefer-inject (cust-table-dialogue:29) + no-empty-lifecycle-method (table:192)
+        - cust-table-dialogue: `@Inject(MAT_DIALOG_DATA)` constructor → `inject<Record<string, unknown>>(MAT_DIALOG_DATA)` field (same public `data` name)
+        - table: removed the empty ngOnDestroy + OnDestroy from implements/imports
+    [✓] 5e verification
+        - `npx eslint src` exit 0 — ZERO errors project-wide (was 47); prettier clean on src + eslint.config.js + ROADMAP.md; dev + prod build pass (prod: pre-existing budget warning only)
+        - headless Edge: 6 renamed input directives present + appNumericInput blocks letters / allows digits + appDateTransform formats 2026-03-04 → 04 Mar 2026; appCopyText decorates; select option emits once per click; zoomable-image Enter on next 1→2 of 7; table-dialogue opens with rows (inject change); media-dialog Enter on close closes it, img alt present; info-card eye icon focus shows popup anchored to the element, blur hides it; no console errors
+        - AGENTS.md lint paragraph synced (eqeqeq null idiom, app selector prefix)
+[✓] STOP — developer review of Step 5 (approved 2026-11-18; Step 6 = proposed scope; plus a new request below)
+[✓] Step 5b: dependency + versioning audit (developer request: `npm i` reported 75 vulnerabilities — 2 low, 33 moderate, 37 high, 3 critical)
+    - findings recorded in ROADMAP.md → "Dependencies & versioning (audit 2026-11-18)" as AUD-43…AUD-48 (+ re-run commands)
+    - measured: 75 total (2/33/37/3) over 886 pkgs; runtime-only (`--omit=dev`) 9 (7 moderate, 2 high) = Angular 22.0.5 advisories; criticals are dev-only (piscina via @angular/build; proxy-addr via @angular/cli → MCP SDK → express; karma stack)
+    - unused/deprecated: @angular/animations, @angular/platform-browser-dynamic (deprecated, 0 imports), prettier-eslint, istanbul-lib-instrument; 0 spec files despite the karma stack
+    - nothing installed/changed (needs approval); note: package.json already had an uncommitted `baseline-browser-mapping` addition before this step
+    - read-only: npm audit (json), npm outdated, npm ls; record findings as ID'd ROADMAP audit items; NO npm audit fix / installs (dependency changes need explicit approval)
+[✓] Step 6 (agreed scope): AUD-31 DIRECTIVES_CONTRACTS.md, AUD-42 dynamic-window required, AUD-11 range-slider initial values, AUD-13 rest (shared name="test"), AUD-34/35/41 mechanical cleanups
+    [✓] 6a AUD-31 DIRECTIVES_CONTRACTS.md (12 directives: index + per-directive purpose/inputs/outputs/requirements/known issues) + AGENTS.md Contracts, reading order and folder entries; stale @example selectors in 5 directive files fixed
+    [✓] 6b AUD-42 dynamic-window: validators built as a list (required + type); old `requiredValidator` was a no-op (conditionalValidator without a validator returns null), so required only worked on plain fields; dependent phone/email unchanged; sandbox window form gained a required email field (browser check in 6f)
+        - touching: dynamic-window.component.ts, sandbox-dialogs-data.service.ts
+    [✓] 6c AUD-11 range-slider: values built in ngOnInit (minValue/maxValue now optional, default to min/max); valueChange emits a copy
+        - touching: range-slider.component.ts
+    [✓] 6d AUD-13 rest: option gets an optional `name` input (rendered only when set) instead of the page-wide `name="test"`; sandbox radio row passes a shared name
+        - touching: option.component.{ts,html}, sandbox-inputs.component.html
+        - behaviour change: radios without a name are no longer accidentally grouped page-wide
+    [✓] 6e AUD-34/35/41
+        - removed `standalone: true` from 62 files (audit said 63; 62 found); removed the stale controls-to-port exclude (tsconfig.app.json) and the unused `@animations` alias (tsconfig.json)
+        - added `@environments/*` alias; the 4 deep relative environment imports now use `@environments/environment`; app.component.ts navigation import aliased; AGENTS.md path-alias line updated (known gap removed)
+        - removed unused AppComponent `title`
+        - left as-is (out of scope): sibling-file relative imports inside single control folders; relative lazy imports in app.routes.ts
+    [✓] 6f verification
+        - tsc; `npx eslint src` exit 0 (added `no-extraneous-class` allowWithDecorator: the now-empty AppComponent is a normal decorated Angular class); prettier clean; prod build (pre-existing budget warning only; `showComponentSandbox:false`, 0 sandbox chunks — env file replacement works through the new alias); dev build (46 sandbox chunks)
+        - headless Edge: sliders start at 500–3000 / 20–500 (were 0–100); radio row shares one name and is exclusive, checkboxes have no name; window required email invalid when empty/malformed, valid for a@b.co; only console output = existing AUD-14 warnings
+        - not browser-verified: valueChange now emitting a copy (code-only)
+    - deferred to later tasks: AUD-09/10 dynamic dialog behaviour, tabs/gallery bugs, CSS cleanup, button-v2 rename, AUD-33 host listeners
+[✓] STOP — developer review of Step 6 (approved 2026-11-18: "step 6 was fine")
+    - during review: completed the developer's `postLable` → `postLabel` rename (IDE rename had only updated list-card-data-header.interface.ts + 2 object keys): cust-card-table.interface.ts ×4, list-card.html:42 + list-card.ts reads, info-card.ts, 2 sandbox data services; dev build + eslint + prettier pass; headless Edge shows "Created: <date>" on list-cards (/sandbox/cards, /sandbox/tables). Breaking for forks' card configs using `postLable`.
+    - new finding AUD-49: info-card maps postText/postLabel into its header but its template never renders them
+    - during review: fixed NG8102 in currency.component.ts by widening `amount` to `string | number | null | undefined` (the `?? 0` guards untyped table/card data); eslint + prettier + dev build pass
+[✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md; open audit items stay live in ROADMAP.md
+
+## Task (2026-11-18): dependency updates (roadmap item 1) + housekeeping (roadmap item 5) — developer-approved
+
+Item 1 — dependencies (AUD-43…AUD-48; changes package.json + lockfile, approved):
+[✓] 1a baseline: record npm audit counts + versions; snapshot package.json/lockfile in scratchpad for rollback — 75 (2 low, 33 moderate, 37 high, 3 critical) at commit b62e074; package.json + package-lock.json copied to scratchpad deps-backup
+[✓] 1b remove unused/deprecated: @angular/animations, @angular/platform-browser-dynamic, prettier-eslint, istanbul-lib-instrument (AUD-47) — npm uninstall; dev build still passes
+[✓] 1c remove the unused Karma/Jasmine test stack: karma*, jasmine-core, @types/jasmine, `test` script, angular.json `test` target, tsconfig.spec.json (AUD-45) — done (git rm tsconfig.spec.json; angular.json/package.json re-formatted by prettier)
+    - note: npm 12 blocks dependency install scripts by default (esbuild, lmdb, msgpackr-extract listed); builds work without them
+[✓] 1d update within ranges: @angular/* 22.2.x, cdk/material/build 22.2.7, cli range → ^22.2.7, eslint/typescript-eslint/angular-eslint/prettier/eslint-plugin-prettier, tslib (AUD-43, AUD-44, AUD-46)
+    - npm update + `npm install -D @angular/cli@^22.2.7` → @angular/* 22.2.6, cdk/material/build/cli 22.2.7, eslint 10.15.0, typescript-eslint 8.73.0, angular-eslint 22.7.0, prettier 3.10.1, eslint-plugin-prettier 5.5.7, tslib 2.9.1
+    - npm audit: 75 → 20 (all high, all dev-only); `--omit=dev` → 0 vulnerabilities
+    - remaining 20 share one root: picomatch ReDoS GHSA-fc5q-39xc-vjpf (range <=4.0.7); latest published picomatch IS 4.0.7 → no patched version exists, no override possible; npm's suggested fixes are major downgrades (cli@16, angular-eslint@18, typescript-eslint@8.47) — rejected
+[✓] 1e verify: npm audit (record new counts), tsc, eslint src, prettier, dev + prod build, sandbox browser pass over all 13 pages
+    - new lint from typescript-eslint 8.73: no-unsafe-enum-assignment ×5 fixed with runtime guards (button-v2 `isCustButtonType`, list-card `toHeaderAlignment`); no-unsafe-class-instance-assignment ×9 turned off in eslint.config.js with reason (Material config literals / data-only casts)
+    - prettier 3.10 reformatted 5 src files; NOT touched: .vscode/*.json (developer editor config) and the tracker .md files (never prettier-formatted)
+    - tsc 0; eslint src 0; prettier clean (src, configs, AGENTS/ROADMAP/README); dev + prod build pass, 0 NG8xxx; prod initial bundle 673 → 722 kB (Angular 22.2; budget warning was already present)
+    - headless Edge on a fresh `ng serve` (port 4301, updated packages): all 14 pages render, no console errors except known AUD-14 warnings; re-ran Step 2/3/5/6 probes — identical results; button-v2 classes correct for every type
+[✓] 1f AUD-48 hygiene: README "Toolchain" section (verified versions, npm 12 install-scripts note, no test runner, audit guidance)
+    - left for a dedicated task (majors): typescript 7, eslint-config-prettier 10, zone.js 0.16 / zoneless; no `engines` field added (Angular's supported Node range not verified here)
+
+Item 5 — housekeeping:
+[✓] 5a AUD-33: @HostListener/@HostBinding → `host: {}` metadata — 22 listeners + 1 binding in 13 files (11 library directives, 2 tabs directives, zoomable-image) converted by script (scratchpad hostconv.py); selector kept first; dev build (type-checks host bindings) + eslint pass; behaviour browser-check in 5h
+    - note: `experimentalDecorators` still needed (@Input/@Output/@ViewChild remain in decorator-API controls)
+[✓] 5b AUD-36: static inline `style="…"` in templates → component SCSS (tokens); dead Kendo selectors in card-table.scss; tab-group TS default colour
+    - 83 static style attrs in 17 templates → component-scoped classes (script: scratchpad styleconv.py); utility-style `.s-<declarations>` names, 6 long ones renamed semantically (zoom-container, font-poppins, tab-header, circle--count, circle--clear, menu-link); 6 interpolated declarations → `[style.--x]` bindings (button-v2 ×4, table, cust-table-dialogue); colours → tokens where one exists (#000, #fff, #f47920, #ff3826, #75bf44), single-use hex kept literal
+    - verified by computed-style diff (headless Edge): baseline of 798 styled elements / 1889 properties across 11 sandbox pages + 9 opened dialogs/windows → after: 0 diffs, 0 missing. First pass caught 4 diffs, fixed: `--color: $color-black` needed `#{}` in a custom property; info-card menu links lost to `.dropdown-content a` → scoped `.dropdown-content a.menu-link`
+    - card-table: dead kendo-floatinglabel/kendo-switch block removed
+    - tab-group TS hex defaults NOT changed: they feed CSS variables no stylesheet reads (only --tabwidth is used) → folded into AUD-16 (wire the variables)
+    - coverage caveat: elements only rendered in states the sandbox does not show were converted but not diffed
+[✓] 5c AUD-37: model() for the two two-way pairs (time-span-picker value, range-date-picker selectedRangeValue)
+    - range-date-picker: `selectedRangeValue` → `model()` (same public name, `[(selectedRangeValue)]` works; Change event now typed `| undefined` — sandbox handler widened); effect syncs the text fields from the range; `[startAt]` added → also fixes AUD-12 (initial range now shown, calendar opens on its month); headless Edge verified (initial 2026/01/10–15 + JAN 2026, two clicks fill both fields, change logged per click)
+    - time-span-picker NOT converted (decision): its `value` setter must sync the inner form synchronously during CVA writeValue; model()+effect would defer that; also on the CVA "do not migrate" list
+[✓] 5d AUD-38: perf notes (duplicate async subscriptions, keyvalue in @for, un-torn-down dialog subscriptions)
+    - fixed: dynamic-material-dialog date valueChanges + takeUntilDestroyed; backdropClick + takeUntil(afterClosed()) (dev build + eslint pass)
+    - no change (assessed): the 3 `filteredData | async` are in mutually exclusive @case branches (one per rendered control); expandable-grid-form `?? {} | keyvalue` only re-runs for the undefined/empty case; template getters fine under OnPush
+[✓] 5e AUD-39 / AUD-40: decisions recorded in ROADMAP.md Standing policy (JWT stays in localStorage — forks with sensitive data move to httpOnly cookies; ElementRef reads OK, Renderer2 for element creation, no consistency-only migration; experimentalDecorators + useDefineForClassFields stay until the last decorator-API control; ::ng-deep capped at the 2 range-slider uses)
+[✓] 5f CSS cleanup leftovers: clone families (info-card↔list-card, drag-drop↔dynamic-material-dialog) — shared partial for identical rules; Phase 4 naming only in touched files
+    - info-card ↔ list-card: 22 verbatim-identical top-level blocks moved to `src/app/library/styles/_card-shared.scss`, `@use "card-shared";` in both (script: scratchpad scssdupes.py); info-card.scss 351→241 lines, list-card.scss 321→213
+    - cascade check (headless Edge, 853 card elements × 35 computed properties on /sandbox/cards + /sandbox/tables): partial-at-top vs partial-at-bottom differ only in list-card `justify-content` where `.column` (shared) meets `.col-no-border`; original order had `.column` first → current top placement reproduces the original (`center`)
+    - drag-drop ↔ dynamic-material-dialog: only 1 identical top-level block (a 2-line utility class) → no partial (not worth a shared file)
+    - Phase 4 naming: no renames beyond the semantic class names chosen in 5b
+[✓] 5g button rename: button-v2 → app-button (selector, class, folder, all usages, docs)
+    - git mv button/button-v2 → button/button (button.component.{ts,html,scss}); ButtonV2Component → ButtonComponent; app-button-v2 → app-button across 13 files; ROADMAP standing policy updated, Button follow-up section removed; dev build + headless Edge (all button types keep their classes). BREAKING for forks using `app-button-v2` / `ButtonV2Component`.
+[✓] 5h verify item 5 (builds, eslint, prettier, browser pass) + roadmap ticks
+    - tsc 0; eslint src 0; prettier clean (src, configs, docs); prod build (722 kB, budget warning only) + dev build; 0 NG8xxx
+    - headless Edge: all 14 pages render, no unexpected console output; host-listener behaviours verified (fileover on drag, copy icon + snackbar, clickElsewhere, document ArrowRight, tabs next, appMinMax clamp + letter block); computed-style diff vs post-5b baseline: 0 diffs / 1555 properties
+    - ROADMAP: AUD-12, 33, 36, 37, 38 ticked (39/40 earlier); AUD-16 absorbs the tab-group TS colour defaults; CSS cleanup section rewritten
+[✓] Clean boundary: section moved to RATE_LIMIT_TRACKER_HISTORY.md
+    - next: remaining open audit items (AUD-09/10 dynamic dialog behaviour, AUD-14/15/16/17/18/19/20/21/22/23/24/25/26/27/29/49, AUD-48 majors) — developer to pick

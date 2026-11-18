@@ -1,14 +1,14 @@
 ﻿<div class="dynamic-material-dialog">
 	@if (options && options.draggable) {
-		<h2 mat-dialog-title cdkDrag cdkDragHandle cdkDragBoundary=".cdk-overlay-container" cdkDragRootElement=".cdk-overlay-pane" style="float: right; cursor: grab">
+		<h2 class="s-float-right-cursor-grab" mat-dialog-title cdkDrag cdkDragHandle cdkDragBoundary=".cdk-overlay-container" cdkDragRootElement=".cdk-overlay-pane">
 			{{ dialogSetup.title
-			}}<span style="float: right; cursor: pointer"><mat-icon role="button" tabindex="0" (keydown.enter)="close('close')" (click)="close('close')">close</mat-icon></span>
+			}}<span class="s-float-right-cursor-pointer"><mat-icon role="button" tabindex="0" (keydown.enter)="close('close')" (click)="close('close')">close</mat-icon></span>
 		</h2>
 	}
 	@if (!options) {
 		<h2 mat-dialog-title>
 			{{ dialogSetup.title
-			}}<span style="float: right; cursor: pointer"><mat-icon role="button" tabindex="0" (keydown.enter)="close('close')" (click)="close('close')">close</mat-icon></span>
+			}}<span class="s-float-right-cursor-pointer"><mat-icon role="button" tabindex="0" (keydown.enter)="close('close')" (click)="close('close')">close</mat-icon></span>
 		</h2>
 	}
 	@if (dialogSetup.imageUrl) {
@@ -79,7 +79,7 @@
 
 								@if (control.autoComplete && this.autoCompleteList.length > 0 && this.searchInputName === control.formName) {
 									<div>
-										<div style="padding: 5px">Select a buylead below to verify</div>
+										<div class="s-p-5">Select a buylead below to verify</div>
 										<div class="auto-complete-container">
 											@for (item of this.autoCompleteList; track $index) {
 												<div
@@ -92,7 +92,7 @@
 												</div>
 											}
 											@if (showSpinner && this.searchInputName === control.formName) {
-												<mat-spinner style="margin: 0 auto" [diameter]="30"></mat-spinner>
+												<mat-spinner class="s-m-0-auto" [diameter]="30"></mat-spinner>
 											}
 										</div>
 									</div>
@@ -177,14 +177,14 @@
 						<!--            Button Group-->
 						@case (formType.ButtonGroup) {
 							<div class="button-group-wrapper">
-								<app-button-toggle style="width: 100%" [inputObj]="$any(control)" (inputChanged)="inputChange($event, control.formName || '')"></app-button-toggle>
+								<app-button-toggle class="s-w-100" [inputObj]="$any(control)" (inputChanged)="inputChange($event, control.formName || '')"></app-button-toggle>
 							</div>
 						}
 						<!--            CUST Button Group-->
 						@case (formType.CUSTButtonGroup) {
 							<div class="button-group-wrapper">
 								<app-button-toggle
-									style="width: 100%"
+									class="s-w-100"
 									[inputObj]="$any(control)"
 									[equalToSelected]="equalSelected"
 									(inputChanged)="inputChange($event, control.formName || '')"></app-button-toggle>
@@ -438,7 +438,7 @@
 							<div class="container" appDragAndDropFiles (fileDropped)="handleFilesDropped($event, control.formName)">
 								@if (files.length > 0) {
 									<div class="uploaded-files">
-										<div style="color: #f47920; margin-bottom: 10px">Attached files</div>
+										<div class="s-c-orange-mb-10">Attached files</div>
 										@for (file of files; track $index) {
 											<div>{{ file.name }}</div>
 										}
@@ -484,7 +484,7 @@
 	</mat-dialog-content>
 
 	@if (!dialogSetup.hideBackButton || !dialogSetup.hideSubmitButton) {
-		<mat-dialog-actions [style.justify-content]="dialogSetup.hideBackButton ? 'right' : 'space-between'" style="display: flex">
+		<mat-dialog-actions class="s-d-flex" [style.justify-content]="dialogSetup.hideBackButton ? 'right' : 'space-between'">
 			@if (!dialogSetup.hideBackButton) {
 				<button (click)="actions(dialogSetup.backButtonText || '')" mat-stroked-button>
 					{{ dialogSetup.backButtonText }}

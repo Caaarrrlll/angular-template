@@ -41,6 +41,9 @@ module.exports = defineConfig([
 					message: "AGENTS.md: root services use @Service() from @angular/core instead of @Injectable({ providedIn }).",
 				},
 			],
+			// New in typescript-eslint 8.7x strict preset. Off: Angular Material's documented API passes config classes
+			// (MatDialogConfig, MatSnackBarConfig, …) as object literals; every hit in this codebase was that idiom or a data-only cast.
+			"@typescript-eslint/no-unsafe-class-instance-assignment": "off",
 			// Angular components/directives are decorated classes and may legitimately have no members (e.g. a root shell).
 			"@typescript-eslint/no-extraneous-class": ["error", { allowWithDecorator: true }],
 			"@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true, allowTypedFunctionExpressions: true, allowHigherOrderFunctions: true }],

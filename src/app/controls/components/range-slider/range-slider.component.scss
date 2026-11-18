@@ -39,3 +39,8 @@ mat-hint {
 	position: relative;
 	bottom: 4px;
 }
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-ta-center {
+	text-align: center;
+}

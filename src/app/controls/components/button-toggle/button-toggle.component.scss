@@ -42,3 +42,8 @@
 	height: calc(100% - 4px) !important;
 	border-radius: 2px;
 }
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-w-100 {
+	width: 100%;
+}

@@ -18,6 +18,14 @@ The sandbox segment (route `/sandbox`) demos every control live. It is only
 registered in development builds (`environment.showComponentSandbox` in
 `src/environments/`), so it never ships to production.
 
+## Toolchain
+
+Verified on 2026-11-18 with Node 24.15.0 and npm 12.2.2, Angular 22.2 (`@angular/*` 22.2.6, CLI/build/Material 22.2.7), TypeScript 6.0, ESLint 10.15 and Prettier 3.10.
+
+- npm 12 blocks dependency install scripts by default (it lists esbuild, lmdb, msgpackr-extract); the build does not need them.
+- There is no unit-test runner: the Karma/Jasmine stack was removed (UI components are not unit-tested). Add Angular's Vitest builder (`@angular/build:unit-test`) when service integration tests arrive.
+- `npm audit` shows dev-only advisories in the build/lint tooling until upstream patches land; `npm audit --omit=dev` (what ships) is clean. See the "Dependencies & versioning" section of `ROADMAP.md`.
+
 ## What's inside
 
 | Folder             | Purpose                                                                                                                         |

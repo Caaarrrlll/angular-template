@@ -111,13 +111,13 @@
 											@if (detail.type === "button") {
 												<div class="button-item">
 													@if (detail.buttonType === "Primary") {
-														<app-button-v2 [type]="tableButton(detail, 'Primary')" (buttonClick)="buttonAction(detail)"></app-button-v2>
+														<app-button [type]="tableButton(detail, 'Primary')" (buttonClick)="buttonAction(detail)"></app-button>
 													}
 													@if (detail.buttonType === "Secondary") {
-														<app-button-v2 [type]="tableButton(detail, 'Secondary')" (buttonClick)="buttonAction(detail)"></app-button-v2>
+														<app-button [type]="tableButton(detail, 'Secondary')" (buttonClick)="buttonAction(detail)"></app-button>
 													}
 													@if (!detail.buttonType || detail.buttonType === "Tertiary") {
-														<app-button-v2 [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button-v2>
+														<app-button [type]="tableButton(detail)" (buttonClick)="buttonAction(detail)"></app-button>
 													}
 												</div>
 											}
@@ -151,7 +151,7 @@
 										@if (!detail.label) {
 											<div>
 												@if (detail.extendedText) {
-													<div class="content-font content-height" style="float: left">
+													<div class="content-font content-height s-float-left">
 														{{ detail.value }}
 													</div>
 												}
@@ -180,7 +180,7 @@
 										@if (!detail.label) {
 											<div>
 												@if (detail.extendedText) {
-													<div class="content-font content-height" style="float: left">
+													<div class="content-font content-height s-float-left">
 														{{ detail.value }}
 													</div>
 												}
@@ -206,14 +206,14 @@
 										</div>
 										<div class="image-icons right-text-border">
 											@for (image of detail.imageIcons; track $index) {
-												<img style="height: 1.3rem" alt="" [style.opacity]="image.opacity" [src]="image.path" />
+												<img class="s-h-1p3rem" alt="" [style.opacity]="image.opacity" [src]="image.path" />
 											}
 										</div>
 									</div>
 								}
 								@case ("chipsStatus") {
 									@if (detail.value && detail.value.length > 0) {
-										<div class="float-container-chip content-font content-height" style="padding-left: 5px; height: 20px">
+										<div class="float-container-chip content-font content-height s-pl-5-h-20">
 											<div class="float-child content-font content-height">
 												<b>{{ detail.label }}:</b>
 											</div>

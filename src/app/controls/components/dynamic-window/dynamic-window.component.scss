@@ -43,3 +43,64 @@
 .row {
 	flex-direction: row;
 }
+
+// Moved from inline style attributes in the template (AUD-36).
+.s-pb-20 {
+	padding-bottom: 20px;
+}
+
+.s-d-flex-jc-center-w-500-pb-30 {
+	display: flex;
+	justify-content: center;
+	width: 500px;
+	padding-bottom: 30px;
+}
+
+.s-w-100-pb-20-ta-center {
+	width: 100%;
+	padding-bottom: 20px;
+	text-align: center;
+}
+
+.s-mb-15 {
+	margin-bottom: 15px;
+}
+
+.s-w-500-pb-30 {
+	width: 500px;
+	padding-bottom: 30px;
+}
+
+.s-w-100-pb-10-minw-450 {
+	width: 100%;
+	padding-bottom: 10px;
+	min-width: 450px;
+}
+
+.s-c-red {
+	color: red;
+}
+
+.s-w-100-pb-20 {
+	width: 100%;
+	padding-bottom: 20px;
+}
+
+.s-w-500-pb-30-ta-center {
+	width: 500px;
+	padding-bottom: 30px;
+	text-align: center;
+}
+
+.s-fw-bold {
+	font-weight: bold;
+}
+
+.s-w-100 {
+	width: 100%;
+}
+
+.s-d-flex-gap-10 {
+	display: flex;
+	gap: 10px;
+}

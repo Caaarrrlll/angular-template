@@ -1,17 +1,5 @@
 export type DialogWindowControlType =
-	| "Image"
-	| "Slider"
-	| "BtnGroup"
-	| "DropDown"
-	| "TextArea"
-	| "Input"
-	| "CurrencyShortHand"
-	| "MultiSelect"
-	| "SingleDate"
-	| "DateTime"
-	| "Checkbox"
-	| "radio"
-	| "approval";
+	"Image" | "Slider" | "BtnGroup" | "DropDown" | "TextArea" | "Input" | "CurrencyShortHand" | "MultiSelect" | "SingleDate" | "DateTime" | "Checkbox" | "radio" | "approval";
 
 export type DialogWindowValidator = "phone" | "email" | "nospace";
 

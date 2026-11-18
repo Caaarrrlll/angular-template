@@ -1,8 +1,11 @@
 import { DatePipe } from "@angular/common";
-import { AfterViewInit, Directive, ElementRef, HostListener, Input, inject } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef, Input, inject } from "@angular/core";
 
 @Directive({
 	selector: "[appDateTransform]",
+	host: {
+		"(ngModelChange)": "change()",
+	},
 	providers: [DatePipe],
 })
 export class DateTransformDirective implements AfterViewInit {
@@ -14,7 +17,7 @@ export class DateTransformDirective implements AfterViewInit {
 		this.elementRef.nativeElement.value = this.datePipe.transform(this.elementRef.nativeElement.value, this.appDateTransform) ?? "";
 	}
 
-	@HostListener("ngModelChange") change(): void {
+	change(): void {
 		if (Number.isNaN(Date.parse(this.elementRef.nativeElement.value))) return;
 		this.elementRef.nativeElement.value = this.datePipe.transform(this.elementRef.nativeElement.value, this.appDateTransform) ?? "";
 	}

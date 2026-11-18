@@ -1,18 +1,20 @@
-import { Directive, HostListener, inject } from "@angular/core";
+import { Directive, inject } from "@angular/core";
 import { NgControl } from "@angular/forms";
 
 @Directive({
 	selector: "[formControlName][appCurrencyMask]",
+	host: {
+		"(ngModelChange)": "onModelChange($event)",
+		"(keydown.backspace)": "keydownBackspace($event)",
+	},
 })
 export class CurrencyMaskDirective {
 	public readonly ngControl = inject(NgControl);
 
-	@HostListener("ngModelChange", ["$event"])
 	onModelChange(event: Event): void {
 		this.onInputChange(typeof event === "string" ? event : "", false);
 	}
 
-	@HostListener("keydown.backspace", ["$event"])
 	keydownBackspace(event: Event): void {
 		if (!(event.target instanceof HTMLInputElement)) return;
 		this.onInputChange(event.target.value, true);

@@ -1,5 +1,5 @@
 import { CurrencyPipe } from "@angular/common";
-import { Directive, ElementRef, HostListener, Input, OnInit, inject } from "@angular/core";
+import { Directive, ElementRef, Input, OnInit, inject } from "@angular/core";
 
 /**
  * Apply currency pipe to input field. No Decimals.
@@ -11,7 +11,12 @@ import { Directive, ElementRef, HostListener, Input, OnInit, inject } from "@ang
  *      if (Number.isNaN(Number(value))) value = value.replace(/[^0-9.]+/g, "");
  */
 
-@Directive({ selector: "[appCurrencyInput]" })
+@Directive({
+	selector: "[appCurrencyInput]",
+	host: {
+		"(ngModelChange)": "change()",
+	},
+})
 export class CurrencyInputDirective implements OnInit {
 	@Input()
 	public currencyCode = "ZAR";
@@ -35,7 +40,7 @@ export class CurrencyInputDirective implements OnInit {
 		this.el.value = this.currencyPipe.transform(this.el.value, this.currencyCode, "symbol", "1.0-0") ?? "";
 	}
 
-	@HostListener("ngModelChange") change(): string | undefined {
+	change(): string | undefined {
 		this.el.value = this.el.value.replace(/[^0-9.]+/g, "");
 		if (Number.isNaN(Number(this.el.value))) return;
 		if (this.max != null && Number(this.el.value) > this.max) {

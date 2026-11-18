@@ -6,7 +6,7 @@
 			@if (type().loading) {
 				<app-loader></app-loader>
 			} @else {
-				<div class="icon-container" style="width: 20px; height: 20px; padding-right: 3px">
+				<div class="icon-container s-w-20-h-20-pr-3">
 					<mat-icon>{{ type().icon }}</mat-icon>
 				</div>
 			}
@@ -16,13 +16,14 @@
 			[class]="buttonClass"
 			[disabled]="type().disabled"
 			(click)="onClick(type().value)"
-			class="button-container button-width-ext"
-			style="--button-padding: {{ buttonPadding }}; --font-size: {{ buttonFontSize }}; --button-height: {{ buttonHeight }}; --button-width: {{
-				type().width
-			}}; font-family: Poppins, sans-serif"
+			class="button-container button-width-ext font-poppins"
+			[style.--button-padding]="buttonPadding"
+			[style.--font-size]="buttonFontSize"
+			[style.--button-height]="buttonHeight"
+			[style.--button-width]="type().width"
 			[matTooltip]="type().tooltip">
 			@if (type().icon && type().iconSide === "left" && !type().loading) {
-				<div class="icon-container" style="padding-left: 4px">
+				<div class="icon-container s-pl-4">
 					<mat-icon>{{ type().icon }}</mat-icon>
 				</div>
 				@if (displayLength > 0) {
@@ -36,7 +37,7 @@
 						{{ type().display.toUpperCase() }}
 					</div>
 				}
-				<div class="icon-container" style="padding-right: 4px">
+				<div class="icon-container s-pr-4">
 					<mat-icon>{{ type().icon }}</mat-icon>
 				</div>
 			} @else if (displayLength > 0 && !type().iconSide && !type().loading) {
