@@ -27,7 +27,7 @@ export class SandboxMediaComponent {
 	public readonly carouselShortcuts: _SandboxMediaImage[] = this.images.slice(0, 3);
 	public readonly carouselLog = new SandboxEventLog();
 
-	// ---- gallery (+ cursorFollowZoom directive) ---- //
+	// ---- gallery (+ appCursorFollowZoom directive) ---- //
 	public readonly galleryEmpty: WritableSignal<boolean> = signal(false);
 	public readonly galleryAutoplay: WritableSignal<boolean> = signal(false);
 	public readonly galleryShowAutoplay: WritableSignal<boolean> = signal(true);

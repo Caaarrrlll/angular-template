@@ -1,4 +1,4 @@
-import { _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
+import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 
 export class _CUSTPage {
 	page = 0;

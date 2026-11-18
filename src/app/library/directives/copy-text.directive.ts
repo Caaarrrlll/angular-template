@@ -3,14 +3,14 @@ import { AfterViewInit, Directive, ElementRef, HostListener, Input, OnChanges, R
 import { SnackbarService } from "@shared/services/snackbar.service";
 
 @Directive({
-	selector: "[copyText]",
+	selector: "[appCopyText]",
 	standalone: true,
 })
 export class CopyTextDirective implements AfterViewInit, OnChanges {
 	// IF USING IN A GRID OR COMPONENT WHERE CHANGE DETECTION MIGHT BE
 	// AN ISSUE BIND TO THE INPUT INSTEAD OF USING --> this.element.textContent
 	// THIS WILL MAKE SURE THE MOST UP TO DATE VALUE IS USED
-	@Input() copyText = "";
+	@Input() appCopyText = "";
 	private readonly clipboard = inject(Clipboard);
 	private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 	private readonly snackbar = inject(SnackbarService);
@@ -34,7 +34,7 @@ export class CopyTextDirective implements AfterViewInit, OnChanges {
 	}
 
 	private updateText(): void {
-		this.text = this.copyText ? this.copyText : this.element.textContent;
+		this.text = this.appCopyText ? this.appCopyText : this.element.textContent;
 		this.renderer.setAttribute(this.element, "title", 'Click to copy "' + this.text + '"');
 	}
 

@@ -9,7 +9,7 @@ import { Directive, HostListener } from "@angular/core";
  */
 
 @Directive({
-	selector: "[NumericInput]",
+	selector: "[appNumericInput]",
 	standalone: true,
 })
 export class NumericInputDirective {

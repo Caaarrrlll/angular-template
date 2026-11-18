@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, ChangeDetectionStrategy, Component, ComponentRef, EventEmitter, Injector, Input, OnDestroy, Output, inject } from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, Component, ComponentRef, EventEmitter, Injector, Input, Output, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule } from "@angular/material/paginator";
@@ -9,7 +9,7 @@ import { MatTableModule } from "@angular/material/table";
 import { ButtonV2Component } from "@shared/components/button/button-v2/button-v2.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
 import { LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
-import { _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
+import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 import { CustButtonInput } from "@shared/models/cust-basic-controls";
 import { LinQRequestState, LinQSort } from "@shared/models/lin-q-request-state";
 import { _CUSTPage } from "@shared/models/cust-page";
@@ -47,7 +47,7 @@ import { PASSED_INFO } from "./table-constants.const";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{ provide: PASSED_INFO, useValue: "" }],
 })
-export class TableComponent implements OnDestroy, AfterContentInit {
+export class TableComponent implements AfterContentInit {
 	@Input() public filters?: _LinQGridFilterItem;
 	@Input() public listObservable?: Observable<unknown>;
 	@Input() public storageNameIn!: string;
@@ -187,10 +187,6 @@ export class TableComponent implements OnDestroy, AfterContentInit {
 
 	public setInjector(row: unknown): void {
 		this.myInjector = Injector.create({ providers: [{ provide: PASSED_INFO, useValue: row }], parent: this.injector });
-	}
-
-	public ngOnDestroy(): void {
-		// nothing long-lived: template-bound observables tear down with the view
 	}
 
 	public isDateInPast(dateIn: Date | null | undefined): boolean {

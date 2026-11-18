@@ -71,8 +71,8 @@
 	</app-sandbox-demo>
 
 	<app-sandbox-demo
-		title="Floating-label input + autoFocus"
-		description="app-input wraps a projected native input (its label targets id 'search'). The toggle renders an input with the autoFocus directive.">
+		title="Floating-label input + appAutoFocus"
+		description="app-input wraps a projected native input (its label targets id 'search'). The toggle renders an input with the appAutoFocus directive.">
 		<div class="sandbox-inputs__grid">
 			<app-input label="Search">
 				<input id="search" type="text" placeholder=" " />
@@ -83,43 +83,43 @@
 		</div>
 		@if (showAutoFocus()) {
 			<mat-form-field appearance="fill">
-				<mat-label>autoFocus</mat-label>
-				<input matInput type="text" autoFocus />
+				<mat-label>appAutoFocus</mat-label>
+				<input matInput type="text" appAutoFocus />
 			</mat-form-field>
 		}
 	</app-sandbox-demo>
 
 	<app-sandbox-demo
 		title="Input directives"
-		description="NumericInput, MinMax, MinMaxDecimal, NDigitDecimalNumber, currencyInput, appCurrencyMask and dateTransform on plain matInput fields bound to one FormGroup.">
+		description="appNumericInput, appMinMax, appMinMaxDecimal, appNDigitDecimalNumber, appCurrencyInput, appCurrencyMask and appDateTransform on plain matInput fields bound to one FormGroup.">
 		<form class="sandbox-inputs__grid" [formGroup]="directiveForm">
 			<mat-form-field appearance="fill">
-				<mat-label>NumericInput (digits only)</mat-label>
-				<input matInput type="text" formControlName="numeric" NumericInput />
+				<mat-label>appNumericInput (digits only)</mat-label>
+				<input matInput type="text" formControlName="numeric" appNumericInput />
 			</mat-form-field>
 			<mat-form-field appearance="fill">
-				<mat-label>MinMax (0 - 10)</mat-label>
-				<input matInput type="number" formControlName="minMax" MinMax [min]="0" [max]="10" />
+				<mat-label>appMinMax (0 - 10)</mat-label>
+				<input matInput type="number" formControlName="minMax" appMinMax [min]="0" [max]="10" />
 			</mat-form-field>
 			<mat-form-field appearance="fill">
-				<mat-label>MinMaxDecimal (0 - 10)</mat-label>
-				<input matInput type="text" formControlName="minMaxDecimal" MinMaxDecimal [min]="0" [max]="10" />
+				<mat-label>appMinMaxDecimal (0 - 10)</mat-label>
+				<input matInput type="text" formControlName="minMaxDecimal" appMinMaxDecimal [min]="0" [max]="10" />
 			</mat-form-field>
 			<mat-form-field appearance="fill">
-				<mat-label>NDigitDecimalNumber (3 decimals)</mat-label>
-				<input matInput type="text" formControlName="nDigit" NDigitDecimalNumber numberOfDecimals="3" />
+				<mat-label>appNDigitDecimalNumber (3 decimals)</mat-label>
+				<input matInput type="text" formControlName="nDigit" appNDigitDecimalNumber numberOfDecimals="3" />
 			</mat-form-field>
 			<mat-form-field appearance="fill">
-				<mat-label>currencyInput (ZAR, 0 - 100000)</mat-label>
-				<input matInput type="text" formControlName="currencyInput" currencyInput currencyCode="ZAR" [min]="0" [max]="100000" />
+				<mat-label>appCurrencyInput (ZAR, 0 - 100000)</mat-label>
+				<input matInput type="text" formControlName="currencyInput" appCurrencyInput currencyCode="ZAR" [min]="0" [max]="100000" />
 			</mat-form-field>
 			<mat-form-field appearance="fill">
 				<mat-label>appCurrencyMask</mat-label>
 				<input matInput type="text" formControlName="currencyMask" appCurrencyMask />
 			</mat-form-field>
 			<mat-form-field appearance="fill">
-				<mat-label>dateTransform (dd MMM yyyy)</mat-label>
-				<input matInput type="text" formControlName="dateTransform" dateTransform="dd MMM yyyy" />
+				<mat-label>appDateTransform (dd MMM yyyy)</mat-label>
+				<input matInput type="text" formControlName="dateTransform" appDateTransform="dd MMM yyyy" />
 			</mat-form-field>
 		</form>
 		<p class="sandbox-inputs__value">Form model (note: the masking directives rewrite the view only, not the model):</p>

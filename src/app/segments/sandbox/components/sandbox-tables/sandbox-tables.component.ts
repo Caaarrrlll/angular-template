@@ -13,7 +13,7 @@ import { CardTableComponent } from "@shared/components/card-table/card-table.com
 import { ExpandableGridComponent } from "@shared/components/expandable-grid/expandable-grid.component";
 import { _ExpandableGridRow } from "@shared/components/expandable-grid/core/types/expandable-grid-row.type";
 import { _DisplayedColumnChoice, LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
-import { _LinQGridFilterCondition, _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
+import { _LinQGridFilterCondition, _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 import { TableComponent } from "@shared/components/table/table.component";
 import { CustInputGeneral } from "@shared/models/cust-basic-controls";
 import { _CUSTPage } from "@shared/models/cust-page";

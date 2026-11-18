@@ -73,6 +73,8 @@ module.exports = defineConfig([
 		rules: {
 			"prettier/prettier": ["error", { parser: "angular" }],
 			"@angular-eslint/template/prefer-control-flow": "error",
+			// `x == null` / `x != null` is the idiomatic null-or-undefined check; every other loose comparison is still an error.
+			"@angular-eslint/template/eqeqeq": ["error", { allowNullOrUndefined: true }],
 		},
 	},
 ]);

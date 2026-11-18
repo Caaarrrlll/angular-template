@@ -1,4 +1,4 @@
-<span class="closeButton" (click)="close()">
+<span class="closeButton" role="button" tabindex="0" aria-label="Close" (click)="close()" (keydown.enter)="close()">
 	<mat-icon>close</mat-icon>
 </span>
 @if (imageData$ | apiResponse | async; as imageData) {
@@ -7,7 +7,7 @@
 	}
 	@if (imageData.payload) {
 		<div class="image-container">
-			<img [src]="mediaSrc(imageData)" class="image" />
+			<img [src]="mediaSrc(imageData)" class="image" alt="Media item" />
 		</div>
 	}
 	@if (imageData.loading) {

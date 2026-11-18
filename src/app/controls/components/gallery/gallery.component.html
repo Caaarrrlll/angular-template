@@ -38,7 +38,7 @@
 			[alt]="currentImage?.title"
 			[style.object-fit]="imageSize"
 			[title]="currentImage?.description"
-			[cursorFollowZoom]="imageZoom && fullscreenOpen" />
+			[appCursorFollowZoom]="imageZoom && fullscreenOpen" />
 
 		@if (!onlyShowPreview) {
 			<div class="galleryPagerScollContainer" #pagerScrollContainer (wheel)="pagerHorizontalScroll($event)">

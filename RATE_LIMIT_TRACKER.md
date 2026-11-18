@@ -44,11 +44,39 @@ Next steps (developer to choose): visually walk through `/sandbox` (`ng serve`, 
     - sandbox no longer pre-escapes the term; added an untrusted-sample line as a regression case
     - verified: dev build, eslint, prettier; headless Edge with terms toyota, (cross), ., <b>, &, onerror, zzz → no injected elements, literal text, correct <mark>, no console warnings
     - found + fixed during verify: the first version returned unescaped text on the no-match path (Angular's sanitizer stripped onerror but <img>/<b> still rendered)
-[•] STOP — developer review of Step 3
-[ ] Step 4: AUD-01 (library→controls model move) + AUD-30 (single dev-gating flag)
-[ ] STOP — developer review of Step 4
-[ ] Step 5: AUD-03 — clear the 47 pre-existing @angular-eslint errors
-[ ] STOP — developer review of Step 5
+[✓] STOP — developer review of Step 3 (approved 2026-11-18: "proceed" — taken as go-ahead for Step 4, Step 3 was already complete)
+[✓] Step 4: AUD-01 (library→controls model move) + AUD-30 (single dev-gating flag)
+    - verified: tsc; dev + production ng build (prod: pre-existing budget warning only); prettier clean; eslint clean on touched files except table.component.ts:192 no-empty-lifecycle-method (pre-existing, AUD-03)
+    - headless Edge (dev): nav shows /sandbox link; /sandbox/tables renders table, 3 linq-grid-filters, card-table cards; no console errors
+    - prod: nav links are behind @if (showSandbox) = isLocal (false in prod); sandbox routes absent; not browser-tested in a prod serve
+    [✓] AUD-01 model moved (git mv) to src/app/library/models/linq-grid-filter-item.ts; 8 importers + SERVICES_CONTRACTS.md path updated; zero @shared/components imports left in library; tsc passes
+    - touching: library/models/linq-grid-filter-item.ts, cust-page.ts, grid-storage.service.ts, card-table/table/linq-grid-filters components, 2 sandbox files
+    [✓] AUD-30 dev-gating flags — nav `showSandbox` now uses `isLocal` (same as the sandbox routes); flags documented in both environment files
+    - decision: NOT collapsed into one flag — `environmentName` (diagnostics: logger + error handler, on in any non-production env) and `isLocal` (local tooling: sandbox) are different concerns; the real bug was only the nav link vs route mismatch
+    - touching: navigation.component.ts, environment.ts, environment.development.ts
+[✓] STOP — developer review of Step 4 (approved 2026-11-18 with a change request: rename `isLocal` → `showComponentSandbox`)
+[✓] Step 4b: rename sandbox flag `isLocal` → `showComponentSandbox` (env files, routes, nav, docs)
+    - touching: environment.ts, environment.development.ts, app.routes.ts, navigation.component.ts, AGENTS.md, README.md, ROADMAP.md (AUD-30 note)
+    - verified: prettier + eslint clean; dev + prod build; headless Edge nav link + /sandbox/tables OK, no console errors
+[✓] Step 5: AUD-03 — clear the 47 pre-existing @angular-eslint errors (developer chose: rename directive selectors to app*)
+    [✓] 5a directive-selector ×9 → appAutoFocus, appCopyText, appCurrencyInput, appDateTransform, appMinMaxDecimal, appMinMax, appNDigitDecimalNumber, appNumericInput, appCursorFollowZoom (dev build passes)
+        - same-named inputs renamed too (appCopyText, appDateTransform, appCursorFollowZoom); formControlName values in sandbox-inputs deliberately untouched
+        - touching: 9 directive files; dynamic-material-dialog.html, gallery.html, sandbox-inputs/media/misc (.html + 2 TS comments); ROADMAP AUD-15/20 names
+        - BREAKING for forks using the old attribute names (developer-approved)
+    [✓] 5b template eqeqeq ×7 — all were `== null`/`!= null` idiom checks; enabled `allowNullOrUndefined` on @angular-eslint/template/eqeqeq in eslint.config.js (other loose comparisons still error) instead of rewriting; 0 left
+    [✓] 5c template a11y ×27 + alt-text ×3 — 0 left
+        - clickables → role="button" tabindex="0" (keydown.enter) (info-card ×3, media-dialog close + aria-label, zoom-image, zoomable-image img + prev/next)
+        - hover → tabindex + (focus)/(blur) (info-card eye icon: mouseOver now accepts FocusEvent and anchors to the element; table listPopupHover cell)
+        - select option: (click) on <label> → (change) on the input (also fixes the AUD-13 double emit)
+        - alt: info-card image "Image", media-dialog "Media item", list-card icon alt="" (decorative)
+    [✓] 5d prefer-inject (cust-table-dialogue:29) + no-empty-lifecycle-method (table:192)
+        - cust-table-dialogue: `@Inject(MAT_DIALOG_DATA)` constructor → `inject<Record<string, unknown>>(MAT_DIALOG_DATA)` field (same public `data` name)
+        - table: removed the empty ngOnDestroy + OnDestroy from implements/imports
+    [✓] 5e verification
+        - `npx eslint src` exit 0 — ZERO errors project-wide (was 47); prettier clean on src + eslint.config.js + ROADMAP.md; dev + prod build pass (prod: pre-existing budget warning only)
+        - headless Edge: 6 renamed input directives present + appNumericInput blocks letters / allows digits + appDateTransform formats 2026-03-04 → 04 Mar 2026; appCopyText decorates; select option emits once per click; zoomable-image Enter on next 1→2 of 7; table-dialogue opens with rows (inject change); media-dialog Enter on close closes it, img alt present; info-card eye icon focus shows popup anchored to the element, blur hides it; no console errors
+        - AGENTS.md lint paragraph synced (eqeqeq null idiom, app selector prefix)
+[•] STOP — developer review of Step 5 (also: agree Step 6 scope)
 [ ] Step 6: remaining Medium/Low items, CSS cleanup, button rename (scope to be agreed at the Step 5 stop)
 [ ] STOP — developer review of Step 6
 [ ] Clean boundary: move this section to history

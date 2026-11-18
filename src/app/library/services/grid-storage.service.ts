@@ -1,5 +1,5 @@
 import { Service } from "@angular/core";
-import { _LinQGridFilterCondition, _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
+import { _LinQGridFilterCondition, _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 import { LinQRequestState } from "@shared/models/lin-q-request-state";
 
 @Service()

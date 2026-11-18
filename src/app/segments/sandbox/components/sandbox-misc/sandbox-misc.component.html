@@ -1,4 +1,4 @@
-<app-sandbox-page title="Misc" description="accordion, search-address, copyText + appClickElsewhere directives and the safe pipe.">
+<app-sandbox-page title="Misc" description="accordion, search-address, appCopyText + appClickElsewhere directives and the safe pipe.">
 	<app-sandbox-demo title="Accordion" description="expandFirst, a disabled item, custom header/content templates; expandedItem output logged." [log]="accordionLog.entries()">
 		<app-accordion [expandFirst]="true" (expandedItem)="onAccordionExpanded($event)">
 			@for (item of accordionItems; track item.title) {
@@ -43,11 +43,11 @@
 	</app-sandbox-demo>
 
 	<app-sandbox-demo
-		title="copyText directive"
-		description="Click to copy to the clipboard (CDK Clipboard) with a snackbar confirmation. Without a value it copies the element's textContent; binding [copyText] copies the bound value instead (recommended inside grids/OnPush views).">
+		title="appCopyText directive"
+		description="Click to copy to the clipboard (CDK Clipboard) with a snackbar confirmation. Without a value it copies the element's textContent; binding [appCopyText] copies the bound value instead (recommended inside grids/OnPush views).">
 		<div class="sandbox-misc__stack">
-			<span copyText>Copies its own text: INV-2026-0042</span>
-			<span [copyText]="copyAccountNumber()">Account ending 5678 (copies the full bound number)</span>
+			<span appCopyText>Copies its own text: INV-2026-0042</span>
+			<span [appCopyText]="copyAccountNumber()">Account ending 5678 (copies the full bound number)</span>
 		</div>
 	</app-sandbox-demo>
 

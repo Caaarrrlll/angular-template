@@ -11,7 +11,7 @@ import { Directive, ElementRef, HostListener, Input, OnInit, inject } from "@ang
  *      if (Number.isNaN(Number(value))) value = value.replace(/[^0-9.]+/g, "");
  */
 
-@Directive({ selector: "[currencyInput]", standalone: true })
+@Directive({ selector: "[appCurrencyInput]", standalone: true })
 export class CurrencyInputDirective implements OnInit {
 	@Input()
 	public currencyCode = "ZAR";

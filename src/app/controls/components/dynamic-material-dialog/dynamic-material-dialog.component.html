@@ -197,7 +197,7 @@
 									@if (control.label) {
 										<mat-label>{{ control.label }}</mat-label>
 									}
-									<input [formControlName]="control.formName || ''" (input)="formatDate(control.formName || '')" matInput tabindex="-1" [dateTransform]="'yyyy/MM/dd'" />
+									<input [formControlName]="control.formName || ''" (input)="formatDate(control.formName || '')" matInput tabindex="-1" [appDateTransform]="'yyyy/MM/dd'" />
 									@if (control.hintText) {
 										<mat-hint>{{ control.hintText }}</mat-hint>
 									}
@@ -464,7 +464,7 @@
 									matInput
 									(input)="controlChange($any(control))"
 									[(ngModel)]="control.value"
-									MinMax />
+									appMinMax />
 								@if (control.hintText) {
 									<mat-hint>{{ control.hintText }}</mat-hint>
 								}

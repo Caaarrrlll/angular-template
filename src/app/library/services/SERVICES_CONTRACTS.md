@@ -114,7 +114,7 @@ This file documents the shared services in `src/app/library/services`. Review it
 ## GridStorageService
 
 - **Purpose:** Caches grid filter setups and LinQ request state in `sessionStorage`.
-- **Related models:** `_LinQGridFilterItem` (`src/app/controls/components/linq-grid-filters/linq-grid-filter-item.model`) and `LinQRequestState` (`src/app/library/models/lin-q-request-state`).
+- **Related models:** `_LinQGridFilterItem` (`src/app/library/models/linq-grid-filter-item`) and `LinQRequestState` (`src/app/library/models/lin-q-request-state`).
 - **Public API:**
 
 | Method                 | Signature                                                            | Notes                                                                                       |

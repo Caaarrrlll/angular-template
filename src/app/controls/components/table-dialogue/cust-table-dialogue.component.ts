@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, Inject, Input, OnInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
@@ -26,7 +26,7 @@ export class CustTableDialogueComponent implements OnInit {
 
 	public readonly dialogRef = inject<MatDialogRef<CustTableDialogueComponent>>(MatDialogRef);
 
-	constructor(@Inject(MAT_DIALOG_DATA) public data: Record<string, unknown>) {}
+	public readonly data = inject<Record<string, unknown>>(MAT_DIALOG_DATA);
 
 	public ngOnInit(): void {
 		if (this.data["title"]) this.title = this.data["title"] as string;

@@ -2,7 +2,15 @@
 	<div class="flex" style="justify-content: center; height: 100%; width: 100%">
 		<div #zoomContainer style="align-self: center; text-align: center; height: 100%; display: flex; justify-content: center; align-items: center" (wheel)="onMouseWheel($event)">
 			@if (src) {
-				<img #image [src]="src" alt="Image unavailable" (mousemove)="moveLens($event)" (click)="showLightbox.set(true)" />
+				<img
+					#image
+					[src]="src"
+					alt="Image unavailable"
+					role="button"
+					tabindex="0"
+					(mousemove)="moveLens($event)"
+					(click)="showLightbox.set(true)"
+					(keydown.enter)="showLightbox.set(true)" />
 			}
 		</div>
 
@@ -27,12 +35,12 @@
 			</div>
 		}
 
-		<div class="direction left" title="Previous Image" (click)="prev.emit()">
+		<div class="direction left" title="Previous Image" role="button" tabindex="0" (click)="prev.emit()" (keydown.enter)="prev.emit()">
 			<div class="nav-icon">
 				<mat-icon class="icon">chevron_left</mat-icon>
 			</div>
 		</div>
-		<div class="direction right" title="Next Image" (click)="next.emit()">
+		<div class="direction right" title="Next Image" role="button" tabindex="0" (click)="next.emit()" (keydown.enter)="next.emit()">
 			<div class="nav-icon">
 				<mat-icon class="icon">chevron_right</mat-icon>
 			</div>

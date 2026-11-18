@@ -10,7 +10,7 @@ import { Directive, ElementRef, HostListener, Input, inject } from "@angular/cor
  * @param numberOfDecimals
  */
 @Directive({
-	selector: "[NDigitDecimalNumber]",
+	selector: "[appNDigitDecimalNumber]",
 	standalone: true,
 })
 export class NDigitDecimalNumberDirective {

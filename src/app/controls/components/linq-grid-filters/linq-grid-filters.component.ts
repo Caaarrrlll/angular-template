@@ -12,7 +12,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { Sort } from "@angular/material/sort";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CustInputGeneral } from "@shared/models/cust-basic-controls";
-import { _LinQGridFilterItem } from "./linq-grid-filter-item.model";
+import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 
 export interface _DisplayedColumnChoice {
 	display: string;

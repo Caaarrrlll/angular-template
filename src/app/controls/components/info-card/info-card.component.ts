@@ -396,20 +396,27 @@ export class InfoCardComponent implements AfterContentInit {
 		this.menuClickEvent.emit(action);
 	}
 
-	public mouseOver(event: MouseEvent, details: _DisplayDetail[], top = 0): void {
+	public mouseOver(event: MouseEvent | FocusEvent, details: _DisplayDetail[], top = 0): void {
 		this.showDetailCard = true;
+		// Keyboard focus has no pointer coordinates: anchor the popup to the focused element instead.
+		const point: { x: number; y: number } = event instanceof MouseEvent ? { x: event.x, y: event.y } : this.elementAnchor(event.target);
 		if (this.displayDetails.length > 0) {
-			this.top = event.y - 130 - top;
+			this.top = point.y - 130 - top;
 		} else {
-			this.top = event.y - 70 - top;
+			this.top = point.y - 70 - top;
 		}
 
-		this.left = event.x + 10;
+		this.left = point.x + 10;
 
 		this.displayDetails = details;
 	}
 
 	public mouseOff(): void {
 		this.showDetailCard = false;
+	}
+
+	private elementAnchor(target: EventTarget | null): { x: number; y: number } {
+		const rect: DOMRect | undefined = target instanceof Element ? target.getBoundingClientRect() : undefined;
+		return rect ? { x: rect.right, y: rect.top + rect.height / 2 } : { x: 0, y: 0 };
 	}
 }

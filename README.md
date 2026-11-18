@@ -15,7 +15,7 @@ npm run format     # prettier
 ```
 
 The sandbox segment (route `/sandbox`) demos every control live. It is only
-registered in development builds (`environment.isLocal` in
+registered in development builds (`environment.showComponentSandbox` in
 `src/environments/`), so it never ships to production.
 
 ## What's inside

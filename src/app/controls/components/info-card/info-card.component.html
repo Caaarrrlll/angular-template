@@ -39,7 +39,13 @@
 									</span>
 								}
 								@if (!headCol.textPre && headCol.clickAction) {
-									<span [style.color]="headCol.textColor ? headCol.textColor : '#000'" (click)="buttonAction(headCol.clickAction)" class="text-link">
+									<span
+										[style.color]="headCol.textColor ? headCol.textColor : '#000'"
+										role="button"
+										tabindex="0"
+										(click)="buttonAction(headCol.clickAction)"
+										(keydown.enter)="buttonAction(headCol.clickAction)"
+										class="text-link">
 										{{ headCol.text }}
 									</span>
 								}
@@ -89,7 +95,14 @@
 							<div class="dropdown-content" [id]="tableHeaderMenu.id" style="padding-top: 16px; padding-bottom: 26px">
 								@for (menu of tableHeaderMenu.items; track $index) {
 									<div style="padding-left: 12px; padding-right: 12px">
-										<a style="border-bottom: 1px #e8ece9 solid; padding: 8px; cursor: pointer; height: 20px" (click)="menuClick(menu.action)">{{ menu.display }}</a>
+										<a
+											style="border-bottom: 1px #e8ece9 solid; padding: 8px; cursor: pointer; height: 20px"
+											role="button"
+											tabindex="0"
+											(click)="menuClick(menu.action)"
+											(keydown.enter)="menuClick(menu.action)"
+											>{{ menu.display }}</a
+										>
 									</div>
 								}
 							</div>
@@ -210,7 +223,13 @@
 												<b>{{ detail.label }} </b>
 											</div>
 										}
-										<div style="float: left" (mouseover)="mouseOver($event, displayList(detail))" (mouseleave)="mouseOff()">
+										<div
+											style="float: left"
+											tabindex="0"
+											(mouseover)="mouseOver($event, displayList(detail))"
+											(focus)="mouseOver($event, displayList(detail))"
+											(mouseleave)="mouseOff()"
+											(blur)="mouseOff()">
 											<mat-icon class="icons-infront">remove_red_eye</mat-icon>
 										</div>
 									</div>
@@ -237,7 +256,13 @@
 													color: detail.valueColor ? detail.valueColor : '#000',
 													'font-weight': detail.valueColor ? '700' : '400',
 												}">
-												<div class="no-wrap-text text-link" [title]="detail.value" (click)="buttonAction(detail.buttonClick ?? '')">
+												<div
+													class="no-wrap-text text-link"
+													role="button"
+													tabindex="0"
+													[title]="detail.value"
+													(click)="buttonAction(detail.buttonClick ?? '')"
+													(keydown.enter)="buttonAction(detail.buttonClick ?? '')">
 													{{ detail.value }}
 												</div>
 											</div>
@@ -478,7 +503,7 @@
 										}
 										@if (detail.label) {
 											<div class="content-font content-height right-text-border-ext">
-												<img [src]="detail.value" [title]="detail.value" />
+												<img [src]="detail.value" [title]="detail.value" alt="Image" />
 											</div>
 										}
 									</div>

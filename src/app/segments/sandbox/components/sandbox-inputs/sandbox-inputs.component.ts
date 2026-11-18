@@ -81,7 +81,7 @@ interface _SandboxOption {
 		NDigitDecimalNumberDirective,
 		NumericInputDirective,
 	],
-	// CurrencyPipe is injected by the currencyInput directive; the native date adapter backs the input-text calendar mode.
+	// CurrencyPipe is injected by the appCurrencyInput directive; the native date adapter backs the input-text calendar mode.
 	providers: [CurrencyPipe, provideNativeDateAdapter()],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -183,7 +183,7 @@ export class SandboxInputsComponent {
 	];
 	public readonly optionLog: SandboxEventLog = new SandboxEventLog();
 
-	// ---- app-input (floating-label wrapper) + autoFocus ----
+	// ---- app-input (floating-label wrapper) + appAutoFocus ----
 	public readonly showAutoFocus: WritableSignal<boolean> = signal<boolean>(false);
 
 	// ---- directives ----

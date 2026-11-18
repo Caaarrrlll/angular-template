@@ -15,7 +15,7 @@ import {
 	_CustTableWrapperInterface,
 } from "@shared/components/card-table/cust-card-table.interface";
 import { ListCardComponent, _ListCardParentButtonContext, _ListCardParentDataContext } from "@shared/components/list-card/list-card.component";
-import { _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
+import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 import { ApiResponsePipe } from "@shared/pipes/api-response/api-response.pipe";
 import { _CUSTPage } from "@shared/models/cust-page";
 import { CustInputGeneral } from "@shared/models/cust-basic-controls";

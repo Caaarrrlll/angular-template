@@ -41,7 +41,7 @@ Each library area keeps a contracts file. Review it before creating something ne
 
 ## Coding Standards
 
-Enforced by tooling (lint/prettier are the source of truth; keep this paragraph in sync when a rule changes): `eslint.config.js` enforces explicit return types, no `console` (log through the project `LoggerService`), no `setTimeout` / `detectChanges()` / `Promise.resolve().then(...)` (use `effect()`, `computed()` or `afterNextRender`), `@Service()` instead of `@Injectable({ providedIn })`, `inject()` over constructor injection, `@if`/`@for`/`@switch` control flow, plus the strict `typescript-eslint` and Angular template rules; `.prettierrc.json` enforces semicolons, double quotes as the non-template default, and tabs. The list below is judgement - follow it by hand.
+Enforced by tooling (lint/prettier are the source of truth; keep this paragraph in sync when a rule changes): `eslint.config.js` enforces explicit return types, no `console` (log through the project `LoggerService`), no `setTimeout` / `detectChanges()` / `Promise.resolve().then(...)` (use `effect()`, `computed()` or `afterNextRender`), `@Service()` instead of `@Injectable({ providedIn })`, `inject()` over constructor injection, `@if`/`@for`/`@switch` control flow, plus the strict `typescript-eslint` and Angular template rules (template `===` required except the `== null` / `!= null` idiom; directive and component selectors use the `app` prefix); `.prettierrc.json` enforces semicolons, double quotes as the non-template default, and tabs. The list below is judgement - follow it by hand.
 
 - Default to backticks (`) for string literals in new TypeScript code so interpolation is easy. Exceptions: module specifiers (`import ... from "x"`, `import("x")`), which cannot be template literals, and decorator metadata, which keep double quotes. Do not convert quotes in existing code you are not otherwise changing.
 - Use path aliases (`@shared/*`, `@segments/*`, see `tsconfig.json`) instead of relative or absolute paths. Known gap: `src/environments` has no alias yet, so its few relative imports are accepted. When a new path is introduced, offer to create an alias instead.
@@ -80,7 +80,7 @@ Do not:
 - `src/app`: Contains the source code.
 - `src/assets`: Contains all the assets.
 - `src/app/controls`: Contains reusable shared controls (for example the Navigation component). Control-specific animations live in an `animations` folder inside the owning control (for example `src/app/controls/components/accordion/animations/`).
-- `src/app/segments`: Contains logical components that fulfil whole ideas; each segment can be seen as a whole feature. `src/app/segments/sandbox` is the dev-only demo area for every control (`/sandbox`, gated by `environment.isLocal`).
+- `src/app/segments`: Contains logical components that fulfil whole ideas; each segment can be seen as a whole feature. `src/app/segments/sandbox` is the dev-only demo area for every control (`/sandbox`, gated by `environment.showComponentSandbox`).
 - `src/app/library`: Contains shared code and, in the future, interceptors, directives, validators, guards and utils.
 - `src/app/library/directives`: Contains reusable directives.
 - `src/app/library/pipes`: Contains reusable pipes and `PIPES_CONTRACTS.md`.

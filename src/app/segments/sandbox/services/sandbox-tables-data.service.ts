@@ -2,7 +2,7 @@ import { Service } from "@angular/core";
 import { _CustTableWrapperInterface, _DataProcessResponse } from "@shared/components/card-table/cust-card-table.interface";
 import { _TableTypes as _CardTableTypes } from "@shared/components/card-table/cust-table.enum";
 import { _CardTableParentDataContext } from "@shared/components/card-table/card-table.component";
-import { _LinQGridFilterItem } from "@shared/components/linq-grid-filters/linq-grid-filter-item.model";
+import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
 import { _TableTypes } from "@shared/components/table/cust-table.enum";
 import { _CustTableInterface } from "@shared/components/table/cust-table.interface";
 import { LinQSort } from "@shared/models/lin-q-request-state";

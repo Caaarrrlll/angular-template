@@ -11,7 +11,7 @@ import { Directive, ElementRef, HostListener, Input, inject } from "@angular/cor
  */
 
 @Directive({
-	selector: "[MinMax]",
+	selector: "[appMinMax]",
 	standalone: true,
 })
 export class MinMaxDirective {

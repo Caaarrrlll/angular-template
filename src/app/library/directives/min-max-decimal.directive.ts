@@ -11,7 +11,7 @@ import { Directive, ElementRef, HostListener, Input, inject } from "@angular/cor
  */
 
 @Directive({
-	selector: "[MinMaxDecimal]",
+	selector: "[appMinMaxDecimal]",
 	standalone: true,
 })
 export class MinMaxDecimalDirective {
