@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, signal, WritableSignal } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
@@ -18,7 +18,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 export class CheckboxGroupComponent implements ControlValueAccessor {
 	@Input() public multi = false;
 
-	public value: string[] = [];
+	// Signal so the projected OnPush checkboxes re-render on writeValue/toggle (they read it via isSelected()).
+	public readonly value: WritableSignal<string[]> = signal<string[]>([]);
 
 	private onChange: (value: string[]) => void = () => undefined;
 	private onTouch: () => void = () => undefined;
@@ -32,22 +33,22 @@ export class CheckboxGroupComponent implements ControlValueAccessor {
 	}
 
 	public writeValue(value: string[] | null): void {
-		this.value = value ?? [];
+		this.value.set(value ?? []);
 	}
 
 	public toggleValue(selectedValue: string): void {
 		if (this.multi) {
-			const index = this.value.indexOf(selectedValue);
-			this.value = index > -1 ? this.value.filter((item) => item !== selectedValue) : [...this.value, selectedValue];
+			const current = this.value();
+			this.value.set(current.includes(selectedValue) ? current.filter((item) => item !== selectedValue) : [...current, selectedValue]);
 		} else {
-			this.value = [selectedValue];
+			this.value.set([selectedValue]);
 		}
 
-		this.onChange(this.value);
+		this.onChange(this.value());
 		this.onTouch();
 	}
 
 	public isSelected(valueToCheck: string): boolean {
-		return this.value.includes(valueToCheck);
+		return this.value().includes(valueToCheck);
 	}
 }

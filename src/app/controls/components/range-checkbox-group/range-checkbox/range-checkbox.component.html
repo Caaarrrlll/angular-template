@@ -4,7 +4,7 @@
 			<ng-content></ng-content>
 		</div>
 		<div class="checkbox">
-			<mat-checkbox [checked]="checkBoxGroup.isSelected(value())"></mat-checkbox>
+			<mat-checkbox tabindex="-1" [checked]="checkBoxGroup.isSelected(value())"></mat-checkbox>
 		</div>
 	</div>
 </button>

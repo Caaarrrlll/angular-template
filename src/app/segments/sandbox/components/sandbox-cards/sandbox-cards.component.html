@@ -128,6 +128,15 @@
 				(buttonClick)="onListCardButton($event)"></app-list-card>
 
 			<app-list-card [cardHeader]="leadHeader" [tableConfig]="leadTable" [tablePropertiesConfig]="leadProperties" [tableButtonConfig]="leadButtons"></app-list-card>
+
+			<!-- No tableButtonConfig / parentButtonProcess: regression case for AUD-05 (used to crash on the empty button row). -->
+			<app-list-card
+				class="sandbox-list-card--no-buttons"
+				[data]="leadData"
+				[cardHeader]="leadHeader"
+				[tableConfig]="leadTable"
+				[tablePropertiesConfig]="leadProperties"
+				[parentDataProcess]="leadParentProcess"></app-list-card>
 		</div>
 	</app-sandbox-demo>
 </app-sandbox-page>

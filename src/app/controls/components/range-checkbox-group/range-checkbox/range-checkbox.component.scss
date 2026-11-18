@@ -9,3 +9,8 @@
 	justify-content: space-between;
 	column-gap: 20px;
 }
+
+// The row button owns the click; letting mat-checkbox toggle its own internal state desyncs it from the group value.
+mat-checkbox {
+	pointer-events: none;
+}

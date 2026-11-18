@@ -115,7 +115,8 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 	}
 
 	getEnumName(type: ValidatorType): string {
-		return ValidatorType[type];
+		// noSpace/phone are implemented with Validators.pattern, so their errors live under the `pattern` key.
+		return type === ValidatorType.noSpace || type === ValidatorType.phone ? ValidatorType[ValidatorType.pattern] : ValidatorType[type];
 	}
 
 	ngAfterViewInit(): void {
@@ -281,12 +282,10 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 								this.form.controls[formName].addValidators(Validators.nullValidator.bind(Validators));
 								break;
 							case ValidatorType.noSpace:
-								error.validator = ValidatorType.pattern;
-								this.form.controls[formName].addValidators(Validators.pattern("0[0-9]{9}"));
+								this.form.controls[formName].addValidators(Validators.pattern(/^\S+$/));
 								break;
 							case ValidatorType.phone:
-								error.validator = ValidatorType.pattern;
-								this.form.controls[formName].addValidators(Validators.pattern("[^s]+"));
+								this.form.controls[formName].addValidators(Validators.pattern("0[0-9]{9}"));
 								break;
 						}
 					});
@@ -330,12 +329,10 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.nullValidator.bind(Validators)));
 								break;
 							case ValidatorType.noSpace:
-								error.validator = ValidatorType.pattern;
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern("0[0-9]{9}")));
+								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern(/^\S+$/)));
 								break;
 							case ValidatorType.phone:
-								error.validator = ValidatorType.pattern;
-								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern("[^s]+")));
+								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern("0[0-9]{9}")));
 								break;
 						}
 					});
@@ -521,8 +518,12 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		this.autoCompleteList = [];
 	}
 
-	handleFilesDropped(files: File[] | FileList): void {
+	handleFilesDropped(files: File[] | FileList, formName?: string): void {
 		this.files = Array.from(files);
+		if (formName) {
+			this.form.get(formName)?.setValue(this.files);
+			this.form.get(formName)?.markAsDirty();
+		}
 	}
 
 	inputChange(input: ButtonToggleResponse, formName: string): void {

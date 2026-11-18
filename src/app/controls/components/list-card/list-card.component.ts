@@ -144,12 +144,15 @@ export class ListCardComponent implements OnChanges, OnInit {
 			this.mapButton();
 		}
 
-		this.cardRows.push({
-			item: [...this.cardCols],
-			colSCSS: "col-no-border",
-			pulse: this.taskName !== undefined && !this.data["taskAccepted"],
-			width: "13%",
-		});
+		// No buttons configured: skip the empty button row (the template reads the row's last item).
+		if (this.cardCols.length > 0) {
+			this.cardRows.push({
+				item: [...this.cardCols],
+				colSCSS: "col-no-border",
+				pulse: this.taskName !== undefined && !this.data["taskAccepted"],
+				width: "13%",
+			});
+		}
 		this.cardCols.splice(0, this.cardCols.length);
 	}
 

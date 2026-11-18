@@ -103,8 +103,13 @@ export class ZoomableImageComponent {
 		this.cx = (result.offsetWidth / lens.offsetWidth) * this.magnification;
 		this.cy = (result.offsetHeight / lens.offsetHeight) * this.magnification;
 		this.backgroundSize = `${String(image.width * this.cx)}px ${String(image.height * this.cy)}px`;
-		const safeSrc: string | null = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.src);
-		this.backgroundImage = this.sanitizer.bypassSecurityTrustStyle(`url('${safeSrc ?? ""}')`);
+		// An image URL inside CSS is a URL context (RESOURCE_URL always throws for plain strings). Percent-encode
+		// quotes/parentheses/backslashes so the value cannot break out of `url('...')`.
+		const safeSrc: string = (this.sanitizer.sanitize(SecurityContext.URL, this.src) ?? ``).replace(
+			/['"()\\]/g,
+			(char: string): string => `%${char.charCodeAt(0).toString(16).toUpperCase()}`,
+		);
+		this.backgroundImage = this.sanitizer.bypassSecurityTrustStyle(`url('${safeSrc}')`);
 	}
 
 	public moveLens(event: MouseEvent): void {

@@ -144,6 +144,10 @@ export class SandboxDialogsComponent {
 		this.openDynamic(this.dialogsData.dmdCheckboxSetup(), this.dynamicFormLog, `checkbox`);
 	}
 
+	public openDynamicSliderUpload(): void {
+		this.openDynamic(this.dialogsData.dmdSliderUploadSetup(), this.dynamicFormLog, `slider + upload`);
+	}
+
 	// ---- dynamic-window -----------------------------------------------------------------------
 
 	public openWindowForm(): void {

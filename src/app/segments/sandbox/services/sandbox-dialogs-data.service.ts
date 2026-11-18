@@ -15,8 +15,10 @@ import {
 	DynamicDialogSetup,
 	RadioButton,
 	RangeDate,
+	Slider,
 	SingleDate,
 	TextArea,
+	Upload,
 	ValidatorType,
 	_FormData,
 } from "@shared/components/dynamic-material-dialog/dynamic-material-dialog-setup.model";
@@ -378,6 +380,30 @@ export class SandboxDialogsDataService {
 		});
 	}
 
+	/** Regression cases for AUD-06 (Slider/Upload field types) and AUD-08 (noSpace/phone validators, setup not mutated). */
+	public dmdSliderUploadSetup(): DynamicDialogSetup {
+		return new DynamicDialogSetup({
+			title: `Slider, upload + validators`,
+			instructionText: `Slider and Upload field types plus the noSpace and phone validator types.`,
+			submitButtonText: `Submit`,
+			controls: namedControls([
+				new Slider({ formName: `deposit`, minValue: 0, maxValue: 50, increment: 5, value: 10 }),
+				new DialogInput({
+					formName: `username`,
+					label: `Username (no spaces)`,
+					validators: [{ validator: ValidatorType.noSpace, errorMessage: `Spaces are not allowed` }],
+				}),
+				new DialogInput({
+					formName: `mobile`,
+					label: `Mobile (phone validator)`,
+					inputType: `tel`,
+					validators: [{ validator: ValidatorType.phone, errorMessage: `10 digits starting with 0` }],
+				}),
+				new Upload({ formName: `attachments` }),
+			]),
+		});
+	}
+
 	// ---- dynamic-window -----------------------------------------------------------------------
 
 	/** dynamic-window form: closes with the form value on submit, `false` on back. */
@@ -421,6 +447,7 @@ export class SandboxDialogsDataService {
 					],
 				},
 				{ type: `CurrencyShortHand`, formName: `budget`, placeholder: `Budget (thousands)`, required: true },
+				{ type: `Slider`, formName: `deposit`, minValue: 0, maxValue: 100000, increment: 5000, value: 20000 },
 				{ type: `SingleDate`, formName: `followUp`, placeholder: `Follow-up date`, value: new Date(2026, 0, 15), disabledBefore: new Date(2026, 0, 1) },
 				{ type: `DateTime`, formName: `meeting`, placeholder: `Meeting`, value: `2026-01-15T10:30` },
 				{

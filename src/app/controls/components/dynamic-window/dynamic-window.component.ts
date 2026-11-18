@@ -65,7 +65,7 @@ export class DynamicWindowComponent implements OnInit {
 			// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional truthiness check: falsy non-nullish values (0, "", false) must fall back to null for numeric/text/boolean dialog controls
 			this.form.addControl(formName, new FormControl(element.value ? element.value : null));
 			const requiredValidator = conditionalValidator(() => element.required);
-			const noSpaceValidator = conditionalValidator(() => true, Validators.pattern("[^s]+"));
+			const noSpaceValidator = conditionalValidator(() => true, Validators.pattern(/^\S+$/));
 			const phoneValidator = conditionalValidator(() => true, Validators.pattern("0[0-9]{9}"));
 			const emailValidator = conditionalValidator(() => true, Validators.email.bind(Validators));
 

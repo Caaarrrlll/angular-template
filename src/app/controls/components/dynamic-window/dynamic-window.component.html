@@ -33,14 +33,8 @@
 				<span style="margin-bottom: 15px"
 					><strong>{{ form.controls[control.formName].value | currency: "ZAR" : "symbol-narrow" : "1.0-0" }}</strong></span
 				>
-				<mat-slider
-					[min]="control.minValue"
-					[max]="control.maxValue"
-					[step]="control.increment"
-					[discrete]="true"
-					[formControlName]="control.formName"
-					style="width: 500px; padding-bottom: 30px">
-					<input matSliderThumb />
+				<mat-slider [min]="control.minValue" [max]="control.maxValue" [step]="control.increment" [discrete]="true" style="width: 500px; padding-bottom: 30px">
+					<input matSliderThumb [formControlName]="control.formName" />
 				</mat-slider>
 			}
 

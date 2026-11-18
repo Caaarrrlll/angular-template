@@ -334,12 +334,9 @@
 						}
 						<!--           Slider -->
 						@case (formType.Slider) {
-							<mat-slider
-								[formControlName]="control.formName || ''"
-								[max]="control.maxValue ?? 100"
-								[min]="control.minValue ?? 0"
-								[step]="control.increment ?? 1"
-								[discrete]="true"></mat-slider>
+							<mat-slider [max]="control.maxValue ?? 100" [min]="control.minValue ?? 0" [step]="control.increment ?? 1" [discrete]="true">
+								<input matSliderThumb [formControlName]="control.formName || ''" />
+							</mat-slider>
 						}
 						<!--                Check box-->
 						@case (formType.CheckBox) {
@@ -438,7 +435,7 @@
 							</mat-form-field>
 						}
 						@case (formType.Upload) {
-							<div class="container" appDragAndDropFiles (fileDropped)="handleFilesDropped($event)">
+							<div class="container" appDragAndDropFiles (fileDropped)="handleFilesDropped($event, control.formName)">
 								@if (files.length > 0) {
 									<div class="uploaded-files">
 										<div style="color: #f47920; margin-bottom: 10px">Attached files</div>
@@ -448,16 +445,8 @@
 									</div>
 								}
 								<div>
-									<mat-form-field>
-										<input
-											type="file"
-											matInput
-											id="fileDropRef"
-											[formControlName]="control.formName || ''"
-											#fileDropRef
-											[accept]="filesToAccept"
-											(change)="handleFilesDropped($any($event.target).files)" />
-									</mat-form-field>
+									<!-- Native file input: matInput does not support type="file", and the control value is set from the selected files. -->
+									<input type="file" id="fileDropRef" #fileDropRef [accept]="filesToAccept" (change)="handleFilesDropped($any($event.target).files, control.formName)" />
 									<span class="k-icon k-i-file"></span>
 									<label for="fileDropRef">Browse for file</label>
 								</div>

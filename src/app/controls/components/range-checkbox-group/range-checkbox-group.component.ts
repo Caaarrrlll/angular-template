@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, signal, WritableSignal } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { RangeCheckboxValue } from "@shared/components/range-checkbox-group/range-checkbox-group.interface";
 
@@ -19,7 +19,8 @@ import { RangeCheckboxValue } from "@shared/components/range-checkbox-group/rang
 export class RangeCheckboxGroupComponent implements ControlValueAccessor {
 	@Input() public multi = false;
 
-	public value: RangeCheckboxValue[] = [];
+	// Signal so the projected OnPush checkboxes re-render on writeValue/toggle (they read it via isSelected()).
+	public readonly value: WritableSignal<RangeCheckboxValue[]> = signal<RangeCheckboxValue[]>([]);
 
 	private onChange: (value: RangeCheckboxValue[]) => void = () => undefined;
 	private onTouch: () => void = () => undefined;
@@ -33,22 +34,23 @@ export class RangeCheckboxGroupComponent implements ControlValueAccessor {
 	}
 
 	public writeValue(value: RangeCheckboxValue[] | null): void {
-		this.value = value ?? [];
+		this.value.set(value ?? []);
 	}
 
 	public toggleValue(selectedValue: RangeCheckboxValue): void {
 		if (this.multi) {
-			const isSelected = this.value.some((item) => item.min === selectedValue.min);
-			this.value = isSelected ? this.value.filter((item) => item.min !== selectedValue.min) : [...this.value, selectedValue];
+			const current = this.value();
+			const isSelected = current.some((item) => item.min === selectedValue.min);
+			this.value.set(isSelected ? current.filter((item) => item.min !== selectedValue.min) : [...current, selectedValue]);
 		} else {
-			this.value = this.value[0]?.min === selectedValue.min ? [] : [selectedValue];
+			this.value.set(this.value()[0]?.min === selectedValue.min ? [] : [selectedValue]);
 		}
 
-		this.onChange(this.value);
+		this.onChange(this.value());
 		this.onTouch();
 	}
 
 	public isSelected(valueToCheck: RangeCheckboxValue): boolean {
-		return this.value.some((item) => item.min === valueToCheck.min);
+		return this.value().some((item) => item.min === valueToCheck.min);
 	}
 }
