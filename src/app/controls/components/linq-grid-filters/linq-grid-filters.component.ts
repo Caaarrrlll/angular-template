@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from "@angular/core";
 import { DateAdapter, MatNativeDateModule } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -45,7 +45,7 @@ export interface _DisplayedColumnChoice {
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinqGridFiltersComponent implements OnInit {
+export class LinqGridFiltersComponent implements OnChanges {
 	@Input() public gridFilters: _LinQGridFilterItem | _LinQGridFilterItem[] | null | undefined = null;
 	@Input() public showSortButton = false;
 	@Input() public showAddButton = true;
@@ -74,13 +74,21 @@ export class LinqGridFiltersComponent implements OnInit {
 
 	private readonly dateAdapter: DateAdapter<Date> = inject<DateAdapter<Date>>(DateAdapter);
 
-	public ngOnInit(): void {
-		this.filterItems = this.normalizeFilters(this.gridFilters);
-		for (const item of this.filterItems) {
-			this.rehydrateFilterDates(item);
+	/**
+	 * Inputs are re-read whenever they get a new reference (they used to be read once on init). The filter items are
+	 * deep-copied: the bar edits its own copies and reports them through the outputs, never the caller's objects.
+	 */
+	public ngOnChanges(changes: SimpleChanges): void {
+		if (`gridFilters` in changes) {
+			this.filterItems = this.normalizeFilters(this.gridFilters).map((item: _LinQGridFilterItem): _LinQGridFilterItem => structuredClone(item));
+			for (const item of this.filterItems) {
+				this.rehydrateFilterDates(item);
+			}
+			this.filterRefresh.emit(this.filterItems);
 		}
-		this.columnChoices = this.displayedColumns.map((column: string): _DisplayedColumnChoice => ({ display: column, activated: true, value: column }));
-		this.filterRefresh.emit(this.filterItems);
+		if (`displayedColumns` in changes) {
+			this.columnChoices = this.displayedColumns.map((column: string): _DisplayedColumnChoice => ({ display: column, activated: true, value: column }));
+		}
 	}
 
 	public refresh(): void {

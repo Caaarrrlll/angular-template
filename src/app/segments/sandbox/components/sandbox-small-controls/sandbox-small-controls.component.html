@@ -27,10 +27,15 @@
 		</dl>
 	</app-sandbox-demo>
 
-	<app-sandbox-demo title="Slide toggle" description="Unchecked (no value) and checked (value 'true'); inputChanged is logged." [log]="slideToggleLog.entries()">
+	<app-sandbox-demo
+		title="Slide toggle"
+		description="Off (no value), on (value 'true'), off (value 'false') and read-only (isReadOnly disables it); inputChanged is logged."
+		[log]="slideToggleLog.entries()">
 		<div class="sandbox-small__row">
 			<app-slide-toggle [inputObj]="slideToggleOff" (inputChanged)="onSlideToggleChanged('notifications', $event)"></app-slide-toggle>
 			<app-slide-toggle [inputObj]="slideToggleOn" (inputChanged)="onSlideToggleChanged('dark-mode', $event)"></app-slide-toggle>
+			<app-slide-toggle [inputObj]="slideToggleFalse" (inputChanged)="onSlideToggleChanged('marketing', $event)"></app-slide-toggle>
+			<app-slide-toggle [inputObj]="slideToggleReadOnly" (inputChanged)="onSlideToggleChanged('locked', $event)"></app-slide-toggle>
 		</div>
 	</app-sandbox-demo>
 
@@ -50,21 +55,22 @@
 
 	<app-sandbox-demo
 		title="Count down"
-		description="timeLeft in seconds, DD:HH:MM:SS vs textFormat. Pick a preset to restart both (re-selecting the same value does not restart). timeRemaining is logged every 5 s."
+		description="timeLeft in seconds, DD:HH:MM:SS vs textFormat. Pick a preset to start both from a new value; Restart calls restart() to run the current value again (a binding cannot resend the same value). timeRemaining is logged every 5 s."
 		[log]="countDownLog.entries()">
 		<div class="sandbox-small__row">
 			@for (preset of countDownPresets; track preset.seconds) {
 				<button type="button" [disabled]="countDownSeconds() === preset.seconds" (click)="countDownSeconds.set(preset.seconds)">{{ preset.label }}</button>
 			}
+			<button type="button" (click)="countDownDefault.restart(); countDownText.restart()">Restart</button>
 		</div>
 		<div class="sandbox-small__row">
 			<div class="sandbox-small__item">
 				<span>Default</span>
-				<app-count-down [timeLeft]="countDownSeconds()" (timeRemaining)="onTimeRemaining('default', $event)"></app-count-down>
+				<app-count-down #countDownDefault [timeLeft]="countDownSeconds()" (timeRemaining)="onTimeRemaining('default', $event)"></app-count-down>
 			</div>
 			<div class="sandbox-small__item">
 				<span>textFormat</span>
-				<app-count-down [timeLeft]="countDownSeconds()" [textFormat]="true" (timeRemaining)="onTimeRemaining('text', $event)"></app-count-down>
+				<app-count-down #countDownText [timeLeft]="countDownSeconds()" [textFormat]="true" (timeRemaining)="onTimeRemaining('text', $event)"></app-count-down>
 			</div>
 		</div>
 	</app-sandbox-demo>

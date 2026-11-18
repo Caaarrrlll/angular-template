@@ -75,10 +75,10 @@
 
 	<app-sandbox-demo
 		title="Floating-label input + appAutoFocus"
-		description="app-input wraps a projected native input (its label targets id 'search'). The toggle renders an input with the appAutoFocus directive.">
+		description="app-input wraps a projected native input; its label points at inputId (default 'search'), so give the input that id. The toggle renders an input with the appAutoFocus directive.">
 		<div class="sandbox-inputs__grid">
-			<app-input label="Search">
-				<input id="search" type="text" placeholder=" " />
+			<app-input label="Search" inputId="sandbox-search">
+				<input id="sandbox-search" type="text" placeholder=" " />
 			</app-input>
 		</div>
 		<div class="sandbox-inputs__actions">

@@ -41,7 +41,7 @@
 
 	<app-sandbox-demo
 		title="FAB button"
-		description="The FAB is position: fixed; each stage below contains it so several can be shown. Default (help) vs a custom icon/ariaLabel; emitClick is logged."
+		description="By default (floating) the FAB is position: fixed, so each stage below contains it. Left: defaults. Right: custom icon/ariaLabel with floating = false (inline). emitClick is logged."
 		[log]="fabLog.entries()">
 		<div class="sandbox-buttons__controls">
 			@for (icon of fabIcons; track icon) {
@@ -54,8 +54,8 @@
 				<app-fab-button (emitClick)="onFabClick('default')"></app-fab-button>
 			</div>
 			<div class="sandbox-buttons__fab-stage">
-				<span>icon: {{ fabIcon() }}</span>
-				<app-fab-button [icon]="fabIcon()" [ariaLabel]="fabIcon()" (emitClick)="onFabClick(fabIcon())"></app-fab-button>
+				<span>icon: {{ fabIcon() }}, floating: false</span>
+				<app-fab-button [icon]="fabIcon()" [ariaLabel]="fabIcon()" [floating]="false" (emitClick)="onFabClick(fabIcon())"></app-fab-button>
 			</div>
 		</div>
 	</app-sandbox-demo>

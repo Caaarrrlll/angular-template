@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, WritableSignal, effect, inject, input, linkedSignal, output } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
+import { Subscription, interval } from "rxjs";
 
 @Component({
 	selector: "app-count-down",
@@ -24,23 +26,30 @@ export class CountDownComponent {
 		},
 	});
 
-	private timer: ReturnType<typeof setInterval> | null = null;
+	private timer: Subscription | null = null;
 
 	private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
 	constructor() {
-		this.destroyRef.onDestroy((): void => {
-			this.clearTimer();
-		});
-
 		effect(() => {
 			const timeLeft: number | undefined = this.timeLeft();
 			if (timeLeft && timeLeft > 0 && this.timer === null) {
-				this.timer = setInterval((): void => {
-					this.tick();
-				}, 1000);
+				this.startTimer();
 			}
 		});
+	}
+
+	/**
+	 * Starts again from the current `timeLeft`. Needed because a template binding never re-sends an unchanged value,
+	 * so setting the same `timeLeft` again after the count reached zero did not restart it.
+	 */
+	public restart(): void {
+		const timeLeft: number | undefined = this.timeLeft();
+		if (!timeLeft || timeLeft <= 0) {
+			return;
+		}
+		this.seconds.set(Math.floor(timeLeft));
+		this.startTimer();
 	}
 
 	/** Formats the remaining seconds, either as text or as `DD:HH:MM:SS`. */
@@ -65,6 +74,15 @@ export class CountDownComponent {
 		return ("0" + String(days)).slice(-2) + ":" + ("0" + String(hours)).slice(-2) + ":" + ("0" + String(minutes)).slice(-2) + ":" + ("0" + String(seconds)).slice(-2);
 	}
 
+	private startTimer(): void {
+		this.clearTimer();
+		this.timer = interval(1000)
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe((): void => {
+				this.tick();
+			});
+	}
+
 	private tick(): void {
 		const current: number | null = this.seconds();
 		if (current === null) {
@@ -80,9 +98,7 @@ export class CountDownComponent {
 	}
 
 	private clearTimer(): void {
-		if (this.timer !== null) {
-			clearInterval(this.timer);
-			this.timer = null;
-		}
+		this.timer?.unsubscribe();
+		this.timer = null;
 	}
 }

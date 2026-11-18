@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, ChangeDetectionStrategy, Component, ComponentRef, EventEmitter, Injector, Input, Output, inject } from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, Component, ComponentRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule } from "@angular/material/paginator";
@@ -47,7 +47,7 @@ import { PASSED_INFO } from "./table-constants.const";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{ provide: PASSED_INFO, useValue: "" }],
 })
-export class TableComponent implements AfterContentInit {
+export class TableComponent implements AfterContentInit, OnChanges {
 	@Input() public filters?: _LinQGridFilterItem;
 	@Input() public listObservable?: Observable<unknown>;
 	@Input() public storageNameIn!: string;
@@ -85,8 +85,21 @@ export class TableComponent implements AfterContentInit {
 
 	private readonly injector = inject(Injector);
 
+	/** Column setup follows its inputs (it used to be read once on init, so later config changes were ignored). */
+	public ngOnChanges(changes: SimpleChanges): void {
+		if (`tableConfig` in changes || `expandable` in changes) {
+			this.mapColumns();
+		}
+		this.hasPagination = this.custPage != null;
+		this.hasFilters = this.filters != null;
+	}
+
+	/** One-time restore of the stored sort and scroll position (storage side effects: see AUD-25). */
 	public ngAfterContentInit(): void {
 		this.loadConfig();
+	}
+
+	private mapColumns(): void {
 		this.displayedColumnsFilter = this.tableConfig.map((data: _CustTableInterface) => ({ display: data.display, activated: true, value: data.colName }));
 		this.displayedColumns = this.tableConfig.map((item: _CustTableInterface): string => item.colName);
 
@@ -95,9 +108,6 @@ export class TableComponent implements AfterContentInit {
 		if (this.expandable) {
 			this.columnsToDisplayWithExpand = ["expand", ...this.displayedColumns];
 		}
-
-		this.hasPagination = this.custPage == null ? false : true;
-		this.hasFilters = this.filters == null ? false : true;
 	}
 
 	private loadConfig(): void {

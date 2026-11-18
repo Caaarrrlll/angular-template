@@ -505,3 +505,51 @@ Scope: `controls/components/gallery` only (decorator API kept, "do not migrate" 
 - [✓] Step 4 — verify AUD-22/49 + ROADMAP ticks
   - dev build clean; eslint 0; prettier clean on the 6 touched files; /sandbox/cards **not browser-checked**
 - [✓] Step 5 — end of task: production build (pre-existing initial-bundle warning only); eslint + prettier on all 15 touched source files + DIRECTIVES_CONTRACTS.md, ROADMAP.md, tracker; section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): AUD-23 list-card / card-table, then AUD-24 config mapped once (developer request)
+
+Scope: decorator-API controls on the "do not migrate" list — bug fixes only, keep the existing style.
+
+- [✓] Step 1 — AUD-23 fixes
+  - [✓] 1a list-card loading: only the clicked button gets `loading` (was every button with the same label) — list-card.component.ts
+  - [✓] 1b list-card header: missing `type` defaults to Display; `textPre` without `fieldSub` reads `data[field]` (read `data[field]["undefined"]`) — list-card.component.ts
+  - [✓] 1c card-table `upperToggle` emits the checked value — card-table.component.ts/.html, sandbox-tables.component.ts
+  - [✓] 1d card-table: `showFilterBar` / `showPaginator` inputs (default true) — card-table.component.ts/.html; duplicate nested `.table-filters` wrapper removed (1px padding difference)
+  - [✓] 1e sandbox: card-table demo uses the toggle value; description mentions the new inputs — sandbox-tables.component.ts/.html
+- [✓] Step 2 — verify AUD-23 (dev build, eslint, prettier) + ROADMAP tick
+  - dev build clean; eslint 0 and prettier clean on the 5 touched files; /sandbox/tables **not browser-checked**
+- [✓] Step 3 — AUD-24: re-map config on input changes
+  - [✓] 3a list-card: `ngOnChanges` re-maps on any non-`spinner` input change (arrays reset); spinner-only change still clears loading — list-card.component.ts
+  - [✓] 3b info-card: mapping + `cardHeight` move from `ngAfterContentInit` to `ngOnChanges` (arrays reset) — info-card.component.ts
+  - [✓] 3c card-table: `tableWrapper` mapped in `ngOnChanges` — card-table.component.ts
+  - [✓] 3d table: column mapping + `hasPagination`/`hasFilters` in `ngOnChanges`; storage/sort restore stays one-time in `ngAfterContentInit` (AUD-25) — table.component.ts
+  - [✓] 3e linq-grid-filters: works on a `structuredClone` of `gridFilters` (no mutation of the caller's items, breaking for forks that read them back); re-normalizes on `gridFilters` change (emits `filterRefresh` again) and rebuilds column choices on `displayedColumns` change — linq-grid-filters.component.ts
+  - [✓] 3f sandbox: filter showcase builds its condition list from the outputs instead of reading its own (now unmutated) array — sandbox-tables.component.ts
+- [✓] Step 4 — verify AUD-24 + ROADMAP tick
+  - dev build clean; eslint 0 and prettier clean on the 6 touched files; sandbox-cards descriptions updated ("re-mapped whenever an input gets a new reference"); /sandbox/cards and /sandbox/tables **not browser-checked**
+- [✓] Step 5 — end of task: production build (pre-existing initial-bundle warning only); eslint + prettier on all 9 touched source files + ROADMAP.md + tracker; section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): AUD-14 input family (developer request)
+
+- [✓] Step 1 — fixes
+  - [✓] 1a input-select: read-only state set on the FormControl via `effect()` (no `[disabled]` next to `[formControl]`) — input-select.component.ts/.html
+  - [✓] 1b app-input: unused `type` input replaced by `inputId` (label `for`, default `"search"` for compatibility) — input.component.ts/.html
+  - [✓] 1c input-text / input-number / input-currency: `addValidators` + `updateValueAndValidity({ emitEvent: false })` instead of `setValidators` (caller validators kept) — the three .ts files
+  - [✓] 1d sandbox: app-input demo uses `inputId`; read-only select demo already existed — sandbox-inputs.component.html/.ts
+- [✓] Step 2 — verify + ROADMAP tick + clean boundary
+  - dev + prod build pass (prod: pre-existing initial-bundle warning only); eslint 0 and prettier clean on the 8 touched files; /sandbox/inputs **not browser-checked**; section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-18): small-controls batch — AUD-18, AUD-21, AUD-29 (developer request)
+
+Developer will commit afterwards; AUD-25 is next.
+
+- [✓] Step 1 — AUD-18 small controls (sandbox demos done: slide-toggle "false" + read-only, count-down Restart, fab floating=false)
+  - [✓] 1a count-down: public `restart()` (a binding cannot resend the same value); RxJS `interval` + `takeUntilDestroyed` instead of `setInterval` — count-down.component.ts
+  - [✓] 1b slide-toggle: on only for `true` / `"true"` (was `!!value`); `isReadOnly` disables it — slide-toggle.component.ts/.html
+  - [✓] 1c fab-button: `floating` input (default true = fixed corner; false = inline) — fab-button.component.ts/.html/.scss
+- [✓] Step 2 — AUD-21 drag-drop-file-upload: per-instance input id; dropped files filtered by `filesToAccept` — drag-drop-file-upload.component.ts/.html (sandbox-upload description updated)
+- [✓] Step 3 — AUD-29 search-address: guard (logged warning) when the Google Maps Places script is missing; `country` input (default `"za"`) — search-address.component.ts
+- [✓] Step 4 — sandbox demos/descriptions for the new APIs
+  - sandbox-buttons.component.html (fab floating=false), sandbox-small-controls.component.html/.ts (slide-toggle "false" + read-only, count-down Restart), sandbox-upload.component.html (description), sandbox-misc.component.html/.ts (search-address always rendered + country demo)
+- [✓] Step 5 — verify + ROADMAP ticks + clean boundary
+  - dev + prod build pass (prod: pre-existing initial-bundle warning only); eslint 0 and prettier clean on the 15 touched files (one prettier line-wrap fixed in sandbox-small-controls.component.html); /sandbox/buttons, /sandbox/small-controls, /sandbox/upload, /sandbox/misc **not browser-checked**; section moved to RATE_LIMIT_TRACKER_HISTORY.md

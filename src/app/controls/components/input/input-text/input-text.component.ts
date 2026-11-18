@@ -23,7 +23,9 @@ export class InputTextComponent implements OnInit {
 	public readonly actionOut = output<{ action: string; parameters?: string[] }>();
 
 	public ngOnInit(): void {
-		this.inputControl().inputControl.setValidators(this.inputControl().validations);
+		// addValidators keeps validators the caller already put on the control (setValidators replaced them) and skips duplicates.
+		this.inputControl().inputControl.addValidators(this.inputControl().validations);
+		this.inputControl().inputControl.updateValueAndValidity({ emitEvent: false });
 	}
 
 	public buttonClick(action: string, parameters?: string[]): void {

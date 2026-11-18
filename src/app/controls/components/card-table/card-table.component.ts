@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
@@ -47,7 +47,7 @@ export interface _CardTableParentButtonContext extends _ListCardParentButtonCont
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardTableComponent implements AfterContentInit {
+export class CardTableComponent implements OnChanges {
 	@Input() public listObservable?: Observable<unknown>;
 	@Input() public filters?: _LinQGridFilterItem[];
 	@Input() public custPage!: _CUSTPage;
@@ -65,6 +65,10 @@ export class CardTableComponent implements AfterContentInit {
 	@Input() public showUpperToggle = false;
 	@Input() public upperToggle?: CustInputGeneral;
 	@Input() public defaultSort = "";
+	/** Hide the linq-grid-filters bar (refresh/add/sort/custom buttons included) for a plain card list. */
+	@Input() public showFilterBar = true;
+	/** Hide the paginator, e.g. when the list is not paged; `custPage` is then not read. */
+	@Input() public showPaginator = true;
 
 	@Output() public buttonActionOut: EventEmitter<unknown> = new EventEmitter<unknown>();
 
@@ -78,7 +82,8 @@ export class CardTableComponent implements AfterContentInit {
 	public selectedVehicle: unknown;
 	public scrollToId = "";
 
-	public ngAfterContentInit(): void {
+	/** Re-reads `tableWrapper` whenever it gets a new reference (it used to be read once on init). */
+	public ngOnChanges(): void {
 		this.cardHeader = this.tableWrapper.cardHeaders;
 		this.tableConfig = this.tableWrapper.cardTable;
 		this.tablePropertiesConfig = this.tableWrapper.cardTableProperties;
@@ -185,10 +190,10 @@ export class CardTableComponent implements AfterContentInit {
 		this.buttonActionOut.emit(retObj);
 	}
 
-	public upperToggleChange(): void {
+	public upperToggleChange(checked: boolean): void {
 		const retObj = {
 			action: "upperToggle",
-			data: null,
+			data: checked,
 		};
 
 		this.buttonActionOut.emit(retObj);

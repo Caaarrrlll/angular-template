@@ -1,4 +1,4 @@
-<div class="table-filters">
+@if (showFilterBar) {
 	<div class="table-filters">
 		<app-linq-grid-filters
 			[gridFilters]="filters"
@@ -16,10 +16,10 @@
 			(addButtonClicked)="navigateToCreateLead()"
 			(filterRefresh)="filterRefresh($event)"
 			(customButtonClicked)="customButtonClicked()"
-			(upperToggleChanged)="upperToggleChange()">
+			(upperToggleChanged)="upperToggleChange($event)">
 		</app-linq-grid-filters>
 	</div>
-</div>
+}
 <div class="table-container">
 	@if (listObservable | apiResponse | async; as leads) {
 		<div class="table-wrapper">
@@ -52,13 +52,15 @@
 				<p class="s-pl-20">Error retrieving data from the server</p>
 			}
 		</div>
-		<div class="paginator">
-			<mat-paginator
-				(page)="pageChange($event)"
-				[length]="custPage.pageTotal"
-				[pageIndex]="custPage.page"
-				[pageSize]="custPage.pageSize"
-				[pageSizeOptions]="custPage.pageSizeOptions"></mat-paginator>
-		</div>
+		@if (showPaginator) {
+			<div class="paginator">
+				<mat-paginator
+					(page)="pageChange($event)"
+					[length]="custPage.pageTotal"
+					[pageIndex]="custPage.page"
+					[pageSize]="custPage.pageSize"
+					[pageSizeOptions]="custPage.pageSizeOptions"></mat-paginator>
+			</div>
+		}
 	}
 </div>

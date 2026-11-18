@@ -41,7 +41,7 @@ export class SandboxMiscComponent {
 	public readonly accordionItems: _SandboxAccordionItem[] = this.accordionData.items;
 	public readonly accordionLog = new SandboxEventLog();
 
-	/** search-address constructs `google.maps.places.Autocomplete` on view init, so it only renders when the Maps script is present. */
+	/** Whether the Maps script is loaded; without it search-address stays a plain input, and the page shows how to enable suggestions. */
 	public readonly mapsAvailable: boolean = `google` in globalThis;
 	public readonly searchAddressLog = new SandboxEventLog();
 

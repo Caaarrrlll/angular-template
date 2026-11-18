@@ -147,7 +147,9 @@ export class SandboxTablesComponent {
 	public readonly selectableColumns: WritableSignal<boolean> = signal<boolean>(true);
 	public readonly filtersExporting: WritableSignal<boolean> = signal<boolean>(false);
 	public readonly filtersUpperToggle: CustInputGeneral = { label: `Include sold`, value: `false` };
-	/** Snapshot of the active conditions (the control mutates the items in place, so this is refreshed on every output). */
+	/** The filter bar's own working items (from filterRefresh); it no longer edits showcaseFilters, so conditions are read from these. */
+	private barItems: _LinQGridFilterItem[] = [];
+	/** Snapshot of the active conditions, refreshed on every filter-bar output. */
 	public readonly activeConditions: WritableSignal<_LinQGridFilterCondition[]> = signal<_LinQGridFilterCondition[]>([]);
 	public readonly filtersLog = new SandboxEventLog(10);
 
@@ -286,10 +288,9 @@ export class SandboxTablesComponent {
 				break;
 			}
 			case `upperToggle`:
-				// card-table drops the toggle's checked value (data is null), so the demo tracks it itself.
-				this.cardBranchOnly.update((value) => !value);
+				this.cardBranchOnly.set(data === true);
 				this.cardPage.update((page) => ({ ...page, page: 0 }));
-				this.cardLog.add(`buttonActionOut: upperToggle (data: null)`);
+				this.cardLog.add(`buttonActionOut: upperToggle (data: ${String(data)})`);
 				break;
 			case `pageChange`: {
 				const page = data as PageEvent;
@@ -331,6 +332,7 @@ export class SandboxTablesComponent {
 	}
 
 	public onFilterRefresh(items: _LinQGridFilterItem[]): void {
+		this.barItems = items;
 		this.syncConditions();
 		this.filtersLog.add(`filterRefresh: ${String(items.length)} filters`);
 	}
@@ -377,7 +379,7 @@ export class SandboxTablesComponent {
 
 	// -------------------------------------------------------------------- helpers
 	private syncConditions(): void {
-		this.activeConditions.set(this.showcaseFilters.flatMap((item) => item.filter.filters));
+		this.activeConditions.set(this.barItems.flatMap((item) => item.filter.filters));
 	}
 
 	private toModeObservable(mode: _SandboxDataMode, rows: unknown[]): Observable<unknown> {

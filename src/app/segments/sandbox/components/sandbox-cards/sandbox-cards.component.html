@@ -64,7 +64,7 @@
 
 	<app-sandbox-demo
 		title="Info card"
-		description="Decorator API, mapped once on init. Shows header types (boldText, clickable Display, textPre, sub-field with icon, Parent chip, status with its Created date), column types (text, mailText, phoneText, date, money, boolean true and false, textWithEdit, textClick, Parent chip / displayList / textCombined), claims, both header-menu modes, footer chips, paragraph and the no-data error state. Click the name, verified tick, edit icons, agent link, Send statement, header menu items and Retry."
+		description="Decorator API, re-mapped whenever an input gets a new reference. Shows header types (boldText, clickable Display, textPre, sub-field with icon, Parent chip, status with its Created date), column types (text, mailText, phoneText, date, money, boolean true and false, textWithEdit, textClick, Parent chip / displayList / textCombined), claims, both header-menu modes, footer chips, paragraph and the no-data error state. Click the name, verified tick, edit icons, agent link, Send statement, header menu items and Retry."
 		[log]="infoCardLog.entries()">
 		<div class="sandbox-cards__stack">
 			<app-info-card
@@ -97,7 +97,7 @@
 
 	<app-sandbox-demo
 		title="List card"
-		description="Decorator API, mapped once on init. Header: Display, textPre + sub-field, status chip with post date. Columns: text, store, money, dateTime, Parent iconWithDisplay / chipsStatus. Buttons from tableButtonConfig and/or parentButtonProcess; a clicked button shows loading until spinner changes."
+		description="Decorator API, re-mapped whenever an input gets a new reference. Header: Display, textPre + sub-field, status chip with post date. Columns: text, store, money, dateTime, Parent iconWithDisplay / chipsStatus. Buttons from tableButtonConfig and/or parentButtonProcess; a clicked button shows loading until spinner changes."
 		[log]="listCardLog.entries()">
 		<div class="sandbox-cards__actions">
 			<button type="button" (click)="finishPendingActions()">Finish pending actions (bump spinner)</button>

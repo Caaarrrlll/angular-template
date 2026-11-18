@@ -32,7 +32,7 @@
 
 	<app-sandbox-demo
 		title="Card table"
-		description="Each row is an app-list-card built from tableWrapper (headers, field columns, buttons). A Parent field (Days open) is computed by parentDataProcess. Card buttons show a loading state until the spinner input changes. Filter bar: text + select filters, sort toggle, add, custom (download) button and an upper toggle."
+		description="Each row is an app-list-card built from tableWrapper (headers, field columns, buttons). A Parent field (Days open) is computed by parentDataProcess. Card buttons show a loading state until the spinner input changes. Filter bar: text + select filters, sort toggle, add, custom (download) button and an upper toggle (its checked value is the action data). showFilterBar / showPaginator (default true) hide the bar or the paginator."
 		[log]="cardLog.entries()">
 		<div class="sandbox-tables__toolbar" role="group" aria-label="Card table data state">
 			<span class="sandbox-tables__label">listObservable:</span>

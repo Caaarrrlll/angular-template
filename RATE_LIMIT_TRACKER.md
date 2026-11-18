@@ -6,6 +6,6 @@ Live checklist only. Completed sessions/tasks are moved to `RATE_LIMIT_TRACKER_H
 
 ## Active task
 
-None. Last completed (2026-11-18): AUD-20 media misc + AUD-22/AUD-49 info-card (builds/lint clean; /sandbox/media, /sandbox/dialogs and /sandbox/cards not browser-checked); see RATE_LIMIT_TRACKER_HISTORY.md.
+None. Last completed (2026-11-18): small-controls batch AUD-18 / AUD-21 / AUD-29 (builds/lint clean; sandbox pages not browser-checked); see RATE_LIMIT_TRACKER_HISTORY.md.
 
-Next steps (developer to choose): 12 open audit items in ROADMAP.md — suggested next: AUD-23 + AUD-24 (card/table config), then the remaining control bugs (AUD-14/15/18/21/25–27/29); AUD-48 versioning (TypeScript 7, eslint-config-prettier 10, zoneless) as a separate task.
+Next steps: developer commits, then AUD-25 (table storage side effects). Also open: AUD-15 (input directives), AUD-26 (chips / key-value), AUD-27 (pipes/directives); AUD-02 stays parked until HTTP wiring; AUD-48 versioning as a separate task.

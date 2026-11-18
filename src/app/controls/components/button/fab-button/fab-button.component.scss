@@ -21,6 +21,11 @@
 		opacity: 100% !important;
 	}
 
+	// `floating = false`: sits in the normal flow instead of the viewport corner.
+	&--inline {
+		position: static;
+	}
+
 	mat-icon {
 		font-size: 60px;
 		width: 60px;

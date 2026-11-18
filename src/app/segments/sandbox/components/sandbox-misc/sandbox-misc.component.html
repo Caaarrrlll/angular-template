@@ -19,27 +19,27 @@
 
 	<app-sandbox-demo
 		title="Search address"
-		description="Requires the Google Maps JavaScript API (Places library) script with an API key loaded by the host app, plus network access; results are restricted to South Africa (country 'za'). No key ships with this template, so without the script the control is not rendered. Inputs shown: labelText, width, types, value, allowManualInput, disabled; updateAddress + manualUpdateAddress outputs logged."
+		description="Address suggestions need the Google Maps JavaScript API (Places library) script with an API key loaded by the host app, plus network access. No key ships with this template: without the script the fields stay plain inputs (a warning is logged) and manual input still emits. country restricts suggestions (default 'za'; the manual-input field uses ['za', 'na']). Inputs shown: labelText, width, types, value, allowManualInput, disabled, country; updateAddress + manualUpdateAddress outputs logged."
 		[log]="searchAddressLog.entries()">
-		@if (mapsAvailable) {
-			<div class="sandbox-misc__stack">
-				<app-search-address (updateAddress)="onAddressUpdated($event)"></app-search-address>
-				<app-search-address
-					labelText="Search address (manual input allowed)"
-					width="50%"
-					types="geocode"
-					value="1 Example Street"
-					[allowManualInput]="true"
-					(updateAddress)="onAddressUpdated($event)"
-					(manualUpdateAddress)="onManualAddress($event)"></app-search-address>
-				<app-search-address labelText="Search address (disabled)" [disabled]="true"></app-search-address>
-			</div>
-		} @else {
+		@if (!mapsAvailable) {
 			<p class="sandbox-misc__note">
-				Google Maps Places script not detected (<code>google</code> is not defined). Add the Maps JavaScript API script tag with your own key and <code>libraries=places</code> to
-				<code>src/index.html</code> to enable this demo.
+				Google Maps Places script not detected (<code>google</code> is not defined), so no suggestions are shown. Add the Maps JavaScript API script tag with your own key and
+				<code>libraries=places</code> to <code>src/index.html</code> to enable them.
 			</p>
 		}
+		<div class="sandbox-misc__stack">
+			<app-search-address (updateAddress)="onAddressUpdated($event)"></app-search-address>
+			<app-search-address
+				labelText="Search address (manual input allowed, ZA + NA)"
+				width="50%"
+				types="geocode"
+				value="1 Example Street"
+				[country]="['za', 'na']"
+				[allowManualInput]="true"
+				(updateAddress)="onAddressUpdated($event)"
+				(manualUpdateAddress)="onManualAddress($event)"></app-search-address>
+			<app-search-address labelText="Search address (disabled)" [disabled]="true"></app-search-address>
+		</div>
 	</app-sandbox-demo>
 
 	<app-sandbox-demo

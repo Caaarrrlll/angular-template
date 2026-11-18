@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -35,7 +35,7 @@ export interface _InfoCardParentDataContext {
 	imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, ButtonComponent, ChipStatusComponent, CurrencyComponent],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InfoCardComponent implements AfterContentInit {
+export class InfoCardComponent implements OnChanges {
 	@Input() public data?: Record<string, unknown>;
 	@Input({ required: true }) public cardHeader!: _CustCardHeaderTableInterface[];
 	@Input() public tableHeaderMenu?: _CustCardHeaderMenuInterface;
@@ -63,7 +63,13 @@ export class InfoCardComponent implements AfterContentInit {
 	public cardHeight = "";
 	public menuOpen = false;
 
-	public ngAfterContentInit(): void {
+	/** Rebuilds the card whenever an input gets a new reference (it used to be mapped once, so later changes were ignored). */
+	public ngOnChanges(): void {
+		this.cardRows = [];
+		this.cardCols = [];
+		this.cardHeaders = [];
+		this.maxLines = 0;
+		this.errorActionButton = ``;
 		this.mapData();
 
 		this.cardHeight = this.tableProperties.heightAuto ? `${String(this.tableConfig.length * 22)}px` : this.tableProperties.height;

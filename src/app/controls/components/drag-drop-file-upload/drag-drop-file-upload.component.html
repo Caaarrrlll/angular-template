@@ -16,11 +16,11 @@
 		}
 
 		<div>
-			<input type="file" id="fileDropRef" #fileDropRef multiple [accept]="filesToAccept() ?? ''" (change)="handleFilesDropped(fileDropRef.files)" />
+			<input type="file" [id]="inputId" #fileDropRef multiple [accept]="filesToAccept() ?? ''" (change)="handleFilesDropped(fileDropRef.files)" />
 			<mat-icon>description</mat-icon>
 			<h3>Drag and drop file here</h3>
 			<h3>or</h3>
-			<label for="fileDropRef">Browse for file</label>
+			<label [for]="inputId">Browse for file</label>
 		</div>
 	</div>
 </div>

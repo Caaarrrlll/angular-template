@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, effect, input, output } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -16,6 +16,17 @@ export class InputSelectComponent implements OnInit {
 	public readonly inputChanged = output<CustInputReturn>();
 
 	public inputControl: FormControl<unknown> = new FormControl<unknown>("");
+
+	constructor() {
+		// Reactive forms own the disabled state: binding `[disabled]` next to `[formControl]` triggers Angular's warning.
+		effect(() => {
+			if (this.inputObj().isReadOnly ?? false) {
+				this.inputControl.disable({ emitEvent: false });
+			} else {
+				this.inputControl.enable({ emitEvent: false });
+			}
+		});
+	}
 
 	public ngOnInit(): void {
 		this.inputControl.setValue(this.inputObj().value ?? "");

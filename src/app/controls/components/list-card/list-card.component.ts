@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { ButtonComponent } from "@shared/components/button/button/button.component";
@@ -37,7 +37,7 @@ export interface _ListCardParentButtonContext {
 	imports: [CommonModule, MatCardModule, MatIconModule, ChipStatusComponent, CountDownComponent, ButtonComponent, CurrencyComponent],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListCardComponent implements OnChanges, OnInit {
+export class ListCardComponent implements OnChanges {
 	@Input() public data?: Record<string, unknown>;
 	@Input() public cardHeader!: _CustCardHeaderTableInterface[];
 	@Input() public tableButtonConfig?: _CustCardButtonTableInterface[];
@@ -60,6 +60,11 @@ export class ListCardComponent implements OnChanges, OnInit {
 	public maxLines = 0;
 
 	public ngOnChanges(changes: SimpleChanges): void {
+		// Any data/config input change (new references) rebuilds the card; it used to be mapped once on init.
+		if (Object.keys(changes).some((key: string): boolean => key !== `spinner`)) {
+			this.remap();
+			return;
+		}
 		const spinnerChange = changes["spinner"] as SimpleChange | undefined;
 		if (!spinnerChange?.firstChange) {
 			for (const row of this.cardRows) {
@@ -72,27 +77,15 @@ export class ListCardComponent implements OnChanges, OnInit {
 		}
 	}
 
-	public ngOnInit(): void {
-		if (!this.data) {
-			return;
-		}
-		this.mapData();
-	}
-
 	public buttonAction(action: _CardCol): void {
 		const retObj: _ListCardButtonClick = {
 			action: action,
 			data: this.data ?? {},
 		};
 
-		for (const row of this.cardRows) {
-			for (const col of row.item) {
-				if (col.value === action.value) {
-					if ("loading" in col) {
-						col.loading = true;
-					}
-				}
-			}
+		// Only the clicked button spins: matching by label also lit up other buttons that shared it.
+		if (action.type === `button`) {
+			action.loading = true;
 		}
 
 		this.buttonClick.emit(retObj);
@@ -118,6 +111,15 @@ export class ListCardComponent implements OnChanges, OnInit {
 
 	public countDownTime(detail: _CardCol): number {
 		return Number(detail.value);
+	}
+
+	private remap(): void {
+		this.cardRows = [];
+		this.cardCols = [];
+		this.cardHeaders = [];
+		this.maxLines = 0;
+		this.taskName = undefined;
+		this.mapData();
 	}
 
 	private mapData(): void {
@@ -335,7 +337,7 @@ export class ListCardComponent implements OnChanges, OnInit {
 				} else if (sub && !config.textPre) {
 					this.cardHeaders.push({
 						text: (data[field] as Record<string, unknown>)[sub] as string,
-						type: config.type ?? "",
+						type: config.type ?? _HeaderTypes.display,
 						alignment: _HeaderAlignment.start,
 					});
 				} else if (sub && config.textPre) {
@@ -347,15 +349,16 @@ export class ListCardComponent implements OnChanges, OnInit {
 					});
 				} else if (config.textPre) {
 					this.cardHeaders.push({
-						text: (data[field] as Record<string, unknown>)[sub ?? "undefined"] as string,
+						text: data[field] as string,
 						type: _HeaderTypes.display,
 						alignment: _HeaderAlignment.start,
 						textPre: data[config.textPre] as string,
 					});
 				} else {
+					// No `type` means plain text (as in info-card); an empty type matched no template branch and rendered nothing.
 					this.cardHeaders.push({
 						text: data[field] as string,
-						type: config.type ?? "",
+						type: config.type ?? _HeaderTypes.display,
 						alignment: _HeaderAlignment.start,
 					});
 				}

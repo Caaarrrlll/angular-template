@@ -57,6 +57,9 @@ export class SandboxSmallControlsComponent {
 
 	public readonly slideToggleOff: CustInputGeneral = { label: `Notifications (off)` };
 	public readonly slideToggleOn: CustInputGeneral = { label: `Dark mode (on)`, value: `true` };
+	/** The string "false" used to switch the toggle on (`!!value`); it must render off. */
+	public readonly slideToggleFalse: CustInputGeneral = { label: `Marketing (value "false")`, value: `false` };
+	public readonly slideToggleReadOnly: CustInputGeneral = { label: `Locked (read-only, on)`, value: `true`, isReadOnly: true };
 
 	public readonly quantityStep: number = 5;
 	public readonly quantityMax: number = 100;

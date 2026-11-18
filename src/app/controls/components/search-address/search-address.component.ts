@@ -16,6 +16,7 @@ import {
 } from "@angular/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { LoggerService } from "@shared/services/logger.service";
 
 export interface _AddressResult {
 	long_name: string;
@@ -40,10 +41,13 @@ export class SearchAddressComponent implements AfterViewInit, OnChanges {
 	@Input() public labelText = "Search Address";
 	@Input() public value = "";
 	@Input() public allowManualInput = false;
+	/** ISO 3166-1 alpha-2 code(s) the suggestions are restricted to (Google allows up to 5). */
+	@Input() public country: string | string[] = "za";
 
 	public neededTypes: string[] = ["postal_code", "administrative_area_level_1", "locality", "sublocality_level_1", "sublocality_level_2", "route", "street_number"];
 
 	private readonly ngZone = inject(NgZone);
+	private readonly logger = inject(LoggerService);
 
 	public ngAfterViewInit(): void {
 		this.loadMaps();
@@ -51,7 +55,8 @@ export class SearchAddressComponent implements AfterViewInit, OnChanges {
 
 	public ngOnChanges(changes: SimpleChanges): void {
 		const typesChange = changes["types"] as SimpleChange | undefined;
-		if (typesChange && typesChange.currentValue !== typesChange.previousValue) {
+		const countryChange = changes["country"] as SimpleChange | undefined;
+		if ((typesChange && !typesChange.firstChange) || (countryChange && !countryChange.firstChange)) {
 			this.loadMaps();
 		}
 	}
@@ -60,9 +65,14 @@ export class SearchAddressComponent implements AfterViewInit, OnChanges {
 		if (!this.searchField) {
 			return;
 		}
+		// The host app loads the Maps script (with its own key); without it the field stays a plain input instead of throwing.
+		if (!isPlacesLoaded()) {
+			this.logger.warn(`app-search-address: Google Maps Places script not loaded; address suggestions are disabled.`);
+			return;
+		}
 		const searchBox = new google.maps.places.Autocomplete(this.searchField.nativeElement, {
 			types: [this.types],
-			componentRestrictions: { country: "za" },
+			componentRestrictions: { country: this.country },
 		});
 
 		this.ngZone.run(() => {
@@ -104,4 +114,10 @@ export class SearchAddressComponent implements AfterViewInit, OnChanges {
 		const intersection = this.neededTypes.filter((element) => types.includes(element));
 		return intersection.toString();
 	}
+}
+
+/** True when the host app has loaded the Maps JavaScript API with the Places library. */
+function isPlacesLoaded(): boolean {
+	const maps: { places?: unknown } | undefined = (globalThis as { google?: { maps?: { places?: unknown } } }).google?.maps;
+	return maps?.places !== undefined;
 }

@@ -1,7 +1,7 @@
 <app-sandbox-page title="Upload" description="drag-drop-file-upload and the appDragAndDropFiles directive. Files stay in memory only; nothing is uploaded.">
 	<app-sandbox-demo
 		title="Drag & drop file upload"
-		description="Drop files or use Browse. The parent owns the files input (fileAdded appends to it). isInDialog hides the close button; filesToAccept restricts the Browse picker (drops are not filtered). closed hides the control until reopened."
+		description="Drop files or use Browse. The parent owns the files input (fileAdded appends to it). isInDialog hides the close button; filesToAccept restricts the Browse picker and filters dropped files (non-matching files are skipped). Each instance has its own input id. closed hides the control until reopened."
 		[log]="uploadLog.entries()">
 		<div class="upload-controls">
 			<label class="upload-toggle"><input type="checkbox" [checked]="uploadIsInDialog()" (change)="uploadIsInDialog.set(!uploadIsInDialog())" /> isInDialog</label>
