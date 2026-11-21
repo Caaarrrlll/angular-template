@@ -1,4 +1,4 @@
-export interface MediaFile {
+export interface _MediaFile {
 	type?: string;
 	file?: {
 		data: string;

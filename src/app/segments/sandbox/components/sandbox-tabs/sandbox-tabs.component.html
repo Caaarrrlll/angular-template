@@ -1,7 +1,7 @@
 <app-sandbox-page title="Tabs" description="tab-group (Material tabs wrapper) and tabs + tab (step wizard with back/next directives).">
 	<app-sandbox-demo
 		title="Tab group - horizontal"
-		description='Uncontrolled: no activeTab input; clicking a tab switches its content. Each tab&apos;s content is an <ng-template appTabGroupContent="key"> matched to CustTab.classSelect.'
+		description='Uncontrolled: no activeTab input; clicking a tab switches its content. Each tab&apos;s content is an <ng-template appTabGroupContent="key"> matched to _CustTab.classSelect.'
 		[log]="horizontalLog.entries()">
 		<app-tab-group [tabList]="horizontalTabs" (tabClick)="onHorizontalTabClick($event)">
 			<ng-template appTabGroupContent="overview"><p class="sandbox-tabs__panel">Overview content.</p></ng-template>

@@ -1,7 +1,7 @@
-import { RangeCheckboxValue } from "@shared/components/range-checkbox-group/range-checkbox-group.interface";
+import { _RangeCheckboxValue } from "@shared/components/range-checkbox-group/range-checkbox-group.interface";
 
 export interface _ControlInterface {
-	type: FormType;
+	type: _FormType;
 	instructionText?: string;
 	value?: string;
 	formName?: string;
@@ -12,10 +12,10 @@ export interface _ControlInterface {
 }
 
 export interface _DialogControl {
-	type: FormType;
+	type: _FormType;
 	/** Optional: the dialog falls back to the control's index (AUD-09: required here but optional on every builder class). */
 	formName?: string;
-	/** Numeric bounds (Numeric builder), passed to appMinMax. */
+	/** Numeric bounds (`_Numeric` builder), passed to appMinMax. */
 	min?: number;
 	max?: number;
 	value?: unknown;
@@ -43,7 +43,7 @@ export interface _DialogControl {
 	validationDep?: string;
 }
 
-export class DynamicDialogSetup {
+export class _DynamicDialogSetup {
 	public controls?: _DialogControl[];
 	public instructionText?: string;
 	public backButtonText?: string;
@@ -87,8 +87,8 @@ export class DynamicDialogSetup {
 	}
 }
 
-export class GenericControl {
-	public type: FormType;
+export class _GenericControl {
+	public type: _FormType;
 	public instructionText?: string;
 	public value?: unknown;
 	public formName?: string;
@@ -107,7 +107,7 @@ export class GenericControl {
 		validators,
 		validationDep,
 	}: {
-		type: FormType;
+		type: _FormType;
 		instructionText?: string;
 		value?: unknown;
 		formName?: string;
@@ -127,7 +127,7 @@ export class GenericControl {
 	}
 }
 
-export class TextArea extends GenericControl {
+export class _TextArea extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public inputType?: string;
@@ -156,7 +156,7 @@ export class TextArea extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.TextArea,
+			type: _FormType.TextArea,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -171,7 +171,7 @@ export class TextArea extends GenericControl {
 	}
 }
 
-export class DialogInput extends GenericControl {
+export class _DialogInput extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public inputType?: string;
@@ -203,7 +203,7 @@ export class DialogInput extends GenericControl {
 		autoComplete?: boolean;
 	}) {
 		super({
-			type: FormType.Input,
+			type: _FormType.Input,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -219,7 +219,7 @@ export class DialogInput extends GenericControl {
 	}
 }
 
-export class CurrencyShortHand extends GenericControl {
+export class _CurrencyShortHand extends _GenericControl {
 	public label: string;
 	public placeholder?: string;
 
@@ -245,7 +245,7 @@ export class CurrencyShortHand extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.CurrencyShortHand,
+			type: _FormType.CurrencyShortHand,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -259,7 +259,7 @@ export class CurrencyShortHand extends GenericControl {
 	}
 }
 
-export class DropDown extends GenericControl {
+export class _DropDown extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public multiple?: boolean;
@@ -291,7 +291,7 @@ export class DropDown extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.DropDown,
+			type: _FormType.DropDown,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -307,7 +307,7 @@ export class DropDown extends GenericControl {
 	}
 }
 
-export class DropDownGroups extends GenericControl {
+export class _DropDownGroups extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public multiple?: boolean;
@@ -345,7 +345,7 @@ export class DropDownGroups extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.DropDownGroup,
+			type: _FormType.DropDownGroup,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -361,7 +361,7 @@ export class DropDownGroups extends GenericControl {
 	}
 }
 
-export class ButtonGroup extends GenericControl {
+export class _ButtonGroup extends _GenericControl {
 	public data?: _FormData[];
 	public label?: string;
 	public valueList?: string[];
@@ -399,7 +399,7 @@ export class ButtonGroup extends GenericControl {
 		isReadOnly?: boolean;
 	}) {
 		super({
-			type: FormType.ButtonGroup,
+			type: _FormType.ButtonGroup,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -417,7 +417,7 @@ export class ButtonGroup extends GenericControl {
 	}
 }
 
-export class CUSTButtonGroup extends GenericControl {
+export class _CustButtonGroup extends _GenericControl {
 	public data: _FormData[];
 
 	constructor({
@@ -440,7 +440,7 @@ export class CUSTButtonGroup extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.CUSTButtonGroup,
+			type: _FormType.CUSTButtonGroup,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -453,7 +453,7 @@ export class CUSTButtonGroup extends GenericControl {
 	}
 }
 
-export class SingleDate extends GenericControl {
+export class _SingleDate extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public disabledBefore?: Date;
@@ -482,7 +482,7 @@ export class SingleDate extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.SingleDate,
+			type: _FormType.SingleDate,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -497,7 +497,7 @@ export class SingleDate extends GenericControl {
 	}
 }
 
-export class SingleDateString extends GenericControl {
+export class _SingleDateString extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public disabledBefore?: Date;
@@ -526,7 +526,7 @@ export class SingleDateString extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.SingleDateString,
+			type: _FormType.SingleDateString,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -541,7 +541,7 @@ export class SingleDateString extends GenericControl {
 	}
 }
 
-export class RangeDate extends GenericControl {
+export class _RangeDate extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public disabledBefore?: Date;
@@ -570,7 +570,7 @@ export class RangeDate extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.RangeDate,
+			type: _FormType.RangeDate,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -585,7 +585,7 @@ export class RangeDate extends GenericControl {
 	}
 }
 
-export class RangeDateString extends GenericControl {
+export class _RangeDateString extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public disabledBefore?: Date;
@@ -614,7 +614,7 @@ export class RangeDateString extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.RangeDateString,
+			type: _FormType.RangeDateString,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -629,7 +629,7 @@ export class RangeDateString extends GenericControl {
 	}
 }
 
-export class DateTime extends GenericControl {
+export class _DateTime extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public disabledBefore?: Date;
@@ -658,7 +658,7 @@ export class DateTime extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.DateTime,
+			type: _FormType.DateTime,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -673,7 +673,7 @@ export class DateTime extends GenericControl {
 	}
 }
 
-export class Slider extends GenericControl {
+export class _Slider extends _GenericControl {
 	public minValue?: number;
 	public maxValue?: number;
 	public increment?: number;
@@ -702,7 +702,7 @@ export class Slider extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.Slider,
+			type: _FormType.Slider,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -717,7 +717,7 @@ export class Slider extends GenericControl {
 	}
 }
 
-export class CheckBox extends GenericControl {
+export class _CheckBox extends _GenericControl {
 	public data: _FormData[];
 	public multi: boolean;
 	public filterable: boolean;
@@ -746,7 +746,7 @@ export class CheckBox extends GenericControl {
 		filterable?: boolean;
 	}) {
 		super({
-			type: FormType.CheckBox,
+			type: _FormType.CheckBox,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -761,7 +761,7 @@ export class CheckBox extends GenericControl {
 	}
 }
 
-export class RadioButton extends GenericControl {
+export class _RadioButton extends _GenericControl {
 	public data: _FormData[];
 
 	constructor({
@@ -784,7 +784,7 @@ export class RadioButton extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.Radio,
+			type: _FormType.Radio,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -797,7 +797,7 @@ export class RadioButton extends GenericControl {
 	}
 }
 
-export class CheckBoxRange extends GenericControl {
+export class _CheckBoxRange extends _GenericControl {
 	public data: _FormData[];
 	public multi: boolean;
 	public filterable: boolean;
@@ -826,7 +826,7 @@ export class CheckBoxRange extends GenericControl {
 		filterable?: boolean;
 	}) {
 		super({
-			type: FormType.CheckBoxRange,
+			type: _FormType.CheckBoxRange,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -841,12 +841,12 @@ export class CheckBoxRange extends GenericControl {
 	}
 }
 
-export class Approval extends GenericControl {
+export class _Approval extends _GenericControl {
 	public approveText: string;
 	public rejectText: string;
 	constructor({ instructionText, formName, approveText, rejectText }: { instructionText?: string; formName?: string; approveText: string; rejectText: string }) {
 		super({
-			type: FormType.Approval,
+			type: _FormType.Approval,
 			instructionText: instructionText,
 			formName: formName,
 		});
@@ -855,7 +855,7 @@ export class Approval extends GenericControl {
 	}
 }
 
-export class Address extends GenericControl {
+export class _Address extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public inputType?: string;
@@ -884,7 +884,7 @@ export class Address extends GenericControl {
 		validationDep?: string;
 	}) {
 		super({
-			type: FormType.Address,
+			type: _FormType.Address,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -899,17 +899,17 @@ export class Address extends GenericControl {
 	}
 }
 
-export class Upload extends GenericControl {
+export class _Upload extends _GenericControl {
 	constructor({ formName, disabled }: { formName?: string; disabled?: boolean }) {
 		super({
 			formName: formName,
 			disabled: disabled,
-			type: FormType.Upload,
+			type: _FormType.Upload,
 		});
 	}
 }
 
-export class Numeric extends GenericControl {
+export class _Numeric extends _GenericControl {
 	public label?: string;
 	public placeholder?: string;
 	public inputType?: string;
@@ -950,7 +950,7 @@ export class Numeric extends GenericControl {
 		decimals?: number;
 	}) {
 		super({
-			type: FormType.Numeric,
+			type: _FormType.Numeric,
 			instructionText: instructionText,
 			value: value,
 			formName: formName,
@@ -974,7 +974,7 @@ export class Numeric extends GenericControl {
 export interface _FormData {
 	value: unknown;
 	display: string;
-	range?: RangeCheckboxValue;
+	range?: _RangeCheckboxValue;
 	activated?: boolean;
 }
 
@@ -984,12 +984,12 @@ export interface _ButtonGroupInput {
 }
 
 export interface _ErrorValidation {
-	validator: ValidatorType;
+	validator: _ValidatorType;
 	value?: unknown;
 	errorMessage: string;
 }
 
-export enum ValidatorType {
+export enum _ValidatorType {
 	min,
 	max,
 	required,
@@ -1003,7 +1003,7 @@ export enum ValidatorType {
 	phone,
 }
 
-export enum FormType {
+export enum _FormType {
 	TextArea,
 	Input,
 	CurrencyShortHand,

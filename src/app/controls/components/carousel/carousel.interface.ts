@@ -1,4 +1,4 @@
-export interface CarouselImage {
+export interface _CarouselImage {
 	name: string;
 	url: string;
 }

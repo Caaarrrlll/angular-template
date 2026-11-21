@@ -6,17 +6,17 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { Observable, filter, switchMap } from "rxjs";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { SANDBOX_MEDIA_KEYS, SandboxDialogsDataService } from "@segments/sandbox/services/sandbox-dialogs-data.service";
 import { ConfirmationDialogComponent } from "@shared/components/confirmation-dialog/confirmation-dialog.component";
 import { _ConfirmationDialogData } from "@shared/components/confirmation-dialog/confirmation-dialog.interface";
 import { DynamicDialogService } from "@shared/components/dynamic-material-dialog/dynamic-dialog.service";
 import { _DialogOptions, openDynamicDialog } from "@shared/components/dynamic-material-dialog/dynamic-material-dialog.component";
-import { DynamicDialogSetup } from "@shared/components/dynamic-material-dialog/dynamic-material-dialog-setup.model";
+import { _DynamicDialogSetup } from "@shared/components/dynamic-material-dialog/dynamic-material-dialog-setup.model";
 import { openDynamicWindow } from "@shared/components/dynamic-window/dynamic-window.component";
-import { DialogSetup } from "@shared/components/dynamic-window/dynamic-window.models";
+import { _DialogSetup } from "@shared/components/dynamic-window/dynamic-window.models";
 import { MEDIA_LOADER, MediaDialogComponent } from "@shared/components/media-dialog/media-dialog.component";
-import { MediaFile, _MediaDialogData } from "@shared/components/media-dialog/media-dialog.models";
+import { _MediaFile, _MediaDialogData } from "@shared/components/media-dialog/media-dialog.models";
 import { CustTableDialogueComponent } from "@shared/components/table-dialogue/cust-table-dialogue.component";
 
 /**
@@ -32,9 +32,9 @@ import { CustTableDialogueComponent } from "@shared/components/table-dialogue/cu
 		provideNativeDateAdapter(),
 		{
 			provide: MEDIA_LOADER,
-			useFactory: (): ((mediaKey: string) => Observable<MediaFile | null>) => {
+			useFactory: (): ((mediaKey: string) => Observable<_MediaFile | null>) => {
 				const dialogsData = inject(SandboxDialogsDataService);
-				return (mediaKey: string): Observable<MediaFile | null> => dialogsData.loadMedia(mediaKey);
+				return (mediaKey: string): Observable<_MediaFile | null> => dialogsData.loadMedia(mediaKey);
 			},
 		},
 	],
@@ -49,13 +49,13 @@ export class SandboxDialogsComponent {
 
 	public readonly mediaKeys = SANDBOX_MEDIA_KEYS;
 
-	public readonly confirmationLog = new SandboxEventLog();
-	public readonly mediaLog = new SandboxEventLog();
-	public readonly tableLog = new SandboxEventLog();
-	public readonly dynamicButtonsLog = new SandboxEventLog();
-	public readonly dynamicMenuLog = new SandboxEventLog();
-	public readonly dynamicFormLog = new SandboxEventLog();
-	public readonly windowLog = new SandboxEventLog();
+	public readonly confirmationLog = new _SandboxEventLog();
+	public readonly mediaLog = new _SandboxEventLog();
+	public readonly tableLog = new _SandboxEventLog();
+	public readonly dynamicButtonsLog = new _SandboxEventLog();
+	public readonly dynamicMenuLog = new _SandboxEventLog();
+	public readonly dynamicFormLog = new _SandboxEventLog();
+	public readonly windowLog = new _SandboxEventLog();
 
 	public constructor() {
 		// Answers the dynamic dialog's autocomplete input: the dialog pushes the typed text into
@@ -63,7 +63,7 @@ export class SandboxDialogsComponent {
 		this.dynamicDialogService.inputChange
 			.pipe(
 				filter((term: string): boolean => term.length > 0),
-				switchMap((term: string): Observable<string[]> => this.dialogsData.searchSalesExecs(term)),
+				switchMap((term: string): Observable<string[]> => this.dialogsData.searchAgents(term)),
 				takeUntilDestroyed(this.destroyRef),
 			)
 			.subscribe((matches: string[]): void => {
@@ -169,7 +169,7 @@ export class SandboxDialogsComponent {
 
 	// ---- helpers ------------------------------------------------------------------------------
 
-	private openDynamic(setup: DynamicDialogSetup, log: SandboxEventLog, label: string, options: _DialogOptions = { draggable: true }): void {
+	private openDynamic(setup: _DynamicDialogSetup, log: _SandboxEventLog, label: string, options: _DialogOptions = { draggable: true }): void {
 		openDynamicDialog(this.dialog, setup, this.config({ width: `520px` }), options)
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe((result: unknown): void => {
@@ -177,7 +177,7 @@ export class SandboxDialogsComponent {
 			});
 	}
 
-	private openWindow(setup: DialogSetup, label: string): void {
+	private openWindow(setup: _DialogSetup, label: string): void {
 		openDynamicWindow(this.dialog, setup, this.config({ width: `600px` }))
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe((result: unknown): void => {

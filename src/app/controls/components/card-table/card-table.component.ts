@@ -6,7 +6,7 @@ import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSortModule, Sort, SortDirection } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
-import { LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
+import { GridFiltersComponent } from "@shared/components/grid-filters/grid-filters.component";
 import {
 	_CustCardButtonTableInterface,
 	_CustCardHeaderTableInterface,
@@ -15,10 +15,10 @@ import {
 	_CustTableWrapperInterface,
 } from "@shared/components/card-table/cust-card-table.interface";
 import { ListCardComponent, _ListCardParentButtonContext, _ListCardParentDataContext } from "@shared/components/list-card/list-card.component";
-import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
+import { _CustGridFilterItem } from "@shared/models/cust-grid-filter-item";
 import { ApiResponsePipe } from "@shared/pipes/api-response/api-response.pipe";
-import { _CUSTPage } from "@shared/models/cust-page";
-import { CustInputGeneral } from "@shared/models/cust-basic-controls";
+import { _CustPage } from "@shared/models/cust-page";
+import { _CustInputGeneral } from "@shared/models/cust-basic-controls";
 import { Observable } from "rxjs";
 
 export interface _CardTableParentDataContext extends _ListCardParentDataContext {
@@ -36,7 +36,7 @@ export interface _CardTableParentButtonContext extends _ListCardParentButtonCont
 	imports: [
 		CommonModule,
 		ApiResponsePipe,
-		LinqGridFiltersComponent,
+		GridFiltersComponent,
 		MatPaginatorModule,
 		MatProgressBarModule,
 		MatSortModule,
@@ -49,8 +49,8 @@ export interface _CardTableParentButtonContext extends _ListCardParentButtonCont
 })
 export class CardTableComponent implements OnChanges {
 	@Input() public listObservable?: Observable<unknown>;
-	@Input() public filters?: _LinQGridFilterItem[];
-	@Input() public custPage!: _CUSTPage;
+	@Input() public filters?: _CustGridFilterItem[];
+	@Input() public custPage!: _CustPage;
 	@Input() public tableWrapper!: _CustTableWrapperInterface;
 	@Input() public parentDataProcess: ((context: _CardTableParentDataContext) => ReturnType<NonNullable<ListCardComponent["parentDataProcess"]>>) | undefined;
 	@Input() public parentButtonProcess: ((context: _CardTableParentButtonContext) => ReturnType<NonNullable<ListCardComponent["parentButtonProcess"]>>) | undefined;
@@ -62,11 +62,11 @@ export class CardTableComponent implements OnChanges {
 	@Input() public customButtonTooltip?: string;
 	@Input() public customButtonIcon?: string;
 	@Input() public showUpperToggle = false;
-	@Input() public upperToggle?: CustInputGeneral;
+	@Input() public upperToggle?: _CustInputGeneral;
 	@Input() public defaultSort = "";
 	/** Initial sort arrow for `defaultSort`; later changes are reported through the `announceSortChange` action. */
 	@Input() public defaultSortDirection: SortDirection = "desc";
-	/** Hide the linq-grid-filters bar (refresh/add/sort/custom buttons included) for a plain card list. */
+	/** Hide the grid-filters bar (refresh/add/sort/custom buttons included) for a plain card list. */
 	@Input() public showFilterBar = true;
 	/** Hide the paginator, e.g. when the list is not paged; `custPage` is then not read. */
 	@Input() public showPaginator = true;
@@ -78,7 +78,7 @@ export class CardTableComponent implements OnChanges {
 	public tablePropertiesConfig!: _CustTablePropertiesConfig[];
 	public tableButtonConfig!: _CustCardButtonTableInterface[];
 
-	public displayedColumns: string[] = ["lead"];
+	public displayedColumns: string[] = ["item"];
 
 	/** Re-reads `tableWrapper` whenever it gets a new reference (it used to be read once on init). */
 	public ngOnChanges(): void {
@@ -119,7 +119,7 @@ export class CardTableComponent implements OnChanges {
 		this.buttonActionOut.emit(retObj);
 	}
 
-	public refreshLeads(): void {
+	public refresh(): void {
 		const retObj = {
 			action: "refresh",
 			data: null,
@@ -171,9 +171,9 @@ export class CardTableComponent implements OnChanges {
 		this.buttonActionOut.emit(retObj);
 	}
 
-	public navigateToCreateLead(): void {
+	public navigateToCreate(): void {
 		const retObj = {
-			action: "createLead",
+			action: "create",
 			data: null,
 		};
 

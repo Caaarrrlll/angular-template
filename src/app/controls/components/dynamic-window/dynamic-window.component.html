@@ -31,7 +31,7 @@
 
 			@if (control.type === "Slider") {
 				<span class="s-mb-15"
-					><strong>{{ form.controls[control.formName].value | currency: "ZAR" : "symbol-narrow" : "1.0-0" }}</strong></span
+					><strong>{{ form.controls[control.formName].value | currency: currencyCode : "symbol-narrow" : "1.0-0" }}</strong></span
 				>
 				<mat-slider class="s-w-500-pb-30" [min]="control.minValue" [max]="control.maxValue" [step]="control.increment" [discrete]="true">
 					<input matSliderThumb [formControlName]="control.formName" />
@@ -95,7 +95,7 @@
 						{{
 							!form.controls[control.formName].value
 								? control.placeholder
-								: control.placeholder + " of " + (form.controls[control.formName].value * 1000 | currency: "ZAR" : "symbol-narrow" : "1.0-0")
+								: control.placeholder + " of " + (form.controls[control.formName].value * 1000 | currency: currencyCode : "symbol-narrow" : "1.0-0")
 						}}
 					</mat-label>
 					<input matInput [formControlName]="control.formName" type="number" />

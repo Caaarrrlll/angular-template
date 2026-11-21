@@ -2,8 +2,6 @@
 
 This file documents the shared pipes in `src/app/library/pipes`. Review it before creating a new pipe, and update it whenever a pipe is added, changed, or removed.
 
-> All pipes previously in `src/app/controls-to-port/pipes` have been migrated into this contract; the legacy folder was removed on 2026-11-13.
-
 ## Pipe Index
 
 | Pipe                        | Name                    | File                                                      | Standalone   | Summary                                                                                          |
@@ -13,7 +11,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 | `CamelToTitlePipe`          | `camelToTitle`          | `camel-to-title/camel-to-title.pipe.ts`                   | Yes          | Splits camelCase text and capitalizes the first character.                                       |
 | `CharacterSpacingPipe`      | `characterSpacing`      | `character-spacing/character-spacing.pipe.ts`             | Yes          | Groups string characters by the length's lowest common denominator (3-5, default 3) with spaces. |
 | `ContainsPipe`              | `contains`              | `contains/contains.pipe.ts`                               | Yes          | Returns whether an array contains a value or matches a predicate function.                       |
-| `CurrencyInStringPipe`      | `currencyInString`      | `currency-in-string/currency-in-string.pipe.ts`           | Yes          | Formats numbers embedded in a string as ZAR currency.                                            |
+| `CurrencyInStringPipe`      | `currencyInString`      | `currency-in-string/currency-in-string.pipe.ts`           | Yes          | Formats numbers embedded in a string as currency (default currency).                             |
 | `DayAndHoursPipe`           | `dayAndHours`           | `day-and-hours/day-and-hours.pipe.ts`                     | Yes          | Formats a date as elapsed days and hours from now.                                               |
 | `EmailToInitialsPipe`       | `emailToInitials`       | `email-to-initials/email-to-initials.pipe.ts`             | Yes          | Takes the first and last character of an email's local part and uppercases them.                 |
 | `FilterPipe`                | `arrayFilter`           | `array-filter/array-filter.pipe.ts`                       | Yes          | Filters an array with an object of property values or a predicate function.                      |
@@ -50,7 +48,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ "502336455040" | characterSpacing }}
   ```
   Outputs `502 336 455 040`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/character-spacing.pipe.ts`; now standalone.
 
 ## ContainsPipe
 
@@ -63,7 +60,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   {{ items | contains: "item-1" }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/contains.pipe.ts`; now standalone.
 
 ## EmailToInitialsPipe
 
@@ -73,10 +69,9 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 - **Output:** Two uppercase characters, or an empty string for a falsy value.
 - **Example:**
   ```html
-  {{ "pietk@webuycars.co.za" | emailToInitials }}
+  {{ "janed@example.com" | emailToInitials }}
   ```
-  Outputs `PK`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/email-to-initials.pipe.ts`; now standalone.
+  Outputs `JD`.
 
 ## FilterPipe (template name `arrayFilter`)
 
@@ -89,19 +84,18 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   {{ items | arrayFilter: { status: "open" } }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/filter.pipe.ts` (declaration `FilterPipe`); now standalone.
 
 ## GroupByDatePipe
 
 - **Purpose:** Groups a collection items' `entryDate` property using `DatePipe` format `d MMMM yyyy`.
 - **Inputs:**
   - `collection`: array of records with an `entryDate` property.
-- **Output:** Array of `{ date: string, leadHistory: items[] }`, or `null` for a falsy collection. The output key is named `leadHistory` for compatibility with the legacy usage.
+- **Output:** Array of `{ date: string, items: unknown[] }`, or `null` for a falsy collection. (The key was `leadHistory` until 2026-11-20; renamed to the generic `items`.)
 - **Example:**
   ```html
-  {{ leadHistory | groupByDate }}
+  {{ history | groupByDate }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/group-by-date.pipe.ts`; injects `DatePipe`; now standalone.
+- **Notes:** Injects `DatePipe`.
 
 ## HighlightSearchMatchPipe (template name `searchMatch`)
 
@@ -114,7 +108,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   <span [innerHTML]="paragraph | searchMatch: searchTerm"></span>
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/highlight-search-match.pipe.ts`; injects `DomSanitizer`; now standalone. 2026-11-18 (AUD-27/AUD-28): switched from regex to literal matching and added HTML escaping; no longer wraps the edge spaces in extra `<span>`s.
+- **Notes:** Injects `DomSanitizer`; 2026-11-18 (AUD-27/AUD-28): switched from regex to literal matching and added HTML escaping; no longer wraps the edge spaces in extra `<span>`s.
 
 ## KebabToTitlePipe
 
@@ -127,7 +121,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ "kebab-case-text" | kebabToTitle }}
   ```
   Outputs `kebab case-text`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/kebab-to-title.pipe.ts`; now standalone.
 
 ## NameToInitialsPipe
 
@@ -139,8 +132,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   {{ "Piet K Stellen" | nameToInitials }}
   ```
-  Outputs `PK`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/name-to-initials.pipe.ts`; now standalone.
+  Outputs `JD`.
 
 ## NearestPipe
 
@@ -154,7 +146,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ 27 | nearest: 10 }}
   ```
   Outputs `30`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/nearest.pipe.ts`; now standalone.
 
 ## OrderByPipe
 
@@ -167,7 +158,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   {{ items | orderBy: byName }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/order-by.pipe.ts`; now standalone.
 
 ## OrdinalPipe
 
@@ -181,7 +171,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ 22 | ordinal }}
   ```
   Outputs `22nd`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/ordinal.pipe.ts`; now standalone.
 
 ## PercentagePipe
 
@@ -195,7 +184,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ 10 | percentage: 25 }}
   ```
   Outputs `40.00%`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/percentage.pipe.ts`; now standalone.
 
 ## RemoveEmailDomainPipe (template name `removeDomain`)
 
@@ -205,10 +193,9 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 - **Output:** The local part, or an empty string for a falsy value.
 - **Example:**
   ```html
-  {{ "pietk@webuycars.co.za" | removeDomain }}
+  {{ "janed@example.com" | removeDomain }}
   ```
-  Outputs `pietk`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/remove-email-domain.pipe.ts`; now standalone.
+  Outputs `janed`.
 
 ## ArraySortPipe (template name `sort`)
 
@@ -221,7 +208,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   {{ rows | sort: "name" }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/sort.pipe.ts`; item field identities (`Record<string, any>`) are intentionally loosely typed to keep the original numeric/string compare behaviour.
+- **Notes:** Item field identities (`Record<string, any>`) are intentionally loosely typed to keep the original numeric/string compare behaviour.
 
 ## TimeElapsedFormatPipe
 
@@ -233,32 +220,32 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   {{ record.createdAt | timeElapsedFormat }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/time-elapsed.pipe.ts`; now standalone, injects the library `DateTimeOpsService`. Kept impure so values recompute as time passes.
+- **Notes:** Injects the library `DateTimeOpsService`. Kept impure so values recompute as time passes.
 
 ## TimeFormatPipe
 
-- **Purpose:** Formats a date string as `hh:mm` with `toLocaleTimeString`, using the given IANA-orabbreviation zone (`CAT` legacy abbreviation).
+- **Purpose:** Formats a date string as a 24-hour `HH:mm` time with `toLocaleTimeString` in the app locale (`LOCALE_ID`).
 - **Inputs:**
   - `date`: date string.
-  - `timeZone`: zone string, defaults to `CAT`.
+  - `timeZone` (optional): IANA zone name such as `Africa/Johannesburg`; omitted = the user's local time. (Defaulted to `CAT` until 2026-11-20.)
 - **Output:** Formatted time string; impure to recalculate with growing dates.
 - **Example:**
   ```html
   {{ "2024-01-01T09:30:00Z" | timeFormat }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/time-format.pipe.ts`; now standalone.
 
 ## TimeInStringPipe
 
-- **Purpose:** Converts UTC (`+00:00`) date-time strings embedded in a text to CAT time via `DatePipe`.
+- **Purpose:** Converts UTC (`+00:00`) date-time strings embedded in a text to local time (or the given zone) via `DatePipe`.
 - **Inputs:**
   - `value`: text containing date-time strings in the form `dd/MM/yyyy HH:mm:ss +00:00`.
+  - `timezone` (optional): DatePipe zone, e.g. `+0200` or `UTC`; omitted = the DatePipe default (local time). (Was a fixed `CAT` until 2026-11-20, which `DatePipe` does not recognise.)
 - **Output:** The text with embedded date-times converted, or an empty string for a falsy value.
 - **Example:**
   ```html
   {{ "Report from 01/02/2024 08:00:00 +00:00" | timeInString }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/time-in-string-pipe/time-in-string.pipe.ts`; injects `DatePipe`; now standalone.
+- **Notes:** Injects `DatePipe`.
 
 ## TimeMaskPipe
 
@@ -271,11 +258,10 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ "2.30" | timeMask }}
   ```
   Outputs `2d 30`.
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/time-mask.pipe.ts`; now standalone.
 
 ## ToNumberPipe
 
-- **Purpose:** Converts the input with `Number()`. The `?? value` fallback of the legacy pipe never executes, so non-numeric strings become `NaN`.
+- **Purpose:** Converts the input with `Number()`. Non-numeric strings become `NaN`.
 - **Inputs:**
   - `value`: value to convert.
 - **Output:** The `Number()` result.
@@ -283,10 +269,9 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   {{ "12" | toNumber }}
   ```
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/to-number.pipe.ts`; now standalone.
 
-| `TimeFormatPipe` | `timeFormat` | `time-format/time-format.pipe.ts` | Yes | Formats a date string as `hh:mm` using a zone abbreviation such as `CAT`. |
-| `TimeInStringPipe` | `timeInString` | `time-in-string/time-in-string.pipe.ts` | Yes | Converts UTC date-time strings embedded in a string into CAT time. |
+| `TimeFormatPipe` | `timeFormat` | `time-format/time-format.pipe.ts` | Yes | Formats a date string as `HH:mm` (local time or a given IANA zone). |
+| `TimeInStringPipe` | `timeInString` | `time-in-string/time-in-string.pipe.ts` | Yes | Converts UTC date-time strings embedded in a string to local time. |
 | `TimeMaskPipe` | `timeMask` | `time-mask/time-mask.pipe.ts` | Yes | Splits a dotted value into a `d`-prefixed days/hours string. |
 | `ToNumberPipe` | `toNumber` | `to-number/to-number.pipe.ts` | Yes | Converts a value with `Number()`. |
 | `TruncatePipe` | `truncate` | `truncate/truncate.pipe.ts` | Yes | Truncates text to a maximum length and appends a trailing string; empty string for a falsy value. |
@@ -314,8 +299,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   </ng-container>
   ```
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/api-response-pipe`. The legacy `ApiResponseModule` was removed; the pipe is standalone.
-
 ## TruncatePipe
 
 - **Purpose:** Shortens long text so table cells and labels do not overflow.
@@ -330,7 +313,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ longDescription | truncate: 85 }}
   ```
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/truncate.pipe.ts`; now standalone. Consolidates the former `TrimCharactersPipe` (`trimCharacters`), which was removed during a cleanup pass; `truncate` accepts a custom trail and is null-safe.
+- **Notes:** Consolidates the former `TrimCharactersPipe` (`trimCharacters`), which was removed during a cleanup pass; `truncate` accepts a custom trail and is null-safe.
 
 ## AbsolutePipe
 
@@ -344,8 +327,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ -5 | absolute }}
   ```
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/absolute.pipe.ts`; now standalone.
-
 ## CamelToTitlePipe
 
 - **Purpose:** Splits camelCase text and capitalizes the first character.
@@ -358,21 +339,20 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ "camelCase" | camelToTitle }}
   ```
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/camel-to-title.pipe.ts`; now standalone.
-
 ## CurrencyInStringPipe
 
-- **Purpose:** Formats numbers embedded in a string as ZAR currency.
+- **Purpose:** Formats numbers embedded in a string as currency, through Angular's `CurrencyPipe`.
 - **Inputs:**
   - `value`: string containing one or more numeric values.
-- **Output:** The original string with each numeric value replaced by a ZAR currency string.
+- **Inputs (optional):** `currencyCode` (ISO 4217); defaults to the app's `DEFAULT_CURRENCY_CODE` (set once in `main.ts`).
+- **Output:** The original string with each numeric value (`,` or `.` decimal, space thousands) replaced by a formatted currency string (`symbol-narrow`, `1.2-2`, `LOCALE_ID`); text with two separators such as `1,234.50` is left unchanged.
 - **Example:**
 
   ```html
   {{ "Invoice 1234,50" | currencyInString }}
   ```
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/currency-in-string-pipe/currency-in-string.pipe.ts`; uses `formatCurrency` with `LOCALE_ID` and is now standalone.
+- **Notes:** 2026-11-20: uses `CurrencyPipe` (it called `formatCurrency` with the code and symbol arguments swapped, printing a literal "ZAR", then replaced the first `,` with `.`, which broke amounts of 1 000 and more).
 
 ## DayAndHoursPipe
 
@@ -385,8 +365,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```html
   {{ createdAt | dayAndHours }}
   ```
-
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/day-and-hour-pipe/day-and-hours.pipe.ts`; now standalone.
 
 ## FormatNullTextPipe
 
@@ -401,7 +379,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ value | formatNull }} {{ value | formatNull: "N/A" }}
   ```
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/format-null-pipe/format-null-text.pipe.ts`; template name remains `formatNull`; now standalone.
+- **Notes:** Template name remains `formatNull`.
 
 ## ObscureTextPipe
 
@@ -418,8 +396,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 
   Outputs `******7890`.
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/obscure-text-pipe/obscure-text.pipe.ts`; now standalone.
-
 ## PascalToTitlePipe
 
 - **Purpose:** Splits PascalCase text and capitalizes the first character.
@@ -433,8 +409,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```
 
   Outputs `Pascal Case`.
-
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/pascal-to-title-pipe/pascal-to-title.pipe.ts`; now standalone.
 
 ## PostfixPipe
 
@@ -453,8 +427,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 
   Outputs `12 km`.
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/postfix/postfix.pipe.ts`; now standalone.
-
 ## RemoveCharsPipe
 
 - **Purpose:** Removes every occurrence of a character (or substring) from text; defaults to removing underscores.
@@ -468,7 +440,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   {{ "some_value" | removeChars }} {{ "some value" | removeChars: " " }}
   ```
 
-- **Notes:** Consolidates the former `RemoveUnderscorePipe` (`removeUnderscore`) and `RemoveSpacesPipe` (`removeSpaces`), both removed during a cleanup pass. The legacy app-specific behaviors were not carried over: `removeUnderscore` replaced `_` with a space rather than removing it, and `removeSpaces` also stripped `,@#$%^&*()/` and uppercased the result.
+- **Notes:** Consolidates the former `RemoveUnderscorePipe` (`removeUnderscore`) and `RemoveSpacesPipe` (`removeSpaces`), both removed during a cleanup pass.
 
 ## RoundToNthPipe
 
@@ -485,8 +457,6 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 
   Outputs `12.35`.
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/round-to-nth-pipe/round-to-nth.pipe.ts`; now standalone.
-
 ## SafePipe
 
 - **Purpose:** Bypasses resource URL sanitization.
@@ -499,7 +469,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   <iframe [src]="url | safe"></iframe>
   ```
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/safe.pipe.ts`; injects `DomSanitizer` and is now standalone. Only use with trusted URLs.
+- **Notes:** Injects `DomSanitizer` and is Only use with trusted URLs.
 
 ## SpaceBetweenUppercasePipe
 
@@ -515,7 +485,7 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
 
   Outputs `Hello World`.
 
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/space-between-uppercase-pipe/space-between-uppercase.pipe.ts`; class renamed to `SpaceBetweenUppercasePipe`; now standalone.
+- **Notes:** Class renamed to `SpaceBetweenUppercasePipe`.
 
 ## ThousandSeparatorPipe
 
@@ -530,5 +500,3 @@ This file documents the shared pipes in `src/app/library/pipes`. Review it befor
   ```
 
   Outputs `1 234 567`.
-
-- **Notes:** Migrated from `src/app/controls-to-port/pipes/thousand-separator-pipe/thousand-separator.pipe.ts`; now standalone.

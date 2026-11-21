@@ -47,14 +47,15 @@ Live demos of every directive: `/sandbox/inputs` (input directives), `/sandbox/m
 ## CurrencyInputDirective
 
 - **Purpose:** Formats the displayed value with `CurrencyPipe` (`symbol`, `1.0-0`) on init and on every `ngModelChange`, clamping to `min`/`max`.
-- **Inputs:** `currencyCode = "ZAR"`, `min?: number`, `max?: number`.
-- **Example:** `<input matInput type="text" formControlName="amount" appCurrencyInput currencyCode="ZAR" [min]="0" [max]="100000" />`
+- **Inputs:** `currencyCode` (default: the app's `DEFAULT_CURRENCY_CODE`, set once in `main.ts`), `min?: number`, `max?: number`.
+- **Example:** `<input matInput type="text" formControlName="amount" appCurrencyInput [min]="0" [max]="100000" />`
 - **Dependencies:** injects `CurrencyPipe` — the host component must provide it (`providers: [CurrencyPipe]`).
 - **Known issues:** display-only — the form value is not changed; strip non-digits before submitting (AUD-15).
 
 ## CurrencyMaskDirective
 
-- **Purpose:** On `ngModelChange`/backspace, rewrites the input through the control's value accessor as `R` + digits grouped with commas (max 10 digits).
+- **Purpose:** On `ngModelChange`/backspace, rewrites the input through the control's value accessor as the currency's narrow symbol + digits grouped with commas (max 10 digits).
+- **Inputs:** `currencyCode` (ISO 4217), default the app's `DEFAULT_CURRENCY_CODE` (set once in `main.ts`; it was a hard-coded `R` until 2026-11-20).
 - **Selector requirement:** must sit on an element with `formControlName`.
 - **Example:** `<input matInput type="text" formControlName="price" appCurrencyMask />`
 - **Known issues:** display-only, like `appCurrencyInput` (AUD-15).

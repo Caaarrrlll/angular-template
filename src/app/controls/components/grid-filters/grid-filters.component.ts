@@ -11,8 +11,8 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { Sort } from "@angular/material/sort";
 import { ReactiveFormsModule } from "@angular/forms";
-import { CustInputGeneral } from "@shared/models/cust-basic-controls";
-import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
+import { _CustInputGeneral } from "@shared/models/cust-basic-controls";
+import { _CustGridFilterItem } from "@shared/models/cust-grid-filter-item";
 
 export interface _DisplayedColumnChoice {
 	display: string;
@@ -21,15 +21,14 @@ export interface _DisplayedColumnChoice {
 }
 
 /**
- * Rebuilt minimal replacement for the legacy Kendo-based linq grid filter bar
- * (legacy source was not present in the repo; rebuilt best-effort against the
- * API consumed by the table and card-table controls, with the custom-backend
- * filter logic intentionally omitted).
+ * Filter bar for the table and card-table controls: text, number, boolean, date, date-range and select filters,
+ * plus optional refresh / add / sort / custom / column-chooser buttons. It only emits filter conditions; the parent
+ * applies them (client-side or in its own API request).
  */
 @Component({
-	selector: "app-linq-grid-filters",
-	templateUrl: "./linq-grid-filters.component.html",
-	styleUrls: ["./linq-grid-filters.component.scss"],
+	selector: "app-grid-filters",
+	templateUrl: "./grid-filters.component.html",
+	styleUrls: ["./grid-filters.component.scss"],
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
@@ -45,31 +44,31 @@ export interface _DisplayedColumnChoice {
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinqGridFiltersComponent implements OnChanges {
-	@Input() public gridFilters: _LinQGridFilterItem | _LinQGridFilterItem[] | null | undefined = null;
+export class GridFiltersComponent implements OnChanges {
+	@Input() public gridFilters: _CustGridFilterItem | _CustGridFilterItem[] | null | undefined = null;
 	@Input() public showSortButton = false;
 	@Input() public showAddButton = true;
 	@Input() public showCustomButton = false;
 	@Input() public customButtonTooltip?: string = "";
 	@Input() public customButtonIcon?: string = "";
 	@Input() public showUpperToggle = false;
-	@Input() public upperToggle?: CustInputGeneral;
+	@Input() public upperToggle?: _CustInputGeneral;
 	@Input() public selectableColumns = false;
 	@Input() public displayedColumns: string[] = [];
 	@Input() public exporting = false;
 
 	@Output() public refreshClicked: EventEmitter<void> = new EventEmitter<void>();
 	@Output() public clearButtonClicked: EventEmitter<void> = new EventEmitter<void>();
-	@Output() public filterChanged: EventEmitter<_LinQGridFilterItem> = new EventEmitter<_LinQGridFilterItem>();
+	@Output() public filterChanged: EventEmitter<_CustGridFilterItem> = new EventEmitter<_CustGridFilterItem>();
 	@Output() public sortChanged: EventEmitter<Sort> = new EventEmitter<Sort>();
 	@Output() public addButtonClicked: EventEmitter<void> = new EventEmitter<void>();
-	@Output() public filterRefresh: EventEmitter<_LinQGridFilterItem[]> = new EventEmitter<_LinQGridFilterItem[]>();
+	@Output() public filterRefresh: EventEmitter<_CustGridFilterItem[]> = new EventEmitter<_CustGridFilterItem[]>();
 	@Output() public customButtonClicked: EventEmitter<void> = new EventEmitter<void>();
 	@Output() public upperToggleChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() public displayedColumnsChanged: EventEmitter<_DisplayedColumnChoice[]> = new EventEmitter<_DisplayedColumnChoice[]>();
 
 	public sortDirection: "asc" | "desc" = "desc";
-	public filterItems: _LinQGridFilterItem[] = [];
+	public filterItems: _CustGridFilterItem[] = [];
 	public columnChoices: _DisplayedColumnChoice[] = [];
 
 	private readonly dateAdapter: DateAdapter<Date> = inject<DateAdapter<Date>>(DateAdapter);
@@ -80,7 +79,7 @@ export class LinqGridFiltersComponent implements OnChanges {
 	 */
 	public ngOnChanges(changes: SimpleChanges): void {
 		if (`gridFilters` in changes) {
-			this.filterItems = this.normalizeFilters(this.gridFilters).map((item: _LinQGridFilterItem): _LinQGridFilterItem => structuredClone(item));
+			this.filterItems = this.normalizeFilters(this.gridFilters).map((item: _CustGridFilterItem): _CustGridFilterItem => structuredClone(item));
 			for (const item of this.filterItems) {
 				this.rehydrateFilterDates(item);
 			}
@@ -121,21 +120,21 @@ export class LinqGridFiltersComponent implements OnChanges {
 		this.upperToggleChanged.emit(checked);
 	}
 
-	public textChanged(item: _LinQGridFilterItem, value: string): void {
+	public textChanged(item: _CustGridFilterItem, value: string): void {
 		item.active = value.length > 0;
 		item.config.options.text = value;
 		item.filter.filters = value.length > 0 ? [{ field: item.name, operator: "contains", value: value }] : [];
 		this.filterChanged.emit(item);
 	}
 
-	public dateChanged(item: _LinQGridFilterItem, value: Date | null): void {
+	public dateChanged(item: _CustGridFilterItem, value: Date | null): void {
 		item.active = value !== null;
 		item.config.options.date = value ?? undefined;
 		item.filter.filters = value ? [{ field: item.name, operator: "eq", value: value }] : [];
 		this.filterChanged.emit(item);
 	}
 
-	public rangeChanged(item: _LinQGridFilterItem, bound: "start" | "end", value: Date | null): void {
+	public rangeChanged(item: _CustGridFilterItem, bound: "start" | "end", value: Date | null): void {
 		const range = item.config.options.range ?? { start: null as Date | null, end: null as Date | null };
 		range[bound] = value;
 		item.config.options.range = range;
@@ -149,7 +148,7 @@ export class LinqGridFiltersComponent implements OnChanges {
 		this.filterChanged.emit(item);
 	}
 
-	public selectChanged(item: _LinQGridFilterItem, value: unknown): void {
+	public selectChanged(item: _CustGridFilterItem, value: unknown): void {
 		item.active = value !== null && value !== undefined && value !== "";
 		item.filter.filters = item.active ? [{ field: item.name, operator: "eq", value: value }] : [];
 		this.filterChanged.emit(item);
@@ -164,22 +163,22 @@ export class LinqGridFiltersComponent implements OnChanges {
 		this.displayedColumnsChanged.emit(this.columnChoices);
 	}
 
-	public rangeStart(item: _LinQGridFilterItem): Date | null {
+	public rangeStart(item: _CustGridFilterItem): Date | null {
 		return item.config.options.range?.start ?? null;
 	}
 
-	public rangeEnd(item: _LinQGridFilterItem): Date | null {
+	public rangeEnd(item: _CustGridFilterItem): Date | null {
 		return item.config.options.range?.end ?? null;
 	}
 
-	private normalizeFilters(gridFilters: _LinQGridFilterItem | _LinQGridFilterItem[] | null | undefined): _LinQGridFilterItem[] {
+	private normalizeFilters(gridFilters: _CustGridFilterItem | _CustGridFilterItem[] | null | undefined): _CustGridFilterItem[] {
 		if (!gridFilters) {
 			return [];
 		}
 		return Array.isArray(gridFilters) ? gridFilters : [gridFilters];
 	}
 
-	private rehydrateFilterDates(item: _LinQGridFilterItem): void {
+	private rehydrateFilterDates(item: _CustGridFilterItem): void {
 		// filters restored from JSON (e.g. a fork's own cache) carry dates as ISO strings
 		if (item.active && item.config.type === "date" && item.config.options.date) {
 			item.config.options.date = this.dateAdapter.parse(item.config.options.date, "yyyy/MM/dd") ?? item.config.options.date;

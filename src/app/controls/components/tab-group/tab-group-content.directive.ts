@@ -1,7 +1,7 @@
 import { Directive, InputSignal, TemplateRef, inject, input } from "@angular/core";
 
 /**
- * Marks the content of one tab in `app-tab-group`. The key matches `CustTab.classSelect`.
+ * Marks the content of one tab in `app-tab-group`. The key matches `_CustTab.classSelect`.
  *
  * @example
  *      <app-tab-group [tabList]="tabs">

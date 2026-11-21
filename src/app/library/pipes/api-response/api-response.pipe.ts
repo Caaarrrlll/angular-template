@@ -4,7 +4,7 @@ import { LoggerService } from "@shared/services/logger.service";
 import { isObservable, of, Observable } from "rxjs";
 import { catchError, map, startWith } from "rxjs/operators";
 
-export interface ApiResponseState {
+export interface _ApiResponseState {
 	loading?: boolean;
 	payload?: unknown;
 	error?: boolean;
@@ -12,7 +12,7 @@ export interface ApiResponseState {
 }
 
 /** Envelope shape used by API streams that signal loading/error state themselves. */
-interface ApiResponseEnvelope {
+interface _ApiResponseEnvelope {
 	type?: unknown;
 	value?: unknown;
 }
@@ -21,13 +21,13 @@ interface ApiResponseEnvelope {
 export class ApiResponsePipe implements PipeTransform {
 	private readonly logger = inject(LoggerService);
 
-	transform(apiCall: Observable<unknown> | null | undefined, ignoreNotFound?: boolean): Observable<ApiResponseState> | undefined;
+	transform(apiCall: Observable<unknown> | null | undefined, ignoreNotFound?: boolean): Observable<_ApiResponseState> | undefined;
 	transform(apiCall: unknown, ignoreNotFound?: boolean): unknown;
 	transform(apiCall: unknown, ignoreNotFound = true): unknown {
 		return isObservable(apiCall)
 			? apiCall.pipe(
-					map((payload: unknown): ApiResponseState => {
-						const envelope: ApiResponseEnvelope | null = typeof payload === "object" && payload !== null ? payload : null;
+					map((payload: unknown): _ApiResponseState => {
+						const envelope: _ApiResponseEnvelope | null = typeof payload === "object" && payload !== null ? payload : null;
 						return envelope?.type === "error"
 							? { loading: false, error: true }
 							: {

@@ -1,3 +1,7 @@
+/**
+ * Chip type (display name passed to `app-chip-status [type]`) → CSS class in chip-status.component.scss.
+ * Generic workflow + commerce statuses only; a fork adds its own entries here (with a matching style).
+ */
 export const ChipStatus: Record<string, string> = {
 	Action: "action",
 	Informative: "informative",
@@ -5,32 +9,19 @@ export const ChipStatus: Record<string, string> = {
 	Inactive: "inactive",
 	Progress: "progress",
 	New: "new",
-	"New Sale": "newSale",
 	Default: "default",
 	Approved: "Approved",
 	Assigned: "Assigned",
 	"Awaiting Customer Action": "awaitingCustomerAction",
 	Escalated: "Escalated",
 	"Feedback Required": "feedbackRequired",
-	"Legal Action Required": "legalActionRequired",
-	"MIOSA Referred": "miosaReferred",
-	"No Agreement Reached": "noAgreementReached",
 	Rejected: "rejected",
-	"Rejection Letter Reviewed": "rejectionLetterReviewed",
-	"3rd Party Feedback Required": "thirdPartyFeedbackRequired",
 	Resolved: "resolved",
-	"Vehicle Released": "vehicleReleased",
-	"Completed - Natis Delivered": "completedNatisDelivered",
+	// Commerce statuses (buy/sale leads, products)
 	Sold: "sold",
-	Released: "vehicleReleased",
-	"Sale Initiated": "saleInitiated",
-	"Customer Contact Attempt Failed": "customerContactAttemptFailed",
-	Stock: "stock",
-	Reserved: "reserved",
 	Bought: "bought",
-	"To be priced": "toBePriced",
+	Reserved: "reserved",
 	"For Sale": "forSale",
-	Online: "online",
 	"In transit": "inTransit",
-	NFS: "NFS",
+	Online: "online",
 };

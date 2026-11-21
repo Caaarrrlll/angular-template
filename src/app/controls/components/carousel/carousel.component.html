@@ -1,5 +1,5 @@
 <div [class]="'carousel-container-' + preview()">
-	<div [class]="'vehicle-imgs-preview-' + preview()">
+	<div [class]="'carousel-imgs-preview-' + preview()">
 		@for (img of images(); track img.url; let i = $index) {
 			<img
 				[src]="img.url"
@@ -15,7 +15,7 @@
 				[class.thumbnail-bottom]="preview() === 'bottom'" />
 		}
 	</div>
-	<div [class]="'vehicle-imgs-' + preview()">
+	<div [class]="'carousel-imgs-' + preview()">
 		<div class="selected-image">
 			@if (images()) {
 				<app-zoomable-image

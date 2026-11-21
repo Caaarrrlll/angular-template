@@ -6,7 +6,7 @@ import { noop } from "rxjs";
 
 const DEFAULT_TIMESPAN = "00:00:00";
 
-type TimeField = "days" | "hours" | "minutes";
+type _TimeField = "days" | "hours" | "minutes";
 
 @Component({
 	selector: "app-time-span-picker",
@@ -55,7 +55,7 @@ export class TimeSpanPickerComponent implements ControlValueAccessor {
 		this.formGroup.controls.minutes.setValue(timeSlots[1] ?? "");
 	}
 
-	public validateTime(field: TimeField): void {
+	public validateTime(field: _TimeField): void {
 		const control: FormControl<string | null> = this.formGroup.controls[field];
 		if (control.invalid) {
 			control.patchValue("00");
@@ -66,7 +66,7 @@ export class TimeSpanPickerComponent implements ControlValueAccessor {
 		this.onTouched();
 	}
 
-	public restrictToNumeric(event: KeyboardEvent, field: TimeField): boolean {
+	public restrictToNumeric(event: KeyboardEvent, field: _TimeField): boolean {
 		if (!/^([0-9])$/.test(event.key)) {
 			return false;
 		}

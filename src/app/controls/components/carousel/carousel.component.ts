@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, inject, input, output, signal, untracked, Signal } from "@angular/core";
 import { ZoomableImageComponent } from "@shared/components/zoomable-image/zoomable-image.component";
 import { SnackbarService } from "@shared/services/snackbar.service";
-import { CarouselImage } from "./carousel.interface";
+import { _CarouselImage } from "./carousel.interface";
 
 @Component({
 	selector: "app-carousel",
@@ -11,14 +11,14 @@ import { CarouselImage } from "./carousel.interface";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarouselComponent {
-	public readonly images = input.required<CarouselImage[]>();
+	public readonly images = input.required<_CarouselImage[]>();
 	public readonly preview = input<"left" | "bottom">("left");
 	public readonly navigateTo = input<string | undefined>();
 	public readonly openDetails = output<string>();
 
 	public readonly selectedImg = signal(0);
 	/** `.at()` is typed `| undefined`, unlike `images()[i]`: an empty list or out-of-range index really is undefined at runtime. */
-	public readonly selectedImage: Signal<CarouselImage | undefined> = computed((): CarouselImage | undefined => this.images().at(this.selectedImg()));
+	public readonly selectedImage: Signal<_CarouselImage | undefined> = computed((): _CarouselImage | undefined => this.images().at(this.selectedImg()));
 
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly imageElement: ElementRef<HTMLElement> = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -31,7 +31,7 @@ export class CarouselComponent {
 			}
 			// `untracked` so image-array changes alone don't re-run this; only `navigateTo` changes did in ngOnChanges
 			const index: number = untracked(this.images)
-				.map((image: CarouselImage): string => image.name)
+				.map((image: _CarouselImage): string => image.name)
 				.indexOf(navigateTo);
 			if (index !== -1) {
 				this.selectedImg.set(index);
@@ -57,7 +57,7 @@ export class CarouselComponent {
 
 	/** Moves to `index` and reports it — wrap-around included, so `openDetails` fires on every next/prev step. */
 	private select(index: number): void {
-		const image: CarouselImage | undefined = this.images().at(index);
+		const image: _CarouselImage | undefined = this.images().at(index);
 		if (image === undefined) {
 			return;
 		}

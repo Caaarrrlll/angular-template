@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Signal, computed, input, output } from "@angular/core";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-controls";
+import { _CustInputGeneral, _CustInputReturn } from "@shared/models/cust-basic-controls";
 
 @Component({
 	selector: "app-slide-toggle",
@@ -9,10 +9,10 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SlideToggleComponent {
-	public readonly inputObj = input.required<CustInputGeneral>();
-	public readonly inputChanged = output<CustInputReturn>();
+	public readonly inputObj = input.required<_CustInputGeneral>();
+	public readonly inputChanged = output<_CustInputReturn>();
 
-	/** `value` is a string in CustInputGeneral: only `"true"` means on (`!!value` also turned `"false"` on). */
+	/** `value` is a string in `_CustInputGeneral`: only `"true"` means on (`!!value` also turned `"false"` on). */
 	public readonly checked: Signal<boolean> = computed((): boolean => this.inputObj().value === `true`);
 
 	public onChange(event: MatSlideToggleChange): void {

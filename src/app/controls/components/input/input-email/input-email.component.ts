@@ -4,7 +4,7 @@ import { debounceTime } from "rxjs";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-controls";
+import { _CustInputGeneral, _CustInputReturn } from "@shared/models/cust-basic-controls";
 
 @Component({
 	selector: "app-input-email",
@@ -13,8 +13,8 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputEmailComponent implements OnInit {
-	public readonly inputObj = input.required<CustInputGeneral>();
-	public readonly inputChanged = output<CustInputReturn>();
+	public readonly inputObj = input.required<_CustInputGeneral>();
+	public readonly inputChanged = output<_CustInputReturn>();
 
 	public readonly inputControl: FormControl<string | null> = new FormControl<string | null>("", Validators.pattern(/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/));
 

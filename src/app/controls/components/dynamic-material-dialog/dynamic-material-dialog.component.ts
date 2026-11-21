@@ -1,4 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, NgZone, OnInit, ViewChild, inject, WritableSignal, signal } from "@angular/core";
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	DEFAULT_CURRENCY_CODE,
+	DestroyRef,
+	ElementRef,
+	NgZone,
+	OnInit,
+	ViewChild,
+	inject,
+	WritableSignal,
+	signal,
+} from "@angular/core";
 import { AsyncPipe, CurrencyPipe } from "@angular/common";
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -16,7 +29,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Observable, Subject } from "rxjs";
 import { debounceTime, filter, map, skip, startWith, takeUntil } from "rxjs/operators";
 import { ButtonToggleComponent } from "@shared/components/button-toggle/button-toggle.component";
-import { ButtonToggleResponse } from "@shared/components/button-toggle/button-toggle.interface";
+import { _ButtonToggleResponse } from "@shared/components/button-toggle/button-toggle.interface";
 import { CheckboxComponent } from "@shared/components/checkbox-group/checkbox/checkbox.component";
 import { CheckboxGroupComponent } from "@shared/components/checkbox-group/checkbox-group.component";
 import { RangeCheckboxComponent } from "@shared/components/range-checkbox-group/range-checkbox/range-checkbox.component";
@@ -25,11 +38,11 @@ import { DateTransformDirective } from "@shared/directives/date-transform.direct
 import { DragAndDropFilesDirective } from "@shared/directives/drag-and-drop-files.directive";
 import { MinMaxDirective } from "@shared/directives/min-max.directive";
 import { SnackbarService } from "@shared/services/snackbar.service";
-import { CheckBox, CheckBoxRange, DynamicDialogSetup, FormType, RadioButton, ValidatorType, _ControlInterface, _FormData } from "./dynamic-material-dialog-setup.model";
+import { _CheckBox, _CheckBoxRange, _DynamicDialogSetup, _FormType, _RadioButton, _ValidatorType, _ControlInterface, _FormData } from "./dynamic-material-dialog-setup.model";
 import { DynamicDialogService } from "./dynamic-dialog.service";
 
 export interface _DynamicDialogOptions {
-	setup: DynamicDialogSetup;
+	setup: _DynamicDialogSetup;
 	options?: _DialogOptions;
 }
 
@@ -69,7 +82,7 @@ export interface _DialogOptions {
 })
 export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 	public readonly form: FormGroup = new FormGroup({});
-	public readonly dialogSetup: DynamicDialogSetup;
+	public readonly dialogSetup: _DynamicDialogSetup;
 	public readonly options: _DialogOptions = {};
 	/** Per-control search box and filtered options for CheckBox / CheckBoxRange / Radio, keyed by formName (AUD-10: they used to share one list). */
 	public readonly searchControls: Record<string, FormControl<string | null>> = {};
@@ -90,6 +103,8 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 	private readonly dialogData = inject<_DynamicDialogOptions>(MAT_DIALOG_DATA);
 	private readonly dialogRef = inject<MatDialogRef<DynamicMaterialDialogComponent>>(MatDialogRef);
 	private readonly snackbarService = inject(SnackbarService);
+	/** Currency for the slider labels: the app's `DEFAULT_CURRENCY_CODE` (no hard-coded code in the template). */
+	protected readonly currencyCode: string = inject(DEFAULT_CURRENCY_CODE);
 	private readonly ngZone = inject(NgZone);
 	public readonly dynamicDialogService = inject(DynamicDialogService);
 	private readonly destroyRef = inject(DestroyRef);
@@ -102,13 +117,13 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	public get formType(): typeof FormType {
-		return FormType;
+	public get formType(): typeof _FormType {
+		return _FormType;
 	}
 
-	getEnumName(type: ValidatorType): string {
+	getEnumName(type: _ValidatorType): string {
 		// noSpace/phone are implemented with Validators.pattern, so their errors live under the `pattern` key.
-		return type === ValidatorType.noSpace || type === ValidatorType.phone ? ValidatorType[ValidatorType.pattern] : ValidatorType[type];
+		return type === _ValidatorType.noSpace || type === _ValidatorType.phone ? _ValidatorType[_ValidatorType.pattern] : _ValidatorType[type];
 	}
 
 	ngAfterViewInit(): void {
@@ -147,7 +162,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 			const formName: string = element.formName;
 
 			switch (element.type) {
-				case FormType.RangeDate: {
+				case _FormType.RangeDate: {
 					const rangeValue = element.value as { start?: unknown; end?: unknown } | undefined;
 					this.form.addControl(
 						formName,
@@ -158,7 +173,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 					);
 					break;
 				}
-				case FormType.DateTime: {
+				case _FormType.DateTime: {
 					const value = new Date((element.value as string | number | Date | undefined) ?? Date.now());
 					const hour: string = String(value.getHours()).padStart(2, "0");
 					const min: string = String(value.getMinutes()).padStart(2, "0");
@@ -172,7 +187,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 					);
 					break;
 				}
-				case FormType.SingleDate: {
+				case _FormType.SingleDate: {
 					this.selectedDate = element.value ? new Date(element.value as string | number | Date) : null;
 					this.form.addControl(formName, new FormControl(this.selectedDate));
 					this.form
@@ -186,40 +201,40 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 						});
 					break;
 				}
-				case FormType.CheckBox: {
+				case _FormType.CheckBox: {
 					this.form.addControl(formName, new FormControl(element.value ?? []));
-					if (element instanceof CheckBox) {
+					if (element instanceof _CheckBox) {
 						this.registerOptions(formName, element.data);
 					}
 					break;
 				}
-				case FormType.CheckBoxRange: {
+				case _FormType.CheckBoxRange: {
 					this.form.addControl(formName, new FormControl(element.value ?? []));
-					if (element instanceof CheckBoxRange) {
+					if (element instanceof _CheckBoxRange) {
 						this.registerOptions(formName, element.data);
 					}
 					break;
 				}
-				case FormType.Radio: {
+				case _FormType.Radio: {
 					this.form.addControl(formName, new FormControl(element.value || typeof element.value === "boolean" ? element.value : []));
-					if (element instanceof RadioButton) {
+					if (element instanceof _RadioButton) {
 						this.registerOptions(formName, element.data);
 					}
 					break;
 				}
-				case FormType.Upload: {
+				case _FormType.Upload: {
 					this.form.addControl(formName, new FormControl([]));
 					break;
 				}
-				case FormType.ButtonGroup: {
+				case _FormType.ButtonGroup: {
 					this.form.addControl(formName, new FormControl(element.value ?? false));
 					break;
 				}
-				case FormType.CUSTButtonGroup: {
+				case _FormType.CUSTButtonGroup: {
 					this.form.addControl(formName, new FormControl(element.value ?? false));
 					break;
 				}
-				case FormType.Address: {
+				case _FormType.Address: {
 					this.form.addControl(formName, new FormControl(element.value ?? null));
 					break;
 				}
@@ -235,37 +250,37 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 					element.validators.map((error) => {
 						error.value ??= 0;
 						switch (error.validator) {
-							case ValidatorType.min:
+							case _ValidatorType.min:
 								this.form.controls[formName].addValidators(Validators.min(error.value as number));
 								break;
-							case ValidatorType.max:
+							case _ValidatorType.max:
 								this.form.controls[formName].addValidators(Validators.max(error.value as number));
 								break;
-							case ValidatorType.required:
+							case _ValidatorType.required:
 								this.form.controls[formName].addValidators(Validators.required.bind(Validators));
 								break;
-							case ValidatorType.requiredTrue:
+							case _ValidatorType.requiredTrue:
 								this.form.controls[formName].addValidators(Validators.requiredTrue.bind(Validators));
 								break;
-							case ValidatorType.email:
+							case _ValidatorType.email:
 								this.form.controls[formName].addValidators(Validators.email.bind(Validators));
 								break;
-							case ValidatorType.minlength:
+							case _ValidatorType.minlength:
 								this.form.controls[formName].addValidators(Validators.minLength(error.value as number));
 								break;
-							case ValidatorType.maxlength:
+							case _ValidatorType.maxlength:
 								this.form.controls[formName].addValidators(Validators.maxLength(error.value as number));
 								break;
-							case ValidatorType.pattern:
+							case _ValidatorType.pattern:
 								this.form.controls[formName].addValidators(Validators.pattern(error.value as string | RegExp));
 								break;
-							case ValidatorType.nullValidator:
+							case _ValidatorType.nullValidator:
 								this.form.controls[formName].addValidators(Validators.nullValidator.bind(Validators));
 								break;
-							case ValidatorType.noSpace:
+							case _ValidatorType.noSpace:
 								this.form.controls[formName].addValidators(Validators.pattern(/^\S+$/));
 								break;
-							case ValidatorType.phone:
+							case _ValidatorType.phone:
 								this.form.controls[formName].addValidators(Validators.pattern("0[0-9]{9}"));
 								break;
 						}
@@ -276,43 +291,43 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 					element.validators.map((error) => {
 						error.value ??= 0;
 						switch (error.validator) {
-							case ValidatorType.min:
+							case _ValidatorType.min:
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.min(error.value as number)));
 								break;
-							case ValidatorType.max:
+							case _ValidatorType.max:
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.max(error.value as number)));
 								break;
-							case ValidatorType.required:
+							case _ValidatorType.required:
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.required.bind(Validators)));
 								break;
-							case ValidatorType.requiredTrue:
+							case _ValidatorType.requiredTrue:
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.requiredTrue.bind(Validators)));
 								break;
-							case ValidatorType.email:
+							case _ValidatorType.email:
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.email.bind(Validators)));
 								break;
-							case ValidatorType.minlength:
+							case _ValidatorType.minlength:
 								this.form.controls[formName].addValidators(
 									conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.minLength(error.value as number)),
 								);
 								break;
-							case ValidatorType.maxlength:
+							case _ValidatorType.maxlength:
 								this.form.controls[formName].addValidators(
 									conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.maxLength(error.value as number)),
 								);
 								break;
-							case ValidatorType.pattern:
+							case _ValidatorType.pattern:
 								this.form.controls[formName].addValidators(
 									conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern(error.value as string | RegExp)),
 								);
 								break;
-							case ValidatorType.nullValidator:
+							case _ValidatorType.nullValidator:
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.nullValidator.bind(Validators)));
 								break;
-							case ValidatorType.noSpace:
+							case _ValidatorType.noSpace:
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern(/^\S+$/)));
 								break;
-							case ValidatorType.phone:
+							case _ValidatorType.phone:
 								this.form.controls[formName].addValidators(conditionalValidator(() => !this.form.controls[dependentControlName].value, Validators.pattern("0[0-9]{9}")));
 								break;
 						}
@@ -519,7 +534,7 @@ export class DynamicMaterialDialogComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	inputChange(input: ButtonToggleResponse, formName: string): void {
+	inputChange(input: _ButtonToggleResponse, formName: string): void {
 		if (!this.dialogSetup.simple && formName === "secondOperator") {
 			this.updateSecondDropdown(input.value);
 		}
@@ -558,7 +573,7 @@ function conditionalValidator(predicate: () => boolean, validator: ValidatorFn):
 	};
 }
 
-export function openDynamicDialog(dialog: MatDialog, dialogSetup: DynamicDialogSetup, config: MatDialogConfig, options?: _DialogOptions): Observable<unknown> {
+export function openDynamicDialog(dialog: MatDialog, dialogSetup: _DynamicDialogSetup, config: MatDialogConfig, options?: _DialogOptions): Observable<unknown> {
 	config.data = {
 		setup: dialogSetup,
 		options: options,

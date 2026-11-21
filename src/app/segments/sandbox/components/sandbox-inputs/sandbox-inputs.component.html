@@ -3,7 +3,7 @@
 	description="Reactive-forms input controls (text, number, currency, email, phone, select), the select option, the floating-label wrapper and the input directives.">
 	<app-sandbox-demo
 		title="Input text"
-		description="CustInputAdvance API: validators + error messages + clear button + maxlen, prefilled, read-only, disabled (FormControl.disable), action button, and calendar mode (action.value === 'calendar')."
+		description="_CustInputAdvance API: validators + error messages + clear button + maxLength, prefilled, read-only, disabled (FormControl.disable), action button, and calendar mode (action.value === 'calendar')."
 		[log]="textLog.entries()">
 		<div class="sandbox-inputs__grid">
 			<app-input-text label="Name (required, min 3, max 20)" placeholder="Type a name" [inputControl]="textRequired"></app-input-text>
@@ -31,19 +31,21 @@
 		</p>
 	</app-sandbox-demo>
 
-	<app-sandbox-demo title="Input currency" description="Empty control is seeded with 0.00 by the control; pattern error; currencyCode ZAR (default) vs USD prefilled.">
+	<app-sandbox-demo
+		title="Input currency"
+		description="Empty control is seeded with 0.00 by the control; pattern error; currencyCode = the app default (DEFAULT_CURRENCY_CODE, ZAR in this template) vs USD prefilled.">
 		<div class="sandbox-inputs__grid">
-			<app-input-currency label="Amount (ZAR)" [inputControl]="currencyEmpty"></app-input-currency>
+			<app-input-currency label="Amount (app currency)" [inputControl]="currencyEmpty"></app-input-currency>
 			<app-input-currency label="Amount (USD, prefilled)" currencyCode="USD" [inputControl]="currencyUsd"></app-input-currency>
 		</div>
 		<p class="sandbox-inputs__value">
-			ZAR value: <code>{{ currencyValue() ?? "(unchanged)" }}</code>
+			Value: <code>{{ currencyValue() ?? "(unchanged)" }}</code>
 		</p>
 	</app-sandbox-demo>
 
 	<app-sandbox-demo
 		title="Email, phone and select"
-		description="CustInputGeneral API. Email/phone emit inputChanged (500ms debounce) only while valid; select emits on selectionChange."
+		description="_CustInputGeneral API. Email/phone emit inputChanged (500ms debounce) only while valid; select emits on selectionChange."
 		[log]="generalLog.entries()">
 		<div class="sandbox-inputs__grid">
 			<app-input-email [inputObj]="emailEmpty" (inputChanged)="onGeneralChanged('email', $event)"></app-input-email>
@@ -113,8 +115,8 @@
 				<input matInput type="text" formControlName="nDigit" appNDigitDecimalNumber numberOfDecimals="3" />
 			</mat-form-field>
 			<mat-form-field appearance="fill">
-				<mat-label>appCurrencyInput (ZAR, 0 - 100000)</mat-label>
-				<input matInput type="text" formControlName="currencyInput" appCurrencyInput currencyCode="ZAR" [min]="0" [max]="100000" />
+				<mat-label>appCurrencyInput (app currency, 0 - 100000)</mat-label>
+				<input matInput type="text" formControlName="currencyInput" appCurrencyInput [min]="0" [max]="100000" />
 			</mat-form-field>
 			<mat-form-field appearance="fill">
 				<mat-label>appCurrencyMask</mat-label>
@@ -133,5 +135,30 @@
 				</li>
 			}
 		</ul>
+	</app-sandbox-demo>
+
+	<app-sandbox-demo
+		title="ID number validator"
+		description="idNumberValidator(country): pick a country and type an ID (spaces and hyphens are ignored; empty is valid). ZA is a full check (birth date, citizenship digit, Luhn); NA, BW, SZ and ZW are format checks; MZ and LS are lenient and unconfirmed. Try the published ZA test ID 8001015009087.">
+		<div class="sandbox-inputs__grid">
+			<mat-form-field appearance="fill">
+				<mat-label>Country</mat-label>
+				<select matNativeControl [value]="idCountry()" (change)="onIdCountryChange($event)">
+					@for (country of idCountries; track country.code) {
+						<option [value]="country.code">{{ country.name }}</option>
+					}
+				</select>
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>ID number</mat-label>
+				<input matInput type="text" [formControl]="idNumberControl" />
+				@if (idNumberControl.hasError("invalidIdNumber")) {
+					<mat-error>Not a valid {{ idCountry() }} ID number</mat-error>
+				}
+			</mat-form-field>
+		</div>
+		<p class="sandbox-inputs__value">
+			Validity: <code>{{ idNumberControl.valid ? "valid" : "invalid" }}</code>
+		</p>
 	</app-sandbox-demo>
 </app-sandbox-page>

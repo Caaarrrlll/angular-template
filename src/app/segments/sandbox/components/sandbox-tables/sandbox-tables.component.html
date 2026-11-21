@@ -1,9 +1,9 @@
 <app-sandbox-page
 	title="Tables"
-	description="table, card-table, expandable-grid, linq-grid-filters, plus a search table using the searchMatch, orderBy, sort and thousandSeparator pipes.">
+	description="table, card-table, expandable-grid, grid-filters, plus a search table using the searchMatch, orderBy, sort and thousandSeparator pipes.">
 	<app-sandbox-demo
 		title="Table"
-		description="Config-driven mat-table: one column per renderer type (textLink, titleText, spaceUpperCase, date, currency, odometer, boolean, yesNo, percentage, dictionary, listPopupHover, favouriteButton, buttonPrimary). Sorting, paging and the filter bar only emit; the page filters, sorts and slices the data and hands the table a new observable. Nothing is persisted: defaultSort + defaultSortDirection set the initial arrow. Every buttonActionOut action is logged."
+		description="Config-driven mat-table: one column per renderer type (textLink, titleText, spaceUpperCase, date, currency, distance, boolean, yesNo, percentage, dictionary, listPopupHover, favouriteButton, buttonPrimary). Sorting, paging and the filter bar only emit; the page filters, sorts and slices the data and hands the table a new observable. Nothing is persisted: defaultSort + defaultSortDirection set the initial arrow. Every buttonActionOut action is logged."
 		[log]="tableLog.entries()">
 		<div class="sandbox-tables__toolbar" role="group" aria-label="Table data state">
 			<span class="sandbox-tables__label">listObservable:</span>
@@ -56,13 +56,13 @@
 			customButtonIcon="download"
 			[showUpperToggle]="true"
 			[upperToggle]="cardUpperToggle()"
-			defaultSort="createdDate"
+			defaultSort="createdOn"
 			(buttonActionOut)="onCardAction($event)">
 		</app-card-table>
 	</app-sandbox-demo>
 
 	<app-sandbox-demo
-		title="LinQ grid filters"
+		title="Grid filters"
 		description="The filter bar on its own with one item of every config.type (text, number, boolean, date, dateRange, select; Region starts pre-selected). Toggle the optional buttons below; every output is logged and the resulting filter conditions are shown."
 		[log]="filtersLog.entries()">
 		<div class="sandbox-tables__toolbar" role="group" aria-label="Filter bar options">
@@ -73,7 +73,7 @@
 			<button mat-stroked-button type="button" [attr.aria-pressed]="selectableColumns()" (click)="toggle(selectableColumns)">selectableColumns: {{ selectableColumns() }}</button>
 			<button mat-stroked-button type="button" [attr.aria-pressed]="filtersExporting()" (click)="toggle(filtersExporting)">exporting: {{ filtersExporting() }}</button>
 		</div>
-		<app-linq-grid-filters
+		<app-grid-filters
 			[gridFilters]="showcaseFilters"
 			[showSortButton]="showSortButton()"
 			[showAddButton]="showAddButton()"
@@ -94,7 +94,7 @@
 			(customButtonClicked)="logFilters('customButtonClicked')"
 			(upperToggleChanged)="onUpperToggleChanged($event)"
 			(displayedColumnsChanged)="onDisplayedColumnsChanged($event)">
-		</app-linq-grid-filters>
+		</app-grid-filters>
 		<div class="sandbox-tables__conditions">
 			<span class="sandbox-tables__label">Active conditions (what a backend query would receive):</span>
 			<pre>{{ activeConditions() | json }}</pre>
@@ -118,10 +118,10 @@
 
 	<app-sandbox-demo
 		title="Search table (pipes)"
-		description="Plain HTML table over fixed, trusted mock data: searchMatch highlights the term (matched literally, text HTML-escaped - see the untrusted sample line), orderBy sorts with a comparator (click a header), thousandSeparator groups price and mileage, and sort lists the matching makes A-Z.">
+		description="Plain HTML table over fixed, trusted mock data: searchMatch highlights the term (matched literally, text HTML-escaped - see the untrusted sample line), orderBy sorts with a comparator (click a header), thousandSeparator groups price and delivery distance, and sort lists the matching categories A-Z.">
 		<label class="sandbox-tables__search">
-			<span>Search reference, make or model</span>
-			<input type="search" [value]="searchTerm()" (input)="onSearchInput($event)" placeholder="e.g. toyota, VH-100, cross" />
+			<span>Search product code, name or category</span>
+			<input type="search" [value]="searchTerm()" (input)="onSearchInput($event)" placeholder="e.g. desk, PR-100, chair" />
 		</label>
 		<p class="sandbox-tables__untrusted">Untrusted sample (AUD-28 regression): <span [innerHTML]="searchUnsafeSample | searchMatch: searchPattern()"></span></p>
 
@@ -142,17 +142,17 @@
 					</tr>
 				</thead>
 				<tbody>
-					@for (row of searchRows() | orderBy: searchComparator(); track row.reference) {
+					@for (row of searchRows() | orderBy: searchComparator(); track row.productCode) {
 						<tr>
-							<td [innerHTML]="row.reference | searchMatch: searchPattern()"></td>
-							<td [innerHTML]="row.make | searchMatch: searchPattern()"></td>
-							<td [innerHTML]="row.model | searchMatch: searchPattern()"></td>
+							<td [innerHTML]="row.productCode | searchMatch: searchPattern()"></td>
+							<td [innerHTML]="row.category | searchMatch: searchPattern()"></td>
+							<td [innerHTML]="row.name | searchMatch: searchPattern()"></td>
 							<td class="sandbox-tables__number">{{ row.price | thousandSeparator }}</td>
-							<td class="sandbox-tables__number">{{ row.mileage | thousandSeparator }}</td>
+							<td class="sandbox-tables__number">{{ row.deliveryDistance | thousandSeparator }}</td>
 						</tr>
 					} @empty {
 						<tr>
-							<td [attr.colspan]="searchFields.length">No vehicles match "{{ searchTerm() }}".</td>
+							<td [attr.colspan]="searchFields.length">No products match "{{ searchTerm() }}".</td>
 						</tr>
 					}
 				</tbody>
@@ -160,9 +160,9 @@
 		</div>
 
 		<p class="sandbox-tables__makes">
-			<span class="sandbox-tables__label">Matching makes (sort: 'make'):</span>
-			@for (vehicle of searchMakes() | sort: "make"; track vehicle["reference"]) {
-				<span class="sandbox-tables__chip">{{ vehicle["make"] }}</span>
+			<span class="sandbox-tables__label">Matching categories (sort: 'category'):</span>
+			@for (product of searchCategories() | sort: "category"; track product["productCode"]) {
+				<span class="sandbox-tables__chip">{{ product["category"] }}</span>
 			}
 		</p>
 	</app-sandbox-demo>

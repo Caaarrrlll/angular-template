@@ -1,19 +1,19 @@
-export interface ButtonToggleOption {
+export interface _ButtonToggleOption {
 	display: string;
 	value: string;
 }
 
-export interface ButtonToggleInput {
+export interface _ButtonToggleInput {
 	label?: string;
 	value?: string | string[];
 	valueList?: string[];
-	inputList?: ButtonToggleOption[];
-	data?: ButtonToggleOption[];
+	inputList?: _ButtonToggleOption[];
+	data?: _ButtonToggleOption[];
 	isReadOnly?: boolean;
 	multiSelect?: boolean;
 }
 
-export interface ButtonToggleResponse {
+export interface _ButtonToggleResponse {
 	value: string | string[];
 	error: boolean;
 	errorDescription: string;

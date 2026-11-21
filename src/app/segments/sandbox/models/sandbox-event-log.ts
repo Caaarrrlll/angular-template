@@ -1,7 +1,7 @@
 import { Signal, signal, WritableSignal } from "@angular/core";
 
 /** Small in-memory output log used by sandbox demos to make control outputs visible. */
-export class SandboxEventLog {
+export class _SandboxEventLog {
 	private readonly _entries: WritableSignal<string[]> = signal<string[]>([]);
 
 	public readonly entries: Signal<string[]> = this._entries.asReadonly();

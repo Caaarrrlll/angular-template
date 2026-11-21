@@ -12,7 +12,7 @@
 
 	<app-sandbox-demo title="Currency" description="amount, currencyCode and digitsInfo inputs; the raw amount is shown through the thousandSeparator pipe for comparison.">
 		<dl class="sandbox-small__list">
-			<dt>Defaults (ZAR, 1.0-0)</dt>
+			<dt>Defaults (app currency, 1.0-0)</dt>
 			<dd>
 				<app-currency [amount]="defaultCurrencyAmount"></app-currency>
 				<small>raw: {{ defaultCurrencyAmount | thousandSeparator }}</small>

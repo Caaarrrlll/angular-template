@@ -1,11 +1,11 @@
 import { getCurrencySymbol } from "@angular/common";
-import { ChangeDetectionStrategy, Component, LOCALE_ID, OnInit, inject, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DEFAULT_CURRENCY_CODE, LOCALE_ID, OnInit, inject, input, output } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
-import { CustButtonInputType, CustInputAdvance } from "@shared/models/cust-basic-controls";
+import { _CustButtonInputType, _CustInputAdvance } from "@shared/models/cust-basic-controls";
 
 @Component({
 	selector: "app-input-currency",
@@ -18,9 +18,9 @@ export class InputCurrencyComponent implements OnInit {
 	public readonly label = input.required<string>();
 	public readonly isReadOnly = input<boolean>(false);
 	public readonly placeholder = input<string>("");
-	public readonly inputControl = input.required<CustInputAdvance>();
-	public readonly action = input<CustButtonInputType | undefined>();
-	public readonly currencyCode = input<string>("ZAR");
+	public readonly inputControl = input.required<_CustInputAdvance>();
+	public readonly action = input<_CustButtonInputType | undefined>();
+	public readonly currencyCode = input<string>(inject(DEFAULT_CURRENCY_CODE));
 	public readonly actionOut = output<{ action: string; parameters?: string[] }>();
 
 	private readonly localeId: string = inject(LOCALE_ID);

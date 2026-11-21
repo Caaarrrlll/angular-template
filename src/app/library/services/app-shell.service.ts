@@ -1,11 +1,11 @@
 import { Service } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
-export type MenuBehaviour = "over" | "side";
+export type _MenuBehaviour = "over" | "side";
 
 @Service()
 export class AppShellService {
-	private readonly _menuBehaviour = new BehaviorSubject<MenuBehaviour>("over");
+	private readonly _menuBehaviour = new BehaviorSubject<_MenuBehaviour>("over");
 
 	readonly menuBehaviour$ = this._menuBehaviour.asObservable();
 
@@ -13,7 +13,7 @@ export class AppShellService {
 		this._menuBehaviour.next(this._menuBehaviour.value === "over" ? "side" : "over");
 	}
 
-	getMenuBehaviour(): MenuBehaviour {
+	getMenuBehaviour(): _MenuBehaviour {
 		return this._menuBehaviour.value;
 	}
 }

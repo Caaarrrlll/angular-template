@@ -1,7 +1,7 @@
-export type DialogWindowControlType =
+export type _DialogWindowControlType =
 	"Image" | "Slider" | "BtnGroup" | "DropDown" | "TextArea" | "Input" | "CurrencyShortHand" | "MultiSelect" | "SingleDate" | "DateTime" | "Checkbox" | "radio" | "approval";
 
-export type DialogWindowValidator = "phone" | "email" | "nospace";
+export type _DialogWindowValidator = "phone" | "email" | "nospace";
 
 export interface _DialogWindowOption {
 	display?: string;
@@ -13,7 +13,7 @@ export interface _DialogWindowOption {
 }
 
 export interface _DialogWindowControl {
-	type: DialogWindowControlType;
+	type: _DialogWindowControlType;
 	formName: string;
 	value?: unknown;
 	label?: string;
@@ -21,7 +21,7 @@ export interface _DialogWindowControl {
 	instructionText?: string;
 	imgUrl?: string;
 	required?: boolean;
-	validators?: DialogWindowValidator;
+	validators?: _DialogWindowValidator;
 	validationDep?: string;
 	disabled?: boolean;
 	valueType?: string;
@@ -33,7 +33,7 @@ export interface _DialogWindowControl {
 	data?: _DialogWindowOption[];
 }
 
-export class DialogSetup {
+export class _DialogSetup {
 	public controls?: _DialogWindowControl[];
 	public instructionText?: string;
 	public additionalText?: string;

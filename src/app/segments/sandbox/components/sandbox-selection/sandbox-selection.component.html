@@ -110,16 +110,16 @@
 				<app-range-slider (valueChange)="onSliderChange('default', $event)"></app-range-slider>
 			</div>
 			<div>
-				<h3>Price (prefix R, displayWith)</h3>
+				<h3>Price (currency prefix, displayWith)</h3>
 				<app-range-slider
-					unit="R"
+					[unit]="currencySymbol"
 					[prefix]="true"
 					[min]="0"
 					[max]="5000"
 					[step]="100"
 					[minValue]="500"
 					[maxValue]="3000"
-					[displayWith]="formatRand"
+					[displayWith]="formatPrice"
 					(valueChange)="onSliderChange('price', $event)"></app-range-slider>
 			</div>
 			<div>

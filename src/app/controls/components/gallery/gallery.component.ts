@@ -5,7 +5,7 @@ import { Subject, debounceTime } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { GalleryPreviewComponent } from "@shared/components/gallery-preview/gallery-preview.component";
 import { ZoomDirective } from "@shared/directives/zoom.directive";
-import { Image } from "./gallery.models";
+import { _Image } from "./gallery.models";
 
 // Inline placeholder so the control does not depend on a file in src/assets (empty by design in the template).
 // The SVG avoids quotes and parentheses so the URL is also safe inside the zoom box's CSS `url(...)`.
@@ -24,7 +24,7 @@ const imageNotFoundUrl = `data:image/svg+xml,${encodeURIComponent(imageNotFoundS
 	},
 })
 export class GalleryComponent implements OnChanges, OnInit {
-	@Input() public images?: Image[];
+	@Input() public images?: _Image[];
 
 	// ------- optional defaults that don't often need to be changed ------ //
 	@Input() public autoplay = true;
@@ -54,7 +54,7 @@ export class GalleryComponent implements OnChanges, OnInit {
 	public autoplayGo = false;
 	public fullscreenOpen = false;
 
-	public get currentImage(): Image | undefined {
+	public get currentImage(): _Image | undefined {
 		return this.images?.[this.currentIndex];
 	}
 

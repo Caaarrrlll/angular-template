@@ -4,7 +4,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSliderModule } from "@angular/material/slider";
 
-interface RangeSliderValues {
+interface _RangeSliderValues {
 	minValue: number;
 	maxValue: number;
 }
@@ -30,9 +30,9 @@ export class RangeSliderComponent implements OnInit {
 	@Input() public displayWith: (value: number) => string = (value: number): string => String(value);
 	@Input() public prefix?: boolean;
 	@Input() public suffix?: boolean;
-	@Output() public valueChange: EventEmitter<RangeSliderValues> = new EventEmitter<RangeSliderValues>();
+	@Output() public valueChange: EventEmitter<_RangeSliderValues> = new EventEmitter<_RangeSliderValues>();
 
-	public values: RangeSliderValues = { minValue: 0, maxValue: 100 };
+	public values: _RangeSliderValues = { minValue: 0, maxValue: 100 };
 
 	// Built here, not in a field initialiser: inputs are not set yet when the class is constructed (AUD-11).
 	public ngOnInit(): void {

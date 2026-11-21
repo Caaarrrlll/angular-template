@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
-import { CustChipInput, CustChipReturn, CustInputReturn } from "@shared/models/cust-basic-controls";
+import { _CustChipInput, _CustChipReturn, _CustInputReturn } from "@shared/models/cust-basic-controls";
 
 @Component({
 	selector: "app-chips",
@@ -11,20 +11,20 @@ import { CustChipInput, CustChipReturn, CustInputReturn } from "@shared/models/c
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsComponent {
-	public readonly input = input.required<CustChipInput[]>();
-	public readonly inputChanged = output<CustChipReturn | CustInputReturn>();
+	public readonly input = input.required<_CustChipInput[]>();
+	public readonly inputChanged = output<_CustChipReturn | _CustInputReturn>();
 
 	private chipClear = false;
 
-	public mouseOver(item: CustChipInput): void {
+	public mouseOver(item: _CustChipInput): void {
 		item.mouseOver = true;
 	}
 
-	public mouseLeave(item: CustChipInput): void {
+	public mouseLeave(item: _CustChipInput): void {
 		item.mouseOver = false;
 	}
 
-	public chipAction(item: CustChipInput, event: Event): void {
+	public chipAction(item: _CustChipInput, event: Event): void {
 		if (item.disabled) {
 			return;
 		}
@@ -42,7 +42,7 @@ export class ChipsComponent {
 		});
 	}
 
-	public chipClearAction(item: CustChipInput): void {
+	public chipClearAction(item: _CustChipInput): void {
 		this.chipClear = true;
 		this.inputChanged.emit({
 			value: item.value,

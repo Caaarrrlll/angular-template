@@ -1,4 +1,4 @@
-export interface RangeCheckboxValue {
+export interface _RangeCheckboxValue {
 	min: number;
 	max: number;
 }

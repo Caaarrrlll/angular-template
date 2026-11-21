@@ -2,22 +2,22 @@
 
 This file documents the shared services in `src/app/library/services`. Review it before creating a new service, and update it whenever a service is added, changed, or removed.
 
-> `GridStorageService` (sessionStorage cache for grid filters and the LinQ request state) and the `LinQRequestState`/`LinQSort` model were removed on 2026-11-18 (AUD-25): the custom LinQ backend they served is not part of the template, and the grid controls no longer persist anything. A fork that wants filters or paging to survive a reload stores the filter-bar outputs / `_CUSTPage` itself.
+> `GridStorageService` (sessionStorage cache for grid filters and the LinQ request state) and the `LinQRequestState`/`LinQSort` model were removed on 2026-11-18 (AUD-25): the custom LinQ backend they served is not part of the template, and the grid controls no longer persist anything. A fork that wants filters or paging to survive a reload stores the filter-bar outputs / `_CustPage` itself.
 
 ## Service Index
 
-| Service                           | File                                    | Provided by  | Summary                                                                                                            |
-| --------------------------------- | --------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------ |
-| `LoggerService`                   | `logger.service.ts`                     | `@Service()` | Central logging service; suppresses output in production.                                                          |
-| `SnackbarService`                 | `snackbar.service.ts`                   | `@Service()` | Material snackbar wrapper for user-facing notifications.                                                           |
-| `AppShellService`                 | `app-shell.service.ts`                  | `@Service()` | Global side-nav menu behaviour state (`over` / `side`).                                                            |
-| `B64ToBlobService`                | `b64-to-blob.service.ts`                | `@Service()` | Converts base64 strings to `Blob` objects.                                                                         |
-| `CustomPreloadingStrategyService` | `custom-preloading-strategy.service.ts` | `@Service()` | Router `PreloadingStrategy`; preloads routes with `data.preload`.                                                  |
-| `DateTimeOpsService`              | `date-time-ops.service.ts`              | `@Service()` | Relative time strings, date period helpers (`startOf`/`endOf`/`add`/`subtract`), and `en-ZA` date/time formatting. |
-| `ErrorHandlingService`            | `error-handling.service.ts`             | `@Service()` | App-wide `ErrorHandler`; surfaces errors via snackbar and logs non-production errors.                              |
-| `LoginService`                    | `login.service.ts`                      | `@Service()` | Current-user state and JWT decoding/claims helpers (no authentication flows).                                      |
-| `OpenPageService`                 | `open-page.service.ts`                  | `@Service()` | Routes to a URL in-app or in a new tab based on a persisted user preference.                                       |
-| `SearchRetainService`             | `search-retain.service.ts`              | `@Service()` | Global search-term state retained across grids.                                                                    |
+| Service                           | File                                    | Provided by  | Summary                                                                                                                                    |
+| --------------------------------- | --------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `LoggerService`                   | `logger.service.ts`                     | `@Service()` | Central logging service; suppresses output in production.                                                                                  |
+| `SnackbarService`                 | `snackbar.service.ts`                   | `@Service()` | Material snackbar wrapper for user-facing notifications.                                                                                   |
+| `AppShellService`                 | `app-shell.service.ts`                  | `@Service()` | Global side-nav menu behaviour state (`over` / `side`).                                                                                    |
+| `B64ToBlobService`                | `b64-to-blob.service.ts`                | `@Service()` | Converts base64 strings to `Blob` objects.                                                                                                 |
+| `CustomPreloadingStrategyService` | `custom-preloading-strategy.service.ts` | `@Service()` | Router `PreloadingStrategy`; preloads routes with `data.preload`.                                                                          |
+| `DateTimeOpsService`              | `date-time-ops.service.ts`              | `@Service()` | Relative time strings, date period helpers (`startOf`/`endOf`/`add`/`subtract`), and date/time formatting in the app locale (`LOCALE_ID`). |
+| `ErrorHandlingService`            | `error-handling.service.ts`             | `@Service()` | App-wide `ErrorHandler`; surfaces errors via snackbar and logs non-production errors.                                                      |
+| `LoginService`                    | `login.service.ts`                      | `@Service()` | Current-user state and JWT decoding/claims helpers (no authentication flows).                                                              |
+| `OpenPageService`                 | `open-page.service.ts`                  | `@Service()` | Routes to a URL in-app or in a new tab based on a persisted user preference.                                                               |
+| `SearchRetainService`             | `search-retain.service.ts`              | `@Service()` | Global search-term state retained across grids.                                                                                            |
 
 ## AppShellService
 
@@ -40,7 +40,7 @@ This file documents the shared services in `src/app/library/services`. Review it
 ## DateTimeOpsService
 
 - **Purpose:** Date/time helpers shared by pipes and controls (e.g. the `timeElapsed` pipe, range date picker).
-- **Types:** `DateTimePeriod` = `"year" | "month" | "week" | "day" | "hour" | "minute" | "second"` (exported from the service file).
+- **Types:** `_DateTimePeriod` = `"year" | "month" | "week" | "day" | "hour" | "minute" | "second"` (exported from the service file).
 - **Public API:**
 
 | Method               | Signature                                                                                                               | Output                                                                               |
@@ -48,16 +48,16 @@ This file documents the shared services in `src/app/library/services`. Review it
 | `getRelativeTime`    | `getRelativeTime(date: Date): string`                                                                                   | `"5 minutes ago"`, `"3 months 2d ago"`, `"1 yr 2 mo ago"`.                           |
 | `timeTillNow`        | `timeTillNow(prefix: boolean, date: Date): string`                                                                      | Same units; `"in "` prefix when `prefix` is `true`.                                  |
 | `getMonthDifference` | `getMonthDifference(startDate: Date, endDate: Date): { months: number; days: number }`                                  | Whole months plus leftover days.                                                     |
-| `startOf`            | `startOf(timePeriod: DateTimePeriod, date?: Date): Date`                                                                | Copy of `date` truncated to the start of the period (defaults to now).               |
-| `endOf`              | `endOf(timePeriod: DateTimePeriod, date?: Date): Date`                                                                  | Copy of `date` truncated to the end of the period (defaults to now).                 |
+| `startOf`            | `startOf(timePeriod: _DateTimePeriod, date?: Date): Date`                                                               | Copy of `date` truncated to the start of the period (defaults to now).               |
+| `endOf`              | `endOf(timePeriod: _DateTimePeriod, date?: Date): Date`                                                                 | Copy of `date` truncated to the end of the period (defaults to now).                 |
 | `formatISO`          | `formatISO(date: Date, format: "YYYY-MM-ddTHH:mm:ss" \| "YYYY-MM-ddTHH:mm:ss[Z]" \| "YYYY-MM-ddTHH:mm:ssZ[Z]"): string` | ISO strings with seconds precision; the `Z[Z]` variant appends the local UTC offset. |
-| `subtract`           | `subtract(date: Date, amount: number, timePeriod: DateTimePeriod): Date`                                                | New date shifted back.                                                               |
-| `add`                | `add(date: Date, amount: number, timePeriod: DateTimePeriod): Date`                                                     | New date shifted forward.                                                            |
-| `dateFormat`         | `dateFormat(date: Date): string`                                                                                        | `en-ZA` `dd/MM/yyyy`.                                                                |
-| `timeFormat`         | `timeFormat(date: Date): string`                                                                                        | `en-ZA` `HH:mm`.                                                                     |
-| `dateTimeFormat`     | `dateTimeFormat(date: Date): string`                                                                                    | `en-ZA` `dd/MM/yyyy, HH:mm`.                                                         |
+| `subtract`           | `subtract(date: Date, amount: number, timePeriod: _DateTimePeriod): Date`                                               | New date shifted back.                                                               |
+| `add`                | `add(date: Date, amount: number, timePeriod: _DateTimePeriod): Date`                                                    | New date shifted forward.                                                            |
+| `dateFormat`         | `dateFormat(date: Date): string`                                                                                        | Numeric date in the app locale (`LOCALE_ID`).                                        |
+| `timeFormat`         | `timeFormat(date: Date): string`                                                                                        | Hours and minutes in the app locale.                                                 |
+| `dateTimeFormat`     | `dateTimeFormat(date: Date): string`                                                                                    | Numeric date and time in the app locale.                                             |
 
-- **Porting note:** the legacy service injected `DatePipe`; the ported service uses `formatDate` with the injected `LOCALE_ID` instead. Time-period parameters are now the `DateTimePeriod` union type instead of raw strings.
+- **Notes:** formatting follows the injected `LOCALE_ID` (it was hard-coded to `en-ZA` until 2026-11-20); time-period parameters use the `_DateTimePeriod` union type.
 
 ## ErrorHandlingService
 
@@ -90,8 +90,6 @@ This file documents the shared services in `src/app/library/services`. Review it
 | `userHasClaim`           | `userHasClaim(searchForClaim: string): boolean`            | Whether the claim key is present.                                                                          |
 | `userHasRequiredClaims`  | `userHasRequiredClaims(requiredClaims: string[]): boolean` | Whether **any** required claim key is present.                                                             |
 
-- **Porting note:** the legacy service's `login`/`refreshToken`/Identity Server request builders, `NotificationService` hub calls, and the `jwt-decode` package were all removed per developer decision (2026-11-11).
-
 ## OpenPageService
 
 - **Purpose:** Opens URLs in-app or in a new tab according to the `operations_open_in_new_tab` `localStorage` preference, re-read on every call.
@@ -102,11 +100,9 @@ This file documents the shared services in `src/app/library/services`. Review it
 | `openInNewTab` | `openInNewTab(): boolean`                                    | Current preference (`false` when unset).                         |
 | `openPage`     | `openPage(url: string, queryParam?: NavigationExtras): void` | `window.open(url, "_blank", "noreferrer")` or `router.navigate`. |
 
-- **Porting note:** the legacy `goTo*` methods (stock/lead/concern routes) were app-specific and dropped per the template's seam-stripping approach; renamed from `openPageService` to `OpenPageService`.
-
 ## SearchRetainService
 
-- **Purpose:** Retains a global search term (e.g. shared across grids); legacy consumers keep the same observable contract.
+- **Purpose:** Retains a global search term (e.g. shared across grids).
 - **Public API:**
   - `getSearchData` — `Observable<string>`, current search term (defaults to `""`).
   - `changeValue(searchValue: string): void` — pushes a new search term.
@@ -149,15 +145,12 @@ This file documents the shared services in `src/app/library/services`. Review it
 - **States:** `info`, `success`, `warning`, `error`. Each state maps to a `snackbar-<state>` panel class styled globally in `src/styles.scss`.
 - **Public API:**
 
-| Method    | Signature                                                                                                    | Notes                                                                                                                                       |
-| --------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `open`    | `open(message?: string, state?: SnackbarState, duration?: number): MatSnackBarRef<TextOnlySnackBar> \| null` | Defaults to an empty message, `error` state, and `5555`ms. Shows a `Close` action. Returns `null` when the same message is already visible. |
-| `dismiss` | `dismiss(): void`                                                                                            | Dismisses the currently visible snackbar.                                                                                                   |
+| Method    | Signature                                                                                                     | Notes                                                                                                                                       |
+| --------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `open`    | `open(message?: string, state?: _SnackbarState, duration?: number): MatSnackBarRef<TextOnlySnackBar> \| null` | Defaults to an empty message, `error` state, and `5555`ms. Shows a `Close` action. Returns `null` when the same message is already visible. |
+| `dismiss` | `dismiss(): void`                                                                                             | Dismisses the currently visible snackbar.                                                                                                   |
 
-- **Parity with the legacy service:** consecutive duplicate messages are suppressed. The following legacy behaviours are intentionally not carried over:
-  - Stacked notifications and the Kendo "Close All" button; Material shows a single snackbar at a time.
-  - The `errorList` / `errorListGet` / `errorListCntGet` buffer and `dev_show_error` claim gating; these depended on the unported `LoginService` and were not used by the template.
-  - The Kendo slide animation; Material provides its own open/close animation.
+- **Behaviour:** one snackbar at a time (Material); a message identical to the one already showing is not shown again.
 
 - **Example:**
 
@@ -169,12 +162,6 @@ This file documents the shared services in `src/app/library/services`. Review it
 
   this.snackbar.open("Saved successfully", "success");
   ```
-
-### Legacy snackbar service
-
-The old Kendo-based `SnackbarService` in `src/app/controls-to-port/services/snackbar.service.ts` was replaced by the Material service above. All of its `controls-to-port` consumers have been migrated (carousel and dynamic window now use the Material `SnackbarService`) and the legacy file was removed on 2026-11-13.
-
-The ported `copy-text` directive (`src/app/library/directives/copy-text.directive.ts`) and `dynamic-material-dialog` component (`src/app/controls/components/dynamic-material-dialog/dynamic-material-dialog.component.ts`) already use the new Material `SnackbarService`.
 
 ## Sandbox mock services
 

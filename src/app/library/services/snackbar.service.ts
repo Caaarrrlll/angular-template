@@ -2,7 +2,7 @@ import { DestroyRef, Service, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef, TextOnlySnackBar } from "@angular/material/snack-bar";
 
-export type SnackbarState = "info" | "success" | "warning" | "error";
+export type _SnackbarState = "info" | "success" | "warning" | "error";
 
 @Service()
 export class SnackbarService {
@@ -10,7 +10,7 @@ export class SnackbarService {
 	private readonly destroyRef: DestroyRef = inject(DestroyRef);
 	private previousMessage: string | null = null;
 
-	open(message = "", state: SnackbarState = "error", duration = 5555): MatSnackBarRef<TextOnlySnackBar> | null {
+	open(message = "", state: _SnackbarState = "error", duration = 5555): MatSnackBarRef<TextOnlySnackBar> | null {
 		if (this.previousMessage === message) {
 			return null;
 		}

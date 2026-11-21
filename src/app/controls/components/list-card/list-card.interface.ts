@@ -13,7 +13,7 @@ export interface _CardCol {
 	iconName?: string;
 	iconTooltip?: string;
 	iconColour?: string;
-	leadEscalated?: boolean;
+	escalated?: boolean;
 	buttonType?: string;
 	taskName?: string;
 	loading?: boolean;

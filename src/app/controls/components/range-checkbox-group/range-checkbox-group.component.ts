@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, signal, WritableSignal } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { RangeCheckboxValue } from "@shared/components/range-checkbox-group/range-checkbox-group.interface";
+import { _RangeCheckboxValue } from "@shared/components/range-checkbox-group/range-checkbox-group.interface";
 
 @Component({
 	selector: "app-range-checkbox-group",
@@ -19,12 +19,12 @@ export class RangeCheckboxGroupComponent implements ControlValueAccessor {
 	@Input() public multi = false;
 
 	// Signal so the projected OnPush checkboxes re-render on writeValue/toggle (they read it via isSelected()).
-	public readonly value: WritableSignal<RangeCheckboxValue[]> = signal<RangeCheckboxValue[]>([]);
+	public readonly value: WritableSignal<_RangeCheckboxValue[]> = signal<_RangeCheckboxValue[]>([]);
 
-	private onChange: (value: RangeCheckboxValue[]) => void = () => undefined;
+	private onChange: (value: _RangeCheckboxValue[]) => void = () => undefined;
 	private onTouch: () => void = () => undefined;
 
-	public registerOnChange(fn: (value: RangeCheckboxValue[]) => void): void {
+	public registerOnChange(fn: (value: _RangeCheckboxValue[]) => void): void {
 		this.onChange = fn;
 	}
 
@@ -32,11 +32,11 @@ export class RangeCheckboxGroupComponent implements ControlValueAccessor {
 		this.onTouch = fn;
 	}
 
-	public writeValue(value: RangeCheckboxValue[] | null): void {
+	public writeValue(value: _RangeCheckboxValue[] | null): void {
 		this.value.set(value ?? []);
 	}
 
-	public toggleValue(selectedValue: RangeCheckboxValue): void {
+	public toggleValue(selectedValue: _RangeCheckboxValue): void {
 		if (this.multi) {
 			const current = this.value();
 			const isSelected = current.some((item) => item.min === selectedValue.min);
@@ -49,7 +49,7 @@ export class RangeCheckboxGroupComponent implements ControlValueAccessor {
 		this.onTouch();
 	}
 
-	public isSelected(valueToCheck: RangeCheckboxValue): boolean {
+	public isSelected(valueToCheck: _RangeCheckboxValue): boolean {
 		return this.value().some((item) => item.min === valueToCheck.min);
 	}
 }

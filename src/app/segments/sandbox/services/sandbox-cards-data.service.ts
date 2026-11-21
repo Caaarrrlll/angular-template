@@ -18,7 +18,10 @@ export interface _SandboxContact {
 	lastActive: string;
 }
 
-/** Deterministic mock data and configs for the cards sandbox page. */
+/**
+ * Deterministic mock data and configs for the cards sandbox page.
+ * All data here is invented for the demos (names, email addresses on example.com, lead/product codes, branches, amounts); none comes from real records.
+ */
 @Service()
 export class SandboxCardsDataService {
 	public readonly contacts: _SandboxContact[] = [
@@ -121,11 +124,12 @@ export class SandboxCardsDataService {
 	// ---- list-card ----
 
 	public readonly leadData: Record<string, unknown> = {
-		reference: `LD-2041`,
+		leadCode: `LD-2041`,
+		type: `sale`,
 		customerName: `Sipho Dlamini`,
-		status: `New Lead`,
+		status: `New`,
 		createdOn: `2026-01-15T09:30:00`,
-		vehicle: { make: `Toyota`, model: `Corolla Cross` },
+		product: { productCode: `PR-1006`, name: `Standing Desk` },
 		branch: `Pretoria East`,
 		amount: `389900`,
 		assignedTo: `Lerato Khumalo`,
@@ -133,14 +137,15 @@ export class SandboxCardsDataService {
 	};
 
 	public readonly leadHeader: _CustCardHeaderTableInterface[] = [
-		{ display: ``, field: `reference`, type: _HeaderTypes.display, textColor: `` },
-		{ display: ``, field: `vehicle`, fieldSub: `make`, textPre: `customerName`, textColor: `` },
+		{ display: ``, field: `leadCode`, type: _HeaderTypes.display, textColor: `` },
+		{ display: ``, field: `product`, fieldSub: `name`, textPre: `customerName`, textColor: `` },
 		{ display: ``, field: `status`, type: _HeaderTypes.status, postText: `createdOn`, postLabel: `Created`, alignment: _HeaderAlignment.end, textColor: `` },
 	];
 
 	public readonly leadTable: _CustCardTableInterface[] = [
 		{ display: `Customer`, field: `customerName`, type: _TableTypes.Text, column: 1 },
-		{ display: `Model`, field: `vehicle`, fieldSub: `model`, type: _TableTypes.Text, column: 1 },
+		{ display: `Type`, field: `type`, type: _TableTypes.Text, column: 1 },
+		{ display: `Product`, field: `product`, fieldSub: `productCode`, type: _TableTypes.Text, column: 1 },
 		{ display: `Branch`, field: `branch`, type: _TableTypes.store, column: 1 },
 		{ display: `Amount`, field: `amount`, type: _TableTypes.money, column: 2 },
 		{ display: `Created`, field: `createdOn`, type: _TableTypes.DateTime, column: 2 },

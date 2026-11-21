@@ -4,14 +4,14 @@ import { inject, Pipe, PipeTransform } from "@angular/core";
 /** A collection grouped by formatted date. */
 export interface _GroupedDate {
 	date: string;
-	leadHistory: unknown[];
+	items: unknown[];
 }
 
 /**
  * Groups a collection of items by their `entryDate` property.
  *
  * @example
- *      {{ leadHistory | groupByDate }}
+ *      {{ history | groupByDate }}
  */
 @Pipe({
 	name: "groupByDate",
@@ -35,6 +35,6 @@ export class GroupByDatePipe implements PipeTransform {
 			return previous;
 		}, {});
 
-		return Object.keys(grouped).map((date) => ({ date: date, leadHistory: grouped[date] }));
+		return Object.keys(grouped).map((date) => ({ date: date, items: grouped[date] }));
 	}
 }

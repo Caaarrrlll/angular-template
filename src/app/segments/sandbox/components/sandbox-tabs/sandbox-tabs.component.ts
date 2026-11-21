@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, Signal, signal, viewChild, WritableSignal } from "@angular/core";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { TabGroupComponent } from "@shared/components/tab-group/tab-group.component";
 import { TabGroupContentDirective } from "@shared/components/tab-group/tab-group-content.directive";
-import { CustTabConfig } from "@shared/components/tab-group/tab-group.interface";
+import { _CustTabConfig } from "@shared/components/tab-group/tab-group.interface";
 import { TabComponent } from "@shared/components/tabs/tab/tab.component";
 import { TabBackButtonDirective } from "@shared/components/tabs/tab-back-button.directive";
 import { TabNextButtonDirective } from "@shared/components/tabs/tab-next-button.directive";
@@ -18,11 +18,11 @@ import { TabsComponent } from "@shared/components/tabs/tabs.component";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SandboxTabsComponent {
-	public readonly horizontalLog = new SandboxEventLog();
-	public readonly verticalLog = new SandboxEventLog();
-	public readonly wizardLog = new SandboxEventLog();
+	public readonly horizontalLog = new _SandboxEventLog();
+	public readonly verticalLog = new _SandboxEventLog();
+	public readonly wizardLog = new _SandboxEventLog();
 
-	public readonly horizontalTabs: CustTabConfig = {
+	public readonly horizontalTabs: _CustTabConfig = {
 		tabType: `horizontal`,
 		tab: [
 			{ tabName: `Overview`, index: 0, classSelect: `overview`, icon: `dashboard` },
@@ -35,7 +35,7 @@ export class SandboxTabsComponent {
 	public readonly completedSteps: WritableSignal<number> = signal<number>(0);
 	public readonly verticalActive: WritableSignal<number> = signal<number>(0);
 
-	public readonly verticalTabs: Signal<CustTabConfig> = computed((): CustTabConfig => ({
+	public readonly verticalTabs: Signal<_CustTabConfig> = computed((): _CustTabConfig => ({
 		tabType: `vertical`,
 		tab: [
 			{ tabName: `Applicant`, index: 0, classSelect: `applicant`, isProcess: true, canProgress: true },

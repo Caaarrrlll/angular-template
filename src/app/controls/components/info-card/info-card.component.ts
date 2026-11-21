@@ -14,9 +14,9 @@ import {
 	_DataProcessResponse,
 } from "@shared/components/card-table/cust-card-table.interface";
 import { _TableTypes } from "@shared/components/card-table/cust-table.enum";
-import { _HeaderAlignment, _HeaderTypes, _StatusChip } from "@shared/components/list-card/list-card.enum";
+import { DEFAULT_STATUS_CHIPS, _HeaderAlignment, _HeaderTypes, _StatusChip } from "@shared/components/list-card/list-card.enum";
 import { _CardCol, _CardRow } from "@shared/components/list-card/list-card.interface";
-import { CustButtonInput } from "@shared/models/cust-basic-controls";
+import { _CustButtonInput } from "@shared/models/cust-basic-controls";
 import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { ChipStatusComponent } from "@shared/components/chip-status/chip-status.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
@@ -46,6 +46,8 @@ export class InfoCardComponent implements OnChanges {
 	@Input() public claims: string[] = [];
 	@Input() public dateFormat = "yyyy/MM/dd";
 	@Input() public footerChips?: _CustFooterChips;
+	/** Status text → chip type for the `status` header; unknown statuses get `Default`. */
+	@Input() public statusChips: Readonly<Record<string, _StatusChip>> = DEFAULT_STATUS_CHIPS;
 
 	@Output() public buttonClick: EventEmitter<_InfoCardButtonClick> = new EventEmitter<_InfoCardButtonClick>();
 	@Output() public menuClickEvent: EventEmitter<string> = new EventEmitter<string>();
@@ -88,7 +90,7 @@ export class InfoCardComponent implements OnChanges {
 		return (detail.list ?? []) as _DisplayDetail[];
 	}
 
-	public tableButton(detail: _CardCol, width: string): CustButtonInput {
+	public tableButton(detail: _CardCol, width: string): _CustButtonInput {
 		return {
 			type: "",
 			icon: "",
@@ -102,7 +104,7 @@ export class InfoCardComponent implements OnChanges {
 		};
 	}
 
-	public headerButton(menu: _CustCardHeaderMenuInterface): CustButtonInput {
+	public headerButton(menu: _CustCardHeaderMenuInterface): _CustButtonInput {
 		return {
 			type: "icon",
 			icon: "edit",
@@ -388,18 +390,7 @@ export class InfoCardComponent implements OnChanges {
 	}
 
 	private setStatusChip(description: string): _StatusChip {
-		let colour = _StatusChip.Action;
-		if (description === "New Lead" || description === "Assigned") {
-			colour = _StatusChip.newSale;
-		} else if (description === "In Progress" || description === "Sale Process Started") {
-			colour = _StatusChip.Action;
-		} else if (description === "Lead Expired") {
-			colour = _StatusChip.Default;
-		} else if (description === "Lost Sale" || description === "Completed - No Sale") {
-			colour = _StatusChip.Negative;
-		}
-
-		return colour;
+		return this.statusChips[description] ?? _StatusChip.Default;
 	}
 
 	/** Per-instance menu state, so cards that share a menu `id` no longer toggle each other's menus. */

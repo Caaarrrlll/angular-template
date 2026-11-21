@@ -1,6 +1,6 @@
 @if (showFilterBar) {
 	<div class="table-filters">
-		<app-linq-grid-filters
+		<app-grid-filters
 			[gridFilters]="filters"
 			[showSortButton]="showSortButton"
 			[showAddButton]="showAddButton"
@@ -9,29 +9,29 @@
 			[customButtonIcon]="customButtonIcon"
 			[showUpperToggle]="showUpperToggle"
 			[upperToggle]="upperToggle"
-			(refreshClicked)="refreshLeads()"
+			(refreshClicked)="refresh()"
 			(clearButtonClicked)="filtersClear()"
 			(filterChanged)="updateFilter($event)"
 			(sortChanged)="updateSort($event)"
-			(addButtonClicked)="navigateToCreateLead()"
+			(addButtonClicked)="navigateToCreate()"
 			(filterRefresh)="filterRefresh($event)"
 			(customButtonClicked)="customButtonClicked()"
 			(upperToggleChanged)="upperToggleChange($event)">
-		</app-linq-grid-filters>
+		</app-grid-filters>
 	</div>
 }
 <div class="table-container">
-	@if (listObservable | apiResponse | async; as leads) {
+	@if (listObservable | apiResponse | async; as list) {
 		<div class="table-wrapper">
-			@if (!leads.loading) {
+			@if (!list.loading) {
 				<table
 					mat-table
-					[dataSource]="$any(leads.payload)"
+					[dataSource]="$any(list.payload)"
 					matSort
 					[matSortActive]="defaultSort"
 					[matSortDirection]="defaultSortDirection"
 					(matSortChange)="announceSortChange($event)">
-					<ng-container matColumnDef="lead">
+					<ng-container matColumnDef="item">
 						<th mat-header-cell *matHeaderCellDef class="sticky-header"></th>
 						<td mat-cell *matCellDef="let element">
 							<app-list-card
@@ -51,10 +51,10 @@
 					<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 				</table>
 			}
-			@if (leads.loading) {
+			@if (list.loading) {
 				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
 			}
-			@if (leads.error) {
+			@if (list.error) {
 				<p class="s-pl-20">Error retrieving data from the server</p>
 			}
 		</div>

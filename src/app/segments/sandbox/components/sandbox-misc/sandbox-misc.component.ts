@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } fr
 import { MatIconModule } from "@angular/material/icon";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { _SandboxAccordionItem, SandboxAccordionDataService } from "@segments/sandbox/services/sandbox-accordion-data.service";
 import { AccordionComponent } from "@shared/components/accordion/accordion.component";
 import { AccordionContentDirective } from "@shared/components/accordion/directives/accordion-content.directive";
@@ -39,15 +39,15 @@ export class SandboxMiscComponent {
 	private readonly accordionData = inject(SandboxAccordionDataService);
 
 	public readonly accordionItems: _SandboxAccordionItem[] = this.accordionData.items;
-	public readonly accordionLog = new SandboxEventLog();
+	public readonly accordionLog = new _SandboxEventLog();
 
 	/** Whether the Maps script is loaded; without it search-address stays a plain input, and the page shows how to enable suggestions. */
 	public readonly mapsAvailable: boolean = `google` in globalThis;
-	public readonly searchAddressLog = new SandboxEventLog();
+	public readonly searchAddressLog = new _SandboxEventLog();
 
 	public readonly copyAccountNumber: WritableSignal<string> = signal<string>(`62 0000 1234 5678`);
 
-	public readonly clickElsewhereLog = new SandboxEventLog();
+	public readonly clickElsewhereLog = new _SandboxEventLog();
 	public readonly insideClicks: WritableSignal<number> = signal<number>(0);
 
 	public readonly trustedFrameUrl: string = `data:text/html;charset=utf-8,${encodeURIComponent(TRUSTED_FRAME_HTML)}`;

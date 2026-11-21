@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-controls";
+import { _CustInputGeneral, _CustInputReturn } from "@shared/models/cust-basic-controls";
 
 @Component({
 	selector: "app-input-select",
@@ -12,8 +12,8 @@ import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-con
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputSelectComponent implements OnInit {
-	public readonly inputObj = input.required<CustInputGeneral>();
-	public readonly inputChanged = output<CustInputReturn>();
+	public readonly inputObj = input.required<_CustInputGeneral>();
+	public readonly inputChanged = output<_CustInputReturn>();
 
 	public inputControl: FormControl<unknown> = new FormControl<unknown>("");
 

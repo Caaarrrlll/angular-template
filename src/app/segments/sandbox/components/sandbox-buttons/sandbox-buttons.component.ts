@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, Signal, signal, WritableSignal } from "@angular/core";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { FabButtonComponent } from "@shared/components/button/fab-button/fab-button.component";
 import { ButtonToggleComponent } from "@shared/components/button-toggle/button-toggle.component";
-import { ButtonToggleInput, ButtonToggleResponse } from "@shared/components/button-toggle/button-toggle.interface";
-import { CustButtonIconSide, CustButtonInput, CustButtonType, CustInputReturn } from "@shared/models/cust-basic-controls";
+import { _ButtonToggleInput, _ButtonToggleResponse } from "@shared/components/button-toggle/button-toggle.interface";
+import { _CustButtonIconSide, _CustButtonInput, _CustButtonType, _CustInputReturn } from "@shared/models/cust-basic-controls";
 
 @Component({
 	selector: "app-sandbox-buttons",
@@ -16,34 +16,34 @@ import { CustButtonIconSide, CustButtonInput, CustButtonType, CustInputReturn } 
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SandboxButtonsComponent {
-	public readonly buttonLog = new SandboxEventLog();
-	public readonly toggleLog = new SandboxEventLog();
-	public readonly fabLog = new SandboxEventLog();
+	public readonly buttonLog = new _SandboxEventLog();
+	public readonly toggleLog = new _SandboxEventLog();
+	public readonly fabLog = new _SandboxEventLog();
 
 	public readonly loading: WritableSignal<boolean> = signal<boolean>(false);
 	public readonly disabled: WritableSignal<boolean> = signal<boolean>(false);
 	public readonly tableSize: WritableSignal<boolean> = signal<boolean>(false);
 
-	/** One button per CustButtonType variant, reacting to the state toggles above them. */
-	public readonly variantButtons: Signal<CustButtonInput[]> = computed((): CustButtonInput[] =>
-		Object.values(CustButtonType)
-			.filter((type: CustButtonType): boolean => type !== CustButtonType.icon)
-			.map((type: CustButtonType): CustButtonInput => ({
+	/** One button per `_CustButtonType` variant, reacting to the state toggles above them. */
+	public readonly variantButtons: Signal<_CustButtonInput[]> = computed((): _CustButtonInput[] =>
+		Object.values(_CustButtonType)
+			.filter((type: _CustButtonType): boolean => type !== _CustButtonType.icon)
+			.map((type: _CustButtonType): _CustButtonInput => ({
 				type: type,
 				display: type,
 				value: type,
 				tooltip: `${type} button`,
-				disabled: this.disabled() || type === CustButtonType.disabled,
+				disabled: this.disabled() || type === _CustButtonType.disabled,
 				loading: this.loading(),
 				isTableButton: this.tableSize(),
 			})),
 	);
 
-	public readonly iconButtons: Signal<CustButtonInput[]> = computed((): CustButtonInput[] => [
+	public readonly iconButtons: Signal<_CustButtonInput[]> = computed((): _CustButtonInput[] => [
 		{
-			type: CustButtonType.primary,
+			type: _CustButtonType.primary,
 			icon: `save`,
-			iconSide: CustButtonIconSide.left,
+			iconSide: _CustButtonIconSide.left,
 			display: `Save`,
 			value: `save`,
 			tooltip: `Icon on the left`,
@@ -52,9 +52,9 @@ export class SandboxButtonsComponent {
 			isTableButton: this.tableSize(),
 		},
 		{
-			type: CustButtonType.secondary,
+			type: _CustButtonType.secondary,
 			icon: `arrow_forward`,
-			iconSide: CustButtonIconSide.right,
+			iconSide: _CustButtonIconSide.right,
 			display: `Continue`,
 			value: `continue`,
 			tooltip: `Icon on the right`,
@@ -63,7 +63,7 @@ export class SandboxButtonsComponent {
 			isTableButton: this.tableSize(),
 		},
 		{
-			type: CustButtonType.tertiary,
+			type: _CustButtonType.tertiary,
 			display: `Fixed width`,
 			value: `fixed-width`,
 			tooltip: `width: 240px`,
@@ -73,7 +73,7 @@ export class SandboxButtonsComponent {
 			isTableButton: this.tableSize(),
 		},
 		{
-			type: CustButtonType.icon,
+			type: _CustButtonType.icon,
 			icon: `delete`,
 			display: ``,
 			value: `icon-only`,
@@ -83,15 +83,15 @@ export class SandboxButtonsComponent {
 		},
 	]);
 
-	public readonly tooLongButton: CustButtonInput = {
-		type: CustButtonType.primary,
+	public readonly tooLongButton: _CustButtonInput = {
+		type: _CustButtonType.primary,
 		display: `This label is far too long for a button`,
 		value: `too-long`,
 		tooltip: ``,
 		disabled: false,
 	};
 
-	public readonly singleToggle: ButtonToggleInput = {
+	public readonly singleToggle: _ButtonToggleInput = {
 		label: `Single select`,
 		value: `week`,
 		inputList: [
@@ -101,7 +101,7 @@ export class SandboxButtonsComponent {
 		],
 	};
 
-	public readonly multiToggle: ButtonToggleInput = {
+	public readonly multiToggle: _ButtonToggleInput = {
 		label: `Multi select`,
 		multiSelect: true,
 		valueList: [`email`, `sms`],
@@ -112,7 +112,7 @@ export class SandboxButtonsComponent {
 		],
 	};
 
-	public readonly readOnlyToggle: ButtonToggleInput = {
+	public readonly readOnlyToggle: _ButtonToggleInput = {
 		label: `Read only`,
 		value: `on`,
 		isReadOnly: true,
@@ -122,7 +122,7 @@ export class SandboxButtonsComponent {
 		],
 	};
 
-	public readonly operatorToggle: ButtonToggleInput = {
+	public readonly operatorToggle: _ButtonToggleInput = {
 		label: `equalToSelected (disables "and")`,
 		value: `or`,
 		inputList: [
@@ -134,11 +134,11 @@ export class SandboxButtonsComponent {
 	public readonly fabIcons: string[] = [`help`, `add`, `chat`];
 	public readonly fabIcon: WritableSignal<string> = signal<string>(`add`);
 
-	public onButtonClick(result: CustInputReturn): void {
+	public onButtonClick(result: _CustInputReturn): void {
 		this.buttonLog.add(`buttonClick: ${result.value}`);
 	}
 
-	public onToggleChanged(name: string, result: ButtonToggleResponse): void {
+	public onToggleChanged(name: string, result: _ButtonToggleResponse): void {
 		const value: string = Array.isArray(result.value) ? `[${result.value.join(`, `)}]` : result.value;
 		this.toggleLog.add(`${name} inputChanged: ${value}`);
 	}

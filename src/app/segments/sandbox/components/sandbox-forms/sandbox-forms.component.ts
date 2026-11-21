@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, signal, WritableSignal } from "@ang
 import { email, FieldTree, form, FormField, FormRoot, max, min, minLength, pattern, required, SchemaPathTree, validate, ValidationError } from "@angular/forms/signals";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 
 /** Model behind the Signal Forms reference demo. */
 export interface _SandboxContactModel {
@@ -51,7 +51,7 @@ function contactSchema(path: SchemaPathTree<_SandboxContactModel>): void {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SandboxFormsComponent {
-	public readonly submitLog = new SandboxEventLog();
+	public readonly submitLog = new _SandboxEventLog();
 
 	/** Source of truth: the form reads and writes this signal directly. */
 	public readonly contactModel: WritableSignal<_SandboxContactModel> = signal<_SandboxContactModel>({ ...INITIAL_CONTACT });

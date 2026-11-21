@@ -5,8 +5,8 @@ import { Pipe, PipeTransform } from "@angular/core";
  * the string.
  *
  * @example
- *      {{ "pietk@webuycars.co.za" | removeDomain }}
- * Outputs `pietk`.
+ *      {{ "janed@example.com" | removeDomain }}
+ * Outputs `janed`.
  */
 @Pipe({
 	name: "removeDomain",

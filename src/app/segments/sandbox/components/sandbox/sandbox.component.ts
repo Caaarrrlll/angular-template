@@ -19,7 +19,7 @@ export class SandboxComponent {
 		{
 			path: "buttons",
 			title: "Buttons",
-			description: "button (all CustButtonType variants), button-toggle, fab-button.",
+			description: "button (all _CustButtonType variants), button-toggle, fab-button.",
 		},
 		{
 			path: "inputs",
@@ -69,7 +69,7 @@ export class SandboxComponent {
 		{
 			path: "tables",
 			title: "Tables",
-			description: "table, card-table, expandable-grid, linq-grid-filters.",
+			description: "table, card-table, expandable-grid, grid-filters.",
 		},
 		{
 			path: "misc",

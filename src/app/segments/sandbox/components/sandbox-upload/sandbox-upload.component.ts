@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from "@angular/core";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { DragDropFileUploadComponent } from "@shared/components/drag-drop-file-upload/drag-drop-file-upload.component";
 import { DragAndDropFilesDirective } from "@shared/directives/drag-and-drop-files.directive";
 
@@ -22,11 +22,11 @@ export class SandboxUploadComponent {
 	public readonly uploadIsInDialog: WritableSignal<boolean> = signal(false);
 	public readonly uploadRestrictTypes: WritableSignal<boolean> = signal(false);
 	public readonly uploadVisible: WritableSignal<boolean> = signal(true);
-	public readonly uploadLog = new SandboxEventLog();
+	public readonly uploadLog = new _SandboxEventLog();
 
 	// ---- appDragAndDropFiles directive ---- //
 	public readonly droppedFiles: WritableSignal<File[]> = signal<File[]>([]);
-	public readonly dropLog = new SandboxEventLog();
+	public readonly dropLog = new _SandboxEventLog();
 
 	public onFileAdded(files: File[]): void {
 		this.uploadFiles.update((current: File[]): File[] => [...current, ...files]);

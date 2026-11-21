@@ -7,7 +7,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { InputCurrencyComponent } from "@shared/components/input/input-currency/input-currency.component";
 import { InputEmailComponent } from "@shared/components/input/input-email/input-email.component";
 import { InputNumberComponent } from "@shared/components/input/input-number/input-number.component";
@@ -24,7 +24,8 @@ import { MinMaxDecimalDirective } from "@shared/directives/min-max-decimal.direc
 import { MinMaxDirective } from "@shared/directives/min-max.directive";
 import { NDigitDecimalNumberDirective } from "@shared/directives/n-digit-decimal-number.directive";
 import { NumericInputDirective } from "@shared/directives/numeric-input.directive";
-import { CustButtonInputType, CustInputAdvance, CustInputGeneral, CustInputReturn, InputSelectOption } from "@shared/models/cust-basic-controls";
+import { _CustButtonInputType, _CustInputAdvance, _CustInputGeneral, _CustInputReturn, _InputSelectOption } from "@shared/models/cust-basic-controls";
+import { _IdNumberCountry, idNumberValidator } from "@shared/validators/identity-number.validator";
 
 interface _SandboxActionEvent {
 	action: string;
@@ -87,7 +88,7 @@ interface _SandboxOption {
 })
 export class SandboxInputsComponent {
 	// ---- input-text ----
-	public readonly textRequired: CustInputAdvance = {
+	public readonly textRequired: _CustInputAdvance = {
 		inputControl: new FormControl<string | null>(``),
 		validations: [Validators.required.bind(Validators), Validators.minLength(3)],
 		errors: [
@@ -95,38 +96,38 @@ export class SandboxInputsComponent {
 			{ name: `minlength`, message: `At least 3 characters` },
 		],
 		clear: true,
-		maxlen: 20,
+		maxLength: 20,
 	};
-	public readonly textPrefilled: CustInputAdvance = {
+	public readonly textPrefilled: _CustInputAdvance = {
 		inputControl: new FormControl<string | null>(`Jane Doe`),
 		validations: [],
 		errors: [],
 		clear: true,
 	};
-	public readonly textReadOnly: CustInputAdvance = {
+	public readonly textReadOnly: _CustInputAdvance = {
 		inputControl: new FormControl<string | null>(`Read-only value`),
 		validations: [],
 		errors: [],
 		clear: true,
 	};
-	public readonly textWithAction: CustInputAdvance = {
+	public readonly textWithAction: _CustInputAdvance = {
 		inputControl: new FormControl<string | null>(``),
 		validations: [],
 		errors: [],
 	};
-	public readonly textCalendar: CustInputAdvance = {
+	public readonly textCalendar: _CustInputAdvance = {
 		inputControl: new FormControl<Date | null>(new Date(2026, 0, 15)),
 		validations: [],
 		errors: [],
 	};
-	public readonly searchAction: CustButtonInputType = { icon: `search`, tooltip: `Search`, display: `Search`, value: `search`, disabled: false, parameters: [`demo`] };
-	public readonly calendarAction: CustButtonInputType = { icon: `calendar_today`, tooltip: `Pick a date`, display: `Calendar`, value: `calendar`, disabled: false };
+	public readonly searchAction: _CustButtonInputType = { icon: `search`, tooltip: `Search`, display: `Search`, value: `search`, disabled: false, parameters: [`demo`] };
+	public readonly calendarAction: _CustButtonInputType = { icon: `calendar_today`, tooltip: `Pick a date`, display: `Calendar`, value: `calendar`, disabled: false };
 	public readonly textRequiredValue: Signal<string | null> = toSignal(this.textRequired.inputControl.valueChanges, { initialValue: null });
 	public readonly textDisabled: WritableSignal<boolean> = signal<boolean>(false);
-	public readonly textLog: SandboxEventLog = new SandboxEventLog();
+	public readonly textLog: _SandboxEventLog = new _SandboxEventLog();
 
 	// ---- input-number ----
-	public readonly numberRanged: CustInputAdvance = {
+	public readonly numberRanged: _CustInputAdvance = {
 		inputControl: new FormControl<number | null>(null),
 		validations: [Validators.required.bind(Validators), Validators.min(1), Validators.max(100)],
 		errors: [
@@ -136,7 +137,7 @@ export class SandboxInputsComponent {
 		],
 		clear: true,
 	};
-	public readonly numberText: CustInputAdvance = {
+	public readonly numberText: _CustInputAdvance = {
 		inputControl: new FormControl<string | null>(`42`),
 		validations: [],
 		errors: [],
@@ -145,13 +146,13 @@ export class SandboxInputsComponent {
 	public readonly numberRangedValue: Signal<number | null> = toSignal(this.numberRanged.inputControl.valueChanges, { initialValue: null });
 
 	// ---- input-currency ----
-	public readonly currencyEmpty: CustInputAdvance = {
+	public readonly currencyEmpty: _CustInputAdvance = {
 		inputControl: new FormControl<string | null>(``),
 		validations: [Validators.pattern(/^\d+(\.\d{1,2})?$/)],
 		errors: [{ name: `pattern`, message: `Use a number with up to 2 decimals` }],
 		clear: true,
 	};
-	public readonly currencyUsd: CustInputAdvance = {
+	public readonly currencyUsd: _CustInputAdvance = {
 		inputControl: new FormControl<string | null>(`1250.50`),
 		validations: [],
 		errors: [],
@@ -159,21 +160,21 @@ export class SandboxInputsComponent {
 	};
 	public readonly currencyValue: Signal<string | null> = toSignal(this.currencyEmpty.inputControl.valueChanges, { initialValue: null });
 
-	// ---- input-email / input-phone / input-select (CustInputGeneral API) ----
-	public readonly emailEmpty: CustInputGeneral = { label: `Email`, placeholder: `name@example.com` };
-	public readonly emailPrefilled: CustInputGeneral = { label: `Email (prefilled)`, value: `jane.doe@example.com` };
-	public readonly emailReadOnly: CustInputGeneral = { label: `Email (read-only)`, value: `locked@example.com`, isReadOnly: true };
-	public readonly phoneTen: CustInputGeneral = { label: `Phone (10 digits)`, placeholder: `0821234567`, minlength: 10 };
-	public readonly phoneAny: CustInputGeneral = { label: `Phone (any digits, prefilled)`, value: `0115550000` };
-	public readonly selectOptions: InputSelectOption[] = [
+	// ---- input-email / input-phone / input-select (`_CustInputGeneral` API) ----
+	public readonly emailEmpty: _CustInputGeneral = { label: `Email`, placeholder: `name@example.com` };
+	public readonly emailPrefilled: _CustInputGeneral = { label: `Email (prefilled)`, value: `jane.doe@example.com` };
+	public readonly emailReadOnly: _CustInputGeneral = { label: `Email (read-only)`, value: `locked@example.com`, isReadOnly: true };
+	public readonly phoneTen: _CustInputGeneral = { label: `Phone (10 digits)`, placeholder: `0821234567`, minlength: 10 };
+	public readonly phoneAny: _CustInputGeneral = { label: `Phone (any digits, prefilled)`, value: `0115550000` };
+	public readonly selectOptions: _InputSelectOption[] = [
 		{ display: `Johannesburg`, value: `jhb` },
 		{ display: `Cape Town`, value: `cpt` },
 		{ display: `Durban`, value: `dbn` },
 	];
-	public readonly selectEmpty: CustInputGeneral = { label: `City`, inputList: this.selectOptions };
-	public readonly selectPrefilled: CustInputGeneral = { label: `City (prefilled)`, inputList: this.selectOptions, value: `cpt` };
-	public readonly selectReadOnly: CustInputGeneral = { label: `City (read-only)`, inputList: this.selectOptions, value: `dbn`, isReadOnly: true };
-	public readonly generalLog: SandboxEventLog = new SandboxEventLog();
+	public readonly selectEmpty: _CustInputGeneral = { label: `City`, inputList: this.selectOptions };
+	public readonly selectPrefilled: _CustInputGeneral = { label: `City (prefilled)`, inputList: this.selectOptions, value: `cpt` };
+	public readonly selectReadOnly: _CustInputGeneral = { label: `City (read-only)`, inputList: this.selectOptions, value: `dbn`, isReadOnly: true };
+	public readonly generalLog: _SandboxEventLog = new _SandboxEventLog();
 
 	// ---- select option ----
 	public readonly radioOptions: _SandboxOption[] = [
@@ -181,10 +182,23 @@ export class SandboxInputsComponent {
 		{ label: `Medium`, value: `m` },
 		{ label: `Large`, value: `l` },
 	];
-	public readonly optionLog: SandboxEventLog = new SandboxEventLog();
+	public readonly optionLog: _SandboxEventLog = new _SandboxEventLog();
 
 	// ---- app-input (floating-label wrapper) + appAutoFocus ----
 	public readonly showAutoFocus: WritableSignal<boolean> = signal<boolean>(false);
+
+	// ---- ID number validator ----
+	public readonly idCountries: { code: _IdNumberCountry; name: string }[] = [
+		{ code: `ZA`, name: `South Africa` },
+		{ code: `NA`, name: `Namibia` },
+		{ code: `BW`, name: `Botswana` },
+		{ code: `SZ`, name: `Eswatini` },
+		{ code: `ZW`, name: `Zimbabwe` },
+		{ code: `MZ`, name: `Mozambique (unconfirmed)` },
+		{ code: `LS`, name: `Lesotho (unconfirmed)` },
+	];
+	public readonly idCountry: WritableSignal<_IdNumberCountry> = signal<_IdNumberCountry>(`ZA`);
+	public readonly idNumberControl: FormControl<string | null> = new FormControl<string | null>(``, idNumberValidator(`ZA`));
 
 	// ---- directives ----
 	public readonly directiveForm: FormGroup<_SandboxDirectiveControls> = new FormGroup<_SandboxDirectiveControls>({
@@ -222,7 +236,7 @@ export class SandboxInputsComponent {
 		this.currencyEmpty.inputControl.markAsTouched();
 	}
 
-	public onGeneralChanged(source: string, event: CustInputReturn): void {
+	public onGeneralChanged(source: string, event: _CustInputReturn): void {
 		this.generalLog.add(`${source} inputChanged: ${JSON.stringify(event)}`);
 	}
 
@@ -232,5 +246,16 @@ export class SandboxInputsComponent {
 
 	public toggleAutoFocus(): void {
 		this.showAutoFocus.update((shown: boolean): boolean => !shown);
+	}
+
+	public onIdCountryChange(event: Event): void {
+		const code: string = event.target instanceof HTMLSelectElement ? event.target.value : ``;
+		const country = this.idCountries.find((entry) => entry.code === code);
+		if (!country) {
+			return;
+		}
+		this.idCountry.set(country.code);
+		this.idNumberControl.setValidators(idNumberValidator(country.code));
+		this.idNumberControl.updateValueAndValidity();
 	}
 }

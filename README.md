@@ -63,7 +63,7 @@ Routes live in `src/app/app.routes.ts`; the navigation control
    files for hex values when rebranding. The snackbar colors use Material
    CSS variables in `src/styles.scss`.
 3. **Title, meta, favicon** — `src/index.html` (title is still
-   `AngularTemplate`) and `src/favicon.ico`.
+   `AngularTemplate`) and `src/favicon.svg` (a neutral placeholder; replace it with the client's icon, and update the `<link rel="icon">` type if you use a `.ico`).
 4. **Assets** — client logos and images go in `src/assets`.
 5. **Navigation** — configure the links in the navigation control.
 6. **Routes** — add client pages as lazy segments in

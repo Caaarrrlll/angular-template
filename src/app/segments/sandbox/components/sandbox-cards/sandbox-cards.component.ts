@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from "@angular/core";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { _SandboxContact, SandboxCardsDataService } from "@segments/sandbox/services/sandbox-cards-data.service";
 import { CardComponent } from "@shared/components/card/card.component";
 import { CardHeaderComponent } from "@shared/components/card/card-header/card-header.component";
@@ -85,7 +85,7 @@ export class SandboxCardsComponent {
 	public readonly notesProperties: _CustTablePropertiesExtConfig = this.cardsData.notesProperties();
 	/** Claims are passed through to `parentDataProcess`; the statement button is only produced with `account.statement`. */
 	public readonly fullClaims: string[] = [`account.statement`];
-	public readonly infoCardLog = new SandboxEventLog();
+	public readonly infoCardLog = new _SandboxEventLog();
 
 	// ---- list-card ----
 	public readonly leadData: Record<string, unknown> = this.cardsData.leadData;
@@ -96,7 +96,7 @@ export class SandboxCardsComponent {
 	public readonly leadViewButton: _CustCardButtonTableInterface[] = this.cardsData.leadButtons.slice(2);
 	/** Changing `spinner` tells list-card the pending action finished, which clears every button's loading state. */
 	public readonly spinner: WritableSignal<number> = signal<number>(0);
-	public readonly listCardLog = new SandboxEventLog();
+	public readonly listCardLog = new _SandboxEventLog();
 
 	/**
 	 * info-card resolves `Parent` header/table entries through this callback (the control's API requires a function input).

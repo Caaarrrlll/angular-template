@@ -2,38 +2,39 @@ import { Service } from "@angular/core";
 import { _CustTableWrapperInterface, _DataProcessResponse } from "@shared/components/card-table/cust-card-table.interface";
 import { _TableTypes as _CardTableTypes } from "@shared/components/card-table/cust-table.enum";
 import { _CardTableParentDataContext } from "@shared/components/card-table/card-table.component";
-import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
+import { _Lead } from "@shared/models/lead";
+import { _CustGridFilterItem } from "@shared/models/cust-grid-filter-item";
+import { _Product } from "@shared/models/product";
 import { _TableTypes } from "@shared/components/table/cust-table.enum";
 import { _CustTableInterface } from "@shared/components/table/cust-table.interface";
 
-/** Vehicle row used by the `app-table` and search/pipes demos (type alias so it is assignable to `Record<string, unknown>`). */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- type alias needed: interfaces are not assignable to Record<string, unknown> (table row APIs)
-export type _SandboxVehicleRow = {
-	reference: string;
-	make: string;
-	model: string;
+/*
+ * All data in this file is invented for the sandbox demos: product codes, names, customers, phone numbers,
+ * email addresses (example.com), branches and amounts do not come from any real records.
+ */
+
+/** Product row used by the `app-table` and search/pipes demos: the generic `_Product` plus demo-only columns (one per table renderer). */
+export type _SandboxProductRow = _Product & {
+	category: string;
+	price: number;
 	status: string;
 	listedDate: Date;
-	price: number;
-	mileage: number;
-	serviced: boolean;
-	financed: boolean;
+	/** Delivery distance in km (shows the `distance` renderer). */
+	deliveryDistance: number;
+	inspected: boolean;
+	onPromotion: boolean;
 	discount: number;
 	region: string;
-	owners: string[];
+	suppliers: string[];
 	favourite: boolean;
 };
 
-/** Lead row used by the `app-card-table` demo. `createdDate` is an ISO string because the list-card header reads its length. */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- type alias needed: interfaces are not assignable to Record<string, unknown> (list-card data APIs)
-export type _SandboxLeadRow = {
-	leadId: string;
-	customer: string;
-	status: string;
-	createdDate: string;
+/** Lead row used by the `app-card-table` demo: the generic `_Lead` plus contact/source columns. `createdOn` is an ISO string (the list-card header reads its length). */
+export type _SandboxLeadRow = _Lead & {
+	createdOn: string;
 	contact: { phone: string; email: string };
-	vehicle: string;
-	offer: number;
+	product: string;
+	amount: number;
 	source: string;
 	branch: string;
 };
@@ -45,219 +46,231 @@ const DAY_MS = 86_400_000;
 @Service()
 export class SandboxTablesDataService {
 	// ---------------------------------------------------------------- app-table
-	public readonly vehicles: readonly _SandboxVehicleRow[] = [
+	public readonly products: readonly _SandboxProductRow[] = [
 		{
-			reference: `VH-1001`,
-			make: `toyota`,
-			model: `Corolla Cross`,
+			productCode: `PR-1001`,
+			category: `furniture`,
+			name: `Ergonomic Desk Chair`,
 			status: `InStock`,
 			listedDate: new Date(2026, 0, 15),
-			price: 389900,
-			mileage: 42150,
-			serviced: true,
-			financed: false,
+			price: 3899,
+			quantity: 42,
+			deliveryDistance: 42,
+			inspected: true,
+			onPromotion: false,
 			discount: 5,
 			region: `GP`,
-			owners: [`A. Naidoo`],
+			suppliers: [`A. Naidoo`],
 			favourite: false,
 		},
 		{
-			reference: `VH-1002`,
-			make: `volkswagen`,
-			model: `Polo Vivo`,
+			productCode: `PR-1002`,
+			category: `electronics`,
+			name: `27-inch Monitor`,
 			status: `Reserved`,
 			listedDate: new Date(2026, 1, 3),
-			price: 219500,
-			mileage: 88400,
-			serviced: false,
-			financed: true,
+			price: 4195,
+			quantity: 8,
+			deliveryDistance: 884,
+			inspected: false,
+			onPromotion: true,
 			discount: 0,
 			region: `WC`,
-			owners: [`J. Smith`, `K. Dlamini`],
+			suppliers: [`J. Smith`, `K. Dlamini`],
 			favourite: true,
 		},
 		{
-			reference: `VH-1003`,
-			make: `ford`,
-			model: `Ranger XLT`,
+			productCode: `PR-1003`,
+			category: `appliances`,
+			name: `Espresso Machine`,
 			status: `InStock`,
 			listedDate: new Date(2026, 1, 21),
-			price: 629000,
-			mileage: 31200,
-			serviced: true,
-			financed: true,
+			price: 6290,
+			quantity: 15,
+			deliveryDistance: 312,
+			inspected: true,
+			onPromotion: true,
 			discount: 2.5,
 			region: `KZN`,
-			owners: [`P. van Wyk`],
+			suppliers: [`P. van Wyk`],
 			favourite: false,
 		},
 		{
-			reference: `VH-1004`,
-			make: `bmw`,
-			model: `320i M Sport`,
+			productCode: `PR-1004`,
+			category: `electronics`,
+			name: `Laptop Docking Station`,
 			status: `AwaitingInspection`,
 			listedDate: new Date(2026, 2, 8),
-			price: 715000,
-			mileage: 15800,
-			serviced: true,
-			financed: false,
+			price: 2150,
+			quantity: 30,
+			deliveryDistance: 158,
+			inspected: true,
+			onPromotion: false,
 			discount: 0,
 			region: `GP`,
-			owners: [],
+			suppliers: [],
 			favourite: false,
 		},
 		{
-			reference: `VH-1005`,
-			make: `suzuki`,
-			model: `Swift GL`,
+			productCode: `PR-1005`,
+			category: `stationery`,
+			name: `A4 Paper (box of 5)`,
 			status: `Sold`,
 			listedDate: new Date(2026, 2, 30),
-			price: 184900,
-			mileage: 120300,
-			serviced: false,
-			financed: false,
+			price: 489,
+			quantity: 0,
+			deliveryDistance: 1203,
+			inspected: false,
+			onPromotion: false,
 			discount: 10,
 			region: `WC`,
-			owners: [`L. Botha`, `S. Mokoena`, `T. Pillay`],
+			suppliers: [`L. Botha`, `S. Mokoena`, `T. Pillay`],
 			favourite: false,
 		},
 		{
-			reference: `VH-1006`,
-			make: `hyundai`,
-			model: `Tucson Elite`,
+			productCode: `PR-1006`,
+			category: `furniture`,
+			name: `Standing Desk`,
 			status: `InStock`,
 			listedDate: new Date(2026, 3, 12),
-			price: 489000,
-			mileage: 56700,
-			serviced: true,
-			financed: true,
+			price: 7890,
+			quantity: 6,
+			deliveryDistance: 567,
+			inspected: true,
+			onPromotion: true,
 			discount: 3,
 			region: `KZN`,
-			owners: [`R. Govender`],
+			suppliers: [`R. Govender`],
 			favourite: true,
 		},
 		{
-			reference: `VH-1007`,
-			make: `mercedes-benz`,
-			model: `C200 AMG Line`,
+			productCode: `PR-1007`,
+			category: `tools`,
+			name: `Cordless Drill Set`,
 			status: `Reserved`,
 			listedDate: new Date(2026, 4, 2),
-			price: 845000,
-			mileage: 9800,
-			serviced: true,
-			financed: true,
+			price: 2450,
+			quantity: 12,
+			deliveryDistance: 98,
+			inspected: true,
+			onPromotion: true,
 			discount: 0,
 			region: `GP`,
-			owners: [],
+			suppliers: [],
 			favourite: false,
 		},
 		{
-			reference: `VH-1008`,
-			make: `kia`,
-			model: `Picanto Street`,
+			productCode: `PR-1008`,
+			category: `stationery`,
+			name: `Whiteboard 1200 x 900`,
 			status: `InStock`,
 			listedDate: new Date(2026, 4, 27),
-			price: 199900,
-			mileage: 64300,
-			serviced: false,
-			financed: false,
+			price: 1299,
+			quantity: 20,
+			deliveryDistance: 643,
+			inspected: false,
+			onPromotion: false,
 			discount: 7.5,
 			region: `WC`,
-			owners: [`M. Jacobs`],
+			suppliers: [`M. Jacobs`],
 			favourite: false,
 		},
 		{
-			reference: `VH-1009`,
-			make: `toyota`,
-			model: `Hilux Legend`,
+			productCode: `PR-1009`,
+			category: `appliances`,
+			name: `Bar Fridge`,
 			status: `AwaitingInspection`,
 			listedDate: new Date(2026, 5, 18),
-			price: 799500,
-			mileage: 22400,
-			serviced: true,
-			financed: false,
+			price: 3995,
+			quantity: 4,
+			deliveryDistance: 224,
+			inspected: true,
+			onPromotion: false,
 			discount: 0,
 			region: `KZN`,
-			owners: [`D. Nel`, `F. Khumalo`],
+			suppliers: [`D. Nel`, `F. Khumalo`],
 			favourite: false,
 		},
 		{
-			reference: `VH-1010`,
-			make: `renault`,
-			model: `Kwid Climber`,
+			productCode: `PR-1010`,
+			category: `electronics`,
+			name: `Wireless Headset`,
 			status: `Sold`,
 			listedDate: new Date(2026, 6, 9),
-			price: 159900,
-			mileage: 101250,
-			serviced: false,
-			financed: true,
+			price: 1599,
+			quantity: 0,
+			deliveryDistance: 1012,
+			inspected: false,
+			onPromotion: true,
 			discount: 12,
 			region: `GP`,
-			owners: [`H. Peters`],
+			suppliers: [`H. Peters`],
 			favourite: false,
 		},
 		{
-			reference: `VH-1011`,
-			make: `mazda`,
-			model: `CX-5 Dynamic`,
+			productCode: `PR-1011`,
+			category: `furniture`,
+			name: `Filing Cabinet`,
 			status: `InStock`,
 			listedDate: new Date(2026, 7, 14),
-			price: 512000,
-			mileage: 47900,
-			serviced: true,
-			financed: false,
+			price: 2290,
+			quantity: 18,
+			deliveryDistance: 479,
+			inspected: true,
+			onPromotion: false,
 			discount: 4,
 			region: `WC`,
-			owners: [],
+			suppliers: [],
 			favourite: true,
 		},
 		{
-			reference: `VH-1012`,
-			make: `nissan`,
-			model: `Navara PRO-4X`,
+			productCode: `PR-1012`,
+			category: `tools`,
+			name: `Laser Measure`,
 			status: `Reserved`,
 			listedDate: new Date(2026, 8, 5),
-			price: 689900,
-			mileage: 18650,
-			serviced: true,
-			financed: true,
+			price: 899,
+			quantity: 25,
+			deliveryDistance: 186,
+			inspected: true,
+			onPromotion: true,
 			discount: 1.5,
 			region: `KZN`,
-			owners: [`G. Ferreira`],
+			suppliers: [`G. Ferreira`],
 			favourite: false,
 		},
 	];
 
 	/** Column config for `app-table`: one column per renderer type worth showing. */
-	public readonly vehicleColumns: _CustTableInterface[] = [
-		{ display: `Reference`, colName: `reference`, type: _TableTypes.TextLink, width: `110px`, sticky: true },
-		{ display: `Make`, colName: `make`, type: _TableTypes.TitleText, width: `130px` },
-		{ display: `Model`, colName: `model`, type: _TableTypes.Text, width: `160px` },
+	public readonly productColumns: _CustTableInterface[] = [
+		{ display: `Product code`, colName: `productCode`, type: _TableTypes.TextLink, width: `120px`, sticky: true },
+		{ display: `Category`, colName: `category`, type: _TableTypes.TitleText, width: `130px` },
+		{ display: `Name`, colName: `name`, type: _TableTypes.Text, width: `180px` },
 		{ display: `Status`, colName: `status`, type: _TableTypes.SpaceUpperCase, width: `160px` },
 		{ display: `Listed`, colName: `listedDate`, type: _TableTypes.Date, width: `110px` },
 		{ display: `Price`, colName: `price`, type: _TableTypes.Currency, width: `130px` },
-		{ display: `Mileage`, colName: `mileage`, type: _TableTypes.Odometer, width: `120px` },
-		{ display: `Serviced`, colName: `serviced`, type: _TableTypes.Boolean, width: `90px` },
-		{ display: `Financed`, colName: `financed`, type: _TableTypes.YesNo, width: `90px` },
+		{ display: `Delivery`, colName: `deliveryDistance`, type: _TableTypes.Distance, width: `110px` },
+		{ display: `Inspected`, colName: `inspected`, type: _TableTypes.Boolean, width: `90px` },
+		{ display: `On promotion`, colName: `onPromotion`, type: _TableTypes.YesNo, width: `110px` },
 		{ display: `Discount`, colName: `discount`, type: _TableTypes.Percentage, width: `90px` },
 		{ display: `Region`, colName: `region`, type: _TableTypes.Dictionary, width: `130px`, dictionary: { GP: `Gauteng`, WC: `Western Cape`, KZN: `KwaZulu-Natal` } },
-		{ display: `Owners`, colName: `owners`, type: _TableTypes.ListPopupHover, width: `140px`, disableSort: true },
+		{ display: `Suppliers`, colName: `suppliers`, type: _TableTypes.ListPopupHover, width: `140px`, disableSort: true },
 		{ display: `Favourite`, colName: `favourite`, type: _TableTypes.FavouriteButton, width: `60px`, disableSort: true, disableDisplay: true, tooltip: `Toggle favourite` },
 		{ display: `View`, colName: `view`, type: _TableTypes.ButtonPrimary, width: `100px`, disableSort: true, icon: `visibility` },
 	];
 
-	/** Fresh filter item per call: `app-linq-grid-filters` mutates the items it is given. */
-	public createVehicleFilter(): _LinQGridFilterItem {
-		return { name: `make`, display: `Search make / model`, config: { type: `text`, options: {} }, filter: { filters: [], logic: `and` } };
+	/** Fresh filter item per call, so each demo owns its config object. */
+	public createProductFilter(): _CustGridFilterItem {
+		return { name: `name`, display: `Search name / category`, config: { type: `text`, options: {} }, filter: { filters: [], logic: `and` } };
 	}
 
-	public filterVehicles(rows: readonly _SandboxVehicleRow[], text: string): _SandboxVehicleRow[] {
+	public filterProducts(rows: readonly _SandboxProductRow[], text: string): _SandboxProductRow[] {
 		const term = text.trim().toLowerCase();
-		return term ? rows.filter((row) => `${row.make} ${row.model} ${row.reference}`.toLowerCase().includes(term)) : [...rows];
+		return term ? rows.filter((row) => `${row.category} ${row.name} ${row.productCode}`.toLowerCase().includes(term)) : [...rows];
 	}
 
-	public sortVehicles(rows: _SandboxVehicleRow[], sort: _SandboxSort): _SandboxVehicleRow[] {
-		const field = sort.field as keyof _SandboxVehicleRow;
+	public sortProducts(rows: _SandboxProductRow[], sort: _SandboxSort): _SandboxProductRow[] {
+		const field = sort.field as keyof _SandboxProductRow;
 		const factor = sort.direction === `asc` ? 1 : -1;
 		return [...rows].sort((a, b) => this.compare(a[field], b[field]) * factor);
 	}
@@ -265,79 +278,93 @@ export class SandboxTablesDataService {
 	// ----------------------------------------------------------- app-card-table
 	public readonly leads: readonly _SandboxLeadRow[] = [
 		{
-			leadId: `LD-2041`,
-			customer: `Thandi Mokoena`,
-			status: `New Lead`,
-			createdDate: `2026-11-10`,
+			leadCode: `LD-2041`,
+			type: `buy`,
+			customerName: `Thandi Mokoena`,
+			status: `New`,
+			createdOn: `2026-11-10`,
 			contact: { phone: `082 555 0141`, email: `thandi@example.com` },
-			vehicle: `2021 Toyota Corolla Cross`,
-			offer: 352000,
+			productCode: `PR-1003`,
+			product: `Espresso Machine`,
+			amount: 6290,
 			source: `Website`,
 			branch: `Pretoria`,
 		},
 		{
-			leadId: `LD-2042`,
-			customer: `Johan Botha`,
+			leadCode: `LD-2042`,
+			type: `sale`,
+			customerName: `Johan Botha`,
 			status: `In Progress`,
-			createdDate: `2026-11-02`,
+			createdOn: `2026-11-02`,
 			contact: { phone: `083 555 0172`, email: `johan@example.com` },
-			vehicle: `2019 Ford Ranger XLT`,
-			offer: 498500,
+			productCode: `PR-1006`,
+			product: `Standing Desk`,
+			amount: 5400,
 			source: `Walk-in`,
 			branch: `Cape Town`,
 		},
 		{
-			leadId: `LD-2043`,
-			customer: `Ayesha Patel`,
-			status: `Ready for invoicing`,
-			createdDate: `2026-10-28`,
+			leadCode: `LD-2043`,
+			type: `buy`,
+			customerName: `Ayesha Patel`,
+			status: `Completed`,
+			createdOn: `2026-10-28`,
 			contact: { phone: `084 555 0190`, email: `ayesha@example.com` },
-			vehicle: `2022 Hyundai Tucson Elite`,
-			offer: 455000,
+			productCode: `PR-1002`,
+			product: `27-inch Monitor`,
+			amount: 4195,
 			source: `Referral`,
 			branch: `Durban`,
 		},
 		{
-			leadId: `LD-2044`,
-			customer: `Sipho Dlamini`,
-			status: `Completed - No Sale`,
-			createdDate: `2026-10-15`,
+			leadCode: `LD-2044`,
+			type: `sale`,
+			customerName: `Sipho Dlamini`,
+			status: `Lost`,
+			createdOn: `2026-10-15`,
 			contact: { phone: `071 555 0113`, email: `sipho@example.com` },
-			vehicle: `2018 VW Polo Vivo`,
-			offer: 0,
+			productCode: `PR-1008`,
+			product: `Whiteboard 1200 x 900`,
+			amount: 0,
 			source: `Website`,
 			branch: `Pretoria`,
 		},
 		{
-			leadId: `LD-2045`,
-			customer: `Mia van der Merwe`,
+			leadCode: `LD-2045`,
+			type: `buy`,
+			customerName: `Mia van der Merwe`,
 			status: `Assigned`,
-			createdDate: `2026-11-14`,
+			createdOn: `2026-11-14`,
 			contact: { phone: `072 555 0168`, email: `mia@example.com` },
-			vehicle: `2020 Mazda CX-5 Dynamic`,
-			offer: 389000,
+			productCode: `PR-1011`,
+			product: `Filing Cabinet`,
+			amount: 2290,
 			source: `Call centre`,
 			branch: `Cape Town`,
 		},
 		{
-			leadId: `LD-2046`,
-			customer: `Kabelo Nkosi`,
-			status: `Lead Expired`,
-			createdDate: `2026-09-30`,
+			leadCode: `LD-2046`,
+			type: `sale`,
+			customerName: `Kabelo Nkosi`,
+			status: `Expired`,
+			createdOn: `2026-09-30`,
 			contact: { phone: `073 555 0155`, email: `kabelo@example.com` },
-			vehicle: `2017 Kia Picanto Street`,
-			offer: 98000,
+			productCode: `PR-1007`,
+			product: `Cordless Drill Set`,
+			amount: 1800,
 			source: `Website`,
 			branch: `Pretoria`,
 		},
 		{
-			leadId: `LD-2047`,
-			customer: `Lerato Khumalo`,
+			leadCode: `LD-2047`,
+			type: `buy`,
+			customerName: `Lerato Khumalo`,
 			status: `In Progress`,
-			createdDate: `2026-11-06`,
+			createdOn: `2026-11-06`,
 			contact: { phone: `074 555 0127`, email: `lerato@example.com` },
-			vehicle: `2023 Toyota Hilux Legend`,
-			offer: 742000,
+			productCode: `PR-1009`,
+			product: `Bar Fridge`,
+			amount: 3995,
 			source: `Referral`,
 			branch: `Durban`,
 		},
@@ -346,18 +373,19 @@ export class SandboxTablesDataService {
 	/** Card layout: headers, three field columns, a button column. Column widths are indexed by `column - 1`. */
 	public readonly leadCardWrapper: _CustTableWrapperInterface = {
 		cardHeaders: [
-			{ display: `Customer`, field: `customer`, type: `Display`, textColor: `` },
-			{ display: `Status`, field: `status`, type: `status`, textColor: ``, postText: `createdDate`, postLabel: `Created` },
+			{ display: `Customer`, field: `customerName`, type: `Display`, textColor: `` },
+			{ display: `Status`, field: `status`, type: `status`, textColor: ``, postText: `createdOn`, postLabel: `Created` },
 		],
 		cardTable: [
-			{ display: `Lead`, field: `leadId`, type: _CardTableTypes.Text, column: 1 },
+			{ display: `Lead code`, field: `leadCode`, type: _CardTableTypes.Text, column: 1 },
+			{ display: `Type`, field: `type`, type: _CardTableTypes.Text, column: 1 },
 			{ display: `Source`, field: `source`, type: _CardTableTypes.Text, column: 1 },
 			{ display: `Branch`, field: `branch`, type: _CardTableTypes.Text, column: 1 },
 			{ display: `Phone`, field: `contact`, fieldSub: `phone`, type: _CardTableTypes.Text, column: 2 },
 			{ display: `Email`, field: `contact`, fieldSub: `email`, type: _CardTableTypes.Text, column: 2 },
-			{ display: `Vehicle`, field: `vehicle`, type: _CardTableTypes.Text, column: 3 },
-			{ display: `Offer`, field: `offer`, type: _CardTableTypes.money, column: 3 },
-			{ display: `Days open`, field: `createdDate`, type: _CardTableTypes.Parent, column: 3 },
+			{ display: `Product`, field: `product`, type: _CardTableTypes.Text, column: 3 },
+			{ display: `Amount`, field: `amount`, type: _CardTableTypes.money, column: 3 },
+			{ display: `Days open`, field: `createdOn`, type: _CardTableTypes.Parent, column: 3 },
 		],
 		cardTableProperties: [{ width: `27%` }, { width: `30%` }, { width: `30%` }],
 		cardButtonTable: [
@@ -366,10 +394,10 @@ export class SandboxTablesDataService {
 		],
 	};
 
-	/** Fresh filter items per call: `app-linq-grid-filters` mutates the items it is given. */
-	public createLeadFilters(): _LinQGridFilterItem[] {
+	/** Fresh filter items per call, so each demo owns its config objects. */
+	public createLeadFilters(): _CustGridFilterItem[] {
 		return [
-			{ name: `customer`, display: `Customer`, config: { type: `text`, options: {} }, filter: { filters: [], logic: `and` } },
+			{ name: `customerName`, display: `Customer`, config: { type: `text`, options: {} }, filter: { filters: [], logic: `and` } },
 			{
 				name: `status`,
 				display: `Status`,
@@ -384,7 +412,7 @@ export class SandboxTablesDataService {
 	 * Arrow property so it keeps `this` when the card calls it.
 	 */
 	public readonly leadDataProcess = (context: _CardTableParentDataContext): _DataProcessResponse | undefined => {
-		const created = context.data[`createdDate`];
+		const created = context.data[`createdOn`];
 		if (typeof created !== `string`) {
 			return undefined;
 		}
@@ -392,15 +420,15 @@ export class SandboxTablesDataService {
 		return { response: `${String(days)} days`, type: `text` };
 	};
 
-	// ------------------------------------------------------ app-linq-grid-filters
+	// ------------------------------------------------------ app-grid-filters
 	/** One filter item of every supported `config.type`; `region` starts pre-selected. */
-	public createFilterShowcase(): _LinQGridFilterItem[] {
+	public createFilterShowcase(): _CustGridFilterItem[] {
 		return [
-			{ name: `make`, display: `Make`, config: { type: `text`, options: {} }, filter: { filters: [], logic: `and` } },
-			{ name: `year`, display: `Year`, config: { type: `number`, options: {} }, filter: { filters: [], logic: `and` } },
-			{ name: `serviced`, display: `Serviced only`, config: { type: `boolean`, options: {} }, filter: { filters: [], logic: `and` } },
+			{ name: `category`, display: `Category`, config: { type: `text`, options: {} }, filter: { filters: [], logic: `and` } },
+			{ name: `quantity`, display: `Quantity`, config: { type: `number`, options: {} }, filter: { filters: [], logic: `and` } },
+			{ name: `inspected`, display: `Inspected only`, config: { type: `boolean`, options: {} }, filter: { filters: [], logic: `and` } },
 			{ name: `listedDate`, display: `Listed on`, config: { type: `date`, options: {} }, filter: { filters: [], logic: `and` } },
-			{ name: `createdDate`, display: `Created`, config: { type: `dateRange`, options: {} }, filter: { filters: [], logic: `and` } },
+			{ name: `createdOn`, display: `Created`, config: { type: `dateRange`, options: {} }, filter: { filters: [], logic: `and` } },
 			{
 				name: `region`,
 				display: `Region`,

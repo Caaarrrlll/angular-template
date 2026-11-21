@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal, untracked } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
-import { GalleryPreviewImage } from "./gallery-preview.interface";
+import { _GalleryPreviewImage } from "./gallery-preview.interface";
 
 @Component({
 	selector: "app-gallery-preview",
@@ -13,7 +13,7 @@ import { GalleryPreviewImage } from "./gallery-preview.interface";
 export class GalleryPreviewComponent {
 	private static readonly widthOfNavButtons: number = 120;
 
-	public readonly images = input.required<GalleryPreviewImage[]>();
+	public readonly images = input.required<_GalleryPreviewImage[]>();
 	public readonly imageSelected = output<number>();
 	public readonly totalWidth = input<number>(0);
 	public readonly imageWidth = input<number>(160);

@@ -1,5 +1,5 @@
 import { CurrencyPipe } from "@angular/common";
-import { Directive, ElementRef, Input, OnInit, inject } from "@angular/core";
+import { DEFAULT_CURRENCY_CODE, Directive, ElementRef, Input, OnInit, inject } from "@angular/core";
 
 /**
  * Apply currency pipe to input field. No Decimals.
@@ -19,7 +19,7 @@ import { Directive, ElementRef, Input, OnInit, inject } from "@angular/core";
 })
 export class CurrencyInputDirective implements OnInit {
 	@Input()
-	public currencyCode = "ZAR";
+	public currencyCode: string = inject(DEFAULT_CURRENCY_CODE);
 
 	@Input()
 	public min?: number;

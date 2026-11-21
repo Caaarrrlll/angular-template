@@ -1,40 +1,40 @@
 import { FormControl, ValidatorFn } from "@angular/forms";
 
-export interface CustInputReturn {
+export interface _CustInputReturn {
 	value: string;
 	error: boolean;
 	errorDescription: string;
 	event?: Event;
 }
 
-export interface CustInputResponse {
+export interface _CustInputResponse {
 	value: string[];
 	error: boolean;
 	errorDescription: string;
 }
 
-export interface ToggleOption {
+export interface _ToggleOption {
 	display: string;
 	value: unknown;
 }
 
-export interface InputSelectOption {
+export interface _InputSelectOption {
 	display: string;
 	value: unknown;
 }
 
-export interface CustInputGeneral {
+export interface _CustInputGeneral {
 	label: string;
 	value?: string;
 	valueList?: string[];
-	inputList?: InputSelectOption[];
+	inputList?: _InputSelectOption[];
 	isReadOnly?: boolean;
 	placeholder?: string;
 	minlength?: number;
 	multiSelect?: boolean;
 }
 
-export interface CustChipInput {
+export interface _CustChipInput {
 	icon: string;
 	display: string;
 	value: unknown;
@@ -47,13 +47,13 @@ export interface CustChipInput {
 	refresh?: boolean;
 }
 
-export interface CustChipReturn {
+export interface _CustChipReturn {
 	value: unknown;
 	action: string;
 	event: Event | null;
 }
 
-export interface CustButtonInput {
+export interface _CustButtonInput {
 	type: string;
 	icon?: string;
 	tooltip: string;
@@ -66,7 +66,7 @@ export interface CustButtonInput {
 	loading?: boolean;
 }
 
-export interface CustButtonInputType {
+export interface _CustButtonInputType {
 	icon: string;
 	tooltip: string;
 	iconSide?: string;
@@ -78,26 +78,26 @@ export interface CustButtonInputType {
 	parameters?: string[];
 }
 
-export interface CustButtonMenuItem {
+export interface _CustButtonMenuItem {
 	text: string;
 	disabled?: boolean;
 }
 
-export interface CustInputAdvance {
+export interface _CustInputAdvance {
 	inputControl: FormControl;
 	validations: ValidatorFn[];
 	errors: { name: string; message: string }[];
 	clear?: boolean;
-	maxlen?: number;
+	maxLength?: number;
 }
 
-export interface CustCheckboxInput {
+export interface _CustCheckboxInput {
 	display: string;
 	activated: boolean;
 	value: string;
 }
 
-export enum CustButtonType {
+export enum _CustButtonType {
 	primary = "Primary",
 	secondary = "Secondary",
 	tertiary = "Tertiary",
@@ -106,7 +106,7 @@ export enum CustButtonType {
 	icon = "icon",
 }
 
-export enum CustButtonIconSide {
+export enum _CustButtonIconSide {
 	left = "left",
 	right = "right",
 }

@@ -102,7 +102,6 @@ export interface _DataProcessResponse {
 	whatsAppMessage?: string;
 	alignment?: string;
 	url?: string;
-	vin?: string;
 	width?: string;
 	displayList?: unknown[];
 	buttonAction?: string;

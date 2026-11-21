@@ -14,9 +14,9 @@ import { _TableTypes } from "@shared/components/card-table/cust-table.enum";
 import { ChipStatusComponent } from "@shared/components/chip-status/chip-status.component";
 import { CountDownComponent } from "@shared/components/count-down/count-down.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
-import { CustButtonInput } from "@shared/models/cust-basic-controls";
+import { _CustButtonInput } from "@shared/models/cust-basic-controls";
 import { _CustCardHeaderDataInterface } from "./list-card-data-header.interface";
-import { _HeaderAlignment, _HeaderTypes, _StatusChip } from "./list-card.enum";
+import { DEFAULT_STATUS_CHIPS, _HeaderAlignment, _HeaderTypes, _StatusChip } from "./list-card.enum";
 import { _CardCol, _CardListButtons, _CardRow, _ListCardButtonClick } from "./list-card.interface";
 
 export interface _ListCardParentDataContext {
@@ -49,6 +49,8 @@ export class ListCardComponent implements OnChanges {
 	@Input() public dateFormat = "yyyy/MM/dd";
 	@Input() public timeFormat = "HH:mm:ss";
 	@Input() public spinner?: number;
+	/** Status text → chip type for the `status` header; unknown statuses get `Default`. */
+	@Input() public statusChips: Readonly<Record<string, _StatusChip>> = DEFAULT_STATUS_CHIPS;
 
 	@Output() public buttonClick: EventEmitter<_ListCardButtonClick> = new EventEmitter<_ListCardButtonClick>();
 
@@ -95,7 +97,7 @@ export class ListCardComponent implements OnChanges {
 		this.pulseColour = timeRemaining >= 60 ? "pulse" : timeRemaining > 0 ? "urgent" : "";
 	}
 
-	public tableButton(detail: _CardCol, type = "Tertiary"): CustButtonInput {
+	public tableButton(detail: _CardCol, type = "Tertiary"): _CustButtonInput {
 		return {
 			type: type,
 			icon: "",
@@ -367,13 +369,7 @@ export class ListCardComponent implements OnChanges {
 	}
 
 	private setStatusChip(description: string): _StatusChip {
-		if (["Ready for invoicing"].includes(description)) return _StatusChip.Informative;
-		if (["Error", "Lost Sale", "Completed - No Sale"].includes(description)) return _StatusChip.Negative;
-		if (["New Lead", "Assigned"].includes(description)) return _StatusChip.newSale;
-		if (["In Progress", "Sale Process Started", "Sale Initiated", "Not yet submitted"].includes(description)) return _StatusChip.Action;
-		if (["Lead Expired"].includes(description)) return _StatusChip.Default;
-
-		return _StatusChip.Default;
+		return this.statusChips[description] ?? _StatusChip.Default;
 	}
 }
 

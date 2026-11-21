@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal, WritableSignal } from "@angular/core";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { _SandboxMediaImage, SandboxMediaDataService } from "@segments/sandbox/services/sandbox-media-data.service";
 import { CarouselComponent } from "@shared/components/carousel/carousel.component";
 import { GalleryComponent } from "@shared/components/gallery/gallery.component";
@@ -25,7 +25,7 @@ export class SandboxMediaComponent {
 	public readonly carouselPreview: WritableSignal<`left` | `bottom`> = signal<`left` | `bottom`>(`left`);
 	public readonly carouselNavigateTo: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
 	public readonly carouselShortcuts: _SandboxMediaImage[] = this.images.slice(0, 3);
-	public readonly carouselLog = new SandboxEventLog();
+	public readonly carouselLog = new _SandboxEventLog();
 
 	// ---- gallery (+ appCursorFollowZoom directive) ---- //
 	public readonly galleryEmpty: WritableSignal<boolean> = signal(false);
@@ -43,7 +43,7 @@ export class SandboxMediaComponent {
 
 	// ---- gallery-preview ---- //
 	public readonly previewActiveIndex: WritableSignal<number> = signal(0);
-	public readonly previewLog = new SandboxEventLog();
+	public readonly previewLog = new _SandboxEventLog();
 
 	// ---- zoomable-image ---- //
 	public readonly zoomableIndex: WritableSignal<number> = signal(0);
@@ -51,7 +51,7 @@ export class SandboxMediaComponent {
 	public readonly zoomableEmpty: WritableSignal<boolean> = signal(false);
 	public readonly zoomableSrc: Signal<string> = computed((): string => (this.zoomableEmpty() ? `` : this.images[this.zoomableIndex()].url));
 	public readonly zoomableCount: Signal<string> = computed((): string => `${String(this.zoomableIndex() + 1)} of ${String(this.images.length)}`);
-	public readonly zoomableLog = new SandboxEventLog();
+	public readonly zoomableLog = new _SandboxEventLog();
 
 	public onCarouselOpenDetails(name: string): void {
 		this.carouselLog.add(`openDetails: ${name}`);

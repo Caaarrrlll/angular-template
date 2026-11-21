@@ -7,7 +7,7 @@ import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { _CustTableInterface } from "@shared/components/table/cust-table.interface";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
-import { CustButtonInput } from "@shared/models/cust-basic-controls";
+import { _CustButtonInput } from "@shared/models/cust-basic-controls";
 import { PostfixPipe } from "@shared/pipes/postfix/postfix.pipe";
 import { ThousandSeparatorPipe } from "@shared/pipes/thousand-separator/thousand-separator.pipe";
 
@@ -38,7 +38,7 @@ export class CustTableDialogueComponent implements OnInit {
 		}
 	}
 
-	public tableButton(column: _CustTableInterface): CustButtonInput {
+	public tableButton(column: _CustTableInterface): _CustButtonInput {
 		return {
 			type: "Tertiary",
 			icon: column.icon ?? "",
@@ -51,7 +51,7 @@ export class CustTableDialogueComponent implements OnInit {
 		};
 	}
 
-	public navigateToStock(element: Record<string, unknown>): void {
+	public openItem(element: Record<string, unknown>): void {
 		this.dialogRef.close(element);
 	}
 

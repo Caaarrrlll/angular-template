@@ -1,7 +1,7 @@
 import { formatDate } from "@angular/common";
 import { LOCALE_ID, Service, inject } from "@angular/core";
 
-export type DateTimePeriod = "year" | "month" | "week" | "day" | "hour" | "minute" | "second";
+export type _DateTimePeriod = "year" | "month" | "week" | "day" | "hour" | "minute" | "second";
 
 @Service()
 export class DateTimeOpsService {
@@ -97,7 +97,7 @@ export class DateTimeOpsService {
 	}
 
 	// Sets the date object to the beginning of the time period passed in
-	startOf(timePeriod: DateTimePeriod, date: Date = new Date()): Date {
+	startOf(timePeriod: _DateTimePeriod, date: Date = new Date()): Date {
 		let modDate = new Date(date);
 		switch (timePeriod) {
 			case "year": {
@@ -138,7 +138,7 @@ export class DateTimeOpsService {
 	}
 
 	// Sets the date object to the end of the time period passed in
-	endOf(timePeriod: DateTimePeriod, date: Date = new Date()): Date {
+	endOf(timePeriod: _DateTimePeriod, date: Date = new Date()): Date {
 		let modDate = new Date(date);
 		switch (timePeriod) {
 			case "year": {
@@ -203,7 +203,7 @@ export class DateTimeOpsService {
 	}
 
 	// Subtract amount from the time period specified
-	subtract(date: Date, amount: number, timePeriod: DateTimePeriod): Date {
+	subtract(date: Date, amount: number, timePeriod: _DateTimePeriod): Date {
 		const modDate = new Date(date);
 		switch (timePeriod) {
 			case "year": {
@@ -239,7 +239,7 @@ export class DateTimeOpsService {
 	}
 
 	// Add amount to the time period specified
-	add(date: Date, amount: number, timePeriod: DateTimePeriod): Date {
+	add(date: Date, amount: number, timePeriod: _DateTimePeriod): Date {
 		const modDate = new Date(date);
 		switch (timePeriod) {
 			case "year": {
@@ -275,17 +275,17 @@ export class DateTimeOpsService {
 	}
 
 	dateFormat(date: Date): string {
-		return new Intl.DateTimeFormat("en-ZA", { year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
+		return new Intl.DateTimeFormat(this.localeId, { year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
 	}
 
 	timeFormat(date: Date): string {
-		return new Intl.DateTimeFormat("en-ZA", {
+		return new Intl.DateTimeFormat(this.localeId, {
 			hour: "numeric",
 			minute: "numeric",
 		}).format(date);
 	}
 
 	dateTimeFormat(date: Date): string {
-		return new Intl.DateTimeFormat("en-ZA", { year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric" }).format(date);
+		return new Intl.DateTimeFormat(this.localeId, { year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric" }).format(date);
 	}
 }

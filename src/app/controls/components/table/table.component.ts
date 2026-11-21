@@ -8,10 +8,10 @@ import { MatSortModule, Sort, SortDirection } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
-import { LinqGridFiltersComponent } from "@shared/components/linq-grid-filters/linq-grid-filters.component";
-import { _LinQGridFilterItem } from "@shared/models/linq-grid-filter-item";
-import { CustButtonInput } from "@shared/models/cust-basic-controls";
-import { _CUSTPage } from "@shared/models/cust-page";
+import { GridFiltersComponent } from "@shared/components/grid-filters/grid-filters.component";
+import { _CustGridFilterItem } from "@shared/models/cust-grid-filter-item";
+import { _CustButtonInput } from "@shared/models/cust-basic-controls";
+import { _CustPage } from "@shared/models/cust-page";
 import { ApiResponsePipe } from "@shared/pipes/api-response/api-response.pipe";
 import { DayAndHoursPipe } from "@shared/pipes/day-and-hours/day-and-hours.pipe";
 import { PostfixPipe } from "@shared/pipes/postfix/postfix.pipe";
@@ -33,7 +33,7 @@ import { PASSED_INFO } from "./table-constants.const";
 		PostfixPipe,
 		SpaceBetweenUppercasePipe,
 		ThousandSeparatorPipe,
-		LinqGridFiltersComponent,
+		GridFiltersComponent,
 		MatPaginatorModule,
 		MatProgressBarModule,
 		MatSortModule,
@@ -47,10 +47,10 @@ import { PASSED_INFO } from "./table-constants.const";
 	providers: [{ provide: PASSED_INFO, useValue: "" }],
 })
 export class TableComponent implements OnChanges {
-	@Input() public filters?: _LinQGridFilterItem;
+	@Input() public filters?: _CustGridFilterItem;
 	@Input() public listObservable?: Observable<unknown>;
 	@Input({ required: true }) public tableConfig!: _CustTableInterface[];
-	@Input() public custPage?: _CUSTPage;
+	@Input() public custPage?: _CustPage;
 	@Input() public defaultSort = "";
 	/** Initial sort arrow for `defaultSort`; later changes are reported through the `announceSortChange` action. */
 	@Input() public defaultSortDirection: SortDirection = "desc";
@@ -149,7 +149,7 @@ export class TableComponent implements OnChanges {
 		};
 	}
 
-	public tableButton(config: _CustTableInterface, icon = "", display = "", iconSide = "", type = "Primary"): CustButtonInput {
+	public tableButton(config: _CustTableInterface, icon = "", display = "", iconSide = "", type = "Primary"): _CustButtonInput {
 		const resolvedIcon = icon || (config.icon ?? "");
 		return {
 			type: type,

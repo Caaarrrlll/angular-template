@@ -1,4 +1,5 @@
-import { Directive, inject } from "@angular/core";
+import { getCurrencySymbol } from "@angular/common";
+import { DEFAULT_CURRENCY_CODE, Directive, Input, LOCALE_ID, inject } from "@angular/core";
 import { NgControl } from "@angular/forms";
 
 @Directive({
@@ -10,6 +11,9 @@ import { NgControl } from "@angular/forms";
 })
 export class CurrencyMaskDirective {
 	public readonly ngControl = inject(NgControl);
+	/** ISO 4217 code whose narrow symbol prefixes the value; defaults to the app's `DEFAULT_CURRENCY_CODE`. */
+	@Input() public currencyCode: string = inject(DEFAULT_CURRENCY_CODE);
+	private readonly localeId: string = inject(LOCALE_ID);
 
 	onModelChange(event: Event): void {
 		this.onInputChange(typeof event === "string" ? event : "", false);
@@ -47,7 +51,8 @@ export class CurrencyMaskDirective {
 			newVal = newVal.replace(/^(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/, "$1,$2,$3,$4");
 		}
 
-		this.ngControl.valueAccessor?.writeValue("R" + newVal);
+		// eslint-disable-next-line @typescript-eslint/no-deprecated -- same symbol lookup as input-currency; CurrencyPipe cannot return the symbol alone
+		this.ngControl.valueAccessor?.writeValue(getCurrencySymbol(this.currencyCode, "narrow", this.localeId) + newVal);
 	}
 
 	toNumber(val: string): string {

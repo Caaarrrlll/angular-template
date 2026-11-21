@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from "@angular/core";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { CountDownComponent } from "@shared/components/count-down/count-down.component";
 import { CurrencyComponent } from "@shared/components/currency/currency.component";
 import { LoaderComponent } from "@shared/components/loader/loader.component";
 import { NumericUpDownComponent } from "@shared/components/numeric-up-down/numeric-up-down.component";
 import { SlideToggleComponent } from "@shared/components/slide-toggle/slide-toggle.component";
-import { CustInputGeneral, CustInputReturn } from "@shared/models/cust-basic-controls";
+import { _CustInputGeneral, _CustInputReturn } from "@shared/models/cust-basic-controls";
 import { PercentagePipe } from "@shared/pipes/percentage/percentage.pipe";
 import { ThousandSeparatorPipe } from "@shared/pipes/thousand-separator/thousand-separator.pipe";
 
@@ -41,9 +41,9 @@ interface _CountDownPreset {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SandboxSmallControlsComponent {
-	public readonly slideToggleLog = new SandboxEventLog();
-	public readonly numericLog = new SandboxEventLog();
-	public readonly countDownLog = new SandboxEventLog();
+	public readonly slideToggleLog = new _SandboxEventLog();
+	public readonly numericLog = new _SandboxEventLog();
+	public readonly countDownLog = new _SandboxEventLog();
 
 	public readonly loaderSizes: (number | undefined)[] = [undefined, 16, 32, 48];
 
@@ -55,11 +55,11 @@ export class SandboxSmallControlsComponent {
 		{ label: `ZAR, 1.2-2, zero`, amount: 0, currencyCode: `ZAR`, digitsInfo: `1.2-2` },
 	];
 
-	public readonly slideToggleOff: CustInputGeneral = { label: `Notifications (off)` };
-	public readonly slideToggleOn: CustInputGeneral = { label: `Dark mode (on)`, value: `true` };
+	public readonly slideToggleOff: _CustInputGeneral = { label: `Notifications (off)` };
+	public readonly slideToggleOn: _CustInputGeneral = { label: `Dark mode (on)`, value: `true` };
 	/** The string "false" used to switch the toggle on (`!!value`); it must render off. */
-	public readonly slideToggleFalse: CustInputGeneral = { label: `Marketing (value "false")`, value: `false` };
-	public readonly slideToggleReadOnly: CustInputGeneral = { label: `Locked (read-only, on)`, value: `true`, isReadOnly: true };
+	public readonly slideToggleFalse: _CustInputGeneral = { label: `Marketing (value "false")`, value: `false` };
+	public readonly slideToggleReadOnly: _CustInputGeneral = { label: `Locked (read-only, on)`, value: `true`, isReadOnly: true };
 
 	public readonly quantityStep: number = 5;
 	public readonly quantityMax: number = 100;
@@ -80,7 +80,7 @@ export class SandboxSmallControlsComponent {
 
 	public readonly countDownSeconds: WritableSignal<number> = signal<number>(90);
 
-	public onSlideToggleChanged(name: string, result: CustInputReturn): void {
+	public onSlideToggleChanged(name: string, result: _CustInputReturn): void {
 		this.slideToggleLog.add(`${name} inputChanged: ${result.value}`);
 	}
 

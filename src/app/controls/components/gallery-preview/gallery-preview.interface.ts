@@ -1,10 +1,10 @@
-export interface GalleryImage {
+export interface _GalleryImage {
 	url: string;
 	title?: string;
 	description?: string;
 	name?: string;
 }
 
-export interface GalleryPreviewImage extends GalleryImage {
+export interface _GalleryPreviewImage extends _GalleryImage {
 	visible?: "block" | "none";
 }

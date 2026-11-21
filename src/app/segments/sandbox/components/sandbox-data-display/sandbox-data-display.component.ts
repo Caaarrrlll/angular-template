@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { SandboxDemoComponent } from "@segments/sandbox/components/sandbox-demo/sandbox-demo.component";
 import { SandboxPageComponent } from "@segments/sandbox/components/sandbox-page/sandbox-page.component";
-import { SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
+import { _SandboxEventLog } from "@segments/sandbox/models/sandbox-event-log";
 import { ChipStatusComponent } from "@shared/components/chip-status/chip-status.component";
 import { ChipsComponent } from "@shared/components/chips/chips.component";
 import { KeyValueComponent } from "@shared/components/key-value/key-value/key-value.component";
 import { KeyValueV2Component } from "@shared/components/key-value/key-value-v2/key-value-v2.component";
 import { KeyValueV3Component } from "@shared/components/key-value/key-value-v3/key-value-v3.component";
-import { CustChipInput, CustChipReturn, CustInputReturn } from "@shared/models/cust-basic-controls";
+import { _CustChipInput, _CustChipReturn, _CustInputReturn } from "@shared/models/cust-basic-controls";
 import { EmailToInitialsPipe } from "@shared/pipes/email-to-initials/email-to-initials.pipe";
 import { FormatNullTextPipe } from "@shared/pipes/format-null/format-null.pipe";
 import { NameToInitialsPipe } from "@shared/pipes/name-to-initials/name-to-initials.pipe";
@@ -60,13 +60,13 @@ export class SandboxDataDisplayComponent {
 		lastLogin: `2026-01-15T09:30:00`,
 	};
 
-	public readonly keyValueLog = new SandboxEventLog();
-	public readonly keyValueV2Log = new SandboxEventLog();
-	public readonly keyValueV3Log = new SandboxEventLog();
-	public readonly chipsLog = new SandboxEventLog();
+	public readonly keyValueLog = new _SandboxEventLog();
+	public readonly keyValueV2Log = new _SandboxEventLog();
+	public readonly keyValueV3Log = new _SandboxEventLog();
+	public readonly chipsLog = new _SandboxEventLog();
 
 	/** chips mutates `isToggle` and `mouseOver` on these objects, so they are plain mutable records. */
-	public readonly filterChips: CustChipInput[] = [
+	public readonly filterChips: _CustChipInput[] = [
 		{ icon: `inbox`, display: `Open`, value: `open`, count: 12, disabled: false, mouseOver: false },
 		{ icon: `schedule`, display: `Overdue`, value: `overdue`, count: 128, disabled: false, mouseOver: false, refresh: true },
 		{ icon: `check_circle`, display: `Closed`, value: `closed`, count: 0, disabled: false, mouseOver: false, showZero: true, isToggle: false },
@@ -100,7 +100,7 @@ export class SandboxDataDisplayComponent {
 		this.keyValueV3Log.add(`${output}: ${field}`);
 	}
 
-	public onChipChanged(event: CustChipReturn | CustInputReturn): void {
+	public onChipChanged(event: _CustChipReturn | _CustInputReturn): void {
 		const action: string = `action` in event ? event.action : `input`;
 		this.chipsLog.add(`inputChanged: ${String(event.value)} (${action})`);
 	}

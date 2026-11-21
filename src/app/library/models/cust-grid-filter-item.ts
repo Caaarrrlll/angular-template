@@ -1,10 +1,10 @@
-export interface _LinQGridFilterCondition {
+export interface _CustGridFilterCondition {
 	field: string;
 	operator?: string;
 	value: unknown;
 }
 
-export interface _LinQGridFilterConfig {
+export interface _CustGridFilterConfig {
 	type: "text" | "number" | "boolean" | "date" | "dateRange" | "select";
 	options: {
 		date?: Date;
@@ -16,16 +16,15 @@ export interface _LinQGridFilterConfig {
 }
 
 /**
- * Minimal rebuild of the legacy linq grid filter item (legacy source was not
- * present in the repo; shape inferred from the filter-bar consumers).
+ * One filter of the grid-filters bar: its config (type + options) and the conditions it currently produces.
  */
-export interface _LinQGridFilterItem {
+export interface _CustGridFilterItem {
 	name: string;
 	display?: string;
 	active?: boolean;
-	config: _LinQGridFilterConfig;
+	config: _CustGridFilterConfig;
 	filter: {
-		filters: _LinQGridFilterCondition[];
+		filters: _CustGridFilterCondition[];
 		logic?: "and" | "or";
 	};
 }

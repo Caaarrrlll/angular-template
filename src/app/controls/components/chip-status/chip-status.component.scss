@@ -43,21 +43,15 @@
 		color: $color-black;
 	}
 
-	&.newSale,
-	&.stock,
 	&.reserved,
-	&.bought,
-	&.toBePriced {
+	&.bought {
 		border: 2px solid $color-blue-alt;
 	}
 
 	// white background, coloured border
 	&.Assigned,
 	&.awaitingCustomerAction,
-	&.customerContactAttemptFailed,
-	&.Escalated,
-	&.noAgreementReached,
-	&.rejectionLetterReviewed {
+	&.Escalated {
 		border: 2px solid $color-orange-light;
 		background-color: $color-white;
 		color: $color-black;
@@ -65,10 +59,7 @@
 
 	&.Approved,
 	&.resolved,
-	&.vehicleReleased,
-	&.completedNatisDelivered,
-	&.sold,
-	&.saleInitiated {
+	&.sold {
 		border: 2px solid $color-green-light;
 		background-color: $color-white;
 		color: $color-black;
@@ -77,14 +68,6 @@
 	&.feedbackRequired {
 		border: 2px solid $color-gray-mid-alt;
 		background-color: $color-white;
-		color: $color-black;
-	}
-
-	&.legalActionRequired,
-	&.miosaReferred,
-	&.thirdPartyFeedbackRequired {
-		border: 2px solid $color-gray-mid-alt;
-		background-color: #f3f3f3;
 		color: $color-black;
 	}
 
@@ -101,10 +84,6 @@
 
 	&.inTransit {
 		border: 2px solid $color-gray-mid-alt;
-	}
-
-	&.NFS {
-		border: 2px solid $color-red-bright;
 	}
 
 	&.default {

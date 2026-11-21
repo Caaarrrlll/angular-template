@@ -47,6 +47,23 @@ module.exports = defineConfig([
 			// Angular components/directives are decorated classes and may legitimately have no members (e.g. a root shell).
 			"@typescript-eslint/no-extraneous-class": ["error", { allowWithDecorator: true }],
 			"@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true, allowTypedFunctionExpressions: true, allowHigherOrderFunctions: true }],
+			// AGENTS.md: the project's own models/types start with `_` and are PascalCase; Angular building blocks never do.
+			"@typescript-eslint/naming-convention": [
+				"error",
+				{ selector: ["interface", "typeAlias", "enum"], format: ["PascalCase"], leadingUnderscore: "require" },
+				{
+					selector: "class",
+					filter: { regex: "(Component|Directive|Pipe|Service|Interceptor|Guard|Resolver)$", match: false },
+					format: ["PascalCase"],
+					leadingUnderscore: "require",
+				},
+				{
+					selector: "class",
+					filter: { regex: "(Component|Directive|Pipe|Service|Interceptor|Guard|Resolver)$", match: true },
+					format: ["PascalCase"],
+					leadingUnderscore: "forbid",
+				},
+			],
 			"@angular-eslint/directive-selector": [
 				"error",
 				{
@@ -70,6 +87,13 @@ module.exports = defineConfig([
 		files: ["src/app/library/services/logger.service.ts", "src/main.ts"],
 		rules: {
 			"no-console": "off",
+		},
+	},
+	{
+		// Google's own Maps typings: external names, so the `_` rule (ours vs. theirs) must not apply.
+		files: ["src/app/library/models/google-places.d.ts"],
+		rules: {
+			"@typescript-eslint/naming-convention": "off",
 		},
 	},
 	{

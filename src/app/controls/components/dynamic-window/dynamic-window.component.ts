@@ -1,6 +1,6 @@
 import { TextFieldModule } from "@angular/cdk/text-field";
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DEFAULT_CURRENCY_CODE, OnInit, inject } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators, ValidatorFn } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatButtonModule } from "@angular/material/button";
@@ -16,10 +16,10 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { Observable } from "rxjs";
 import { ButtonComponent } from "@shared/components/button/button/button.component";
 import { LoaderComponent } from "@shared/components/loader/loader.component";
-import { CustButtonInput } from "@shared/models/cust-basic-controls";
+import { _CustButtonInput } from "@shared/models/cust-basic-controls";
 import { SafePipe } from "@shared/pipes/safe/safe.pipe";
 import { SnackbarService } from "@shared/services/snackbar.service";
-import { DialogSetup, _DialogWindowControl } from "./dynamic-window.models";
+import { _DialogSetup, _DialogWindowControl } from "./dynamic-window.models";
 
 @Component({
 	selector: "app-dynamic-window",
@@ -47,10 +47,12 @@ import { DialogSetup, _DialogWindowControl } from "./dynamic-window.models";
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicWindowComponent implements OnInit {
-	public readonly dialogSetup = inject<DialogSetup>(MAT_DIALOG_DATA);
+	public readonly dialogSetup = inject<_DialogSetup>(MAT_DIALOG_DATA);
 	public readonly dialogRef = inject<MatDialogRef<DynamicWindowComponent>>(MatDialogRef);
 	private readonly fb = inject(FormBuilder);
 	private readonly snackbarService = inject(SnackbarService);
+	/** Currency for the slider labels: the app's `DEFAULT_CURRENCY_CODE` (no hard-coded code in the template). */
+	protected readonly currencyCode: string = inject(DEFAULT_CURRENCY_CODE);
 
 	public form: FormGroup = this.fb.group({});
 	public loading = false;
@@ -150,7 +152,7 @@ export class DynamicWindowComponent implements OnInit {
 		this.dialogRef.close(false);
 	}
 
-	public buttonInput(display: string, value: string, disabled = false, type = "Primary"): CustButtonInput {
+	public buttonInput(display: string, value: string, disabled = false, type = "Primary"): _CustButtonInput {
 		return {
 			type: type,
 			icon: "",
@@ -166,7 +168,7 @@ export class DynamicWindowComponent implements OnInit {
  * Opens the dynamic window as a Material dialog; returns whatever the
  * window closes with (form value, `{ approval, comment }` or `false`).
  */
-export function openDynamicWindow(dialog: MatDialog, dialogSetup: DialogSetup, config: MatDialogConfig): Observable<unknown> {
+export function openDynamicWindow(dialog: MatDialog, dialogSetup: _DialogSetup, config: MatDialogConfig): Observable<unknown> {
 	const dialogConfig: MatDialogConfig = Object.assign(new MatDialogConfig(), config, { data: dialogSetup });
 	const dialogRef = dialog.open(DynamicWindowComponent, dialogConfig);
 	return dialogRef.afterClosed();

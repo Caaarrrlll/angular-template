@@ -5,7 +5,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
-import { CustButtonInputType, CustInputAdvance } from "@shared/models/cust-basic-controls";
+import { _CustButtonInputType, _CustInputAdvance } from "@shared/models/cust-basic-controls";
 
 @Component({
 	selector: "app-input-text",
@@ -18,8 +18,8 @@ export class InputTextComponent implements OnInit {
 	public readonly label = input.required<string>();
 	public readonly isReadOnly = input<boolean>(false);
 	public readonly placeholder = input<string>("");
-	public readonly inputControl = input.required<CustInputAdvance>();
-	public readonly action = input<CustButtonInputType | undefined>();
+	public readonly inputControl = input.required<_CustInputAdvance>();
+	public readonly action = input<_CustButtonInputType | undefined>();
 	public readonly actionOut = output<{ action: string; parameters?: string[] }>();
 
 	public ngOnInit(): void {

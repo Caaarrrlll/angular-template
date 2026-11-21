@@ -1,6 +1,6 @@
 @use "tokens" as *;
 
-.linq-grid-filters {
+.grid-filters {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
@@ -8,7 +8,7 @@
 	padding: 4px 8px;
 }
 
-.linq-grid-filter-item mat-form-field {
+.grid-filter-item mat-form-field {
 	width: 180px;
 	font-size: 12px;
 }

@@ -44,7 +44,7 @@ src/
     controls/components/  reusable controls, one folder each (+ animations/, directives/, interfaces)
     library/
       directives/ pipes/ services/ validators/   each with its *_CONTRACTS.md
-      models/             shared models (cust-basic-controls.ts: CustButtonInput, CustInputReturn, ...)
+      models/             shared models (cust-basic-controls.ts: _CustButtonInput, _CustInputReturn, ...)
       interceptors/       request.interceptor.ts (dormant, not registered)
       styles/             _tokens.scss, _utilities.scss (mixins), _card-shared.scss
     segments/             route-level features: landing, contact, not-found, sandbox
@@ -80,20 +80,20 @@ Each flag has one job: `environmentName` keeps `LoggerService` output and verbos
 
 **Directives**: attribute selectors with the `app` prefix in camelCase (`[appCopyText]`, `[appAutoFocus]`). Use `ElementRef` to read the host, and `Renderer2` to create elements or add classes.
 
-**Naming quirks already in use**: `Cust*` shared model types (`CustButtonInput`, `CustButtonType`); some legacy interfaces have a leading underscore (`_DialogControl`, `_LinQGridFilterItem`). Keep them as they are unless the task is a rename.
+**Model and type naming** (rule in AGENTS.md → Coding Standards): the project's own interfaces, type aliases, enums and model classes start with `_` and are PascalCase (`_Product`, `_StatusChip`, `_CustGridFilterItem`); components, services, directives and pipes do not get the prefix, and Angular/library imports keep their names (so a name without `_` is never ours to change). Lint enforces it (`@typescript-eslint/naming-convention`); the one exception is `library/models/google-places.d.ts`, which declares Google's own Maps types. All existing types were renamed on 2026-11-21 (NAM-01), e.g. `CustButtonType` → `_CustButtonType`, `Product` → `_Product`, `_CUSTPage` → `_CustPage`.
 
 **Forms**: new form work uses Signal Forms (`@angular/forms/signals`). Existing reactive-forms files, `dynamic-material-dialog` and the CVA trio (checkbox-group, range-checkbox-group, time-span-picker) stay reactive.
 
 **Styles**: `@use "tokens" as *;` (resolved through `stylePreprocessorOptions.includePaths`) and token variables (`$color-*`) instead of literal hex; shared mixins come from `@use "utilities"`. Component styles are budgeted (6 kB warning / 10 kB error). No new `::ng-deep`. Control-specific animations live in `<control>/animations/`.
 
-**Buttons**: build new buttons on `app-button` (`ButtonComponent`, with a `CustButtonType`) or `fab-button`; there is no other button variant.
+**Buttons**: build new buttons on `app-button` (`ButtonComponent`, with a `_CustButtonType`) or `fab-button`; there is no other button variant.
 
 ## Sandbox (`src/app/segments/sandbox`)
 
 The live reference for every control, served at `/sandbox/<family>` in dev builds. Families are listed in `sandbox.routes.ts`: buttons, inputs, data-display, cards, small-controls, media, tabs, selection, dialogs, upload, tables, misc, forms.
 
 - Each family page wraps its demos in `<app-sandbox-page title description>` and one `<app-sandbox-demo title description [log]>` per demo.
-- Event output goes into a `SandboxEventLog` (`models/sandbox-event-log.ts`), one per demo, bound through `[log]="xLog.entries()"`.
+- Event output goes into a `_SandboxEventLog` (`models/sandbox-event-log.ts`), one per demo, bound through `[log]="xLog.entries()"`.
 - Bulky demo data lives in `services/sandbox-*-data.service.ts`, not in the page component.
 - When you change a control, update or add its sandbox demo and check `/sandbox/<family>` in the browser. If you could not, record that it was **not** browser-checked (AGENTS.md → Verification).
 - The sandbox works around known control bugs instead of fixing them silently. Log new ones as ID'd `AUD-xx` items in `ROADMAP.md`.

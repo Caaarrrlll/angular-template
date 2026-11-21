@@ -1,4 +1,4 @@
-<div class="linq-grid-filters">
+<div class="grid-filters">
 	@if (showAddButton) {
 		<button mat-icon-button type="button" matTooltip="Add" (click)="add()">
 			<mat-icon>add</mat-icon>
@@ -43,7 +43,7 @@
 	}
 
 	@for (item of filterItems; track item.name) {
-		<div class="linq-grid-filter-item">
+		<div class="grid-filter-item">
 			@switch (item.config.type) {
 				@case ("date") {
 					<mat-form-field appearance="outline" subscriptSizing="dynamic">

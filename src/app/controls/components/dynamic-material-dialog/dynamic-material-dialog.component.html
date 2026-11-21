@@ -99,7 +99,7 @@
 								<mat-label>{{
 									!form.controls[control.formName || ""].value
 										? control.label || ""
-										: (control.label || "") + " of " + (form.controls[control.formName || ""].value * 1000 | currency: "ZAR" : "symbol-narrow" : "1.0-0")
+										: (control.label || "") + " of " + (form.controls[control.formName || ""].value * 1000 | currency: currencyCode : "symbol-narrow" : "1.0-0")
 								}}</mat-label>
 								<input [formControlName]="control.formName || ''" matInput type="number" />
 								@if (control.hintText) {

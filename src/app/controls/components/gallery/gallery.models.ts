@@ -1,10 +1,10 @@
-export interface Image {
+export interface _Image {
 	url: string;
 	title?: string;
 	description?: string;
 	name?: string;
 }
 
-export interface PreviewImage extends Image {
+export interface _PreviewImage extends _Image {
 	visible: "block" | "none";
 }

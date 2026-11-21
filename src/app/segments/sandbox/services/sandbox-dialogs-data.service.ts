@@ -3,28 +3,28 @@ import { Service } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { _ConfirmationDialogData } from "@shared/components/confirmation-dialog/confirmation-dialog.interface";
 import {
-	Approval,
-	ButtonGroup,
-	CheckBox,
-	CurrencyShortHand,
-	CUSTButtonGroup,
-	DateTime,
-	DialogInput,
-	DropDown,
-	DropDownGroups,
-	DynamicDialogSetup,
-	Numeric,
-	RadioButton,
-	RangeDate,
-	Slider,
-	SingleDate,
-	TextArea,
-	Upload,
-	ValidatorType,
+	_Approval,
+	_ButtonGroup,
+	_CheckBox,
+	_CurrencyShortHand,
+	_CustButtonGroup,
+	_DateTime,
+	_DialogInput,
+	_DropDown,
+	_DropDownGroups,
+	_DynamicDialogSetup,
+	_Numeric,
+	_RadioButton,
+	_RangeDate,
+	_Slider,
+	_SingleDate,
+	_TextArea,
+	_Upload,
+	_ValidatorType,
 	_FormData,
 } from "@shared/components/dynamic-material-dialog/dynamic-material-dialog-setup.model";
-import { DialogSetup } from "@shared/components/dynamic-window/dynamic-window.models";
-import { MediaFile } from "@shared/components/media-dialog/media-dialog.models";
+import { _DialogSetup } from "@shared/components/dynamic-window/dynamic-window.models";
+import { _MediaFile } from "@shared/components/media-dialog/media-dialog.models";
 import { _CustTableInterface } from "@shared/components/table/cust-table.interface";
 import { _TableTypes } from "@shared/components/table/cust-table.enum";
 import { Observable, delay, map, of, throwError, timer } from "rxjs";
@@ -50,6 +50,8 @@ export interface _SandboxTableDialogData {
  * Mock dialog configurations for the dialogs sandbox page.
  * Setups are returned from factory methods because the dialogs mutate the
  * setup they are opened with (form names, values, validator types).
+ *
+ * All data here is invented for the demos (people, product codes, branches, amounts); none comes from real records.
  */
 @Service()
 export class SandboxDialogsDataService {
@@ -58,17 +60,17 @@ export class SandboxDialogsDataService {
 		description: `This removes the invoice and its line items from the mock ledger. This cannot be undone.`,
 	};
 
-	public readonly autoCompleteSource: string[] = [`Alice Botha`, `Alicia Keys`, `Bongani Dlamini`, `Brenda Fassie`, `Carl Naude`, `Candice Swanepoel`, `Thabo Mokoena`];
+	public readonly autoCompleteSource: string[] = [`Alice Botha`, `Alina Peters`, `Bongani Dlamini`, `Brenda Smith`, `Carla Nel`, `Candice Moodley`, `Thabo Mokoena`];
 
 	/** Mock `MEDIA_LOADER`: resolves, resolves slowly, 404s (no data) or fails, depending on the key. */
-	public loadMedia(mediaKey: string): Observable<MediaFile | null> {
-		const media: MediaFile = { file: { data: SANDBOX_JPEG_BASE64 } };
+	public loadMedia(mediaKey: string): Observable<_MediaFile | null> {
+		const media: _MediaFile = { file: { data: SANDBOX_JPEG_BASE64 } };
 
 		switch (mediaKey) {
 			case SANDBOX_MEDIA_KEYS.found:
 				return of(media);
 			case SANDBOX_MEDIA_KEYS.slow:
-				return timer(1500).pipe(map((): MediaFile => media));
+				return timer(1500).pipe(map((): _MediaFile => media));
 			case SANDBOX_MEDIA_KEYS.missing:
 				return throwError(() => new HttpErrorResponse({ status: 404, statusText: `Not Found` }));
 			default:
@@ -76,8 +78,8 @@ export class SandboxDialogsDataService {
 		}
 	}
 
-	/** Mock sales-executive search used to answer the dynamic dialog's autocomplete (300ms mock latency). */
-	public searchSalesExecs(term: string): Observable<string[]> {
+	/** Mock agent search used to answer the dynamic dialog's autocomplete (300ms mock latency). */
+	public searchAgents(term: string): Observable<string[]> {
 		const needle = term.toLowerCase();
 		return of(this.autoCompleteSource.filter((name: string): boolean => name.toLowerCase().includes(needle))).pipe(delay(300));
 	}
@@ -86,20 +88,20 @@ export class SandboxDialogsDataService {
 		const rows: Record<string, unknown>[] = empty
 			? []
 			: [
-					{ stockNo: `STK-1001`, model: `Hatchback 1.4`, price: 189900, mileage: 45210, view: `` },
-					{ stockNo: `STK-1002`, model: `Sedan 2.0`, price: 264500, mileage: 18990, view: `` },
-					{ stockNo: `STK-1003`, model: `Bakkie 2.8 D/C`, price: 512000, mileage: 102345, view: `` },
-					{ stockNo: `STK-1004`, model: `SUV 1.5T`, price: 389999, mileage: 0, view: `` },
+					{ productCode: `PR-1001`, name: `Ergonomic Desk Chair`, price: 3899, deliveryDistance: 42, view: `` },
+					{ productCode: `PR-1006`, name: `Standing Desk`, price: 7890, deliveryDistance: 567, view: `` },
+					{ productCode: `PR-1009`, name: `Bar Fridge`, price: 3995, deliveryDistance: 1224, view: `` },
+					{ productCode: `PR-1012`, name: `Laser Measure`, price: 899, deliveryDistance: 0, view: `` },
 				];
 
 		return {
-			title: empty ? `Matching stock (none)` : `Matching stock`,
+			title: empty ? `Matching products (none)` : `Matching products`,
 			dataSource: new MatTableDataSource<Record<string, unknown>>(rows),
 			tableConfig: [
-				{ display: `Stock no.`, colName: `stockNo`, width: `120px`, type: _TableTypes.Text },
-				{ display: `Model`, colName: `model`, width: `200px`, type: _TableTypes.Text },
+				{ display: `Product code`, colName: `productCode`, width: `120px`, type: _TableTypes.Text },
+				{ display: `Name`, colName: `name`, width: `200px`, type: _TableTypes.Text },
 				{ display: `Price`, colName: `price`, width: `140px`, type: _TableTypes.Currency },
-				{ display: `Mileage`, colName: `mileage`, width: `140px`, type: _TableTypes.Odometer },
+				{ display: `Delivery`, colName: `deliveryDistance`, width: `140px`, type: _TableTypes.Distance },
 				{ display: `View`, colName: `view`, width: `80px`, icon: `visibility`, tooltip: `Select this row`, disableDisplay: true },
 			],
 		};
@@ -107,13 +109,13 @@ export class SandboxDialogsDataService {
 
 	// ---- dynamic-material-dialog --------------------------------------------------------------
 
-	/** Button-type: two `ButtonGroup` toggles (single + multi select); closes with the form value on submit. */
-	public dmdButtonGroupSetup(): DynamicDialogSetup {
-		return new DynamicDialogSetup({
+	/** Button-type: two `_ButtonGroup` toggles (single + multi select); closes with the form value on submit. */
+	public dmdButtonGroupSetup(): _DynamicDialogSetup {
+		return new _DynamicDialogSetup({
 			title: `Delivery preferences`,
 			instructionText: `Button-type setup: ButtonGroup controls feed the form through app-button-toggle.`,
 			controls: [
-				new ButtonGroup({
+				new _ButtonGroup({
 					formName: `deliveryMethod`,
 					label: `Delivery method`,
 					value: `courier`,
@@ -123,7 +125,7 @@ export class SandboxDialogsDataService {
 						{ value: `post`, display: `Post` },
 					],
 				}),
-				new ButtonGroup({
+				new _ButtonGroup({
 					formName: `notifyBy`,
 					label: `Notify by`,
 					multiSelect: true,
@@ -138,21 +140,21 @@ export class SandboxDialogsDataService {
 		});
 	}
 
-	/** Button-type: `Approval` control; closes with `"Approve"` / `"Reject"`. Approve stays disabled until the required comment is filled. */
-	public dmdApprovalSetup(): DynamicDialogSetup {
-		return new DynamicDialogSetup({
+	/** Button-type: `_Approval` control; closes with `"Approve"` / `"Reject"`. Approve stays disabled until the required comment is filled. */
+	public dmdApprovalSetup(): _DynamicDialogSetup {
+		return new _DynamicDialogSetup({
 			title: `Approve discount request`,
 			instructionText: `Approval control: Approve is disabled while the form is invalid (comment is required).`,
 			hideSubmitButton: true,
 			hideBackButton: true,
 			controls: [
-				new TextArea({
+				new _TextArea({
 					formName: `comment`,
 					label: `Comment`,
 					placeholder: `Reason for the decision`,
-					validators: [{ validator: ValidatorType.required, errorMessage: `A comment is required` }],
+					validators: [{ validator: _ValidatorType.required, errorMessage: `A comment is required` }],
 				}),
-				new Approval({ formName: `approval`, approveText: `Approve`, rejectText: `Reject` }),
+				new _Approval({ formName: `approval`, approveText: `Approve`, rejectText: `Reject` }),
 			],
 		});
 	}
@@ -163,7 +165,7 @@ export class SandboxDialogsDataService {
 	 * (`secondOperator`), [3] second operator (`thirdOperator`), [4] second value.
 	 * The back button text `Clear` closes with `{ action: "clear" }`.
 	 */
-	public dmdFilterMenuSetup(): DynamicDialogSetup {
+	public dmdFilterMenuSetup(): _DynamicDialogSetup {
 		const operators: _FormData[] = [
 			{ value: `eq`, display: `Is equal to` },
 			{ value: `gt`, display: `Is greater than` },
@@ -172,15 +174,15 @@ export class SandboxDialogsDataService {
 			{ value: `lte`, display: `Is less than or equal to` },
 		];
 
-		return new DynamicDialogSetup({
+		return new _DynamicDialogSetup({
 			title: `Filter: Price`,
 			simple: false,
 			backButtonText: `Clear`,
 			submitButtonText: `Filter`,
 			controls: [
-				new DropDown({ formName: `firstOperator`, label: `Show items with value that`, value: `gt`, data: operators }),
-				new DialogInput({ formName: `firstValue`, label: `Value`, inputType: `number` }),
-				new CUSTButtonGroup({
+				new _DropDown({ formName: `firstOperator`, label: `Show items with value that`, value: `gt`, data: operators }),
+				new _DialogInput({ formName: `firstValue`, label: `Value`, inputType: `number` }),
+				new _CustButtonGroup({
 					formName: `secondOperator`,
 					value: ``,
 					data: [
@@ -188,66 +190,66 @@ export class SandboxDialogsDataService {
 						{ value: `or`, display: `Or` },
 					],
 				}),
-				new DropDown({ formName: `thirdOperator`, label: `Second condition`, value: `lt`, data: operators.slice(1), disabled: true }),
-				new DialogInput({ formName: `secondValue`, label: `Second value`, inputType: `number`, disabled: true }),
+				new _DropDown({ formName: `thirdOperator`, label: `Second condition`, value: `lt`, data: operators.slice(1), disabled: true }),
+				new _DialogInput({ formName: `secondValue`, label: `Second value`, inputType: `number`, disabled: true }),
 			],
 		});
 	}
 
 	/** Form-type: text inputs with validators, a dependent validator (`validationDep`) and the service-driven autocomplete input. */
-	public dmdTextFormSetup(): DynamicDialogSetup {
-		return new DynamicDialogSetup({
+	public dmdTextFormSetup(): _DynamicDialogSetup {
+		return new _DynamicDialogSetup({
 			title: `Contact details`,
 			instructionText: `Form-type setup: text inputs + validators. Email is only required while the phone number is empty (validationDep).`,
 			submitButtonText: `Save`,
 			controls: [
-				new DialogInput({
+				new _DialogInput({
 					formName: `fullName`,
 					label: `Full name`,
 					hintText: `2 - 40 characters`,
 					validators: [
-						{ validator: ValidatorType.required, errorMessage: `Name is required` },
-						{ validator: ValidatorType.minlength, value: 2, errorMessage: `At least 2 characters` },
-						{ validator: ValidatorType.maxlength, value: 40, errorMessage: `At most 40 characters` },
+						{ validator: _ValidatorType.required, errorMessage: `Name is required` },
+						{ validator: _ValidatorType.minlength, value: 2, errorMessage: `At least 2 characters` },
+						{ validator: _ValidatorType.maxlength, value: 40, errorMessage: `At most 40 characters` },
 					],
 				}),
-				new DialogInput({
+				new _DialogInput({
 					formName: `phone`,
 					label: `Mobile number`,
 					inputType: `tel`,
 					hintText: `10 digits starting with 0`,
-					validators: [{ validator: ValidatorType.pattern, value: `0[0-9]{9}`, errorMessage: `Not a valid mobile number` }],
+					validators: [{ validator: _ValidatorType.pattern, value: `0[0-9]{9}`, errorMessage: `Not a valid mobile number` }],
 				}),
-				new DialogInput({
+				new _DialogInput({
 					formName: `contactEmail`,
 					label: `Email`,
 					inputType: `email`,
 					validationDep: `phone`,
 					validators: [
-						{ validator: ValidatorType.required, errorMessage: `Email is required when no phone number is given` },
-						{ validator: ValidatorType.email, errorMessage: `Not a valid email address` },
+						{ validator: _ValidatorType.required, errorMessage: `Email is required when no phone number is given` },
+						{ validator: _ValidatorType.email, errorMessage: `Not a valid email address` },
 					],
 				}),
-				new DialogInput({
+				new _DialogInput({
 					formName: `age`,
 					label: `Age`,
 					inputType: `number`,
 					validators: [
-						{ validator: ValidatorType.min, value: 18, errorMessage: `Must be 18 or older` },
-						{ validator: ValidatorType.max, value: 120, errorMessage: `Must be 120 or younger` },
+						{ validator: _ValidatorType.min, value: 18, errorMessage: `Must be 18 or older` },
+						{ validator: _ValidatorType.max, value: 120, errorMessage: `Must be 120 or younger` },
 					],
 				}),
-				new CurrencyShortHand({
+				new _CurrencyShortHand({
 					formName: `budget`,
 					label: `Budget (thousands)`,
 					hintText: `Type 250 for R250 000`,
-					validators: [{ validator: ValidatorType.required, errorMessage: `Budget is required` }],
+					validators: [{ validator: _ValidatorType.required, errorMessage: `Budget is required` }],
 				}),
-				new TextArea({
+				new _TextArea({
 					formName: `notes`,
 					label: `Notes`,
 					placeholder: `Optional notes`,
-					validators: [{ validator: ValidatorType.maxlength, value: 200, errorMessage: `At most 200 characters` }],
+					validators: [{ validator: _ValidatorType.maxlength, value: 200, errorMessage: `At most 200 characters` }],
 				}),
 			],
 		});
@@ -258,32 +260,32 @@ export class SandboxDialogsDataService {
 	 * search input (the first Input typed into wins), so other inputs in the same dialog would hijack it.
 	 * Suggestions are pushed by the page through `DynamicDialogService`.
 	 */
-	public dmdAutoCompleteSetup(): DynamicDialogSetup {
-		return new DynamicDialogSetup({
-			title: `Assign sales executive`,
+	public dmdAutoCompleteSetup(): _DynamicDialogSetup {
+		return new _DynamicDialogSetup({
+			title: `Assign agent`,
 			instructionText: `Type a few letters (e.g. "al" or "th"); suggestions are supplied through DynamicDialogService.`,
 			submitButtonText: `Assign`,
 			controls: [
-				new DialogInput({
-					formName: `salesExec`,
-					label: `Sales executive`,
+				new _DialogInput({
+					formName: `agent`,
+					label: `Agent`,
 					autoComplete: true,
-					validators: [{ validator: ValidatorType.required, errorMessage: `Sales executive is required` }],
+					validators: [{ validator: _ValidatorType.required, errorMessage: `Agent is required` }],
 				}),
 				// AUD-10 regression: a plain input in the same dialog must not trigger or claim the suggestion list.
-				new DialogInput({ formName: `note`, label: `Note (plain input, no suggestions)` }),
+				new _DialogInput({ formName: `note`, label: `Note (plain input, no suggestions)` }),
 			],
 		});
 	}
 
 	/** Form-type: selection and date controls. Requires a `DateAdapter` in the dialog's injector. */
-	public dmdPickerFormSetup(): DynamicDialogSetup {
-		return new DynamicDialogSetup({
-			title: `Book a test drive`,
+	public dmdPickerFormSetup(): _DynamicDialogSetup {
+		return new _DynamicDialogSetup({
+			title: `Book an appointment`,
 			instructionText: `Form-type setup: dropdowns, grouped dropdown, radio and date pickers.`,
 			submitButtonText: `Book`,
 			controls: [
-				new DropDown({
+				new _DropDown({
 					formName: `branch`,
 					label: `Branch`,
 					data: [
@@ -291,9 +293,9 @@ export class SandboxDialogsDataService {
 						{ value: `jhb`, display: `Johannesburg` },
 						{ value: `dbn`, display: `Durban` },
 					],
-					validators: [{ validator: ValidatorType.required, errorMessage: `Pick a branch` }],
+					validators: [{ validator: _ValidatorType.required, errorMessage: `Pick a branch` }],
 				}),
-				new DropDown({
+				new _DropDown({
 					formName: `extras`,
 					label: `Extras (multiple)`,
 					multiple: true,
@@ -301,54 +303,54 @@ export class SandboxDialogsDataService {
 					data: [
 						{ value: `coffee`, display: `Coffee` },
 						{ value: `finance`, display: `Finance quote` },
-						{ value: `tradeIn`, display: `Trade-in valuation` },
+						{ value: `delivery`, display: `Delivery quote` },
 					],
 				}),
-				new DropDownGroups({
-					formName: `vehicle`,
-					label: `Vehicle`,
+				new _DropDownGroups({
+					formName: `product`,
+					label: `Product`,
 					groups: [
 						{
-							groupName: `Hatchbacks`,
+							groupName: `Furniture`,
 							data: [
-								{ value: `hatch-14`, display: `Hatchback 1.4` },
-								{ value: `hatch-16`, display: `Hatchback 1.6` },
+								{ value: `PR-1001`, display: `Ergonomic Desk Chair` },
+								{ value: `PR-1006`, display: `Standing Desk` },
 							],
 						},
 						{
-							groupName: `SUVs`,
+							groupName: `Electronics`,
 							data: [
-								{ value: `suv-15t`, display: `SUV 1.5T` },
-								{ value: `suv-20d`, display: `SUV 2.0D` },
+								{ value: `PR-1002`, display: `27-inch Monitor` },
+								{ value: `PR-1010`, display: `Wireless Headset` },
 							],
 						},
 					],
-					validators: [{ validator: ValidatorType.required, errorMessage: `Pick a vehicle` }],
+					validators: [{ validator: _ValidatorType.required, errorMessage: `Pick a product` }],
 				}),
-				new RadioButton({
-					formName: `licence`,
-					value: `code8`,
+				new _RadioButton({
+					formName: `contactMethod`,
+					value: `email`,
 					data: [
-						{ value: `code8`, display: `Code 8 (B)` },
-						{ value: `code10`, display: `Code 10 (C1)` },
-						{ value: `learner`, display: `Learner's only` },
+						{ value: `email`, display: `Email` },
+						{ value: `phone`, display: `Phone` },
+						{ value: `whatsapp`, display: `WhatsApp` },
 					],
 				}),
-				new SingleDate({ formName: `preferredDate`, label: `Preferred date`, value: new Date(2026, 0, 15), disabledBefore: new Date(2026, 0, 1) }),
-				new RangeDate({ formName: `availability`, label: `Availability window`, value: { start: new Date(2026, 0, 12), end: new Date(2026, 0, 23) } }),
-				new DateTime({ formName: `slot`, label: `Slot`, value: new Date(2026, 0, 15, 10, 30) }),
+				new _SingleDate({ formName: `preferredDate`, label: `Preferred date`, value: new Date(2026, 0, 15), disabledBefore: new Date(2026, 0, 1) }),
+				new _RangeDate({ formName: `availability`, label: `Availability window`, value: { start: new Date(2026, 0, 12), end: new Date(2026, 0, 23) } }),
+				new _DateTime({ formName: `slot`, label: `Slot`, value: new Date(2026, 0, 15, 10, 30) }),
 			],
 		});
 	}
 
 	/** Form-type: filterable multi checkbox list (more than 5 options turns the search field on). */
-	public dmdCheckboxSetup(): DynamicDialogSetup {
-		return new DynamicDialogSetup({
+	public dmdCheckboxSetup(): _DynamicDialogSetup {
+		return new _DynamicDialogSetup({
 			title: `Choose colours`,
 			instructionText: `CheckBox control (multi, filterable). More than 5 options enables the search box.`,
 			submitButtonText: `Apply`,
 			controls: [
-				new CheckBox({
+				new _CheckBox({
 					formName: `colours`,
 					multi: true,
 					filterable: true,
@@ -362,20 +364,20 @@ export class SandboxDialogsDataService {
 						{ value: `indigo`, display: `Indigo` },
 						{ value: `violet`, display: `Violet` },
 					],
-					validators: [{ validator: ValidatorType.required, errorMessage: `Pick at least one colour` }],
+					validators: [{ validator: _ValidatorType.required, errorMessage: `Pick at least one colour` }],
 				}),
 			],
 		});
 	}
 
-	/** Regression cases for AUD-09/AUD-10: two choice lists in one dialog (each must show its own options) and the `Numeric` builder. */
-	public dmdChoiceListsSetup(): DynamicDialogSetup {
-		return new DynamicDialogSetup({
+	/** Regression cases for AUD-09/AUD-10: two choice lists in one dialog (each must show its own options) and the `_Numeric` builder. */
+	public dmdChoiceListsSetup(): _DynamicDialogSetup {
+		return new _DynamicDialogSetup({
 			title: `Two choice lists + numeric`,
 			instructionText: `Each list shows its own options; only the 7-option list gets a search box. Quantity uses the Numeric builder (appMinMax 1-10).`,
 			submitButtonText: `Apply`,
 			controls: [
-				new CheckBox({
+				new _CheckBox({
 					formName: `colours`,
 					multi: true,
 					filterable: true,
@@ -389,7 +391,7 @@ export class SandboxDialogsDataService {
 						{ value: `violet`, display: `Violet` },
 					],
 				}),
-				new RadioButton({
+				new _RadioButton({
 					formName: `size`,
 					data: [
 						{ value: `s`, display: `Small` },
@@ -397,31 +399,31 @@ export class SandboxDialogsDataService {
 						{ value: `l`, display: `Large` },
 					],
 				}),
-				new Numeric({ formName: `quantity`, label: `Quantity`, min: 1, max: 10 }),
+				new _Numeric({ formName: `quantity`, label: `Quantity`, min: 1, max: 10 }),
 			],
 		});
 	}
 
 	/** Regression cases for AUD-06 (Slider/Upload field types) and AUD-08 (noSpace/phone validators, setup not mutated). */
-	public dmdSliderUploadSetup(): DynamicDialogSetup {
-		return new DynamicDialogSetup({
+	public dmdSliderUploadSetup(): _DynamicDialogSetup {
+		return new _DynamicDialogSetup({
 			title: `Slider, upload + validators`,
 			instructionText: `Slider and Upload field types plus the noSpace and phone validator types.`,
 			submitButtonText: `Submit`,
 			controls: [
-				new Slider({ formName: `deposit`, minValue: 0, maxValue: 50, increment: 5, value: 10 }),
-				new DialogInput({
+				new _Slider({ formName: `deposit`, minValue: 0, maxValue: 50, increment: 5, value: 10 }),
+				new _DialogInput({
 					formName: `username`,
 					label: `Username (no spaces)`,
-					validators: [{ validator: ValidatorType.noSpace, errorMessage: `Spaces are not allowed` }],
+					validators: [{ validator: _ValidatorType.noSpace, errorMessage: `Spaces are not allowed` }],
 				}),
-				new DialogInput({
+				new _DialogInput({
 					formName: `mobile`,
 					label: `Mobile (phone validator)`,
 					inputType: `tel`,
-					validators: [{ validator: ValidatorType.phone, errorMessage: `10 digits starting with 0` }],
+					validators: [{ validator: _ValidatorType.phone, errorMessage: `10 digits starting with 0` }],
 				}),
-				new Upload({ formName: `attachments` }),
+				new _Upload({ formName: `attachments` }),
 			],
 		});
 	}
@@ -429,25 +431,25 @@ export class SandboxDialogsDataService {
 	// ---- dynamic-window -----------------------------------------------------------------------
 
 	/** dynamic-window form: closes with the form value on submit, `false` on back. */
-	public windowFormSetup(): DialogSetup {
-		return new DialogSetup({
+	public windowFormSetup(): _DialogSetup {
+		return new _DialogSetup({
 			instructionText: `Assign a lead`,
 			optionSelected: `Lead #L-2026-0115`,
-			additionalText: `Pick a sales executive or provide a mobile number.`,
+			additionalText: `Pick an agent or provide a mobile number.`,
 			submitButtonText: `ASSIGN`,
 			controls: [
 				{ type: `Image`, formName: `banner`, imgUrl: `data:image/jpeg;base64,${SANDBOX_JPEG_BASE64}` },
 				{
 					type: `DropDown`,
-					formName: `salesExec`,
-					placeholder: `Sales executive`,
+					formName: `agent`,
+					placeholder: `Agent`,
 					data: [
 						{ display: `Alice Botha`, value: `alice` },
 						{ display: `Bongani Dlamini`, value: `bongani` },
 						{ display: `Thabo Mokoena`, value: `thabo` },
 					],
 				},
-				{ type: `Input`, formName: `mobile`, placeholder: `Mobile number`, validators: `phone`, validationDep: `salesExec` },
+				{ type: `Input`, formName: `mobile`, placeholder: `Mobile number`, validators: `phone`, validationDep: `agent` },
 				// AUD-42 regression: required + email on the same control (required used to be dropped).
 				{ type: `Input`, formName: `contactEmail`, placeholder: `Contact email (required)`, validators: `email`, required: true },
 				{
@@ -490,8 +492,8 @@ export class SandboxDialogsDataService {
 	}
 
 	/** dynamic-window approval: closes with `{ approval, comment }`. */
-	public windowApprovalSetup(): DialogSetup {
-		return new DialogSetup({
+	public windowApprovalSetup(): _DialogSetup {
+		return new _DialogSetup({
 			instructionText: `Approve the price override?`,
 			optionSelected: `STK-1002 - Sedan 2.0 - R 249 900`,
 			hideSubmitButton: true,

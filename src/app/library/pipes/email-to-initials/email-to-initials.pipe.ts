@@ -5,8 +5,8 @@ import { Pipe, PipeTransform } from "@angular/core";
  * (before the @) and uppercases them.
  *
  * @example
- *      {{ "pietk@webuycars.co.za" | emailToInitials }}
- * Outputs `PK`.
+ *      {{ "janed@example.com" | emailToInitials }}
+ * Outputs `JD`.
  */
 @Pipe({
 	name: "emailToInitials",

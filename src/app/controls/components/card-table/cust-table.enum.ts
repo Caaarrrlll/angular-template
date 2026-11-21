@@ -12,7 +12,6 @@ export enum _TableTypes {
 	Button = "button",
 	ButtonConditional = "buttonConditional",
 	ButtonTertiary = "buttonTertiary",
-	Odometer = "odometer",
 	distance = "distance",
 	Boolean = "boolean",
 	BooleanInverse = "booleanInverse",

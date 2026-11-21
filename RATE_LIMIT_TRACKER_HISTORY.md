@@ -569,3 +569,53 @@ Developer decisions (2026-11-18): remove all niche persistence from the table/gr
   - dev + prod build pass (prod: pre-existing initial-bundle warning only); eslint 0 and prettier clean on the 10 touched source files + table SCSS + SERVICES_CONTRACTS.md (2 prettier line-wraps fixed); no README/AGENTS/CLAUDE mentions; /sandbox/tables **not browser-checked**
   - remaining storage: LoginService token (AUD-39 policy) and OpenPageService `operations_open_in_new_tab` → logged as AUD-50
   - section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-20): Release readiness — generic domain (lead/product), currency, ID validator (developer request)
+
+Roadmap: "Release readiness" Phase 1 (inventory) + the requested parts of Phase 2. Audit items stay parked. Developer instructions: stock/lead/vehicle/sale/buy → generic "product code" + "lead code with buy/sale types"; stock item → product with generic fields; currency only via the official CurrencyPipe (no hard-coding); ID validator more generic with SA's neighbouring countries (note: add more as needed); note that the sandbox data is invented.
+
+- [✓] Step 1 — inventory recorded in ROADMAP.md as REL items (keyword sweep 2026-11-20; incl. "webuycars" in 2 pipe docs, dealer chip statuses, odometer renderer, ZAR/R literals, en-ZA dates, sandbox invented data)
+- [✓] Step 2 — generic models `library/models/product.ts` (`Product`) and `library/models/lead.ts` (`Lead`, `LeadType` buy/sale)
+- [✓] Step 3 — controls
+  - [✓] 3a chip-status: dealer statuses removed (MIOSA, Natis, vehicle released, NFS, to be priced, …) + SCSS; `_StatusChip.newSale` → `New`
+  - [✓] 3b list-card + info-card: hard-coded sales `setStatusChip` → `statusChips` input (generic default map)
+  - [✓] 3c card-table: `refreshLeads`/`navigateToCreateLead`/`createLead`/`lead` column → generic names; carousel `vehicle-imgs-*` → `carousel-imgs-*`
+  - [✓] 3d `odometer` renderer → `distance` (table, table-dialogue; card-table duplicate removed); list-card `leadEscalated` → `escalated`; card-table `vin` removed; table-dialogue `navigateToStock` → `openItem`; group-by-date `leadHistory` → `items`; "webuycars" doc examples → example.com
+- [✓] Step 4 — currency (also fixed currency-in-string: formatCurrency had code/symbol args swapped + first-comma replace): `DEFAULT_CURRENCY_CODE` provided once in main.ts; currency component, input-currency, currency-input/currency-mask directives, currency-in-string pipe, dynamic-window/-dialog templates use it (no "ZAR"/"R" literals)
+- [✓] Step 5 — `idNumberValidator(country = "ZA")`: anchored ZA check (date, citizenship, Luhn) + NA, BW, ZW, MZ, LS, SZ formats; contract notes which formats are unverified and to add countries as needed
+- [✓] Step 6 — sandbox: products + buy/sale leads, generic statuses, dialog data; header notes that all sandbox data is invented
+  - tables/cards/dialogs data → products + buy/sale leads; invented-data notes; real celebrity names in the dialog autocomplete replaced; slider demo + currency labels use the app currency; idNumberValidator demo on /sandbox/inputs
+- [✓] Step 7 — contracts/docs (pipes, validators, directives) + verify (dev + prod build, eslint, prettier) + ROADMAP REL ticks + clean boundary
+  - dev + prod build pass (prod: pre-existing initial-bundle warning; initial bundle 720.8 → 726.3 kB); eslint 0 and prettier clean on all 49 touched files; idNumberValidator: 20 Node test cases pass; sandbox pages (tables, cards, dialogs, inputs, selection, small-controls, data-display, media) **not browser-checked**
+  - ROADMAP: REL-01…09 and REL-11 ticked; REL-10 (en-ZA dates), 1b (contract porting notes) and 1d (fonts/icons/favicon) still open
+  - section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-20): Release readiness — remaining open items except licensing (developer request)
+
+Phase 4 (license) is excluded: the developer still has to confirm it. Phase 3c (developer sign-off) is the developer's.
+
+- [✓] Step 1 — REL-10 + REL-12 locale/time-zone defaults
+  - [✓] 1a date-time-ops: `en-ZA` → the injected `LOCALE_ID` — date-time-ops.service.ts, SERVICES_CONTRACTS.md
+  - [✓] 1b time pipes: no built-in "CAT"; `timeFormat` (optional IANA zone, `LOCALE_ID`) and `timeInString` (optional offset, DatePipe default otherwise) — time-format.pipe.ts, time-in-string.pipe.ts, PIPES_CONTRACTS.md
+  - [✓] 1c main.ts: note on where a fork sets `LOCALE_ID` (next to the currency setting)
+- [✓] Step 2 — Phase 1d assets: fonts checked (Roboto + Material Icons via Google Fonts, open licences); favicon is the Angular logo (Google trademark) → neutral placeholder; sandbox JPEG is a generated gradient (fine)
+- [✓] Step 3 — Phase 1b/2e docs: porting notes removed from PIPES/SERVICES/VALIDATORS contracts and code comments (linq-grid-filters, linq-grid-filter-item); "old-company" wording in ROADMAP
+- [✓] Step 4 — Phase 3a/3b validation
+  - keyword sweep: zero unresolved hits (intentional: Product doc comment, main.ts currency setting, one sandbox currency-override sample)
+  - dev + prod build pass (prod: pre-existing initial-bundle warning, 726.3 kB); `npm run lint` (whole project): all files pass; prettier clean on every changed file except RATE_LIMIT_TRACKER_HISTORY.md, which was already unformatted at HEAD (archive, left as is)
+  - browser pass over /sandbox/<family>: **not done** (no browser in this session)
+- [✓] Step 5 — ROADMAP ticks + clean boundary
+  - REL-10, 1b, 1d, 1e, 2a–2f, 3a ticked; REL-12 (CAT time pipes) and REL-13 (Angular-logo favicon) added as fixed; 3b in progress (browser pass); 3c and Phase 4 open for the developer
+  - section moved to RATE_LIMIT_TRACKER_HISTORY.md
+
+## Task (2026-11-21): Naming conventions NAM-01 + NAM-02 (developer request)
+
+Rule (AGENTS.md → Coding Standards): own models/types (interfaces, type aliases, enums, model classes) start with `_` + PascalCase; never components/services/directives/pipes. Renames use the TypeScript language service (symbol-aware, not text replace) via a scratchpad script. NAM-03 (external-integration naming) waits for the developer's choice.
+
+- [✓] Step 1 — scan (4 non-exported types added; google-places.d.ts = Google typings, excluded; no collisions): non-exported types missing the prefix + name collisions for every new `_` name
+- [✓] Step 2 — NAM-01 renames (69 symbols, 580 locations, 63 files; dev build clean) with the TS language service (all groups of the ROADMAP list), then dev build
+- [✓] Step 3 — docs: contracts, CLAUDE.md naming note, stale names in comments
+- [✓] Step 4 — NAM-02 (rule proven on a temporary sample file, then deleted): `@typescript-eslint/naming-convention` in eslint.config.js (+ AGENTS.md tooling paragraph); `npm run lint` clean
+- [✓] Step 5 — verify (dev + prod build, full lint, prettier) + ROADMAP ticks + clean boundary
+  - dev + prod build pass (prod: pre-existing initial-bundle warning, 726.3 kB); `npm run lint` (whole project) passes with the new rule; prettier clean on every changed file; old names also removed from sandbox description strings (not symbols, so not covered by the rename engine); **not browser-checked**
+  - section moved to RATE_LIMIT_TRACKER_HISTORY.md
