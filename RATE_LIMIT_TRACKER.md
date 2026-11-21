@@ -8,4 +8,4 @@ Live checklist only. Completed sessions/tasks are moved to `RATE_LIMIT_TRACKER_H
 
 None. Last completed (2026-11-21): naming conventions NAM-01 (all own types renamed to `_` + PascalCase) and NAM-02 (lint-enforced); see RATE_LIMIT_TRACKER_HISTORY.md.
 
-Next steps (developer): choose an option for NAM-03 (external-integration naming, ROADMAP "Naming conventions"); REL-14 broken sandbox styling to close Release readiness 3b; 3c sign-off; Phase 4 licensing once confirmed. Audit items stay parked.
+**Project on hold (developer decision, 2026-11-21):** the template is left in its current state (committed as c184b45). When work resumes, the open items are: REL-14 broken sandbox styling (closes Release readiness 3b), 3c sign-off, Phase 4 licensing once confirmed. Parked: NAM-03 (until a real integration), the audit items (AUD-02, AUD-15, AUD-26, AUD-27, AUD-48, AUD-50).
